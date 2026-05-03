@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-/** Sadece site kökü — vitrin `/kuafor`, panel `/kuafor/panel` (basePath) */
+/**
+ * Next.js 16+: `middleware.ts` yerine `proxy.ts` + `export function proxy`.
+ * `basePath` varken `/` için route olmadığından kökte yapım sayfası döner.
+ */
 const YAPIM_HTML = `<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -24,23 +27,26 @@ a{color:#a78bfa;text-decoration:none;font-weight:600}a:hover{text-decoration:und
 <main class="box">
 <div class="tag">Yapım aşamasında</div>
 <h1><span>Site</span> hazırlanıyor</h1>
-<p>Bu adres kök vitrin için ayrıldı. Kuaför uygulaması aşağıdaki yolda çalışır.</p>
+<p>Bu adres kök vitrin için ayrıldı. Uygulama <code>/kuafor</code> altında çalışır.</p>
 <nav class="nav" aria-label="Uygulama">
 <p><a href="/kuafor">Vitrine git → <code>/kuafor</code></a></p>
 <p style="margin-top:.65rem"><a href="/kuafor/panel">Panele git → <code>/kuafor/panel</code></a></p>
 </nav>
-<p class="small">Next.js · yerel geliştirme</p>
+<p class="small">Next.js</p>
 </main>
 </body>
 </html>`;
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (pathname !== "/" && pathname !== "") {
+  if (pathname !== "/") {
     return NextResponse.next();
   }
   if (request.method !== "GET" && request.method !== "HEAD") {
     return NextResponse.next();
+  }
+  if (request.method === "HEAD") {
+    return new NextResponse(null, { status: 200, headers: { "Cache-Control": "no-store" } });
   }
   return new NextResponse(YAPIM_HTML, {
     status: 200,
@@ -52,5 +58,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/",
+  matcher: ["/"],
 };

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 /**
- * Uygulama `basePath` ile `/kuafor` altında. Kök `/` için `middleware.ts` “yapım aşamasında” HTML döner.
+ * Uygulama `basePath` ile `/kuafor` altında. Kök `/` → `proxy.ts` yapım HTML’i.
  * `/kuafor` → buradan `/anasayfa` yönlendirmesi.
  */
 export default function MarketingRootRedirect() {
