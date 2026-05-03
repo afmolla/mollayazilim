@@ -10,7 +10,8 @@ function isLocalHost(host: string | null): boolean {
 /** Yerelde `/` açıldığında yapım ekranı; canlıda `/anasayfa` yönlendirmesi */
 export default async function MarketingRootPage() {
   const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
+  /** Doğrudan bağlantıda `host` doğru; bazı proxy'lerde `x-forwarded-host` yanlış öncelenebilir */
+  const host = h.get("host") ?? h.get("x-forwarded-host");
 
   if (!isLocalHost(host)) {
     redirect("/anasayfa");
