@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 /**
- * Site kökü (`/`) IIS üzerinde `index.php` ile “yapım aşamasında” vb. sunulur.
- * Next uygulaması yalnızca `basePath` (`/kuafor`) altında; burası vitrin kökünden anasayfaya gider.
+ * Uygulama `basePath` ile `/kuafor` altında. Kök `/` için `middleware.ts` “yapım aşamasında” HTML döner.
+ * `/kuafor` → buradan `/anasayfa` yönlendirmesi.
  */
 export default function MarketingRootRedirect() {
   redirect("/anasayfa");
