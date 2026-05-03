@@ -1,0 +1,127 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "İstanbul · Demo vitrin Test",
+      "baslik": "Tarzınızı yenileyin",
+      "aciklama": "Kesim, sakal ve bakım hizmetlerinde modern teknikler, hızlı randevu ve şeffaf panel yönetimi — müşteriye sunulabilir demo.",
+      "ctaPrimaryLabel": "Randevu al j",
+      "ctaPrimaryHref": "/randevu",
+      "ctaSecondaryLabel": "Hizmetler",
+      "ctaSecondaryHref": "/hizmetler",
+      "heroImageSrc": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&q=80",
+      "heroImageAlt": "Berber salonu iç mekan — profesyonel çalışma alanı test",
+      "heroAltBloklar": [],
+      "bolumBaslik": "Neden bu demo?",
+      "bolumAciklama": "SEO uyumlu sayfalar, mobil uyum ve tek tık WhatsApp — gerçek işletme vitrinine yakın deneyim.",
+      "features": [
+        {
+          "baslik": "Performans",
+          "aciklama": "Next.js ile sunucu tarafı render ve hızlı geçişler.",
+          "kolon": 1
+        },
+        {
+          "id": "de304f30-0fb7-467e-abb3-f2d605d1a0af",
+          "baslik": "Yeni kart",
+          "aciklama": "Metin ekleyin.",
+          "hiza": "orta",
+          "kolon": 1
+        },
+        {
+          "baslik": "Panel entegrasyonu",
+          "aciklama": "Randevuları onaylayın; müşteriye anında mesaj gönderin."
+        },
+        {
+          "baslik": "4 tema",
+          "aciklama": "Klasik berberden minimal tasarıma tek tıkla geçiş."
+        },
+        {
+          "baslik": "Yeni",
+          "aciklama": "Açıklama"
+        },
+        {
+          "baslik": "Yeni",
+          "aciklama": "Açıklama"
+        },
+        {
+          "id": "2c0c7f67-3b4e-4fbb-921e-2015d376c07f",
+          "baslik": "Yeni kart",
+          "aciklama": "Metin ekleyin.",
+          "hiza": "orta",
+          "kolon": 1
+        },
+        {
+          "id": "efb20d9e-7118-4807-95c8-34da5e3504f3",
+          "baslik": "Yeni kart",
+          "aciklama": "Metin ekleyin.",
+          "hiza": "orta",
+          "kolon": 1
+        }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Demo vitrin — gerçek işletmede fiyatlar panele bağlı güncellenebilir.",
+      "rows": [
+        {
+          "ad": "Saç kesimi",
+          "sure": "30 dk",
+          "fiyat": "850 ₺"
+        },
+        {
+          "ad": "Sakal şekillendirme",
+          "sure": "20 dk",
+          "fiyat": "450 ₺"
+        },
+        {
+          "ad": "Saç + sakal paket",
+          "sure": "45 dk",
+          "fiyat": "1.100 ₺"
+        },
+        {
+          "ad": "Fön / şekillendirme",
+          "sure": "25 dk",
+          "fiyat": "600 ₺"
+        },
+        {
+          "ad": "Boyama / röfle",
+          "sure": "90+ dk",
+          "fiyat": "2.400 ₺+"
+        },
+        {
+          "ad": "Keratin / bakım",
+          "sure": "120 dk",
+          "fiyat": "3.200 ₺"
+        },
+        {
+          "ad": "",
+          "sure": "",
+          "fiyat": ""
+        }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Unsplash üzerinden telif dostu demo görseller. Gerçek müşteri için kendi çekimlerinizi kullanın.",
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80",
+          "alt": "Berber koltuğu ve ayna — modern salon"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80",
+          "alt": "Profesyonel saç kesimi anı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=800&q=80",
+          "alt": "Berber aletleri ve detay"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80",
+          "alt": "Salon iç mekan geniş açı"
+        }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "Adres, çalışma saatleri ve WhatsApp — iletişim bilgileri.",
+      "whatsappMesaj": "Merhaba, randevu ve fiyat bilgisi almak istiyorum."
+    }
+  }
+}

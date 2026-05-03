@@ -1,0 +1,152 @@
+import Link from "next/link";
+import { normalizeExternalUrl, parseGoogleMapsInput } from "@/lib/footer-social-map";
+import { whatsappLink } from "@/lib/whatsapp";
+import { ayarlarGetir } from "@/lib/settings-store";
+import { menuGetir, type MenuItem } from "@/lib/menu-store";
+
+function FooterMenuEntry({ item }: { item: MenuItem }) {
+  const hasChildren = (item.children?.length ?? 0) > 0;
+  return (
+    <li className="shrink-0">
+      {item.href && item.href !== "#" ? (
+        <Link
+          href={item.href}
+          className="inline-block whitespace-nowrap hover:text-[var(--brand)]"
+          target={item.newTab ? "_blank" : undefined}
+          rel={item.newTab ? "noreferrer" : undefined}
+        >
+          {item.label}
+        </Link>
+      ) : (
+        <span className="font-medium text-[var(--text)]">{item.label}</span>
+      )}
+      {hasChildren ? (
+        <ul className="mt-1.5 space-y-1 border-l border-[var(--border)] pl-3">
+          {(item.children ?? []).map((c, j) => (
+            <li key={`${c.href}-${j}`}>
+              <Link
+                href={c.href}
+                className="inline-block whitespace-nowrap hover:text-[var(--brand)]"
+                target={c.newTab ? "_blank" : undefined}
+                rel={c.newTab ? "noreferrer" : undefined}
+              >
+                {c.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </li>
+  );
+}
+
+export async function SiteFooter() {
+  const ayar = await ayarlarGetir();
+  const menu = await menuGetir();
+  const wa = whatsappLink(ayar.whatsapp, "Merhaba, randevu almak istiyorum.");
+  const ig = ayar.instagram?.trim();
+  const fb = ayar.facebook?.trim();
+  const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
+  const igHref = ig ? normalizeExternalUrl(ig) : "";
+  const fbHref = fb ? normalizeExternalUrl(fb) : "";
+  const showSocialMap = !!(igHref || fbHref || mapBlock);
+
+  return (
+    <footer className="mt-auto border-t border-[var(--border)] bg-[var(--surface-2)]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3 md:px-6">
+        <div>
+          <p className="font-semibold text-[var(--text)]">{ayar.salonAd}</p>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            {ayar.adresKisa} — {ayar.calismaSaatleri}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm font-medium text-[var(--text)]">Hızlı bağlantılar</p>
+          <ul className="mt-3 flex flex-col gap-3 text-sm text-[var(--muted)]">
+            {menu.footer.map((n, i) => (
+              <FooterMenuEntry key={`${n.label}-${i}`} item={n} />
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p className="text-sm font-medium text-[var(--text)]">İletişim</p>
+          <a
+            href={wa}
+            className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-sm font-semibold text-white hover:opacity-95"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp ile yazın
+          </a>
+        </div>
+      </div>
+
+      {showSocialMap ? (
+        <div className="border-t border-[var(--border)] bg-[var(--surface)]">
+          <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+            <h2 className="text-center text-sm font-semibold tracking-wide text-[var(--text)]">
+              Sosyal medya ve konum
+            </h2>
+
+            {(igHref || fbHref) ? (
+              <ul className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                {igHref ? (
+                  <li>
+                    <a
+                      href={igHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      Instagram
+                    </a>
+                  </li>
+                ) : null}
+                {fbHref ? (
+                  <li>
+                    <a
+                      href={fbHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      Facebook
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
+            ) : null}
+
+            {mapBlock?.type === "iframe" ? (
+              <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border border-[var(--border)] shadow-sm">
+                <iframe
+                  title="Konum haritası"
+                  src={mapBlock.src}
+                  className="h-[min(50vh,320px)] w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            ) : mapBlock?.type === "link" ? (
+              <div className="mt-8 text-center">
+                <a
+                  href={mapBlock.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-xl bg-[var(--surface-2)] px-6 py-3 text-sm font-semibold text-[var(--text)] ring-1 ring-[var(--border)] transition hover:ring-[var(--brand)]/40"
+                >
+                  Haritada aç
+                </a>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      <div className="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]">
+        © {new Date().getFullYear()} {ayar.salonAd} — SEO uyumlu vitrin + panel demosu
+      </div>
+    </footer>
+  );
+}

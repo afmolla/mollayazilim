@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Mollayazilim — Yakında</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0c0c0f;
+        --card: #16161c;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --accent: #6366f1;
+        --accent-dim: rgba(99, 102, 241, 0.15);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        font-family: "DM Sans", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.25rem;
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.25), transparent),
+          radial-gradient(ellipse 60% 40% at 100% 100%, rgba(99, 102, 241, 0.08), transparent);
+      }
+      .card {
+        max-width: 28rem;
+        width: 100%;
+        padding: 2.5rem 2rem;
+        border-radius: 1.25rem;
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+        text-align: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent);
+        background: var(--accent-dim);
+        margin-bottom: 1.5rem;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
+      h1 {
+        font-size: clamp(1.5rem, 4vw, 1.85rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
+        margin-bottom: 0.75rem;
+      }
+      .brand {
+        color: var(--accent);
+      }
+      p {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+      footer {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="badge">Yapım aşamasında</div>
+      <h1><span class="brand">Mollayazilim</span> çok yakında</h1>
+      <p>
+        Sitemizi sizin için hazırlıyoruz. Kısa süre içinde burada olacağız; gelişmeler için tekrar uğrayabilirsiniz.
+      </p>
+      <footer>© <span id="y"></span> Mollayazilim</footer>
+    </main>
+    <script>
+      document.getElementById("y").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

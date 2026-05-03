@@ -1,0 +1,16 @@
+Mollayazilim — "yapım aşamasında" statik sayfa
+===============================================
+
+BURADAKİ TEK DOSYA: index.html
+
+Nereye atacaksınız (inetmar / paylaşımlı hosting):
+  - FTP veya Dosya yöneticisi ile sitenin WEB KÖKÜne yükleyin.
+  - Genel adlar: public_html, httpdocs, www, htdocs
+  - index.html bu kökte olmalı: açılışta otomatik gösterilir.
+
+Sadece bu dosyayı yeter; başka dosya gerekmez (Apache / PHP host için).
+
+IIS (Windows) kullanıyorsanız aynı index.html yeter; gerekirse .NET hostunda varsayılan belge "index.html" olsun.
+
+Hazırlanma yeri (bilgisayarınızda):
+  c:\inetpub\wwwroot\kuafor\site-yapim-asamasi-upload\

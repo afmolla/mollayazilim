@@ -1,0 +1,48 @@
+{
+  "header": [
+    {
+      "label": "Ana Sayfa",
+      "href": "/anasayfa",
+      "newTab": false
+    },
+    {
+      "label": "Hizmetler",
+      "href": "/hizmetler",
+      "newTab": false
+    },
+    {
+      "label": "Galeri",
+      "href": "/galeri",
+      "newTab": false
+    },
+    {
+      "label": "Randevular",
+      "href": "/randevular",
+      "newTab": false
+    },
+    {
+      "label": "Randevu Al",
+      "href": "/randevu",
+      "newTab": false
+    },
+    {
+      "label": "İletişim",
+      "href": "/iletisim",
+      "newTab": false
+    },
+  ],
+  "footer": [
+    {
+      "href": "/randevu",
+      "label": "Online randevu"
+    },
+    {
+      "href": "/randevular",
+      "label": "Onaylı randevu örnekleri"
+    },
+    {
+      "href": "/panel",
+      "label": "Yönetim paneli"
+    }
+  ]
+}

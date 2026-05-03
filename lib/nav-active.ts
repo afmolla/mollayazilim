@@ -1,0 +1,29 @@
+import { stripBasePath } from "@/lib/base-path";
+import type { MenuItem } from "@/lib/menu-store";
+
+/** Geçerli sayfa ile menü href eşleşmesi (hariç: newTab / harici URL) */
+export function isNavActive(pathname: string, href: string, newTab?: boolean): boolean {
+  if (newTab || href.startsWith("http")) return false;
+  if (href === "#") return false;
+  const p = stripBasePath(pathname);
+
+  if (href === "/") {
+    return p === "/" || p === "/anasayfa";
+  }
+  if (href === "/anasayfa") {
+    return p === "/anasayfa" || p === "/";
+  }
+
+  return p === href || p.startsWith(`${href}/`);
+}
+
+/** Üst veya herhangi bir alt menü yolu aktif mi */
+export function menuItemActive(pathname: string, item: MenuItem): boolean {
+  if (item.href && item.href !== "#") {
+    if (isNavActive(pathname, item.href, item.newTab)) return true;
+  }
+  for (const c of item.children ?? []) {
+    if (menuItemActive(pathname, c)) return true;
+  }
+  return false;
+}
