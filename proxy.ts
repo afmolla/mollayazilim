@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { BASE_PATH } from "@/lib/base-path";
 
 /**
- * Next.js 16+: `middleware.ts` yerine `proxy.ts` + `export function proxy`.
- * `basePath` varken `/` için route olmadığından kökte yapım sayfası döner.
+ * Next.js 16: `proxy.ts` + `export function proxy`.
+ *
+ * Dikkat: `request.nextUrl.pathname` basePath altında `/kuafor` için `/` normalize edilebiliyor;
+ * bu yüzden **gerçek** yol için `new URL(request.url).pathname` kullanılır.
  */
 const YAPIM_HTML = `<!DOCTYPE html>
 <html lang="tr">
@@ -38,8 +41,11 @@ a{color:#a78bfa;text-decoration:none;font-weight:600}a:hover{text-decoration:und
 </html>`;
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  if (pathname !== "/") {
+  const rawPath = new URL(request.url).pathname;
+  if (rawPath.startsWith(`${BASE_PATH}/`) || rawPath === BASE_PATH) {
+    return NextResponse.next();
+  }
+  if (rawPath !== "/" && rawPath !== "") {
     return NextResponse.next();
   }
   if (request.method !== "GET" && request.method !== "HEAD") {
