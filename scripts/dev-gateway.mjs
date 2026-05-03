@@ -1,12 +1,15 @@
 /**
- * basePath=/kuafor varken Next kök "/" için route üretmez (middleware de çalışmaz).
- * Bu betik: 3000 = kök yapım + tüm trafiği 3001'deki `next dev`'e iletir.
- * Üretimde kök genelde IIS/static ile ayrılır; doğrudan `next start` ise yalnızca /kuafor kullanın.
+ * basePath=/kuafor varken Next kök "/" route üretmez.
+ * 3000: kök `/` = yapım HTML; geri kalan (HTTP + WebSocket HMR) → `next dev` (3001).
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const httpProxy = require("http-proxy");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -29,17 +32,52 @@ a{color:#a78bfa;text-decoration:none;font-weight:600}
 <main class="box">
 <div class="tag">Yapım aşamasında</div>
 <h1><span>Site</span> hazırlanıyor</h1>
-<p>Next <code>:${NEXT_PORT}</code> üzerinde çalışıyor. Vitrin ve panel:</p>
+<p>Next <code>:${NEXT_PORT}</code> (HMR dahil). Vitrin ve panel:</p>
 <nav class="nav">
 <p><a href="/kuafor">/kuafor</a> — vitrin</p>
 <p style="margin-top:.65rem"><a href="/kuafor/panel">/kuafor/panel</a> — panel</p>
 </nav>
-<p class="small">dev-gateway · port ${GATEWAY_PORT}</p>
+<p class="small">dev-gateway · ${GATEWAY_PORT}→${NEXT_PORT}</p>
 </main></body></html>`;
 
 function isRootPath(url) {
   const p = new URL(url, "http://local").pathname;
   return p === "/" || p === "";
+}
+
+function waitForNextReady() {
+  const deadline = Date.now() + 120_000;
+  return new Promise((resolve, reject) => {
+    function tryOnce() {
+      const req = http.request(
+        {
+          hostname: "127.0.0.1",
+          port: NEXT_PORT,
+          path: "/kuafor",
+          method: "GET",
+          timeout: 3000,
+        },
+        (res) => {
+          res.resume();
+          resolve();
+        }
+      );
+      req.on("timeout", () => {
+        req.destroy();
+        schedule();
+      });
+      req.on("error", () => {
+        if (Date.now() > deadline) {
+          reject(new Error(`Next :${NEXT_PORT} 120 sn içinde ayaklanmadı (npm run dev çıktısına bak).`));
+        } else schedule();
+      });
+      function schedule() {
+        setTimeout(tryOnce, 500);
+      }
+      req.end();
+    }
+    tryOnce();
+  });
 }
 
 const nextBin = path.join(root, "node_modules", "next", "dist", "bin", "next");
@@ -50,17 +88,29 @@ const child = spawn(process.execPath, [nextBin, "dev", "--webpack", "-p", String
 
 child.on("exit", (code) => process.exit(code ?? 0));
 
+const target = `http://127.0.0.1:${NEXT_PORT}`;
+const proxy = httpProxy.createProxyServer({
+  target,
+  ws: true,
+  xfwd: true,
+  changeOrigin: true,
+});
+
+proxy.on("error", (err, req, res) => {
+  console.error("[dev-gateway] proxy:", err.message);
+  if (res && !res.headersSent && typeof res.writeHead === "function") {
+    res.writeHead(502, { "Content-Type": "text/plain; charset=utf-8" });
+    res.end(`Proxy hatası: ${err.message}`);
+  }
+});
+
 const server = http.createServer((req, res) => {
   if (!req.url) {
     res.writeHead(400);
     res.end();
     return;
   }
-  if (req.method !== "GET" && req.method !== "HEAD") {
-    proxy(req, res);
-    return;
-  }
-  if (isRootPath(req.url)) {
+  if ((req.method === "GET" || req.method === "HEAD") && isRootPath(req.url)) {
     if (req.method === "HEAD") {
       res.writeHead(200, { "Cache-Control": "no-store" });
       res.end();
@@ -73,32 +123,30 @@ const server = http.createServer((req, res) => {
     res.end(YAPIM);
     return;
   }
-  proxy(req, res);
+  proxy.web(req, res);
 });
 
-function proxy(req, res) {
-  const u = new URL(req.url, `http://127.0.0.1:${GATEWAY_PORT}`);
-  const opts = {
-    hostname: "127.0.0.1",
-    port: NEXT_PORT,
-    path: u.pathname + u.search,
-    method: req.method,
-    headers: { ...req.headers, host: `127.0.0.1:${NEXT_PORT}` },
-  };
-  const p = http.request(opts, (upstream) => {
-    res.writeHead(upstream.statusCode || 502, upstream.headers);
-    upstream.pipe(res);
+server.on("upgrade", (req, socket, head) => {
+  proxy.ws(req, socket, head);
+});
+
+async function main() {
+  console.log(`[dev-gateway] Next başlatılıyor :${NEXT_PORT} …`);
+  await waitForNextReady();
+  server.listen(GATEWAY_PORT, () => {
+    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım`);
+    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/kuafor  → next (HMR/WebSocket ile)`);
   });
-  p.on("error", (err) => {
-    res.writeHead(502, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end(`Next (${NEXT_PORT}) henüz ayakta değil veya hata: ${err.message}`);
-  });
-  req.pipe(p);
 }
 
-server.listen(GATEWAY_PORT, () => {
-  console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım HTML`);
-  console.log(`[dev-gateway] diğer istekler → next dev http://127.0.0.1:${NEXT_PORT}`);
+main().catch((e) => {
+  console.error(e);
+  try {
+    child.kill("SIGTERM");
+  } catch {
+    /* ignore */
+  }
+  process.exit(1);
 });
 
 function shutdown() {
@@ -107,7 +155,12 @@ function shutdown() {
   } catch {
     /* ignore */
   }
-  child.kill("SIGTERM");
+  if (typeof proxy.close === "function") proxy.close();
+  try {
+    child.kill("SIGTERM");
+  } catch {
+    /* ignore */
+  }
   process.exit(0);
 }
 process.on("SIGINT", shutdown);
