@@ -7,6 +7,17 @@ const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   basePath: BASE_PATH,
+  /** Vercel vb. kök `/` 404 vermesin; uygulama `basePath` altında. */
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: BASE_PATH,
+        permanent: false,
+        basePath: false,
+      },
+    ];
+  },
   /** Üst klasörde başka lockfile varken Turbopack kökünü sabitle */
   turbopack: {
     root: configDir,
