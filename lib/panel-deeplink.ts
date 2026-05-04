@@ -1,5 +1,5 @@
 import type { PanelContentTab } from "@/components/PanelContent";
-import { stripBasePath } from "@/lib/base-path";
+import { stripBasePath, withBase } from "@/lib/base-path";
 
 /** Panel «İçerik» sekmesinde açılacak hedef (URL vf_* parametrelerinden) */
 export type VfIcerikSnapshot = { sablon?: PanelContentTab; slug?: string };
@@ -19,25 +19,25 @@ export function panelEditUrlFromPathname(pathname: string): {
 
   if (p === "/" || p === "/anasayfa") {
     return {
-      href: "/panel?vf_tab=icerik&vf_sablon=home",
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=home"),
       label: "Anasayfa şablonu",
     };
   }
   if (p === "/hizmetler") {
     return {
-      href: "/panel?vf_tab=icerik&vf_sablon=hizmetler",
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=hizmetler"),
       label: "Hizmetler şablonu",
     };
   }
   if (p === "/galeri") {
     return {
-      href: "/panel?vf_tab=icerik&vf_sablon=galeri",
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=galeri"),
       label: "Galeri şablonu",
     };
   }
   if (p === "/iletisim") {
     return {
-      href: "/panel?vf_tab=icerik&vf_sablon=iletisim",
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=iletisim"),
       label: "İletişim şablonu",
     };
   }
@@ -45,20 +45,20 @@ export function panelEditUrlFromPathname(pathname: string): {
   const cms = /^\/p\/([^/]+)$/.exec(p);
   if (cms?.[1]) {
     return {
-      href: `/panel?vf_tab=icerik&vf_slug=${encodeURIComponent(cms[1])}`,
+      href: withBase(`/panel?vf_tab=icerik&vf_slug=${encodeURIComponent(cms[1])}`),
       label: "Bu ek sayfa",
     };
   }
 
   if (p === "/randevu" || p === "/randevular") {
     return {
-      href: "/panel?vf_tab=randevular",
+      href: withBase("/panel?vf_tab=randevular"),
       label: "Randevular",
     };
   }
 
   return {
-    href: "/panel?vf_tab=icerik",
+    href: withBase("/panel?vf_tab=icerik"),
     label: "İçerik",
   };
 }

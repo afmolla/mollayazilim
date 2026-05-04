@@ -24,6 +24,27 @@ export function withBase(path: string): string {
   return `${BASE_PATH}${p}`;
 }
 
+/**
+ * Menü / CMS’te saklı iç yollar (`/hizmetler`) → tarayıcıda `/kuafor/hizmetler`.
+ * Harici URL, `mailto:`, `tel:`, `#` dokunulmaz; zaten önekli yol çiftlenmez.
+ */
+export function publicHref(href: string): string {
+  const h = (href ?? "").trim();
+  if (!h || h === "#") return h;
+  if (
+    h.startsWith("http://") ||
+    h.startsWith("https://") ||
+    h.startsWith("//") ||
+    h.startsWith("mailto:") ||
+    h.startsWith("tel:")
+  ) {
+    return h;
+  }
+  if (!BASE_PATH) return h.startsWith("/") ? h : `/${h}`;
+  if (h === BASE_PATH || h.startsWith(`${BASE_PATH}/`)) return h;
+  return withBase(h);
+}
+
 export function stripBasePath(pathname: string): string {
   if (!BASE_PATH) return pathname || "/";
   if (pathname === BASE_PATH || pathname === `${BASE_PATH}/`) {

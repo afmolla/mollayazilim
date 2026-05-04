@@ -1,6 +1,6 @@
 "use client";
 
-import { withBase } from "@/lib/base-path";
+import { withBase, stripBasePath } from "@/lib/base-path";
 import { bloklardanHtml, sayfaSlugify, type SayfaBlok } from "@/lib/cms-blok";
 import type { Sayfa } from "@/lib/pages-store";
 import { useRouter } from "next/navigation";
@@ -34,8 +34,8 @@ const BLOK_ETIKET: Record<string, string> = {
 };
 
 function hrefEslestir(a: string, b: string): boolean {
-  const na = (a.trim().replace(/\/+$/, "") || "/").toLowerCase();
-  const nb = (b.trim().replace(/\/+$/, "") || "/").toLowerCase();
+  const na = (stripBasePath(a.trim().replace(/\/+$/, "") || "/")).toLowerCase();
+  const nb = (stripBasePath(b.trim().replace(/\/+$/, "") || "/")).toLowerCase();
   return na === nb;
 }
 
@@ -458,7 +458,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   if (loading) return <p className="text-center text-[var(--muted)]">Yükleniyor…</p>;
 
-  const previewHref = form.slug ? `/p/${encodeURIComponent(form.slug)}` : "";
+  const previewHref = form.slug ? withBase(`/p/${encodeURIComponent(form.slug)}`) : "";
   const previewHtml =
     editorMode === "blocks" ? bloklardanHtml(form.bloklar) : form.icerikHtml;
   const slugNormPreview = sayfaSlugify(form.slug);
@@ -642,7 +642,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
                     Düzenle
                   </button>
                   <a
-                    href={`/p/${encodeURIComponent(s.slug)}`}
+                    href={withBase(`/p/${encodeURIComponent(s.slug)}`)}
                     target="_blank"
                     rel="noreferrer"
                     className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--surface-2)]"

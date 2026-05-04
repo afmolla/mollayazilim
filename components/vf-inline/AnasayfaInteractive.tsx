@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouse
 import type { HomeFeature, HomeHeroAltBlok, SiteIcerik } from "@/lib/content-store";
 import type { SiteAyarlar } from "@/lib/settings-store";
 import type { VfHiza } from "@/lib/vf-hiza";
-import { withBase } from "@/lib/base-path";
+import { withBase, publicHref } from "@/lib/base-path";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
 import { VfContextMenu, type VfMenuItem } from "@/components/vf-inline/VfContextMenu";
@@ -639,7 +639,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
             <div className="mt-8 flex flex-wrap gap-4">
               <CtaBlock
                 inline={inline}
-                href={home.ctaPrimaryHref}
+                href={publicHref(home.ctaPrimaryHref)}
                 label={home.ctaPrimaryLabel}
                 onLabel={(v) => updateHome((h) => ({ ...h, ctaPrimaryLabel: v }))}
                 onCtxHref={(e) =>
@@ -659,7 +659,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
               />
               <CtaBlock
                 inline={inline}
-                href={home.ctaSecondaryHref}
+                href={publicHref(home.ctaSecondaryHref)}
                 label={home.ctaSecondaryLabel}
                 onLabel={(v) => updateHome((h) => ({ ...h, ctaSecondaryLabel: v }))}
                 onCtxHref={(e) =>

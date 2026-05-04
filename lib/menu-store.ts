@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { publicHref, stripBasePath } from "@/lib/base-path";
 
 export type MenuItem = {
   label: string;
@@ -54,23 +55,65 @@ export function cleanMenuItem(x: unknown): MenuItem | null {
   return { label: label, href: hrefRaw, newTab };
 }
 
+function canonicalStoreHref(href: string): string {
+  const h = (href ?? "").trim();
+  if (!h || h === "#") return h;
+  if (
+    h.startsWith("http://") ||
+    h.startsWith("https://") ||
+    h.startsWith("//") ||
+    h.startsWith("mailto:") ||
+    h.startsWith("tel:")
+  ) {
+    return h;
+  }
+  const withSlash = h.startsWith("/") ? h : `/${h}`;
+  return stripBasePath(withSlash).replace(/\/+$/, "") || "/";
+}
+
+function normalizeMenuItemPaths(item: MenuItem): MenuItem {
+  const href = item.href === "#" ? "#" : publicHref(item.href);
+  const children = (item.children ?? []).map(normalizeMenuItemPaths);
+  return { ...item, href, children: children.length ? children : undefined };
+}
+
+function toStoreMenuItem(item: MenuItem): MenuItem {
+  const href = item.href === "#" ? "#" : canonicalStoreHref(item.href);
+  const children = (item.children ?? []).map(toStoreMenuItem);
+  return { ...item, href, children: children.length ? children : undefined };
+}
+
+function normalizeDbPaths(db: Db): Db {
+  return {
+    header: db.header.map(normalizeMenuItemPaths),
+    footer: db.footer.map(normalizeMenuItemPaths),
+  };
+}
+
 export async function menuGetir(): Promise<Db> {
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
     const header = Array.isArray(db.header) ? db.header.map(cleanMenuItem).filter((x): x is MenuItem => x !== null) : varsayilan().header;
     const footer = Array.isArray(db.footer) ? db.footer.map(cleanMenuItem).filter((x): x is MenuItem => x !== null) : varsayilan().footer;
-    return { header: header.length ? header : varsayilan().header, footer: footer.length ? footer : varsayilan().footer };
+    const merged = {
+      header: header.length ? header : varsayilan().header,
+      footer: footer.length ? footer : varsayilan().footer,
+    };
+    return normalizeDbPaths(merged);
   } catch {
-    return varsayilan();
+    return normalizeDbPaths(varsayilan());
   }
 }
 
 export async function menuKaydet(loc: MenuLocation, items: MenuItem[]): Promise<Db> {
   const cur = await menuGetir();
-  const cleaned = items.map(cleanMenuItem).filter((x): x is MenuItem => x !== null);
+  const cleaned = items
+    .map(cleanMenuItem)
+    .filter((x): x is MenuItem => x !== null)
+    .map(toStoreMenuItem);
   const next: Db = { ...cur, [loc]: cleaned } as Db;
   await fs.mkdir(path.dirname(FILE), { recursive: true });
   await fs.writeFile(FILE, JSON.stringify(next, null, 2), "utf8");
-  return next;
+  return normalizeDbPaths(next);
 }

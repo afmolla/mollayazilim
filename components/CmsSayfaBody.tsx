@@ -1,5 +1,6 @@
 import type { SayfaBlok } from "@/lib/cms-blok";
 import type { Sayfa } from "@/lib/pages-store";
+import { publicHref } from "@/lib/base-path";
 import { embedIframeSrc, parseVideoUrl } from "@/lib/video-embed";
 
 function CmsBlock({ block }: { block: SayfaBlok }) {
@@ -20,7 +21,7 @@ function CmsBlock({ block }: { block: SayfaBlok }) {
     return (
       <p>
         <a
-          href={block.href}
+          href={publicHref(block.href)}
           target={block.newTab ? "_blank" : undefined}
           rel={block.newTab ? "noreferrer" : undefined}
           className="inline-flex rounded-xl bg-[var(--brand)] px-5 py-3 font-semibold text-[var(--on-brand)] no-underline"

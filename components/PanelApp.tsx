@@ -11,6 +11,7 @@ import { PanelUnifiedIcerik } from "@/components/PanelUnifiedIcerik";
 import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
+import { withBase } from "@/lib/base-path";
 
 type TabId = "randevular" | "icerik" | "site_duzenle" | "medya" | "menuler" | "ayarlar" | "yedek";
 
@@ -90,7 +91,7 @@ export function PanelApp(props: PanelAppProps) {
     queueMicrotask(() => {
       if (vfTab && allowed.has(vfTab as TabId)) setTab(vfTab as TabId);
       else if (wantsContent) setTab("icerik");
-      if (dirty && q) router.replace("/panel", { scroll: false });
+      if (dirty && q) router.replace(withBase("/panel"), { scroll: false });
     });
   }, [searchParams, router]);
 

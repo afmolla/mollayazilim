@@ -3,18 +3,21 @@ import type { MenuItem } from "@/lib/menu-store";
 
 /** Geçerli sayfa ile menü href eşleşmesi (hariç: newTab / harici URL) */
 export function isNavActive(pathname: string, href: string, newTab?: boolean): boolean {
-  if (newTab || href.startsWith("http")) return false;
+  if (newTab || href.startsWith("http://") || href.startsWith("https://") || href.startsWith("//")) {
+    return false;
+  }
   if (href === "#") return false;
-  const p = stripBasePath(pathname);
+  const p = stripBasePath(pathname).replace(/\/+$/, "") || "/";
+  const h = stripBasePath(href).replace(/\/+$/, "") || "/";
 
-  if (href === "/") {
+  if (h === "/") {
     return p === "/" || p === "/anasayfa";
   }
-  if (href === "/anasayfa") {
+  if (h === "/anasayfa") {
     return p === "/anasayfa" || p === "/";
   }
 
-  return p === href || p.startsWith(`${href}/`);
+  return p === h || p.startsWith(`${h}/`);
 }
 
 /** Üst veya herhangi bir alt menü yolu aktif mi */

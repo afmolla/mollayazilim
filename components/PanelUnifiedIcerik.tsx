@@ -201,7 +201,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
                     </button>
                     <div className="flex flex-wrap gap-1">
                       <a
-                        href={`/p/${encodeURIComponent(p.slug)}`}
+                        href={withBase(`/p/${encodeURIComponent(p.slug)}`)}
                         target="_blank"
                         rel="noreferrer"
                         className="rounded-md border border-[var(--border)] px-2 py-0.5 text-[11px] hover:bg-[var(--surface-2)]"
