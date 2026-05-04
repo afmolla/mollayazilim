@@ -13,6 +13,10 @@ export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {
     const h = await headers();
     let prefix = h.get("x-site-prefix")?.trim() ?? "";
     let subdir = h.get("x-data-subdir")?.trim() ?? "";
+    /** Kök marka sitesi: `proxy.ts` boş prefix + `molla` subdir gönderir — bunu kuafor’a çevirme. */
+    if (subdir === "molla" && !prefix) {
+      return { prefix: "", subdir: "molla" };
+    }
     if (!prefix) {
       const first = portfolioPrefixes()[0];
       prefix = first;

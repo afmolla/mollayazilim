@@ -7,12 +7,14 @@ export async function siteUrl(): Promise<string> {
   const prefix = ctx?.prefix ?? (await getRequestSite()).prefix;
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ?? "";
   if (raw) {
+    // Kök alan (Molla landing): prefix boş — domain kökü dönsün.
+    if (!prefix) return raw;
     if (raw.endsWith(prefix)) {
       return raw;
     }
     return `${raw}${prefix}`.replace(/\/$/, "");
   }
-  return `http://localhost:3000${prefix}`.replace(/\/$/, "");
+  return `http://localhost:3000${prefix || ""}`.replace(/\/$/, "") || "http://localhost:3000";
 }
 
 export async function salonAd(): Promise<string> {
