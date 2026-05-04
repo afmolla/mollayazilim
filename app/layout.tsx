@@ -45,8 +45,14 @@ export async function generateMetadata(): Promise<Metadata> {
     ? ["restoran", "QR menü", "rezervasyon", "İstanbul", "yemek"]
     : ["kuaför", "berber", "randevu", "İstanbul", "saç kesimi", "sakal"];
 
+  let metadataBase: URL;
+  try {
+    metadataBase = new URL(base);
+  } catch {
+    metadataBase = new URL("https://mollayazilim.com");
+  }
   return {
-    metadataBase: new URL(base),
+    metadataBase,
     title: {
       default: defaultTitle,
       template: `%s | ${ayar.salonAd}`,

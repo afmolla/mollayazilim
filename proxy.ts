@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
+import { MOLLA_SITE_PREFIX_SENTINEL } from "@/lib/site-proxy-headers";
 
 function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string): Headers {
   const h = new Headers(req.headers);
@@ -36,7 +37,8 @@ export function proxy(req: NextRequest) {
 
   const matched = isPortfolioPath(pathname);
   if (!matched) {
-    const reqHeaders = requestHeadersWithSite(req, "", "molla");
+    /** Boş `x-site-prefix` bazı proxy/CDN katmanlarında düşer; sentinel kullan. */
+    const reqHeaders = requestHeadersWithSite(req, MOLLA_SITE_PREFIX_SENTINEL, "molla");
     return NextResponse.next({ request: { headers: reqHeaders } });
   }
 

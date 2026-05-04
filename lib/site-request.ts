@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { headers } from "next/headers";
 import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
+import { siteFromProxyHeaders } from "@/lib/site-proxy-headers";
 
 export type SiteRequestInfo = { prefix: string; subdir: string };
 
@@ -13,10 +14,8 @@ export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {
     const h = await headers();
     let prefix = h.get("x-site-prefix")?.trim() ?? "";
     let subdir = h.get("x-data-subdir")?.trim() ?? "";
-    /** Kök marka sitesi: `proxy.ts` boş prefix + `molla` subdir gönderir — bunu kuafor’a çevirme. */
-    if (subdir === "molla" && !prefix) {
-      return { prefix: "", subdir: "molla" };
-    }
+    const fromProxy = siteFromProxyHeaders(prefix, subdir);
+    if (fromProxy) return fromProxy;
     if (!prefix) {
       const first = portfolioPrefixes()[0];
       prefix = first;
