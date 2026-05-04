@@ -1,10 +1,11 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function PanelBackup() {
+  const wb = useWithBase();
   const router = useRouter();
   const [err, setErr] = useState("");
   const [okMsg, setOkMsg] = useState("");
@@ -15,7 +16,7 @@ export function PanelBackup() {
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(withBase("/api/panel/backup"), { cache: "no-store" });
+      const res = await fetch(wb("/api/panel/backup"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -49,7 +50,7 @@ export function PanelBackup() {
     setOkMsg("");
     try {
       const text = await file.text();
-      const res = await fetch(withBase("/api/panel/backup"), {
+      const res = await fetch(wb("/api/panel/backup"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: text,

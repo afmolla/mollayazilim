@@ -1,4 +1,5 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,7 +7,6 @@ import { PanelContent, type PanelContentTab } from "@/components/PanelContent";
 import { PanelIcerikHeaderMenu } from "@/components/PanelIcerikHeaderMenu";
 import { PanelPages } from "@/components/PanelPages";
 import { PanelQrMenuTab } from "@/components/PanelQrMenuTab";
-import { withBase } from "@/lib/base-path";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
 type CmsRow = { slug: string; baslik: string; yayin: boolean };
@@ -36,6 +36,7 @@ export type PanelUnifiedIcerikProps = {
 };
 
 export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
+  const wb = useWithBase();
   const router = useRouter();
   const vfSnap = props.vfSnapshot ?? null;
   const [secim, setSecim] = useState<Secim>(() => secimFromVfSnapshot(vfSnap));
@@ -47,7 +48,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
   const cmsYukle = useCallback(async () => {
     setYukleniyorListe(true);
     try {
-      const res = await fetch(withBase("/api/panel/pages"), { cache: "no-store", credentials: "same-origin" });
+      const res = await fetch(wb("/api/panel/pages"), { cache: "no-store", credentials: "same-origin" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -58,7 +59,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
     } finally {
       setYukleniyorListe(false);
     }
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -91,7 +92,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
 
   async function cmsSil(slug: string) {
     if (!confirm(`Bu ek sayfa silinsin mi?\n/p/${slug}`)) return;
-    const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
+    const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
     if (res.status === 401) {
       router.refresh();
       return;
@@ -203,7 +204,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
                     </button>
                     <div className="flex flex-wrap gap-1">
                       <a
-                        href={withBase(`/p/${encodeURIComponent(p.slug)}`)}
+                        href={wb(`/p/${encodeURIComponent(p.slug)}`)}
                         target="_blank"
                         rel="noreferrer"
                         className="rounded-md border border-[var(--border)] px-2 py-0.5 text-[11px] hover:bg-[var(--surface-2)]"

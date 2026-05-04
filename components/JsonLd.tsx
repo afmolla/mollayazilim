@@ -1,10 +1,9 @@
-import { headers } from "next/headers";
 import { siteUrl } from "@/lib/site";
 import { ayarlarGetir } from "@/lib/settings-store";
+import { getRequestSite } from "@/lib/site-request";
 
 export async function JsonLdLocalBusiness() {
-  const h = await headers();
-  const subdir = h.get("x-data-subdir")?.trim() ?? "";
+  const { subdir } = await getRequestSite();
   const ayar = await ayarlarGetir();
   const isRestaurant = subdir === "restaurant";
   const base = await siteUrl();

@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { getDataDir } from "@/lib/data-dir";
-import { publicHref, stripBasePath } from "@/lib/base-path";
+import { publicHref, stripSitePrefix } from "@/lib/base-path";
 
 export type MenuItem = {
   label: string;
@@ -15,7 +15,9 @@ export type MenuLocation = "header" | "footer";
 
 type Db = { header: MenuItem[]; footer: MenuItem[] };
 
-const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "menus.json");
+async function menusFile(): Promise<string> {
+  return path.join(await getDataDir(), "menus.json");
+}
 
 function varsayilan(): Db {
   return {
@@ -69,7 +71,7 @@ function canonicalStoreHref(href: string): string {
     return h;
   }
   const withSlash = h.startsWith("/") ? h : `/${h}`;
-  return stripBasePath(withSlash).replace(/\/+$/, "") || "/";
+  return stripSitePrefix(withSlash).replace(/\/+$/, "") || "/";
 }
 
 function normalizeMenuItemPaths(item: MenuItem): MenuItem {
@@ -92,6 +94,7 @@ function normalizeDbPaths(db: Db): Db {
 }
 
 export async function menuGetir(): Promise<Db> {
+  const FILE = await menusFile();
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
@@ -108,6 +111,7 @@ export async function menuGetir(): Promise<Db> {
 }
 
 export async function menuKaydet(loc: MenuLocation, items: MenuItem[]): Promise<Db> {
+  const FILE = await menusFile();
   const cur = await menuGetir();
   const cleaned = items
     .map(cleanMenuItem)

@@ -1,8 +1,8 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { withBase } from "@/lib/base-path";
 import type { QrMenuData, QrMenuKategori, QrMenuUrun } from "@/lib/qr-menu-store";
 
 function newId() {
@@ -10,6 +10,7 @@ function newId() {
 }
 
 export function PanelQrMenuTab() {
+  const wb = useWithBase();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -19,7 +20,7 @@ export function PanelQrMenuTab() {
 
   const load = useCallback(async () => {
     setErr("");
-    const res = await fetch(withBase("/api/panel/qr-menu"), { cache: "no-store", credentials: "same-origin" });
+    const res = await fetch(wb("/api/panel/qr-menu"), { cache: "no-store", credentials: "same-origin" });
     if (res.status === 401) {
       router.refresh();
       return;
@@ -43,7 +44,7 @@ export function PanelQrMenuTab() {
     setErr("");
     setOk("");
     try {
-      const res = await fetch(withBase("/api/panel/qr-menu"), {
+      const res = await fetch(wb("/api/panel/qr-menu"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

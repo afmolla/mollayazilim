@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 import type { SayfaBlok } from "./cms-blok";
 
@@ -19,7 +20,9 @@ export type Sayfa = {
 
 type SayfaDb = { sayfalar: Sayfa[] };
 
-const DOSYA = path.join(/* turbopackIgnore: true */ getDataDir(), "sayfalar.json");
+async function dosyaYolu(): Promise<string> {
+  return path.join(await getDataDir(), "sayfalar.json");
+}
 
 function slugify(raw: string): string {
   return raw
@@ -36,6 +39,7 @@ function slugify(raw: string): string {
 }
 
 async function oku(): Promise<SayfaDb> {
+  const DOSYA = await dosyaYolu();
   try {
     const raw = await fs.readFile(DOSYA, "utf8");
     return JSON.parse(raw) as SayfaDb;
@@ -45,6 +49,7 @@ async function oku(): Promise<SayfaDb> {
 }
 
 async function yaz(db: SayfaDb): Promise<void> {
+  const DOSYA = await dosyaYolu();
   await fs.mkdir(path.dirname(DOSYA), { recursive: true });
   await fs.writeFile(DOSYA, JSON.stringify(db, null, 2), "utf8");
 }
@@ -113,4 +118,3 @@ export async function sayfaSil(slug: string): Promise<boolean> {
   await yaz(db);
   return true;
 }
-

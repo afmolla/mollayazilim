@@ -2,7 +2,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 
-const FILE = path.join(getDataDir(), "qr-menu.json");
+async function qrMenuFile(): Promise<string> {
+  return path.join(await getDataDir(), "qr-menu.json");
+}
 
 export type QrMenuUrun = {
   id: string;
@@ -66,6 +68,7 @@ function varsayilan(): QrMenuData {
 }
 
 async function oku(): Promise<Db> {
+  const FILE = await qrMenuFile();
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const j = JSON.parse(raw) as Partial<Db>;
@@ -87,6 +90,7 @@ async function oku(): Promise<Db> {
 }
 
 async function yaz(db: Db): Promise<void> {
+  const FILE = await qrMenuFile();
   await fs.mkdir(path.dirname(FILE), { recursive: true });
   await fs.writeFile(FILE, JSON.stringify(db, null, 2), "utf8");
 }

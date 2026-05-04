@@ -1,9 +1,9 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import type { SiteIcerik } from "@/lib/content-store";
-import { withBase } from "@/lib/base-path";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 
@@ -11,7 +11,8 @@ type Hiz = SiteIcerik["hizmetler"];
 
 type CtxItem = { id: string; label: string; run: () => void };
 
-export function HizmetlerInteractive(props: { initial: Hiz }) {
+export function HizmetlerInteractive(props: {
+  const wb = useWithBase(); initial: Hiz }) {
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [h, setH] = useState<Hiz>(() => ({
@@ -32,7 +33,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     if (!inline) return;
     let c = false;
     void (async () => {
-      const res = await fetch(withBase("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
+      const res = await fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
       if (!res.ok || c) return;
       const j = (await res.json()) as { icerik: SiteIcerik };
       if (!c) setH({ ...j.icerik.hizmetler, rows: j.icerik.hizmetler.rows.map((r) => ({ ...r })) });
@@ -46,7 +47,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     async (partial: Partial<Hiz>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase("/api/panel/content"), {
+        const res = await fetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

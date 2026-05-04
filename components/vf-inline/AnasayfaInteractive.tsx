@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import type { HomeFeature, HomeHeroAltBlok, SiteIcerik } from "@/lib/content-store";
 import type { SiteAyarlar } from "@/lib/settings-store";
 import type { VfHiza } from "@/lib/vf-hiza";
-import { withBase, publicHref } from "@/lib/base-path";
+import { publicHref } from "@/lib/base-path";
+import { useWithBase } from "@/components/SitePrefixProvider";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
 import { VfContextMenu, type VfMenuItem } from "@/components/vf-inline/VfContextMenu";
@@ -62,6 +63,8 @@ function CtaBlock(props: {
 }
 
 export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string }) {
+  const wb = useWithBase();
+  const pathname = usePathname() ?? "/";
   const searchParams = useSearchParams();
   const router = useRouter();
   const vfEdit = searchParams.get("vf_edit") === "1";
@@ -89,13 +92,13 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
     queueMicrotask(() => setSessionOk(null));
     void (async () => {
       try {
-        const res = await fetch(withBase("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+        const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
         const j = (await res.json()) as { ok?: boolean };
         if (!cancelled) setSessionOk(!!j.ok);
         if (!j.ok || cancelled) return;
         const [cr, sr] = await Promise.all([
-          fetch(withBase("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
-          fetch(withBase("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
+          fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
+          fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
         ]);
         if (cr.ok) {
           const cj = (await cr.json()) as { icerik: SiteIcerik };
@@ -120,7 +123,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
     async (salonAd: string) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase("/api/panel/settings"), {
+        const res = await fetch(wb("/api/panel/settings"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
@@ -149,7 +152,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
   const patchHome = useCallback(async (partial: Partial<Home> | Home) => {
     setSaveMsg("saving");
     try {
-      const res = await fetch(withBase("/api/panel/content"), {
+      const res = await fetch(wb("/api/panel/content"), {
         method: "PATCH",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -245,7 +248,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
       {
         id: "vf-panel",
         label: "Paneli yeni sekmede aç",
-        run: () => window.open(withBase("/panel"), "_blank", "noopener,noreferrer"),
+        run: () => window.open(wb("/panel"), "_blank", "noopener,noreferrer"),
       },
       {
         id: "vf-add",
@@ -639,7 +642,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
             <div className="mt-8 flex flex-wrap gap-4">
               <CtaBlock
                 inline={inline}
-                href={publicHref(home.ctaPrimaryHref)}
+                href={publicHref(home.ctaPrimaryHref, pathname)}
                 label={home.ctaPrimaryLabel}
                 onLabel={(v) => updateHome((h) => ({ ...h, ctaPrimaryLabel: v }))}
                 onCtxHref={(e) =>
@@ -659,7 +662,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
               />
               <CtaBlock
                 inline={inline}
-                href={publicHref(home.ctaSecondaryHref)}
+                href={publicHref(home.ctaSecondaryHref, pathname)}
                 label={home.ctaSecondaryLabel}
                 onLabel={(v) => updateHome((h) => ({ ...h, ctaSecondaryLabel: v }))}
                 onCtxHref={(e) =>

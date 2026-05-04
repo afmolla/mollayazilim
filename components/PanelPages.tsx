@@ -1,6 +1,7 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase, stripBasePath } from "@/lib/base-path";
+import { stripSitePrefix } from "@/lib/base-path";
 import { bloklardanHtml, sayfaSlugify, type SayfaBlok } from "@/lib/cms-blok";
 import type { Sayfa } from "@/lib/pages-store";
 import { useRouter } from "next/navigation";
@@ -34,8 +35,8 @@ const BLOK_ETIKET: Record<string, string> = {
 };
 
 function hrefEslestir(a: string, b: string): boolean {
-  const na = (stripBasePath(a.trim().replace(/\/+$/, "") || "/")).toLowerCase();
-  const nb = (stripBasePath(b.trim().replace(/\/+$/, "") || "/")).toLowerCase();
+  const na = (stripSitePrefix(a.trim().replace(/\/+$/, "") || "/")).toLowerCase();
+  const nb = (stripSitePrefix(b.trim().replace(/\/+$/, "") || "/")).toLowerCase();
   return na === nb;
 }
 
@@ -155,6 +156,7 @@ export type PanelPagesProps = {
 };
 
 export function PanelPages(props: PanelPagesProps = {}) {
+  const wb = useWithBase();
   const editorOnly = props.layout === "editorOnly";
   const router = useRouter();
   const [list, setList] = useState<Sayfa[]>([]);
@@ -241,7 +243,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   const fetchList = useCallback(async (signal?: AbortSignal) => {
     try {
-      const res = await fetch(withBase("/api/panel/pages"), {
+      const res = await fetch(wb("/api/panel/pages"), {
         cache: "no-store",
         credentials: "same-origin",
         signal,
@@ -267,7 +269,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
     } finally {
       startTransition(() => setLoading(false));
     }
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -303,7 +305,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
           ? { bloklar: form.bloklar }
           : { icerikHtml: form.icerikHtml }),
       };
-      const res = await fetch(withBase("/api/panel/pages"), {
+      const res = await fetch(wb("/api/panel/pages"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -329,7 +331,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   const loadToEdit = useCallback(
     async (slug: string) => {
-      const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(slug)}`), { cache: "no-store" });
+      const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -352,7 +354,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
       });
       setEditorMode((j.sayfa.bloklar && j.sayfa.bloklar.length > 0) ? "blocks" : "html");
     },
-    [router]
+    [router, wb]
   );
 
   useEffect(() => {
@@ -372,8 +374,8 @@ export function PanelPages(props: PanelPagesProps = {}) {
   const loadSiteChrome = useCallback(async () => {
     try {
       const [mRes, sRes] = await Promise.all([
-        fetch(withBase("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" }),
-        fetch(withBase("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" }),
+        fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" }),
+        fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" }),
       ]);
       if (mRes.status === 401 || sRes.status === 401) {
         router.refresh();
@@ -389,7 +391,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
     } catch {
       /* önizleme çubuğu isteğe bağlı */
     }
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -416,7 +418,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
           ? { bloklar: form.bloklar }
           : { icerikHtml: form.icerikHtml }),
       };
-      const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(form.slug)}`), {
+      const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(form.slug)}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -439,7 +441,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   async function del(slug: string) {
     if (!confirm(`Silinsin mi?\n/${slug}`)) return;
-    const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
+    const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
     if (res.status === 401) {
       router.refresh();
       return;
@@ -458,7 +460,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   if (loading) return <p className="text-center text-[var(--muted)]">Yükleniyor…</p>;
 
-  const previewHref = form.slug ? withBase(`/p/${encodeURIComponent(form.slug)}`) : "";
+  const previewHref = form.slug ? wb(`/p/${encodeURIComponent(form.slug)}`) : "";
   const previewHtml =
     editorMode === "blocks" ? bloklardanHtml(form.bloklar) : form.icerikHtml;
   const slugNormPreview = sayfaSlugify(form.slug);
@@ -533,7 +535,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
     }
     const href = `/p/${slug}`;
     try {
-      const res = await fetch(withBase("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" });
+      const res = await fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -550,7 +552,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
         setErr("Bu adres zaten üst menüde.");
         return;
       }
-      const res2 = await fetch(withBase("/api/panel/menus"), {
+      const res2 = await fetch(wb("/api/panel/menus"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -642,7 +644,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
                     Düzenle
                   </button>
                   <a
-                    href={withBase(`/p/${encodeURIComponent(s.slug)}`)}
+                    href={wb(`/p/${encodeURIComponent(s.slug)}`)}
                     target="_blank"
                     rel="noreferrer"
                     className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--surface-2)]"

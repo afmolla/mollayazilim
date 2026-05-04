@@ -1,14 +1,15 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Sayfa } from "@/lib/pages-store";
-import { withBase } from "@/lib/base-path";
 import { CmsSayfaBody } from "@/components/CmsSayfaBody";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 
-export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
+export function CmsPageInteractive(props: {
+  const wb = useWithBase(); slug: string; initial: Sayfa }) {
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [s, setS] = useState<Sayfa>(() => ({ ...props.initial }));
@@ -23,7 +24,7 @@ export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
     if (!inline) return;
     let c = false;
     void (async () => {
-      const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(props.slug)}`), {
+      const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(props.slug)}`), {
         credentials: "same-origin",
         cache: "no-store",
       });
@@ -40,7 +41,7 @@ export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
     async (next: Sayfa) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase(`/api/panel/pages/${encodeURIComponent(props.slug)}`), {
+        const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(props.slug)}`), {
           method: "PUT",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { MenuItem } from "@/lib/menu-store";
 import { isNavActive, menuItemActive } from "@/lib/nav-active";
-import { withBase } from "@/lib/base-path";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 function filterMenu(items: MenuItem[]): MenuItem[] {
   return items
@@ -19,6 +19,7 @@ function filterMenu(items: MenuItem[]): MenuItem[] {
 export function MobileNav(props: { brand: string; items: MenuItem[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? "/";
+  const wb = useWithBase();
   const items = filterMenu(props.items);
 
   function Row({ n, depth }: { n: MenuItem; depth: number }) {
@@ -106,7 +107,7 @@ export function MobileNav(props: { brand: string; items: MenuItem[] }) {
           <div className="absolute left-0 top-0 h-full w-[86%] max-w-xs border-r border-[var(--border)] bg-[var(--surface)] p-4 shadow-2xl">
             <div className="flex items-center justify-between gap-3">
               <Link
-                href={withBase("/anasayfa")}
+                href={wb("/anasayfa")}
                 onClick={() => setOpen(false)}
                 className="truncate text-base font-bold text-[var(--text)]"
               >

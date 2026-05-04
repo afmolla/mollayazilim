@@ -1,17 +1,18 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { SiteIcerik } from "@/lib/content-store";
 import type { SiteAyarlar } from "@/lib/settings-store";
 import { whatsappLink } from "@/lib/whatsapp";
-import { withBase } from "@/lib/base-path";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 
 type Ilet = SiteIcerik["iletisim"];
 
 export function IletisimInteractive(props: {
+  const wb = useWithBase();
   initial: Ilet;
   ayar: Pick<SiteAyarlar, "whatsapp" | "adresDetay" | "calismaSaatleri">;
 }) {
@@ -34,8 +35,8 @@ export function IletisimInteractive(props: {
     let c = false;
     void (async () => {
       const [cr, sr] = await Promise.all([
-        fetch(withBase("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
-        fetch(withBase("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
+        fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
+        fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
       ]);
       if (!c && cr.ok) {
         const j = (await cr.json()) as { icerik: SiteIcerik };
@@ -59,7 +60,7 @@ export function IletisimInteractive(props: {
     async (partial: Partial<Ilet>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase("/api/panel/content"), {
+        const res = await fetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
@@ -89,7 +90,7 @@ export function IletisimInteractive(props: {
     async (partial: Partial<SiteAyarlar>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase("/api/panel/settings"), {
+        const res = await fetch(wb("/api/panel/settings"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

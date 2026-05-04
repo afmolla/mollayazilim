@@ -1,5 +1,5 @@
 import type { PanelContentTab } from "@/components/PanelContent";
-import { stripBasePath, withBase } from "@/lib/base-path";
+import { stripSitePrefix, withBase } from "@/lib/base-path";
 
 /** Panel «İçerik» sekmesinde açılacak hedef (URL vf_* parametrelerinden) */
 export type VfIcerikSnapshot = { sablon?: PanelContentTab; slug?: string };
@@ -15,35 +15,35 @@ export function panelEditUrlFromPathname(pathname: string): {
   /** Kullanıcıya gösterilecek kısa açıklama */
   label: string;
 } {
-  const p = stripBasePath(pathname).replace(/\/+$/, "") || "/";
+  const p = stripSitePrefix(pathname).replace(/\/+$/, "") || "/";
 
   if (p === "/" || p === "/anasayfa") {
     return {
-      href: withBase("/panel?vf_tab=icerik&vf_sablon=home"),
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=home", pathname),
       label: "Anasayfa şablonu",
     };
   }
   if (p === "/hizmetler") {
     return {
-      href: withBase("/panel?vf_tab=icerik&vf_sablon=hizmetler"),
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=hizmetler", pathname),
       label: "Hizmetler şablonu",
     };
   }
   if (p === "/galeri") {
     return {
-      href: withBase("/panel?vf_tab=icerik&vf_sablon=galeri"),
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=galeri", pathname),
       label: "Galeri şablonu",
     };
   }
   if (p === "/iletisim") {
     return {
-      href: withBase("/panel?vf_tab=icerik&vf_sablon=iletisim"),
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=iletisim", pathname),
       label: "İletişim şablonu",
     };
   }
   if (p === "/qr-menu") {
     return {
-      href: withBase("/panel?vf_tab=icerik&vf_sablon=qr_menu"),
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=qr_menu", pathname),
       label: "QR menü",
     };
   }
@@ -51,20 +51,20 @@ export function panelEditUrlFromPathname(pathname: string): {
   const cms = /^\/p\/([^/]+)$/.exec(p);
   if (cms?.[1]) {
     return {
-      href: withBase(`/panel?vf_tab=icerik&vf_slug=${encodeURIComponent(cms[1])}`),
+      href: withBase(`/panel?vf_tab=icerik&vf_slug=${encodeURIComponent(cms[1])}`, pathname),
       label: "Bu ek sayfa",
     };
   }
 
   if (p === "/randevu" || p === "/randevular") {
     return {
-      href: withBase("/panel?vf_tab=randevular"),
+      href: withBase("/panel?vf_tab=randevular", pathname),
       label: "Randevular",
     };
   }
 
   return {
-    href: withBase("/panel?vf_tab=icerik"),
+    href: withBase("/panel?vf_tab=icerik", pathname),
     label: "İçerik",
   };
 }

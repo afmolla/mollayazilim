@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site";
-import { portfolioPrefixes } from "@/lib/site-config";
-import { dataSubdirForPrefix } from "@/lib/site-config";
+import { portfolioPrefixes, dataSubdirForPrefix } from "@/lib/site-config";
 import { runWithSiteContext } from "@/lib/site-context";
 import { yayinSayfalar } from "@/lib/pages-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";

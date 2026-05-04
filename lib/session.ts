@@ -1,13 +1,20 @@
 import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
 import { getSiteContext } from "@/lib/site-context";
+import { getRequestSite } from "@/lib/site-request";
 
 const COOKIE = "kuafor_panel";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 gün
 
-function cookiePath(): string {
-  const p = getSiteContext()?.prefix?.trim() ?? "";
-  return p || "/";
+async function cookiePath(): Promise<string> {
+  const p = getSiteContext()?.prefix?.trim();
+  if (p) return p;
+  try {
+    const { prefix } = await getRequestSite();
+    return prefix || "/";
+  } catch {
+    return "/";
+  }
 }
 
 /** Yalnızca SITE_URL https ise Secure (HTTP/IIS veya localhost prod `next start` çerez gönderebilir) */
@@ -47,7 +54,7 @@ export async function oturumAc(): Promise<void> {
   const payload = Buffer.from(JSON.stringify({ exp }), "utf8").toString("base64url");
   const token = sign(payload);
   const jar = await cookies();
-  const path = cookiePath();
+  const path = await cookiePath();
   jar.set(COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
@@ -59,7 +66,7 @@ export async function oturumAc(): Promise<void> {
 
 export async function oturumKapat(): Promise<void> {
   const jar = await cookies();
-  const path = cookiePath();
+  const path = await cookiePath();
   jar.set(COOKIE, "", { httpOnly: true, sameSite: "lax", secure: cookieSecure(), path, maxAge: 0 });
 }
 

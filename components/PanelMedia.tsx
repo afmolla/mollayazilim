@@ -1,6 +1,6 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,7 +23,8 @@ function normalize(s: string) {
   return s.trim().toLocaleLowerCase("tr-TR");
 }
 
-export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
+export function PanelMedia(props: {
+  const wb = useWithBase(); onPickUrl?: (url: string) => void }) {
   const router = useRouter();
   const [list, setList] = useState<Medya[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
   const [uploading, setUploading] = useState(false);
 
   const fetchList = useCallback(async (signal?: AbortSignal) => {
-    const res = await fetch(withBase("/api/panel/media"), {
+    const res = await fetch(wb("/api/panel/media"), {
       cache: "no-store",
       credentials: "same-origin",
       signal,
@@ -58,7 +59,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
     const { signal } = ac;
     void (async () => {
       try {
-        const res = await fetch(withBase("/api/panel/media"), {
+        const res = await fetch(wb("/api/panel/media"), {
           cache: "no-store",
           credentials: "same-origin",
           signal,
@@ -101,7 +102,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
       for (const file of Array.from(files)) {
         const fd = new FormData();
         fd.set("file", file);
-        const res = await fetch(withBase("/api/panel/media"), { method: "POST", body: fd });
+        const res = await fetch(wb("/api/panel/media"), { method: "POST", body: fd });
         const j = (await res.json()) as { ok?: boolean; error?: string };
         if (res.status === 401) {
           router.refresh();
@@ -120,7 +121,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
 
   async function del(id: string) {
     if (!confirm("Silinsin mi?")) return;
-    const res = await fetch(withBase(`/api/panel/media/${encodeURIComponent(id)}`), { method: "DELETE" });
+    const res = await fetch(wb(`/api/panel/media/${encodeURIComponent(id)}`), { method: "DELETE" });
     if (res.status === 401) {
       router.refresh();
       return;

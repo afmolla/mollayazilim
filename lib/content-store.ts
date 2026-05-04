@@ -56,7 +56,9 @@ export type SiteIcerik = {
 
 type Db = { icerik: SiteIcerik };
 
-const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "content.json");
+async function contentFile(): Promise<string> {
+  return path.join(await getDataDir(), "content.json");
+}
 
 function varsayilan(): SiteIcerik {
   return {
@@ -181,6 +183,7 @@ function mergeIletisim(
 /** Dosyadan okunan kısmi JSON ile varsayılanları güvenli birleştirir (shallow merge home.features’ı silmez). */
 export async function icerikGetir(): Promise<SiteIcerik> {
   const v = varsayilan();
+  const FILE = await contentFile();
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
@@ -198,6 +201,7 @@ export async function icerikGetir(): Promise<SiteIcerik> {
 }
 
 export async function icerikKaydet(patch: Partial<SiteIcerik>): Promise<SiteIcerik> {
+  const FILE = await contentFile();
   const cur = await icerikGetir();
   const next: SiteIcerik = {
     home: mergeHome(cur.home, patch.home),

@@ -1,6 +1,6 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +20,7 @@ type SiteAyarlar = {
 };
 
 export function PanelSettings() {
+  const wb = useWithBase();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -41,7 +42,7 @@ export function PanelSettings() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(withBase("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
+      const res = await fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -75,7 +76,7 @@ export function PanelSettings() {
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(withBase("/api/panel/settings"), {
+      const res = await fetch(wb("/api/panel/settings"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

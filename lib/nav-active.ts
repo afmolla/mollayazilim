@@ -1,4 +1,4 @@
-import { stripBasePath } from "@/lib/base-path";
+import { stripSitePrefix } from "@/lib/base-path";
 import type { MenuItem } from "@/lib/menu-store";
 
 /** Geçerli sayfa ile menü href eşleşmesi (hariç: newTab / harici URL) */
@@ -7,8 +7,8 @@ export function isNavActive(pathname: string, href: string, newTab?: boolean): b
     return false;
   }
   if (href === "#") return false;
-  const p = stripBasePath(pathname).replace(/\/+$/, "") || "/";
-  const h = stripBasePath(href).replace(/\/+$/, "") || "/";
+  const p = stripSitePrefix(pathname).replace(/\/+$/, "") || "/";
+  const h = stripSitePrefix(href).replace(/\/+$/, "") || "/";
 
   if (h === "/") {
     return p === "/" || p === "/anasayfa";

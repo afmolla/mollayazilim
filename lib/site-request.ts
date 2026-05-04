@@ -1,8 +1,14 @@
+import { cache } from "react";
 import { headers } from "next/headers";
 import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
 
-/** Sunucu bileşenlerinde middleware başlıklarından site öneği ve veri alt klasörü. */
-export async function siteFromRequestHeaders(): Promise<{ prefix: string; subdir: string }> {
+export type SiteRequestInfo = { prefix: string; subdir: string };
+
+/**
+ * İstek başına bir kez: middleware `x-site-prefix` / `x-data-subdir` (build’de yok → ilk önek).
+ * AsyncLocalStorage RSC alt ağacında taşınmadığı için `cache` + `headers` kullanılır.
+ */
+export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {
   try {
     const h = await headers();
     let prefix = h.get("x-site-prefix")?.trim() ?? "";
@@ -17,4 +23,4 @@ export async function siteFromRequestHeaders(): Promise<{ prefix: string; subdir
     const first = portfolioPrefixes()[0];
     return { prefix: first, subdir: dataSubdirForPrefix(first) };
   }
-}
+});

@@ -1,6 +1,6 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import type { GaleriGorsel, HizmetSatir, SiteIcerik } from "@/lib/content-store";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ export type PanelContentProps = {
 };
 
 export function PanelContent(props: PanelContentProps = {}) {
+  const wb = useWithBase();
   const layout = props.layout ?? "standalone";
   const hideTabBar = props.hideTabBar === true;
   const visualZones = props.visualZones === true;
@@ -46,7 +47,7 @@ export function PanelContent(props: PanelContentProps = {}) {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(withBase("/api/panel/content"), { cache: "no-store", credentials: "same-origin" });
+      const res = await fetch(wb("/api/panel/content"), { cache: "no-store", credentials: "same-origin" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -64,7 +65,7 @@ export function PanelContent(props: PanelContentProps = {}) {
       setErr("İçerik yüklenemedi");
       setLoading(false);
     });
-  }, [router]);
+  }, [router, wb]);
 
   const filteredServices = useMemo(() => {
     if (!form) return [];
@@ -88,7 +89,7 @@ export function PanelContent(props: PanelContentProps = {}) {
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(withBase("/api/panel/content"), {
+      const res = await fetch(wb("/api/panel/content"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

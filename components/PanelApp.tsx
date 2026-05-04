@@ -1,4 +1,5 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyURLSearchParams } from "next/navigation";
@@ -11,7 +12,6 @@ import { PanelUnifiedIcerik } from "@/components/PanelUnifiedIcerik";
 import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
-import { withBase } from "@/lib/base-path";
 
 type TabId = "randevular" | "icerik" | "site_duzenle" | "medya" | "menuler" | "ayarlar" | "yedek";
 
@@ -55,6 +55,7 @@ function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
 }
 
 export function PanelApp(props: PanelAppProps) {
+  const wb = useWithBase();
   const sabitle = props.panelSolMenuSabitle ?? true;
   const baslangic = props.panelSolMenuBaslangic ?? "acik";
   const router = useRouter();
@@ -91,9 +92,9 @@ export function PanelApp(props: PanelAppProps) {
     queueMicrotask(() => {
       if (vfTab && allowed.has(vfTab as TabId)) setTab(vfTab as TabId);
       else if (wantsContent) setTab("icerik");
-      if (dirty && q) router.replace(withBase("/panel"), { scroll: false });
+      if (dirty && q) router.replace(wb("/panel"), { scroll: false });
     });
-  }, [searchParams, router]);
+  }, [searchParams, router, wb]);
 
   const persistCollapsed = (next: boolean) => {
     setCollapsed(next);

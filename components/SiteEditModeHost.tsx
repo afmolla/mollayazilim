@@ -3,8 +3,9 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { stripBasePath, withBase } from "@/lib/base-path";
+import { stripSitePrefix } from "@/lib/base-path";
 import { panelEditUrlFromPathname } from "@/lib/panel-deeplink";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 const EDIT_Q = "vf_edit";
 
@@ -13,19 +14,20 @@ const EDIT_Q = "vf_edit";
  */
 export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
+  const wb = useWithBase();
   const searchParams = useSearchParams();
   const vfEdit = searchParams.get(EDIT_Q) === "1";
   const [sessionOk, setSessionOk] = useState<boolean | null>(null);
 
   const check = useCallback(async () => {
     try {
-      const res = await fetch(withBase("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+      const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
       const j = (await res.json()) as { ok?: boolean };
       setSessionOk(!!j.ok);
     } catch {
       setSessionOk(false);
     }
-  }, []);
+  }, [wb]);
 
   useEffect(() => {
     if (!vfEdit) return;
@@ -33,14 +35,14 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
       setSessionOk(null);
       void check();
     });
-  }, [vfEdit, check]);
+  }, [vfEdit, check, wb]);
 
   const showBar = vfEdit && sessionOk === true;
   const showNeedLogin = vfEdit && sessionOk === false;
   const showChecking = vfEdit && sessionOk === null;
   const deep = panelEditUrlFromPathname(pathname);
   const vitrinSayfa = useMemo(() => {
-    const p = stripBasePath(pathname).replace(/\/+$/, "") || "/";
+    const p = stripSitePrefix(pathname).replace(/\/+$/, "") || "/";
     return (
       p.startsWith("/p/") ||
       ["/anasayfa", "/hizmetler", "/galeri", "/iletisim", "/qr-menu"].includes(p) ||
@@ -78,7 +80,7 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
             Turuncu çubuk için önce yönetim paneline giriş yapın (bu sekmede veya yeni sekmede açın).
           </span>
           <Link
-            href={withBase("/panel")}
+            href={wb("/panel")}
             className="ml-auto inline-flex items-center rounded-lg bg-amber-900 px-3 py-1.5 text-xs font-semibold text-white hover:opacity-95 dark:bg-amber-200 dark:text-amber-950 sm:ml-0"
           >
             Panele giriş
@@ -113,7 +115,7 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
             Bu sayfayı düzenle ({deep.label})
           </Link>
           <Link
-            href={withBase("/panel")}
+            href={wb("/panel")}
             className="inline-flex items-center rounded-lg border border-[var(--on-brand)]/40 bg-transparent px-3 py-1.5 text-xs font-medium hover:bg-[var(--on-brand)]/15"
           >
             Panele dön

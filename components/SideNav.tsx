@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { withBase } from "@/lib/base-path";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 type MenuItem = { label: string; href: string; newTab?: boolean };
 
@@ -11,6 +11,7 @@ export function SideNav(props: {
   items: MenuItem[];
   mode: "hover" | "sabit";
 }) {
+  const wb = useWithBase();
   const isHover = props.mode === "hover";
 
   const items = useMemo(
@@ -33,7 +34,7 @@ export function SideNav(props: {
       <div className="flex h-full flex-col">
         <div className="border-b border-[var(--border)] px-4 py-4">
           <Link
-            href={withBase("/anasayfa")}
+            href={wb("/anasayfa")}
             className="block truncate text-sm font-bold tracking-tight text-[var(--text)]"
             title={props.brand}
           >

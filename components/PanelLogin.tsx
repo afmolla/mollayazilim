@@ -1,10 +1,11 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function PanelLogin() {
+  const wb = useWithBase();
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +16,7 @@ export function PanelLogin() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(withBase("/api/auth/login"), {
+      const res = await fetch(wb("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

@@ -1,11 +1,11 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import type { SiteIcerik } from "@/lib/content-store";
 import type { VfHiza } from "@/lib/vf-hiza";
-import { withBase } from "@/lib/base-path";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 import { VfContextMenu, type VfMenuItem } from "@/components/vf-inline/VfContextMenu";
@@ -17,7 +17,8 @@ function newGalImage(src: string, alt: string): G["images"][number] {
   return { src, alt, hiza: "orta", kolon: 1 };
 }
 
-export function GaleriInteractive(props: { initial: G }) {
+export function GaleriInteractive(props: {
+  const wb = useWithBase(); initial: G }) {
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [g, setG] = useState<G>(() => ({
@@ -38,7 +39,7 @@ export function GaleriInteractive(props: { initial: G }) {
     if (!inline) return;
     let c = false;
     void (async () => {
-      const res = await fetch(withBase("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
+      const res = await fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
       if (!res.ok || c) return;
       const j = (await res.json()) as { icerik: SiteIcerik };
       if (!c) setG({ ...j.icerik.galeri, images: j.icerik.galeri.images.map((x) => ({ ...x })) });
@@ -52,7 +53,7 @@ export function GaleriInteractive(props: { initial: G }) {
     async (partial: Partial<G>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(withBase("/api/panel/content"), {
+        const res = await fetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
@@ -129,7 +130,7 @@ export function GaleriInteractive(props: { initial: G }) {
       {
         id: "gal-panel",
         label: "Paneli yeni sekmede aç",
-        run: () => window.open(withBase("/panel"), "_blank", "noopener,noreferrer"),
+        run: () => window.open(wb("/panel"), "_blank", "noopener,noreferrer"),
       },
       {
         id: "gal-add",

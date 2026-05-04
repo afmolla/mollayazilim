@@ -1,14 +1,15 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 
 /**
  * Elementor benzeri akış: vitrinü düzenleme modunda yeni sekmede aç.
  */
 export function PanelSiteVisualEdit() {
+  const wb = useWithBase();
   function openVisual(targetPath: string) {
     if (typeof window === "undefined") return;
-    const u = new URL(withBase(targetPath), window.location.origin);
+    const u = new URL(wb(targetPath), window.location.origin);
     u.searchParams.set("vf_edit", "1");
     window.open(u.pathname + u.search + u.hash, "_blank", "noopener,noreferrer");
   }

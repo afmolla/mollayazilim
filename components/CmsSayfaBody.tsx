@@ -1,9 +1,12 @@
+"use client";
+
 import type { SayfaBlok } from "@/lib/cms-blok";
 import type { Sayfa } from "@/lib/pages-store";
 import { publicHref } from "@/lib/base-path";
 import { embedIframeSrc, parseVideoUrl } from "@/lib/video-embed";
+import { usePathname } from "next/navigation";
 
-function CmsBlock({ block }: { block: SayfaBlok }) {
+function CmsBlock({ block, pathname }: { block: SayfaBlok; pathname: string }) {
   if (block.type === "heading") {
     return block.level === 3 ? <h3>{block.text}</h3> : <h2>{block.text}</h2>;
   }
@@ -21,7 +24,7 @@ function CmsBlock({ block }: { block: SayfaBlok }) {
     return (
       <p>
         <a
-          href={publicHref(block.href)}
+          href={publicHref(block.href, pathname)}
           target={block.newTab ? "_blank" : undefined}
           rel={block.newTab ? "noreferrer" : undefined}
           className="inline-flex rounded-xl bg-[var(--brand)] px-5 py-3 font-semibold text-[var(--on-brand)] no-underline"
@@ -73,13 +76,14 @@ function CmsBlock({ block }: { block: SayfaBlok }) {
   return null;
 }
 
-/** CMS sayfası gövdesi (bloklar veya HTML) — sunucu ve istemci ortak */
+/** CMS sayfası gövdesi (bloklar veya HTML) */
 export function CmsSayfaBody({ sayfa }: { sayfa: Sayfa }) {
+  const pathname = usePathname() ?? "/";
   if (sayfa.bloklar && sayfa.bloklar.length > 0) {
     return (
       <div className="prose prose-neutral mt-10 max-w-none dark:prose-invert">
         {sayfa.bloklar.map((b, i) => (
-          <CmsBlock key={i} block={b} />
+          <CmsBlock key={i} block={b} pathname={pathname} />
         ))}
       </div>
     );

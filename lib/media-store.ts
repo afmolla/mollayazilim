@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 
 export type Medya = {
@@ -13,9 +14,13 @@ export type Medya = {
 type MedyaDb = { medya: Medya[] };
 
 const UPLOAD_DIR = path.join(/* turbopackIgnore: true */ process.cwd(), "public", "uploads");
-const DB_FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "media.json");
+
+async function dbFile(): Promise<string> {
+  return path.join(await getDataDir(), "media.json");
+}
 
 async function oku(): Promise<MedyaDb> {
+  const DB_FILE = await dbFile();
   try {
     const raw = await fs.readFile(DB_FILE, "utf8");
     return JSON.parse(raw) as MedyaDb;
@@ -25,6 +30,7 @@ async function oku(): Promise<MedyaDb> {
 }
 
 async function yaz(db: MedyaDb): Promise<void> {
+  const DB_FILE = await dbFile();
   await fs.mkdir(path.dirname(DB_FILE), { recursive: true });
   await fs.writeFile(DB_FILE, JSON.stringify(db, null, 2), "utf8");
 }
@@ -64,13 +70,12 @@ export async function medyaSil(id: string): Promise<boolean> {
   db.medya = db.medya.filter((x) => x.id !== id);
   if (db.medya.length === before || !item) return false;
   await yaz(db);
-  // url = /uploads/<file>
   const rel = item.url.replace(/^\/+/, "");
   const filePath = path.join(/* turbopackIgnore: true */ process.cwd(), "public", rel);
   try {
     await fs.unlink(filePath);
   } catch {
-    // ignore (file may be already gone)
+    /* ignore */
   }
   return true;
 }
@@ -82,4 +87,3 @@ export async function ensureUploadDir(): Promise<void> {
 export function uploadDir(): string {
   return UPLOAD_DIR;
 }
-

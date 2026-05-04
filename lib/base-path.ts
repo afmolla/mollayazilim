@@ -1,4 +1,4 @@
-import { getSiteContext } from "@/lib/site-context";
+import { portfolioPrefixes } from "@/lib/site-config";
 
 function normalizeBasePath(raw: string | undefined): string {
   const v = (raw ?? "").trim();
@@ -7,36 +7,56 @@ function normalizeBasePath(raw: string | undefined): string {
   return withLeading.replace(/\/+$/, "") || "";
 }
 
-/**
- * İstek içi: middleware + root layout `runWithSiteContext` ile set edilir.
- * Build / istemci: `NEXT_PUBLIC_BASE_PATH` (tanımsız → `/kuafor`).
- */
-function resolvedBasePath(): string {
-  const ctx = getSiteContext();
-  if (ctx?.prefix) return ctx.prefix;
+function envFallbackPrefix(): string {
   const raw = process.env.NEXT_PUBLIC_BASE_PATH;
-  if (raw === undefined) return normalizeBasePath("/kuafor");
-  return normalizeBasePath(raw);
+  if (raw === undefined) return normalizeBasePath("/kuafor") || "/kuafor";
+  const n = normalizeBasePath(raw);
+  return n || portfolioPrefixes()[0];
 }
 
-export function getBasePath(): string {
-  return resolvedBasePath();
+/** Tam URL yolundan (`/restaurant/hizmetler`) portföy önekini çıkarır. */
+export function inferPrefixFromPathname(pathname: string): string {
+  const p = (pathname ?? "").split("?")[0] || "/";
+  for (const base of portfolioPrefixes()) {
+    if (p === base || p === `${base}/` || p.startsWith(`${base}/`)) {
+      return base;
+    }
+  }
+  return envFallbackPrefix();
 }
 
-/** Geriye dönük: modül yüklemede sabit değil; dinamik kullanımda `getBasePath()` tercih edin */
-export const BASE_PATH = "";
+/** Bilinen portföy öneklerini kaldırır; iç route (`/hizmetler`) döner. */
+export function stripSitePrefix(path: string): string {
+  const raw = (path ?? "").split("?")[0] || "/";
+  const withSlash = raw.startsWith("/") ? raw : `/${raw}`;
+  for (const base of portfolioPrefixes()) {
+    if (withSlash === base || withSlash === `${base}/`) return "/";
+    if (withSlash.startsWith(`${base}/`)) {
+      return withSlash.slice(base.length) || "/";
+    }
+  }
+  return withSlash;
+}
 
-export function withBase(path: string): string {
-  const base = getBasePath();
+export function getBasePathFromPathname(pathname: string | null | undefined): string {
+  if (pathname) return inferPrefixFromPathname(pathname);
+  if (typeof window !== "undefined") {
+    return inferPrefixFromPathname(window.location.pathname);
+  }
+  return envFallbackPrefix();
+}
+
+export function withBaseFromPrefix(prefix: string, path: string): string {
   const p = path.startsWith("/") ? path : `/${path}`;
-  if (!base) return p;
-  return `${base}${p}`;
+  if (!prefix) return p;
+  return `${prefix}${p}`;
 }
 
-/**
- * Menü / CMS’te saklı iç yollar (`/hizmetler`) → tarayıcıda `{base}/hizmetler`.
- */
-export function publicHref(href: string): string {
+export function withBase(path: string, pathname?: string | null): string {
+  return withBaseFromPrefix(getBasePathFromPathname(pathname ?? null), path);
+}
+
+export function publicHref(href: string, pathname?: string | null): string {
   const h = (href ?? "").trim();
   if (!h || h === "#") return h;
   if (
@@ -48,20 +68,15 @@ export function publicHref(href: string): string {
   ) {
     return h;
   }
-  const base = getBasePath();
-  if (!base) return h.startsWith("/") ? h : `/${h}`;
-  if (h === base || h.startsWith(`${base}/`)) return h;
-  return withBase(h);
+  const base = getBasePathFromPathname(pathname ?? null);
+  const internal = stripSitePrefix(h.startsWith("/") ? h : `/${h}`);
+  if (!base) return internal;
+  const already = h === base || h.startsWith(`${base}/`);
+  if (already) return h.startsWith("/") ? h : `/${h}`;
+  return withBaseFromPrefix(base, internal);
 }
 
+/** @deprecated stripSitePrefix kullanın; uyumluluk için pathname ile aynı. */
 export function stripBasePath(pathname: string): string {
-  const base = getBasePath();
-  if (!base) return pathname || "/";
-  if (pathname === base || pathname === `${base}/`) {
-    return "/";
-  }
-  if (pathname.startsWith(`${base}/`)) {
-    return pathname.slice(base.length) || "/";
-  }
-  return pathname || "/";
+  return stripSitePrefix(pathname);
 }

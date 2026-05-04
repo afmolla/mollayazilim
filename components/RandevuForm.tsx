@@ -1,6 +1,6 @@
 "use client";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { withBase } from "@/lib/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -14,6 +14,7 @@ const HIZMETLER = [
 ];
 
 export function RandevuForm() {
+  const wb = useWithBase();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -62,7 +63,7 @@ export function RandevuForm() {
     }
     setLoading(true);
     try {
-      const res = await fetch(withBase("/api/randevu"), {
+      const res = await fetch(wb("/api/randevu"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

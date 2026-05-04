@@ -1,10 +1,14 @@
 import { promises as fs } from "fs";
+import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 import type { Randevu, RandevuListesi } from "./types";
 
-const DOSYA = path.join(getDataDir(), "randevular.json");
+async function dosyaYolu(): Promise<string> {
+  return path.join(await getDataDir(), "randevular.json");
+}
 
 async function dosyaOku(): Promise<RandevuListesi> {
+  const DOSYA = await dosyaYolu();
   try {
     const raw = await fs.readFile(DOSYA, "utf8");
     const parsed = JSON.parse(raw) as Partial<RandevuListesi>;
@@ -31,6 +35,7 @@ function satirGecerli(r: unknown): r is Randevu {
 }
 
 async function dosyaYaz(data: RandevuListesi): Promise<void> {
+  const DOSYA = await dosyaYolu();
   await fs.mkdir(path.dirname(DOSYA), { recursive: true });
   await fs.writeFile(DOSYA, JSON.stringify(data, null, 2), "utf8");
 }

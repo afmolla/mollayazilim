@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 
 export type SiteAyarlar = {
@@ -20,7 +21,9 @@ export type SiteAyarlar = {
 
 type Db = { ayarlar: SiteAyarlar };
 
-const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "settings.json");
+async function settingsFile(): Promise<string> {
+  return path.join(await getDataDir(), "settings.json");
+}
 
 function varsayilan(): SiteAyarlar {
   return {
@@ -37,6 +40,7 @@ function varsayilan(): SiteAyarlar {
 }
 
 export async function ayarlarGetir(): Promise<SiteAyarlar> {
+  const FILE = await settingsFile();
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
@@ -47,6 +51,7 @@ export async function ayarlarGetir(): Promise<SiteAyarlar> {
 }
 
 export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAyarlar> {
+  const FILE = await settingsFile();
   const cur = await ayarlarGetir();
   const menuDavranis: "hover" | "sabit" =
     patch.menuDavranis === "sabit" || patch.menuDavranis === "hover"
@@ -78,4 +83,3 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
   await fs.writeFile(FILE, JSON.stringify({ ayarlar: next } satisfies Db, null, 2), "utf8");
   return next;
 }
-
