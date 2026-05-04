@@ -1,6 +1,7 @@
 /**
- * basePath=/kuafor varken Next kök "/" route üretmez.
+ * Alt dizin vitrin (`NEXT_PUBLIC_BASE_PATH=/kuafor`): Next kök "/" route üretmez.
  * 3000: kök `/` = yapım HTML; geri kalan (HTTP + WebSocket HMR) → `next dev` (3001).
+ * Kök deploy (basePath boş): tüm istekler doğrudan Next’e proxylanır.
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
@@ -15,6 +16,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const NEXT_PORT = Number(process.env.NEXT_DEV_PORT || 3001);
 const GATEWAY_PORT = Number(process.env.PORT || 3000);
+
+function normalizeBasePath(raw) {
+  const v = String(raw ?? "").trim();
+  if (!v || v === "/") return "";
+  const withLeading = v.startsWith("/") ? v : `/${v}`;
+  return withLeading.replace(/\/+$/, "") || "";
+}
+
+const BASE_PATH = normalizeBasePath(
+  process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || "/kuafor",
+);
+const SUBPATH_VITRIN = Boolean(BASE_PATH);
+const NEXT_HEALTH_PATH = BASE_PATH || "/";
 
 const YAPIM = `<!DOCTYPE html>
 <html lang="tr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -43,7 +57,7 @@ function waitForNextReady() {
         {
           hostname: "127.0.0.1",
           port: NEXT_PORT,
-          path: "/kuafor",
+          path: NEXT_HEALTH_PATH,
           method: "GET",
           timeout: 3000,
         },
@@ -100,7 +114,11 @@ const server = http.createServer((req, res) => {
     res.end();
     return;
   }
-  if ((req.method === "GET" || req.method === "HEAD") && isRootPath(req.url)) {
+  if (
+    SUBPATH_VITRIN &&
+    (req.method === "GET" || req.method === "HEAD") &&
+    isRootPath(req.url)
+  ) {
     if (req.method === "HEAD") {
       res.writeHead(200, { "Cache-Control": "no-store" });
       res.end();
@@ -124,8 +142,16 @@ async function main() {
   console.log(`[dev-gateway] Next başlatılıyor :${NEXT_PORT} …`);
   await waitForNextReady();
   server.listen(GATEWAY_PORT, () => {
-    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım`);
-    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/kuafor  → next (HMR/WebSocket ile)`);
+    if (SUBPATH_VITRIN) {
+      console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım`);
+      console.log(
+        `[dev-gateway] http://localhost:${GATEWAY_PORT}${BASE_PATH}  → next (HMR/WebSocket ile)`,
+      );
+    } else {
+      console.log(
+        `[dev-gateway] http://localhost:${GATEWAY_PORT}/  → next (basePath yok; HMR/WebSocket ile)`,
+      );
+    }
   });
 }
 

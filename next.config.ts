@@ -6,9 +6,10 @@ import { BASE_PATH } from "./lib/base-path";
 const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
-  basePath: BASE_PATH,
-  /** Vercel vb. kök `/` 404 vermesin; uygulama `basePath` altında. */
+  ...(BASE_PATH ? { basePath: BASE_PATH } : {}),
+  /** Alt dizin deploy: kök `/` → vitrin köküne yönlendir (kök deploy’da gerekmez). */
   async redirects() {
+    if (!BASE_PATH) return [];
     return [
       {
         source: "/",
