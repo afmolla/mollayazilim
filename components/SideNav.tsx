@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
+import { withBase } from "@/lib/base-path";
 
 type MenuItem = { label: string; href: string; newTab?: boolean };
 
@@ -32,7 +33,7 @@ export function SideNav(props: {
       <div className="flex h-full flex-col">
         <div className="border-b border-[var(--border)] px-4 py-4">
           <Link
-            href="/"
+            href={withBase("/anasayfa")}
             className="block truncate text-sm font-bold tracking-tight text-[var(--text)]"
             title={props.brand}
           >

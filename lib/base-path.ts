@@ -1,10 +1,7 @@
 /**
- * İstemci ve `siteUrl()` için isteğe bağlı URL öneki (ör. portföyde `/kuafor` göstermek).
- * Next.js `basePath` kullanılmaz; Vercel kök deploy her zaman `/` altında çalışır.
- *
- * Boş bırakın: `withBase("/panel")` → `/panel`
- * `NEXT_PUBLIC_BASE_PATH=/kuafor`: link ve fetch → `/kuafor/panel` (yerelde `npm run dev`
- * gateway bu öneki Next’e iletmeden önce kaldırır).
+ * Portföy kökü: `https://alan.com/` yapım, `https://alan.com/kuafor` vitrin.
+ * Varsayılan önek **`/kuafor`**. Sadece kökte tek site: Vercel’de `NEXT_PUBLIC_BASE_PATH=`
+ * (boş) veya `.env` içinde boş bırakıp `NEXT_PUBLIC_BASE_PATH=` kullanın.
  */
 function normalizeBasePath(raw: string | undefined): string {
   const v = (raw ?? "").trim();
@@ -13,7 +10,13 @@ function normalizeBasePath(raw: string | undefined): string {
   return withLeading.replace(/\/+$/, "") || "";
 }
 
-export const BASE_PATH = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH);
+function resolvedBasePath(): string {
+  const raw = process.env.NEXT_PUBLIC_BASE_PATH;
+  if (raw === undefined) return normalizeBasePath("/kuafor");
+  return normalizeBasePath(raw);
+}
+
+export const BASE_PATH = resolvedBasePath();
 
 export function withBase(path: string): string {
   const p = path.startsWith("/") ? path : `/${path}`;

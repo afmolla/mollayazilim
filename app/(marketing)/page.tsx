@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
+import { withBase } from "@/lib/base-path";
 
 /**
- * Kök `/` → `/anasayfa`. `NEXT_PUBLIC_BASE_PATH` doluysa tarayıcıda `/kuafor` vb. altında
- * açılır (`withBase` linkler); yerelde `npm run dev` gateway öneki Next’ten ayırır.
+ * İç route `/` (middleware `/kuafor` ve `/kuafor/` isteklerini buraya rewrite eder).
+ * Tarayıcıda vitrin kökü → `/anasayfa`.
  */
 export default function MarketingRootRedirect() {
-  redirect("/anasayfa");
+  redirect(withBase("/anasayfa"));
 }

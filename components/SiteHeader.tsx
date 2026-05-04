@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { withBase } from "@/lib/base-path";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { menuGetir } from "@/lib/menu-store";
 import { MobileNav } from "@/components/MobileNav";
@@ -15,7 +16,7 @@ export async function SiteHeader() {
         <div className="flex w-full min-w-0 shrink-0 items-center gap-2 md:w-auto md:max-w-[min(100%,220px)] lg:max-w-[260px]">
           <div className="flex min-w-0 items-center gap-3">
             <MobileNav brand={ayar.salonAd} items={menu.header} />
-            <Link href="/" className="truncate text-lg font-bold tracking-tight text-[var(--text)]">
+            <Link href={withBase("/anasayfa")} className="truncate text-lg font-bold tracking-tight text-[var(--text)]">
               {ayar.salonAd}
             </Link>
           </div>

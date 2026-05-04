@@ -74,7 +74,7 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
             Turuncu çubuk için önce yönetim paneline giriş yapın (bu sekmede veya yeni sekmede açın).
           </span>
           <Link
-            href="/panel"
+            href={withBase("/panel")}
             className="ml-auto inline-flex items-center rounded-lg bg-amber-900 px-3 py-1.5 text-xs font-semibold text-white hover:opacity-95 dark:bg-amber-200 dark:text-amber-950 sm:ml-0"
           >
             Panele giriş
@@ -109,7 +109,7 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
             Bu sayfayı düzenle ({deep.label})
           </Link>
           <Link
-            href="/panel"
+            href={withBase("/panel")}
             className="inline-flex items-center rounded-lg border border-[var(--on-brand)]/40 bg-transparent px-3 py-1.5 text-xs font-medium hover:bg-[var(--on-brand)]/15"
           >
             Panele dön
