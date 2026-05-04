@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import "./globals.css";
 import { Outfit } from "next/font/google";
 import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { ThemeProvider } from "@/components/ThemeProvider";
