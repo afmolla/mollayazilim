@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { withBase } from "@/lib/base-path";
 
-/** Doluysa PHP/static vitrin köküne gider; boşsa Next vitrin (basePath + /anasayfa). */
+/** Doluysa PHP/static vitrin köküne gider; boşsa Next vitrin (`withBase("/anasayfa")`). */
 const siteHomeUrl = process.env.NEXT_PUBLIC_SITE_HOME_URL?.trim() ?? "";
 
 export default function PanelLayout({

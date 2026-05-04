@@ -1,15 +1,16 @@
-# Tek domainde birden fazla demo (/kuafor, ileride /emlak)
+# Tek domainde URL öneki (ör. `/kuafor`)
 
-Alt dizinde yayın için build / Vercel ortamında **`NEXT_PUBLIC_BASE_PATH=/kuafor`** (isteğe bağlı aynı değer **`BASE_PATH`**) ayarlayın; kaynak: `lib/base-path.ts`.
+Next.js **`basePath` kullanılmıyor**; Vercel’de uygulama her zaman **kök `/`** altında deploy edilir (apex 404 riski olmaz).
 
-- Canlı adres örneği: `https://mollayazilim.com/kuafor/anasayfa`, `.../kuafor/panel`
-- Ayrı Vercel projesi kök domainde: **`NEXT_PUBLIC_BASE_PATH` vermeyin** (boş = uygulama kök `/` altında).
-- `NEXT_PUBLIC_SITE_URL=https://mollayazilim.com` yeterli; alt dizinde tam kanonik URL `siteUrl()` ile `.../kuafor` olarak üretilir.
+İsteğe bağlı **`NEXT_PUBLIC_BASE_PATH=/kuafor`**: linkler ve `fetch(withBase(...))` çağrıları `/kuafor/...` üretir. Canlıda bunu kullanmak için reverse proxy veya Vercel rewrite ile **`/kuafor/*` → aynı Next uygulamasının `/*`** eşlemesi gerekir.
+
+- Yerelde `npm run dev`: gateway `http://localhost:3000/kuafor` → Next’e önek kaldırarak iletir.
+- Sadece kök vitrin: **`NEXT_PUBLIC_BASE_PATH` vermeyin.**
 
 **Başka bir tasarım (/emlak vb.)** için pratik yöntem:
 
-1. Bu projeyi kopyala → `NEXT_PUBLIC_BASE_PATH=/emlak` yap → içerik/marka dosyalarını o senaryoya göre değiştir.
-2. Aynı sunucuda ikinci `next build` + ayrı process (farklı port) veya ayrı deploy.
-3. Reverse proxy’de `/emlak` isteğini ikinci uygulamaya yönlendir.
+1. Bu projeyi kopyala → `NEXT_PUBLIC_BASE_PATH=/emlak` yap → proxy’de `/emlak` → uygulama kökü.
+2. Aynı sunucuda ikinci `next build` + ayrı process veya ayrı deploy.
+3. Reverse proxy’de path eşlemesi.
 
-Aynı Next uygulaması içinde hem /kuafor hem /emlak “route group” ile birleştirmek mümkün ama büyük refaktör; portföyde ayrı kopya + ayrı alt yol genelde daha temizdir.
+Aynı Next uygulaması içinde hem /kuafor hem /emlak “route group” ile birleştirmek mümkün ama büyük refaktör; portföyde ayrı kopya + proxy genelde daha temizdir.

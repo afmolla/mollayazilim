@@ -1,7 +1,9 @@
 /**
- * Alt dizin vitrin (`NEXT_PUBLIC_BASE_PATH=/kuafor`): Next kök "/" route üretmez.
- * 3000: kök `/` = yapım HTML; geri kalan (HTTP + WebSocket HMR) → `next dev` (3001).
- * Kök deploy (basePath boş): tüm istekler doğrudan Next’e proxylanır.
+ * Yerelde isteğe bağlı URL öneki (`NEXT_PUBLIC_BASE_PATH`, örn. `/kuafor`):
+ * önekli istekleri Next’e önek olmadan iletir (Next.js `basePath` yok).
+ *
+ * Önek doluysa: kök `/` = yapım HTML; `/{prefix}/*` → Next (3001).
+ * Önek boşsa: tüm istekler doğrudan Next’e (localhost’ta vitrin = kök `/`).
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
@@ -24,11 +26,9 @@ function normalizeBasePath(raw) {
   return withLeading.replace(/\/+$/, "") || "";
 }
 
-const BASE_PATH = normalizeBasePath(
-  process.env.NEXT_PUBLIC_BASE_PATH || process.env.BASE_PATH || "/kuafor",
-);
+const BASE_PATH = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH);
 const SUBPATH_VITRIN = Boolean(BASE_PATH);
-const NEXT_HEALTH_PATH = BASE_PATH || "/";
+const NEXT_HEALTH_PATH = "/";
 
 const YAPIM = `<!DOCTYPE html>
 <html lang="tr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -47,6 +47,34 @@ h1{font-size:1.35rem;margin:0}h1 span{color:#a78bfa}
 function isRootPath(url) {
   const p = new URL(url, "http://local").pathname;
   return p === "/" || p === "";
+}
+
+/** Next `basePath` olmadan üretilen mutlak `/_next/...` istekleri (HMR dahil). */
+function isNextRootAsset(pathname) {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/__nextjs") ||
+    pathname === "/favicon.ico"
+  );
+}
+
+/** @type {{ raw: string, nextPath: string } | null} */
+function mapIncomingToNext(rawUrl) {
+  if (!rawUrl) return null;
+  const u = new URL(rawUrl, "http://local");
+  let pathname = u.pathname;
+  const search = u.search;
+  if (!BASE_PATH) {
+    return { raw: pathname + search, nextPath: pathname + search };
+  }
+  if (pathname === BASE_PATH || pathname === `${BASE_PATH}/`) {
+    return { raw: pathname + search, nextPath: "/" + search };
+  }
+  if (pathname.startsWith(`${BASE_PATH}/`)) {
+    const rest = pathname.slice(BASE_PATH.length) || "/";
+    return { raw: pathname + search, nextPath: rest + search };
+  }
+  return null;
 }
 
 function waitForNextReady() {
@@ -131,10 +159,40 @@ const server = http.createServer((req, res) => {
     res.end(YAPIM);
     return;
   }
+  const mapped = mapIncomingToNext(req.url);
+  if (BASE_PATH && !mapped) {
+    const pathname = new URL(req.url, "http://local").pathname;
+    if (!isNextRootAsset(pathname)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not found");
+      return;
+    }
+    proxy.web(req, res);
+    return;
+  }
+  const nextPath = mapped ? mapped.nextPath : req.url;
+  req.url = nextPath;
   proxy.web(req, res);
 });
 
 server.on("upgrade", (req, socket, head) => {
+  if (!req.url) {
+    socket.destroy();
+    return;
+  }
+  const mapped = mapIncomingToNext(req.url);
+  if (BASE_PATH && !mapped) {
+    const pathname = new URL(req.url, "http://local").pathname;
+    if (!isNextRootAsset(pathname)) {
+      socket.destroy();
+      return;
+    }
+    proxy.ws(req, socket, head);
+    return;
+  }
+  if (mapped) {
+    req.url = mapped.nextPath;
+  }
   proxy.ws(req, socket, head);
 });
 
@@ -149,7 +207,7 @@ async function main() {
       );
     } else {
       console.log(
-        `[dev-gateway] http://localhost:${GATEWAY_PORT}/  → next (basePath yok; HMR/WebSocket ile)`,
+        `[dev-gateway] http://localhost:${GATEWAY_PORT}/  → next (NEXT_PUBLIC_BASE_PATH yok)`,
       );
     }
   });

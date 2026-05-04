@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 
 /**
- * Alt dizin vitrinde (`NEXT_PUBLIC_BASE_PATH`) bu route vitrin köküdür → `/anasayfa`.
- * Kök deploy’da Next zaten `/` için bu sayfayı sunar.
- * Yerelde alt dizin + yapım kökü: `npm run dev` → `scripts/dev-gateway.mjs`.
+ * Kök `/` → `/anasayfa`. `NEXT_PUBLIC_BASE_PATH` doluysa tarayıcıda `/kuafor` vb. altında
+ * açılır (`withBase` linkler); yerelde `npm run dev` gateway öneki Next’ten ayırır.
  */
 export default function MarketingRootRedirect() {
   redirect("/anasayfa");
