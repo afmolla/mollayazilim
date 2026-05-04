@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# runtime analytics (hit logs should not be versioned)
+/data/*/analytics.json
+/data/*/analytics.hits.jsonl
+
 # vercel
 .vercel
 
