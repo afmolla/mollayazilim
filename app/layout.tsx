@@ -1,15 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { siteUrl } from "@/lib/site";
-import { SiteLayoutWrapper } from "@/components/SiteLayoutWrapper";
 import { runWithSiteContext } from "@/lib/site-context";
 import { ayarlarGetir } from "@/lib/settings-store";
-import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
+import { siteFromRequestHeaders } from "@/lib/site-request";
 
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
@@ -27,15 +25,7 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const h = await headers();
-  let prefix = h.get("x-site-prefix")?.trim() ?? "";
-  let subdir = h.get("x-data-subdir")?.trim() ?? "";
-  if (!prefix) {
-    const first = portfolioPrefixes()[0];
-    prefix = first;
-    subdir = dataSubdirForPrefix(first);
-  }
-
+  const { prefix, subdir } = await siteFromRequestHeaders();
   return runWithSiteContext({ prefix, subdir }, async () => {
     const ayar = await ayarlarGetir();
     const base = await siteUrl();
@@ -71,12 +61,14 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const { prefix, subdir } = await siteFromRequestHeaders();
+
+  return runWithSiteContext({ prefix, subdir }, () => (
     <html lang="tr" className={`${outfit.variable} h-full`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapInlineScript() }} />
@@ -87,11 +79,9 @@ export default function RootLayout({
       >
         <JsonLdLocalBusiness />
         <ThemeProvider>
-          <SiteLayoutWrapper>
-            <div className="flex min-h-full flex-col">{children}</div>
-          </SiteLayoutWrapper>
+          <div className="flex min-h-full flex-col">{children}</div>
         </ThemeProvider>
       </body>
     </html>
-  );
+  ));
 }
