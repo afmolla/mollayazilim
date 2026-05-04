@@ -11,15 +11,26 @@ export async function withSiteFromRequest<T>(req: Request, fn: () => Promise<T>)
     const ctx: SiteRequestContext = { prefix, subdir };
     return runWithSiteContext(ctx, fn);
   }
-  const ref = req.headers.get("referer") ?? "";
-  let path = "";
+  let urlPath = "";
   try {
-    path = new URL(ref).pathname;
+    urlPath = new URL(req.url).pathname;
   } catch {
-    path = "";
+    urlPath = "";
   }
   for (const base of portfolioPrefixes()) {
-    if (path === base || path === `${base}/` || path.startsWith(`${base}/`)) {
+    if (urlPath === base || urlPath === `${base}/` || urlPath.startsWith(`${base}/`)) {
+      return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
+    }
+  }
+  const ref = req.headers.get("referer") ?? "";
+  let refPath = "";
+  try {
+    refPath = new URL(ref).pathname;
+  } catch {
+    refPath = "";
+  }
+  for (const base of portfolioPrefixes()) {
+    if (refPath === base || refPath === `${base}/` || refPath.startsWith(`${base}/`)) {
       return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
     }
   }

@@ -72,6 +72,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
   const [home, setHome] = useState<Home>(() => cloneHome(props.initialHome));
   const [salonAdLive, setSalonAdLive] = useState(props.salonAd);
   const [saveMsg, setSaveMsg] = useState<"idle" | "saving" | "ok" | "err">("idle");
+  const [saveErrText, setSaveErrText] = useState("");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [ctx, setCtx] = useState<{ x: number; y: number; items: VfMenuItem[] } | null>(null);
 
@@ -122,6 +123,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
   const patchSalonAd = useCallback(
     async (salonAd: string) => {
       setSaveMsg("saving");
+      setSaveErrText("");
       try {
         const res = await fetch(wb("/api/panel/settings"), {
           method: "PATCH",
@@ -132,10 +134,17 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
         if (res.status === 401) {
           router.refresh();
           setSaveMsg("err");
+          setSaveErrText("Oturum yok veya süresi doldu; panele giriş yapın.");
           return;
         }
         if (!res.ok) {
           setSaveMsg("err");
+          try {
+            const j = (await res.json()) as { error?: string };
+            setSaveErrText(j.error ?? `Sunucu ${res.status}`);
+          } catch {
+            setSaveErrText(`Sunucu ${res.status}`);
+          }
           return;
         }
         const j = (await res.json()) as { ayarlar: SiteAyarlar };
@@ -144,13 +153,15 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
         router.refresh();
       } catch {
         setSaveMsg("err");
+        setSaveErrText("Ağ hatası.");
       }
     },
-    [router]
+    [router, wb]
   );
 
   const patchHome = useCallback(async (partial: Partial<Home> | Home) => {
     setSaveMsg("saving");
+    setSaveErrText("");
     try {
       const res = await fetch(wb("/api/panel/content"), {
         method: "PATCH",
@@ -161,10 +172,17 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
       if (res.status === 401) {
         router.refresh();
         setSaveMsg("err");
+        setSaveErrText("Oturum yok veya süresi doldu; panele giriş yapın.");
         return;
       }
       if (!res.ok) {
         setSaveMsg("err");
+        try {
+          const j = (await res.json()) as { error?: string };
+          setSaveErrText(j.error ?? `Sunucu ${res.status}`);
+        } catch {
+          setSaveErrText(`Sunucu ${res.status}`);
+        }
         return;
       }
       const j = (await res.json()) as { icerik: SiteIcerik };
@@ -173,8 +191,9 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
       router.refresh();
     } catch {
       setSaveMsg("err");
+      setSaveErrText("Ağ hatası.");
     }
-  }, [router]);
+  }, [router, wb]);
 
   const scheduleSave = useCallback(
     (nextHome: Home) => {
@@ -547,10 +566,24 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
   const floatSave =
     inline && saveMsg !== "idle" ? (
       <div
-        className="pointer-events-none fixed bottom-6 left-1/2 z-[120] -translate-x-1/2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-xs font-medium text-[var(--text)] shadow-lg"
+        className="pointer-events-none fixed bottom-6 left-1/2 z-[120] max-w-[min(28rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-center text-xs font-medium text-[var(--text)] shadow-lg"
         role="status"
+        title={saveErrText || undefined}
       >
-        {saveMsg === "saving" ? "Kaydediliyor…" : saveMsg === "ok" ? "Kaydedildi" : "Kayıt hatası"}
+        {saveMsg === "saving" ? (
+          "Kaydediliyor…"
+        ) : saveMsg === "ok" ? (
+          "Kaydedildi"
+        ) : (
+          <span>
+            Kayıt hatası
+            {saveErrText ? (
+              <span className="mt-1 block text-[11px] font-normal leading-snug text-[var(--muted)]">
+                {saveErrText}
+              </span>
+            ) : null}
+          </span>
+        )}
       </div>
     ) : null;
 

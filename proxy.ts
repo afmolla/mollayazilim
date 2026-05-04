@@ -47,6 +47,17 @@ export function proxy(req: NextRequest) {
     });
   }
 
+  if (pathname === "/restaturant" || pathname === "/restaturant/") {
+    const u = req.nextUrl.clone();
+    u.pathname = "/restaurant";
+    return NextResponse.redirect(u, 308);
+  }
+  if (pathname.startsWith("/restaturant/")) {
+    const u = req.nextUrl.clone();
+    u.pathname = "/restaurant" + pathname.slice("/restaturant".length);
+    return NextResponse.redirect(u, 308);
+  }
+
   const matched = isPortfolioPath(pathname);
   if (!matched) {
     return new NextResponse("Not Found", {

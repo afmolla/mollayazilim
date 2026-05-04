@@ -1,4 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Outfit } from "next/font/google";
+import { JsonLdLocalBusiness } from "@/components/JsonLd";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { getRequestSite } from "@/lib/site-request";
+import { ayarlarGetir } from "@/lib/settings-store";
+import { siteUrl } from "@/lib/site";
+import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
