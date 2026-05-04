@@ -1,6 +1,6 @@
 import { runWithSiteContext, type SiteRequestContext } from "@/lib/site-context";
 import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
-import { siteFromProxyHeaders } from "@/lib/site-proxy-headers";
+import { siteFromProxyHeaders, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
 /**
  * Panel / vitrin API: proxy `x-site-prefix` + `x-data-subdir` ile gelir.
@@ -17,6 +17,15 @@ export async function withSiteFromRequest<T>(req: Request, fn: () => Promise<T>)
   if (prefix && subdir) {
     const ctx: SiteRequestContext = { prefix, subdir };
     return runWithSiteContext(ctx, fn);
+  }
+  const pathFromMw = req.headers.get(VITRIN_URL_PATH_HEADER)?.trim();
+  if (pathFromMw) {
+    for (const base of portfolioPrefixes()) {
+      if (pathFromMw === base || pathFromMw === `${base}/` || pathFromMw.startsWith(`${base}/`)) {
+        return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
+      }
+    }
+    return runWithSiteContext({ prefix: "", subdir: "molla" }, fn);
   }
   let urlPath = "";
   try {
@@ -41,9 +50,5 @@ export async function withSiteFromRequest<T>(req: Request, fn: () => Promise<T>)
       return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
     }
   }
-  const first = portfolioPrefixes()[0];
-  return runWithSiteContext(
-    { prefix: first, subdir: dataSubdirForPrefix(first) },
-    fn,
-  );
+  return runWithSiteContext({ prefix: "", subdir: "molla" }, fn);
 }

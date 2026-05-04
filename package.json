@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "clean": "node scripts/clean-next.cjs",
-    "dev": "node scripts/dev-gateway.mjs",
+    "dev": "next dev --webpack -p 3000",
+    "dev:gateway": "node scripts/dev-gateway.mjs",
     "dev:next": "next dev --webpack -p 3001",
     "build": "next build --webpack && node scripts/vercel-fix-client-reference-manifest.cjs",
     "notify": "node scripts/notify-done.cjs",

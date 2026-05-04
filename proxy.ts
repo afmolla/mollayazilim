@@ -1,18 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
-import { MOLLA_SITE_PREFIX_SENTINEL } from "@/lib/site-proxy-headers";
+import { MOLLA_SITE_PREFIX_SENTINEL, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
 function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string): Headers {
   const h = new Headers(req.headers);
   h.set("x-site-prefix", prefix);
   h.set("x-data-subdir", subdir);
+  h.set(VITRIN_URL_PATH_HEADER, req.nextUrl.pathname);
   return h;
 }
 
-/** Next.js 16+: `proxy.ts` (eski `middleware.ts`). */
+/**
+ * Vercel: Edge `middleware` → RSC arasında üst bilgi kaybı / 500 olabiliyor.
+ * Next 16 `proxy` (Node) aynı mantık, sunucu render ile uyumlu.
+ */
 export function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
+
+  /** Route Handler /api/* — üst bilgi enjekte etme; 404/edge-case riski sıfır */
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
 
   if (
     pathname.startsWith("/_next") ||
@@ -37,7 +46,6 @@ export function proxy(req: NextRequest) {
 
   const matched = isPortfolioPath(pathname);
   if (!matched) {
-    /** Boş `x-site-prefix` bazı proxy/CDN katmanlarında düşer; sentinel kullan. */
     const reqHeaders = requestHeadersWithSite(req, MOLLA_SITE_PREFIX_SENTINEL, "molla");
     return NextResponse.next({ request: { headers: reqHeaders } });
   }
@@ -45,7 +53,7 @@ export function proxy(req: NextRequest) {
   const subdir = dataSubdirForPrefix(matched);
   const u = req.nextUrl.clone();
   if (pathname === matched || pathname === `${matched}/`) {
-    u.pathname = "/";
+    u.pathname = "/anasayfa";
   } else {
     u.pathname = pathname.slice(matched.length) || "/";
   }

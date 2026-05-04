@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { GradientBg } from "@/components/molla/GradientBg";
 import { MollaNavbar } from "@/components/molla/MollaNavbar";
 import { MollaFooter } from "@/components/molla/MollaFooter";
@@ -29,6 +29,9 @@ const FEATURES = [
   { title: "Özel tasarım", desc: "Markanıza göre tema, sayfa yapısı ve akışlar." },
 ];
 
+/** Vercel üretimde kök sayfa `next/image` optimizer ile ara sıra 500; doğrudan img kullan. */
+export const dynamic = "force-dynamic";
+
 const TESTIMONIALS = [
   {
     name: "Örnek İşletme",
@@ -47,17 +50,19 @@ const TESTIMONIALS = [
   },
 ];
 
-export default function MollaHome() {
+export default async function MollaHome() {
   return (
-    <GradientBg>
-      <MollaNavbar />
+    <>
+      <JsonLdLocalBusiness />
+      <GradientBg>
+        <MollaNavbar />
 
       <main>
         <section className="mx-auto max-w-6xl px-4 pb-10 pt-14 md:px-6 md:pb-16 md:pt-20">
           <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
             <div>
               <Pill>Özel yazılım · Admin panelleri · Sektörel sistemler</Pill>
-              <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+              <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:text-5xl">
                 İşletmeniz İçin{" "}
                 <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-200 to-cyan-200 bg-clip-text text-transparent">
                   Özel Yazılım Çözümleri
@@ -116,12 +121,13 @@ export default function MollaHome() {
                     </div>
                   </div>
                   <div className="relative min-h-[240px] border-t border-white/10 md:border-l md:border-t-0">
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
                       alt="Dashboard görseli"
-                      fill
-                      className="object-cover opacity-80"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="absolute inset-0 h-full w-full object-cover opacity-80"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
@@ -235,6 +241,7 @@ export default function MollaHome() {
 
       <MollaFooter />
     </GradientBg>
+    </>
   );
 }
 

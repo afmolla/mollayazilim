@@ -1,5 +1,6 @@
 /**
- * Yerelde `npm run dev`: tüm istekler Next’e (proxy `/` yapım + `/kuafor` rewrite).
+ * İsteğe bağlı: iki port (3000→3001) ile çalışmak için `npm run dev:gateway`.
+ * Varsayılan `npm run dev` doğrudan Next :3000 (Üretimdeki `proxy.ts` Next içinde çalışır).
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
@@ -86,8 +87,8 @@ async function main() {
   console.log(`[dev-gateway] Next başlatılıyor :${NEXT_PORT} …`);
   await waitForNextReady();
   server.listen(GATEWAY_PORT, () => {
-    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım (proxy)`);
-    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/kuafor  → vitrin`);
+    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → Next :${NEXT_PORT} (Molla kök + proxy.ts ile vitrin)`);
+    console.log(`[dev-gateway] Örn. /kuafor → kuaför vitrin rewrite`);
   });
 }
 

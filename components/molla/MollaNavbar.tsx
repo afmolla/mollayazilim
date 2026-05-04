@@ -22,8 +22,10 @@ export function MollaNavbar() {
   return (
     <header
       className={[
-        "sticky top-0 z-50 border-b",
-        scrolled ? "border-white/10 bg-black/50 backdrop-blur-xl" : "border-transparent bg-transparent",
+        "sticky top-0 z-50",
+        scrolled
+          ? "border-b border-white/10 bg-black/30 backdrop-blur-md supports-[backdrop-filter]:bg-black/20"
+          : "border-b-0 bg-transparent",
       ].join(" ")}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">

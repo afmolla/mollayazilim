@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { siteUrl } from "@/lib/site";
+import { normalizePublicSiteUrl, siteUrl } from "@/lib/site";
 import { portfolioPrefixes, dataSubdirForPrefix } from "@/lib/site-config";
 import { runWithSiteContext } from "@/lib/site-context";
 
 function siteHost(): string {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() ?? "";
+  const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
   if (raw) {
     try {
       return new URL(raw).host;

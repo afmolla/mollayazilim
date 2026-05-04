@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { headers } from "next/headers";
-import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
-import { siteFromProxyHeaders } from "@/lib/site-proxy-headers";
+import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
+import { siteFromProxyHeaders, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
 export type SiteRequestInfo = { prefix: string; subdir: string };
 
@@ -12,18 +12,24 @@ export type SiteRequestInfo = { prefix: string; subdir: string };
 export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {
   try {
     const h = await headers();
+    const incomingPath = h.get(VITRIN_URL_PATH_HEADER)?.trim();
+    if (incomingPath) {
+      const matched = isPortfolioPath(incomingPath);
+      if (matched) {
+        return { prefix: matched, subdir: dataSubdirForPrefix(matched) };
+      }
+      return { prefix: "", subdir: "molla" };
+    }
+
     let prefix = h.get("x-site-prefix")?.trim() ?? "";
     let subdir = h.get("x-data-subdir")?.trim() ?? "";
     const fromProxy = siteFromProxyHeaders(prefix, subdir);
     if (fromProxy) return fromProxy;
     if (!prefix) {
-      const first = portfolioPrefixes()[0];
-      prefix = first;
-      subdir = dataSubdirForPrefix(first);
+      return { prefix: "", subdir: "molla" };
     }
     return { prefix, subdir };
   } catch {
-    const first = portfolioPrefixes()[0];
-    return { prefix: first, subdir: dataSubdirForPrefix(first) };
+    return { prefix: "", subdir: "molla" };
   }
 });

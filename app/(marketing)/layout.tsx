@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { SiteEditModeHost } from "@/components/SiteEditModeHost";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -25,6 +26,7 @@ export default async function MarketingLayout({
   const { prefix } = await getRequestSite();
   return (
     <SitePrefixProvider prefix={prefix}>
+      <JsonLdLocalBusiness />
       <Suspense fallback={<MarketingShell>{children}</MarketingShell>}>
         <SiteEditModeHost>
           <MarketingShell>{children}</MarketingShell>

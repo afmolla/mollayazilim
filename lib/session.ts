@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
 import { getSiteContext } from "@/lib/site-context";
 import { getRequestSite } from "@/lib/site-request";
+import { normalizePublicSiteUrl } from "@/lib/site";
 
 const COOKIE = "kuafor_panel";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 gün
@@ -21,7 +22,7 @@ async function cookiePath(): Promise<string> {
 function cookieSecure(): boolean {
   if (process.env.SESSION_COOKIE_SECURE === "true") return true;
   if (process.env.SESSION_COOKIE_SECURE === "false") return false;
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim().toLowerCase();
+  const base = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL).toLowerCase();
   return base.startsWith("https://");
 }
 

@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Outfit } from "next/font/google";
-import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { getRequestSite } from "@/lib/site-request";
-import { ayarlarGetir } from "@/lib/settings-store";
-import { siteUrl } from "@/lib/site";
 import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 
 const outfit = Outfit({
@@ -13,6 +9,31 @@ const outfit = Outfit({
   variable: "--font-outfit",
   display: "swap",
 });
+
+/**
+ * Kök metadata tamamen statik: generateMetadata + headers()/async zinciri
+ * Vercel üretiminde `/` için RSC 500 tetikleyebiliyordu.
+ * Vitrin sayfaları kendi segment metadata ile birleştirir.
+ */
+export const metadata: Metadata = {
+  metadataBase: new URL("https://mollayazilim.com"),
+  title: {
+    default: "Molla Yazılım | Özel Yazılım & Admin Panelleri",
+    template: "%s | Molla Yazılım",
+  },
+  description:
+    "İşletmeniz için özel yazılım çözümleri, admin panelleri ve sektöre özel hazır sistemler. Kuaför, restoran ve emlak demolarını inceleyin.",
+  keywords: ["özel yazılım", "admin panel", "yönetim paneli", "SaaS", "Next.js", "İstanbul"],
+  authors: [{ name: "Molla Yazılım" }],
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    url: "https://mollayazilim.com",
+    siteName: "Molla Yazılım",
+  },
+  robots: { index: true, follow: true },
+  alternates: { canonical: "https://mollayazilim.com" },
+};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -23,55 +44,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { subdir } = await getRequestSite();
-  const ayar = await ayarlarGetir();
-  const base = await siteUrl();
-  const isMolla = subdir === "molla";
-  const isRestaurant = subdir === "restaurant";
-  const defaultTitle = isMolla
-    ? "Molla Yazılım | Özel Yazılım & Admin Panelleri"
-    : isRestaurant
-    ? `${ayar.salonAd} | Restoran`
-    : `${ayar.salonAd} | Kuaför & Berber — İstanbul`;
-  const desc = isMolla
-    ? "İşletmeniz için özel yazılım çözümleri, admin panelleri ve sektöre özel hazır sistemler. Kuaför, restoran ve emlak demolarını inceleyin."
-    : isRestaurant
-    ? "QR menü, rezervasyon ve iletişim — restoran vitrin demosu."
-    : "Modern kuaför ve berber hizmetleri: kesim, sakal, boya ve bakım. Online randevu, SEO uyumlu vitrin.";
-  const kw = isMolla
-    ? ["özel yazılım", "admin panel", "yönetim paneli", "SaaS", "Next.js", "İstanbul"]
-    : isRestaurant
-    ? ["restoran", "QR menü", "rezervasyon", "İstanbul", "yemek"]
-    : ["kuaför", "berber", "randevu", "İstanbul", "saç kesimi", "sakal"];
-
-  let metadataBase: URL;
-  try {
-    metadataBase = new URL(base);
-  } catch {
-    metadataBase = new URL("https://mollayazilim.com");
-  }
-  return {
-    metadataBase,
-    title: {
-      default: defaultTitle,
-      template: `%s | ${ayar.salonAd}`,
-    },
-    description: desc,
-    keywords: kw,
-    authors: [{ name: ayar.salonAd }],
-    openGraph: {
-      type: "website",
-      locale: "tr_TR",
-      url: base,
-      siteName: isMolla ? "Molla Yazılım" : ayar.salonAd,
-    },
-    robots: { index: true, follow: true },
-    alternates: { canonical: base },
-  };
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -85,7 +58,6 @@ export default async function RootLayout({
         className="min-h-full bg-[var(--surface)] font-sans text-[var(--text)] antialiased"
         suppressHydrationWarning
       >
-        <JsonLdLocalBusiness />
         <ThemeProvider>
           <div className="flex min-h-full flex-col">{children}</div>
         </ThemeProvider>

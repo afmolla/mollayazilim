@@ -3,24 +3,39 @@ const fs = require("fs");
 const path = require("path");
 
 /**
- * Vercel Next builder bazen `page_client-reference-manifest.js` dosyasını arıyor.
- * Bazı route-group’larda (örn. `app/(marketing)`) build çıktısında bu dosya oluşmayabiliyor.
- * Bu script eksikse minimal bir dosya oluşturur.
+ * Bazı build’lerde `app/(marketing)/page.tsx` olmadığı için bu manifest eksik kalabiliyor.
+ * Eski düzeltme `module.exports = {}` yazıyordu — Next.js bunu vm içinde eval ederken
+ * `module` tanımlı olmadığı için Vercel’de ReferenceError veriyordu.
+ * Gerçek manifest formatı: globalThis.__RSC_MANIFEST (bkz. load-manifest.external.js).
  */
 
-function ensureFile(filePath, contents) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, contents, "utf8");
-    console.log("[postbuild] created", filePath);
-  }
-}
+const EMPTY_SEGMENT_MANIFEST = {
+  moduleLoading: { prefix: "/_next/" },
+  ssrModuleMapping: {},
+  edgeSSRModuleMapping: {},
+  clientModules: {},
+  entryCSSFiles: {},
+  rscModuleMapping: {},
+  edgeRscModuleMapping: {},
+};
 
 function main() {
   const root = process.cwd();
   const target = path.join(root, ".next", "server", "app", "(marketing)", "page_client-reference-manifest.js");
-  ensureFile(target, "module.exports = {};\n");
+  if (!fs.existsSync(path.dirname(target))) {
+    return;
+  }
+  const payload = JSON.stringify(EMPTY_SEGMENT_MANIFEST);
+  const contents =
+    `globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});` +
+    `globalThis.__RSC_MANIFEST["/(marketing)/page"]=${payload};` +
+    "\n";
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const prev = fs.existsSync(target) ? fs.readFileSync(target, "utf8") : "";
+  if (prev !== contents) {
+    fs.writeFileSync(target, contents, "utf8");
+    console.log("[postbuild] wrote", target);
+  }
 }
 
 main();
-

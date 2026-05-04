@@ -3,6 +3,14 @@ import { ayarlarGetir } from "@/lib/settings-store";
 import { getRequestSite } from "@/lib/site-request";
 
 export async function JsonLdLocalBusiness() {
+  try {
+    return await jsonLdBody();
+  } catch {
+    return null;
+  }
+}
+
+async function jsonLdBody() {
   const { subdir } = await getRequestSite();
   const ayar = await ayarlarGetir();
   const isMolla = subdir === "molla";
