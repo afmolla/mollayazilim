@@ -11,7 +11,7 @@ import { withSiteFromRequest } from "@/lib/api-site-context";
 export const runtime = "nodejs";
 
 type BackupPayload = {
-  version: 2;
+  version: 1 | 2;
   exportedAt: string;
   settings: Awaited<ReturnType<typeof ayarlarGetir>>;
   menus: Awaited<ReturnType<typeof menuGetir>>;
