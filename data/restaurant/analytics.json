@@ -1,16 +1,16 @@
 {
   "day": "2026-05-04",
   "lastSeen": {
-    "v_xi30sgd0ur4e8m8s": 1777919911326
+    "v_xi30sgd0ur4e8m8s": 1777920327544
   },
-  "todayHits": 1,
+  "todayHits": 2,
   "todayUniques": 1,
   "todayMeta": {
     "v_xi30sgd0ur4e8m8s": {
       "ip": "::1",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36",
       "lastPath": "/restaurant/anasayfa",
-      "lastTs": "2026-05-04T18:38:31.317Z"
+      "lastTs": "2026-05-04T18:45:27.538Z"
     }
   }
 }

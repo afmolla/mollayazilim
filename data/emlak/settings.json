@@ -1,0 +1,14 @@
+{
+  "ayarlar": {
+    "salonAd": "Atlas Emlak",
+    "whatsapp": "905551234567",
+    "adresKisa": "Kadıköy · İstanbul",
+    "adresDetay": "Örnek Mah. Örnek Cad. No:1, Kadıköy / İstanbul",
+    "calismaSaatleri": "Her gün 09:00 — 19:00",
+    "sehir": "İstanbul",
+    "menuDavranis": "hover",
+    "panelSolMenuSabitle": true,
+    "panelSolMenuBaslangic": "acik"
+  }
+}
+

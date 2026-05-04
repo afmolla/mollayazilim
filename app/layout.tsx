@@ -27,14 +27,21 @@ export async function generateMetadata(): Promise<Metadata> {
   const { subdir } = await getRequestSite();
   const ayar = await ayarlarGetir();
   const base = await siteUrl();
+  const isMolla = subdir === "molla";
   const isRestaurant = subdir === "restaurant";
-  const defaultTitle = isRestaurant
+  const defaultTitle = isMolla
+    ? "Molla Yazılım | Özel Yazılım & Admin Panelleri"
+    : isRestaurant
     ? `${ayar.salonAd} | Restoran`
     : `${ayar.salonAd} | Kuaför & Berber — İstanbul`;
-  const desc = isRestaurant
+  const desc = isMolla
+    ? "İşletmeniz için özel yazılım çözümleri, admin panelleri ve sektöre özel hazır sistemler. Kuaför, restoran ve emlak demolarını inceleyin."
+    : isRestaurant
     ? "QR menü, rezervasyon ve iletişim — restoran vitrin demosu."
     : "Modern kuaför ve berber hizmetleri: kesim, sakal, boya ve bakım. Online randevu, SEO uyumlu vitrin.";
-  const kw = isRestaurant
+  const kw = isMolla
+    ? ["özel yazılım", "admin panel", "yönetim paneli", "SaaS", "Next.js", "İstanbul"]
+    : isRestaurant
     ? ["restoran", "QR menü", "rezervasyon", "İstanbul", "yemek"]
     : ["kuaför", "berber", "randevu", "İstanbul", "saç kesimi", "sakal"];
 
@@ -51,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "tr_TR",
       url: base,
-      siteName: ayar.salonAd,
+      siteName: isMolla ? "Molla Yazılım" : ayar.salonAd,
     },
     robots: { index: true, follow: true },
     alternates: { canonical: base },

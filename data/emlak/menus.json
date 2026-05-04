@@ -1,0 +1,13 @@
+{
+  "header": [
+    { "href": "/anasayfa", "label": "Ana Sayfa" },
+    { "href": "/hizmetler", "label": "Özellikler" },
+    { "href": "/galeri", "label": "Galeri" },
+    { "href": "/iletisim", "label": "İletişim" }
+  ],
+  "footer": [
+    { "href": "/iletisim", "label": "İletişim" },
+    { "href": "/panel", "label": "Yönetim paneli" }
+  ]
+}
+

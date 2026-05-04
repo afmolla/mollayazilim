@@ -1,0 +1,43 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "İstanbul · Emlak vitrin",
+      "baslik": "Doğru ilan, doğru müşteri",
+      "aciklama": "İlan yönetimi, filtreleme ve yönetim paneli — emlak vitrini için modern demo.",
+      "ctaPrimaryLabel": "İlanları incele",
+      "ctaPrimaryHref": "/p/ilanlar",
+      "ctaSecondaryLabel": "İletişim",
+      "ctaSecondaryHref": "/iletisim",
+      "heroImageSrc": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=80",
+      "heroImageAlt": "Modern konut ve şehir manzarası",
+      "heroAltBloklar": [],
+      "bolumBaslik": "Neden bu demo?",
+      "bolumAciklama": "SEO uyumlu ilan sayfaları, hızlı filtreleme ve panelden içerik yönetimi.",
+      "features": [
+        { "baslik": "İlan yönetimi", "aciklama": "Başlık, açıklama, görseller ve etiketler panelden." },
+        { "baslik": "Filtreleme", "aciklama": "Konum, fiyat aralığı, oda sayısı gibi kriterler." },
+        { "baslik": "Hızlı yayın", "aciklama": "Güncellemeler anında vitrinde görünür." }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Emlak vitrini demo — gerçek projede ilan tipleri ve filtreler özelleştirilebilir.",
+      "rows": [
+        { "ad": "İlan yönetimi", "sure": "—", "fiyat": "Panel dahil" },
+        { "ad": "Görsel galeri", "sure": "—", "fiyat": "Sürükle-bırak" },
+        { "ad": "SEO sayfaları", "sure": "—", "fiyat": "Otomatik" }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Demo görseller.",
+      "images": [
+        { "src": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80", "alt": "Konut" },
+        { "src": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80", "alt": "Ev dış cephe" }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "İletişim bilgileri ve WhatsApp.",
+      "whatsappMesaj": "Merhaba, ilanlar hakkında bilgi almak istiyorum."
+    }
+  }
+}
+
