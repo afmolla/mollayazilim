@@ -5,7 +5,7 @@ import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
 export type SiteRequestInfo = { prefix: string; subdir: string };
 
 /**
- * İstek başına bir kez: middleware `x-site-prefix` / `x-data-subdir` (build’de yok → ilk önek).
+ * İstek başına bir kez: proxy `x-site-prefix` / `x-data-subdir` (build’de yok → ilk önek).
  * AsyncLocalStorage RSC alt ağacında taşınmadığı için `cache` + `headers` kullanılır.
  */
 export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {

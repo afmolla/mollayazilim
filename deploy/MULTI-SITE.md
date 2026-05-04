@@ -1,6 +1,6 @@
 # Çoklu vitrin (`/kuafor`, `/restaurant`)
 
-- **`/`** → yapım sayfası (middleware).
+- **`/`** → yapım sayfası (`proxy.ts`).
 - **`/kuafor/*`**, **`/restaurant/*`** → aynı Next uygulaması; veri **`data/kuafor/`** ve **`data/restaurant/`** altında ayrı JSON dosyaları.
 - Önek listesi: **`NEXT_PUBLIC_PORTFOLIO_PREFIXES=/kuafor,/restaurant`** (varsayılan bu ikisi).
 

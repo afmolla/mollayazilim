@@ -3,7 +3,7 @@ import { getRequestSite } from "@/lib/site-request";
 import { withBaseFromPrefix } from "@/lib/base-path";
 
 /**
- * İç route `/` (middleware `/kuafor` ve `/kuafor/` isteklerini buraya rewrite eder).
+ * İç route `/` (proxy `/kuafor` ve `/kuafor/` isteklerini buraya rewrite eder).
  * Tarayıcıda vitrin kökü → `/anasayfa`.
  */
 export default async function MarketingRootRedirect() {

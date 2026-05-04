@@ -1,5 +1,5 @@
 /**
- * Yerelde `npm run dev`: tüm istekler Next’e (middleware `/` yapım + `/kuafor` rewrite).
+ * Yerelde `npm run dev`: tüm istekler Next’e (proxy `/` yapım + `/kuafor` rewrite).
  */
 import http from "node:http";
 import { spawn } from "node:child_process";
@@ -86,7 +86,7 @@ async function main() {
   console.log(`[dev-gateway] Next başlatılıyor :${NEXT_PORT} …`);
   await waitForNextReady();
   server.listen(GATEWAY_PORT, () => {
-    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım (middleware)`);
+    console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/  → yapım (proxy)`);
     console.log(`[dev-gateway] http://localhost:${GATEWAY_PORT}/kuafor  → vitrin`);
   });
 }

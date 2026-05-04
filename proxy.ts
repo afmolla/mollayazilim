@@ -23,7 +23,8 @@ function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string
   return h;
 }
 
-export function middleware(req: NextRequest) {
+/** Next.js 16+: `proxy.ts` (eski `middleware.ts`). */
+export function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   if (

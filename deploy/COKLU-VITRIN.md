@@ -1,7 +1,7 @@
 # Portföy yapısı: kök yapım, `/kuafor` vitrin
 
-- **`/`** → “Yapım aşamasında” (middleware, URL değişmez).
-- **`/kuafor`**, **`/kuafor/panel`** vb. → Next uygulaması (middleware rewrite; Next’te `basePath` yok, `/_next` kökte).
+- **`/`** → “Yapım aşamasında” (proxy, URL değişmez).
+- **`/kuafor`**, **`/kuafor/panel`** vb. → Next uygulaması (proxy rewrite; Next’te `basePath` yok, `/_next` kökte).
 
 **Varsayılan** vitrin öneki: **`/kuafor`** (`NEXT_PUBLIC_BASE_PATH` tanımsızsa).
 

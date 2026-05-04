@@ -2,7 +2,7 @@ import { runWithSiteContext, type SiteRequestContext } from "@/lib/site-context"
 import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
 
 /**
- * Panel / vitrin API: middleware `x-site-prefix` + `x-data-subdir` ile gelir.
+ * Panel / vitrin API: proxy `x-site-prefix` + `x-data-subdir` ile gelir.
  */
 export async function withSiteFromRequest<T>(req: Request, fn: () => Promise<T>): Promise<T> {
   const prefix = req.headers.get("x-site-prefix")?.trim() ?? "";
