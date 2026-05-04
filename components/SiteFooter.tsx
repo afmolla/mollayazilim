@@ -3,6 +3,7 @@ import { normalizeExternalUrl, parseGoogleMapsInput } from "@/lib/footer-social-
 import { whatsappLink } from "@/lib/whatsapp";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { menuGetir, type MenuItem } from "@/lib/menu-store";
+import { qrMenuGetir } from "@/lib/qr-menu-store";
 
 function FooterMenuEntry({ item }: { item: MenuItem }) {
   const hasChildren = (item.children?.length ?? 0) > 0;
@@ -43,6 +44,12 @@ function FooterMenuEntry({ item }: { item: MenuItem }) {
 export async function SiteFooter() {
   const ayar = await ayarlarGetir();
   const menu = await menuGetir();
+  const qr = await qrMenuGetir();
+  const footerItems = qr.yayin
+    ? menu.footer
+    : menu.footer.filter(
+        (n) => !n.href.includes("/qr-menu") && n.href !== "/qr-menu",
+      );
   const wa = whatsappLink(ayar.whatsapp, "Merhaba, randevu almak istiyorum.");
   const ig = ayar.instagram?.trim();
   const fb = ayar.facebook?.trim();
@@ -63,7 +70,7 @@ export async function SiteFooter() {
         <div>
           <p className="text-sm font-medium text-[var(--text)]">Hızlı bağlantılar</p>
           <ul className="mt-3 flex flex-col gap-3 text-sm text-[var(--muted)]">
-            {menu.footer.map((n, i) => (
+            {footerItems.map((n, i) => (
               <FooterMenuEntry key={`${n.label}-${i}`} item={n} />
             ))}
           </ul>

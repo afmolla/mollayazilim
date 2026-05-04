@@ -1,20 +1,35 @@
-import { BASE_PATH } from "@/lib/base-path";
+import { getBasePath } from "@/lib/base-path";
+import { ayarlarGetir } from "@/lib/settings-store";
 
-export function siteUrl(): string {
+export async function siteUrl(): Promise<string> {
+  const base = getBasePath();
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ?? "";
   if (raw) {
-    if (raw.endsWith(BASE_PATH)) {
+    if (raw.endsWith(base)) {
       return raw;
     }
-    return `${raw}${BASE_PATH}`.replace(/\/$/, "");
+    return `${raw}${base}`.replace(/\/$/, "");
   }
-  return `http://localhost:3000${BASE_PATH}`.replace(/\/$/, "");
+  return `http://localhost:3000${base}`.replace(/\/$/, "");
 }
 
-export function salonAd(): string {
+/** Sunucu bileşenlerinde ayarlardan; istemcide env fallback */
+export async function salonAd(): Promise<string> {
+  try {
+    const a = await ayarlarGetir();
+    if (a.salonAd?.trim()) return a.salonAd.trim();
+  } catch {
+    /* ignore */
+  }
   return process.env.NEXT_PUBLIC_SALON_AD ?? "Atlas Kuaför Studio";
 }
 
-export function salonWhatsapp(): string {
+export async function salonWhatsapp(): Promise<string> {
+  try {
+    const a = await ayarlarGetir();
+    if (a.whatsapp?.trim()) return a.whatsapp.trim();
+  } catch {
+    /* ignore */
+  }
   return process.env.NEXT_PUBLIC_WHATSAPP_SALON ?? "905551234567";
 }

@@ -1,8 +1,14 @@
 import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
+import { getSiteContext } from "@/lib/site-context";
 
 const COOKIE = "kuafor_panel";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 gün
+
+function cookiePath(): string {
+  const p = getSiteContext()?.prefix?.trim() ?? "";
+  return p || "/";
+}
 
 /** Yalnızca SITE_URL https ise Secure (HTTP/IIS veya localhost prod `next start` çerez gönderebilir) */
 function cookieSecure(): boolean {
@@ -41,18 +47,20 @@ export async function oturumAc(): Promise<void> {
   const payload = Buffer.from(JSON.stringify({ exp }), "utf8").toString("base64url");
   const token = sign(payload);
   const jar = await cookies();
+  const path = cookiePath();
   jar.set(COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
     secure: cookieSecure(),
-    path: "/",
+    path,
     maxAge: MAX_AGE,
   });
 }
 
 export async function oturumKapat(): Promise<void> {
   const jar = await cookies();
-  jar.delete(COOKIE);
+  const path = cookiePath();
+  jar.set(COOKIE, "", { httpOnly: true, sameSite: "lax", secure: cookieSecure(), path, maxAge: 0 });
 }
 
 export async function oturumVarMi(): Promise<boolean> {

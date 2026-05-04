@@ -1,0 +1,28 @@
+{
+  "sayfalar": [
+    {
+      "slug": "test",
+      "baslik": "Test",
+      "aciklama": "test",
+      "icerikHtml": "test merhaba\n<figure class=\"mt-6\">\n  <img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>\n",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-01T23:38:13.764Z"
+    },
+    {
+      "slug": "testsa",
+      "baslik": "gsdfs",
+      "icerikHtml": "<figure class=\"mt-6\"><img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" /></figure>",
+      "bloklar": [
+        {
+          "type": "image",
+          "src": "/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png",
+          "alt": "Görsel"
+        }
+      ],
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-01T23:35:28.824Z"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "menu": {
+    "baslik": "Dijital menü",
+    "altBaslik": "Tarayıcıdan hızlıca sipariş öncesi inceleyin.",
+    "yayin": true,
+    "guncellenme": "2026-05-04T12:00:00.000Z",
+    "kategoriler": [
+      {
+        "id": "cat_starter",
+        "baslik": "Başlangıçlar",
+        "aciklama": "",
+        "sira": 0,
+        "ogeler": [
+          { "id": "u1", "ad": "Mercimek çorbası", "aciklama": "Günün çorbası", "fiyat": "95 ₺", "sira": 0 },
+          { "id": "u2", "ad": "Humus tabağı", "aciklama": "Lavaş ile", "fiyat": "165 ₺", "sira": 1 },
+          { "id": "u3", "ad": "Sigara böreği", "fiyat": "140 ₺", "sira": 2 }
+        ]
+      },
+      {
+        "id": "cat_main",
+        "baslik": "Ana yemekler",
+        "sira": 1,
+        "ogeler": [
+          { "id": "u4", "ad": "Izgara köfte", "aciklama": "Pilav, közlenmiş biber", "fiyat": "420 ₺", "sira": 0 },
+          { "id": "u5", "ad": "Kuzu tandır", "fiyat": "580 ₺", "sira": 1 },
+          { "id": "u6", "ad": "Levrek (ızgara)", "aciklama": "Mevsim salata", "fiyat": "520 ₺", "sira": 2 }
+        ]
+      },
+      {
+        "id": "cat_dessert",
+        "baslik": "Tatlı & içecek",
+        "sira": 2,
+        "ogeler": [
+          { "id": "u7", "ad": "Sütlaç", "fiyat": "120 ₺", "sira": 0 },
+          { "id": "u8", "ad": "Künefe", "fiyat": "185 ₺", "sira": 1 },
+          { "id": "u9", "ad": "Ev yapımı limonata", "fiyat": "85 ₺", "sira": 2 }
+        ]
+      }
+    ]
+  }
+}

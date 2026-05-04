@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { BASE_PATH } from "@/lib/base-path";
+import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
 
 const YAPIM_HTML = `<!DOCTYPE html>
 <html lang="tr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -16,12 +16,15 @@ h1{font-size:1.35rem;margin:0}h1 span{color:#a78bfa}
 <h1><span>Site</span> hazırlanıyor</h1>
 </main></body></html>`;
 
+function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string): Headers {
+  const h = new Headers(req.headers);
+  h.set("x-site-prefix", prefix);
+  h.set("x-data-subdir", subdir);
+  return h;
+}
+
 export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-
-  if (!BASE_PATH) {
-    return NextResponse.next();
-  }
 
   if (
     pathname.startsWith("/_next") ||
@@ -43,23 +46,24 @@ export function middleware(req: NextRequest) {
     });
   }
 
-  const base = BASE_PATH;
-  if (pathname === base || pathname === `${base}/`) {
-    const u = req.nextUrl.clone();
+  const matched = isPortfolioPath(pathname);
+  if (!matched) {
+    return new NextResponse("Not Found", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  const subdir = dataSubdirForPrefix(matched);
+  const u = req.nextUrl.clone();
+  if (pathname === matched || pathname === `${matched}/`) {
     u.pathname = "/";
-    return NextResponse.rewrite(u);
+  } else {
+    u.pathname = pathname.slice(matched.length) || "/";
   }
 
-  if (pathname.startsWith(`${base}/`)) {
-    const u = req.nextUrl.clone();
-    u.pathname = pathname.slice(base.length) || "/";
-    return NextResponse.rewrite(u);
-  }
-
-  return new NextResponse("Not Found", {
-    status: 404,
-    headers: { "Content-Type": "text/plain; charset=utf-8" },
-  });
+  const reqHeaders = requestHeadersWithSite(req, matched, subdir);
+  return NextResponse.rewrite(u, { request: { headers: reqHeaders } });
 }
 
 export const config = {

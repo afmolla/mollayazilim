@@ -41,6 +41,12 @@ export function panelEditUrlFromPathname(pathname: string): {
       label: "İletişim şablonu",
     };
   }
+  if (p === "/qr-menu") {
+    return {
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=qr_menu"),
+      label: "QR menü",
+    };
+  }
 
   const cms = /^\/p\/([^/]+)$/.exec(p);
   if (cms?.[1]) {
@@ -64,5 +70,5 @@ export function panelEditUrlFromPathname(pathname: string): {
 }
 
 export function isPanelContentTab(s: string): s is PanelContentTab {
-  return s === "home" || s === "hizmetler" || s === "galeri" || s === "iletisim";
+  return s === "home" || s === "hizmetler" || s === "galeri" || s === "iletisim" || s === "qr_menu";
 }

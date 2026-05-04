@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 import type { VfHiza } from "@/lib/vf-hiza";
 
 export type { VfHiza } from "@/lib/vf-hiza";
@@ -55,7 +56,7 @@ export type SiteIcerik = {
 
 type Db = { icerik: SiteIcerik };
 
-const FILE = path.join(/* turbopackIgnore: true */ process.cwd(), "data", "content.json");
+const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "content.json");
 
 function varsayilan(): SiteIcerik {
   return {

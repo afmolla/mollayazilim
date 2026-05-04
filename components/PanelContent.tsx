@@ -10,7 +10,7 @@ function normalize(s: string) {
   return s.trim().toLocaleLowerCase("tr-TR");
 }
 
-export type PanelContentTab = "home" | "hizmetler" | "galeri" | "iletisim";
+export type PanelContentTab = "home" | "hizmetler" | "galeri" | "iletisim" | "qr_menu";
 
 export type PanelContentProps = {
   /** Hub veya üst bileşen sekmeyi kontrol ederken */
@@ -747,7 +747,7 @@ export function PanelContent(props: PanelContentProps = {}) {
           ) : null}
         </div>
         )
-      ) : (
+      ) : tab === "iletisim" ? (
         visualZones ? (
           <ContentZone
             step={1}
@@ -789,7 +789,7 @@ export function PanelContent(props: PanelContentProps = {}) {
           </p>
         </Card>
         )
-      )}
+      ) : null}
 
       {pickMediaFor === "homeHero" ? (
         <Card title="Medyadan hero seç">

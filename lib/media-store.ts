@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 
 export type Medya = {
   id: string;
@@ -13,7 +13,7 @@ export type Medya = {
 type MedyaDb = { medya: Medya[] };
 
 const UPLOAD_DIR = path.join(/* turbopackIgnore: true */ process.cwd(), "public", "uploads");
-const DB_FILE = path.join(/* turbopackIgnore: true */ process.cwd(), "data", "media.json");
+const DB_FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "media.json");
 
 async function oku(): Promise<MedyaDb> {
   try {

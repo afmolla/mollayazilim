@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PanelContent, type PanelContentTab } from "@/components/PanelContent";
 import { PanelIcerikHeaderMenu } from "@/components/PanelIcerikHeaderMenu";
 import { PanelPages } from "@/components/PanelPages";
+import { PanelQrMenuTab } from "@/components/PanelQrMenuTab";
 import { withBase } from "@/lib/base-path";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
@@ -26,6 +27,7 @@ const SABLONLAR: { sekme: PanelContentTab; baslik: string; yol: string; kisa: st
   { sekme: "hizmetler", baslik: "Hizmetler", yol: "/hizmetler", kisa: "Liste + fiyat" },
   { sekme: "galeri", baslik: "Galeri", yol: "/galeri", kisa: "Görseller" },
   { sekme: "iletisim", baslik: "İletişim", yol: "/iletisim", kisa: "Metin + WhatsApp" },
+  { sekme: "qr_menu", baslik: "QR menü", yol: "/qr-menu", kisa: "Kategori + ürün" },
 ];
 
 export type PanelUnifiedIcerikProps = {
@@ -225,13 +227,17 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
 
         <section className="min-w-0 flex-1 space-y-4">
           {secim.tur === "sablon" ? (
-            <PanelContent
-              layout="embedded"
-              hideTabBar
-              visualZones
-              activeTab={secim.sekme}
-              onTabChange={(sekme) => setSecim({ tur: "sablon", sekme })}
-            />
+            secim.sekme === "qr_menu" ? (
+              <PanelQrMenuTab />
+            ) : (
+              <PanelContent
+                layout="embedded"
+                hideTabBar
+                visualZones
+                activeTab={secim.sekme}
+                onTabChange={(sekme) => setSecim({ tur: "sablon", sekme })}
+              />
+            )
           ) : (
             <PanelPages
               key={`ek-${secim.slug}-${cmsMountKey}`}

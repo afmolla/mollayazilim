@@ -1,0 +1,63 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "İstanbul · Restoran vitrin",
+      "baslik": "Lezzet ve atmosfer bir arada",
+      "aciklama": "QR menü, online rezervasyon ve güncel içerik — tek panelden yönetin. Misafirleriniz menüyü telefondan anında görür.",
+      "ctaPrimaryLabel": "QR menüyü aç",
+      "ctaPrimaryHref": "/qr-menu",
+      "ctaSecondaryLabel": "Masa ayırt",
+      "ctaSecondaryHref": "/randevu",
+      "heroImageSrc": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80",
+      "heroImageAlt": "Restoran iç mekan — sıcak aydınlatma ve masalar",
+      "heroAltBloklar": [],
+      "bolumBaslik": "Neden bu vitrin?",
+      "bolumAciklama": "Mobil uyumlu menü, vitrin sayfaları ve yönetim paneli — işletmenize yakın bir demo.",
+      "features": [
+        {
+          "baslik": "QR menü",
+          "aciklama": "Kategoriler ve fiyatlar panelden düzenlenir; yayında veya gizli olabilir."
+        },
+        {
+          "baslik": "Rezervasyon",
+          "aciklama": "Masa taleplerini panelden onaylayın veya iptal edin."
+        },
+        {
+          "baslik": "Hızlı güncelleme",
+          "aciklama": "Menü, galeri ve iletişim bilgileri anında sitede yansır."
+        }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Örnek yemek listesi — panelden satırları düzenleyebilirsiniz.",
+      "rows": [
+        { "ad": "Izgara köfte tabağı", "sure": "25 dk", "fiyat": "420 ₺" },
+        { "ad": "Kuzu tandır", "sure": "35 dk", "fiyat": "580 ₺" },
+        { "ad": "Levrek (ızgara)", "sure": "30 dk", "fiyat": "520 ₺" },
+        { "ad": "Mevsim salata", "sure": "10 dk", "fiyat": "180 ₺" },
+        { "ad": "Sütlaç", "sure": "5 dk", "fiyat": "120 ₺" }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Restoran ve yemek görselleri — kendi fotoğraflarınızla değiştirin.",
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
+          "alt": "Şık servis edilmiş ana yemek"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1555396273-367ea4eb66db?w=900&q=80",
+          "alt": "Restoran masaları ve ambiyans"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&q=80",
+          "alt": "Renkli salata kasesi"
+        }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "Rezervasyon ve adres için bize ulaşın.",
+      "whatsappMesaj": "Merhaba, masa ayırtmak istiyorum."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "header": [
+    { "href": "/anasayfa", "label": "Ana Sayfa", "newTab": false },
+    { "href": "/hizmetler", "label": "Menü", "newTab": false },
+    { "href": "/qr-menu", "label": "QR Menü", "newTab": false },
+    { "href": "/galeri", "label": "Galeri", "newTab": false },
+    { "href": "/randevular", "label": "Rezervasyonlar", "newTab": false },
+    { "href": "/randevu", "label": "Masa ayırt", "newTab": false },
+    { "href": "/iletisim", "label": "İletişim", "newTab": false }
+  ],
+  "footer": [
+    { "href": "/qr-menu", "label": "QR Menü" },
+    { "href": "/randevu", "label": "Rezervasyon" },
+    { "href": "/panel", "label": "Yönetim paneli" }
+  ]
+}

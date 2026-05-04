@@ -41,7 +41,11 @@ export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
   const deep = panelEditUrlFromPathname(pathname);
   const vitrinSayfa = useMemo(() => {
     const p = stripBasePath(pathname).replace(/\/+$/, "") || "/";
-    return p.startsWith("/p/") || ["/anasayfa", "/hizmetler", "/galeri", "/iletisim"].includes(p) || p === "/";
+    return (
+      p.startsWith("/p/") ||
+      ["/anasayfa", "/hizmetler", "/galeri", "/iletisim", "/qr-menu"].includes(p) ||
+      p === "/"
+    );
   }, [pathname]);
 
   const closeEditBarHref = useMemo(() => {

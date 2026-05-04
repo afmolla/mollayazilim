@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 
 export type SiteAyarlar = {
   salonAd: string;
@@ -20,7 +20,7 @@ export type SiteAyarlar = {
 
 type Db = { ayarlar: SiteAyarlar };
 
-const FILE = path.join(/* turbopackIgnore: true */ process.cwd(), "data", "settings.json");
+const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "settings.json");
 
 function varsayilan(): SiteAyarlar {
   return {

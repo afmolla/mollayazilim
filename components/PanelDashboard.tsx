@@ -2,7 +2,6 @@
 
 import { withBase } from "@/lib/base-path";
 import type { Randevu, RandevuDurum } from "@/lib/types";
-import { salonAd } from "@/lib/site";
 import { whatsappLink, whatsappRandevuMesaji } from "@/lib/whatsapp";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -31,6 +30,7 @@ export function PanelDashboard() {
   const [durum, setDurum] = useState<"hepsi" | RandevuDurum>("hepsi");
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [noteDraft, setNoteDraft] = useState<Record<string, string>>({});
+  const [salonAdLive, setSalonAdLive] = useState("");
 
   const fetchList = useCallback(
     async (signal?: AbortSignal) => {
@@ -70,6 +70,20 @@ export function PanelDashboard() {
     },
     [router]
   );
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const res = await fetch(withBase("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
+        if (!res.ok) return;
+        const j = (await res.json()) as { ayarlar?: { salonAd?: string } };
+        const n = j.ayarlar?.salonAd?.trim();
+        if (n) setSalonAdLive(n);
+      } catch {
+        /* ignore */
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -145,7 +159,7 @@ export function PanelDashboard() {
       tarih: tarihGoster,
       saat: r.saat,
       hizmet: r.hizmet,
-      salonAd: salonAd(),
+      salonAd: salonAdLive || "Salon",
     });
     return whatsappLink(r.telefon, msg);
   }

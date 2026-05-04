@@ -1,45 +1,21 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 import { JsonLdLocalBusiness } from "@/components/JsonLd";
-import { siteUrl, salonAd } from "@/lib/site";
+import { siteUrl } from "@/lib/site";
+import { SiteLayoutWrapper } from "@/components/SiteLayoutWrapper";
+import { runWithSiteContext } from "@/lib/site-context";
+import { ayarlarGetir } from "@/lib/settings-store";
+import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
 
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
   variable: "--font-outfit",
   display: "swap",
 });
-
-const base = siteUrl();
-
-export const metadata: Metadata = {
-  metadataBase: new URL(base),
-  title: {
-    default: `${salonAd()} | Kuaför & Berber — İstanbul`,
-    template: `%s | ${salonAd()}`,
-  },
-  description:
-    "Modern kuaför ve berber hizmetleri: kesim, sakal, boya ve bakım. Online randevu, SEO uyumlu vitrin.",
-  keywords: [
-    "kuaför",
-    "berber",
-    "randevu",
-    "İstanbul",
-    "saç kesimi",
-    "sakal",
-  ],
-  authors: [{ name: salonAd() }],
-  openGraph: {
-    type: "website",
-    locale: "tr_TR",
-    url: base,
-    siteName: salonAd(),
-  },
-  robots: { index: true, follow: true },
-  alternates: { canonical: base },
-};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -49,6 +25,51 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const h = await headers();
+  let prefix = h.get("x-site-prefix")?.trim() ?? "";
+  let subdir = h.get("x-data-subdir")?.trim() ?? "";
+  if (!prefix) {
+    const first = portfolioPrefixes()[0];
+    prefix = first;
+    subdir = dataSubdirForPrefix(first);
+  }
+
+  return runWithSiteContext({ prefix, subdir }, async () => {
+    const ayar = await ayarlarGetir();
+    const base = await siteUrl();
+    const isRestaurant = subdir === "restaurant";
+    const defaultTitle = isRestaurant
+      ? `${ayar.salonAd} | Restoran`
+      : `${ayar.salonAd} | Kuaför & Berber — İstanbul`;
+    const desc = isRestaurant
+      ? "QR menü, rezervasyon ve iletişim — restoran vitrin demosu."
+      : "Modern kuaför ve berber hizmetleri: kesim, sakal, boya ve bakım. Online randevu, SEO uyumlu vitrin.";
+    const kw = isRestaurant
+      ? ["restoran", "QR menü", "rezervasyon", "İstanbul", "yemek"]
+      : ["kuaför", "berber", "randevu", "İstanbul", "saç kesimi", "sakal"];
+
+    return {
+      metadataBase: new URL(base),
+      title: {
+        default: defaultTitle,
+        template: `%s | ${ayar.salonAd}`,
+      },
+      description: desc,
+      keywords: kw,
+      authors: [{ name: ayar.salonAd }],
+      openGraph: {
+        type: "website",
+        locale: "tr_TR",
+        url: base,
+        siteName: ayar.salonAd,
+      },
+      robots: { index: true, follow: true },
+      alternates: { canonical: base },
+    };
+  });
+}
 
 export default function RootLayout({
   children,
@@ -66,7 +87,9 @@ export default function RootLayout({
       >
         <JsonLdLocalBusiness />
         <ThemeProvider>
-          <div className="flex min-h-full flex-col">{children}</div>
+          <SiteLayoutWrapper>
+            <div className="flex min-h-full flex-col">{children}</div>
+          </SiteLayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

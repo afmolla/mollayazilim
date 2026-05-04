@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
-import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 import type { Randevu, RandevuListesi } from "./types";
 
-const DOSYA = path.join(process.cwd(), "data", "randevular.json");
+const DOSYA = path.join(getDataDir(), "randevular.json");
 
 async function dosyaOku(): Promise<RandevuListesi> {
   try {

@@ -1,0 +1,45 @@
+{
+  "randevular": [
+    {
+      "id": "demo-1",
+      "ad": "Ahmet Y.",
+      "telefon": "905551112233",
+      "hizmet": "Saç kesimi + sakal",
+      "tarih": "2026-05-02",
+      "saat": "10:00",
+      "durum": "onaylandi",
+      "notlar": "VIP köşe",
+      "olusturulma": "2026-04-28T10:00:00.000Z"
+    },
+    {
+      "id": "demo-2",
+      "ad": "Elif K.",
+      "telefon": "905559998877",
+      "hizmet": "Fön + kesim",
+      "tarih": "2026-05-02",
+      "saat": "14:30",
+      "durum": "onaylandi",
+      "olusturulma": "2026-04-28T11:00:00.000Z"
+    },
+    {
+      "id": "demo-3",
+      "ad": "Murat D.",
+      "telefon": "905554445566",
+      "hizmet": "Sakal şekillendirme",
+      "tarih": "2026-05-03",
+      "saat": "11:15",
+      "durum": "beklemede",
+      "olusturulma": "2026-04-29T09:00:00.000Z"
+    },
+    {
+      "id": "demo-4",
+      "ad": "Zeynep A.",
+      "telefon": "905557776655",
+      "hizmet": "Boyama + bakım",
+      "tarih": "2026-05-03",
+      "saat": "16:00",
+      "durum": "beklemede",
+      "olusturulma": "2026-04-29T10:30:00.000Z"
+    }
+  ]
+}

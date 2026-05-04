@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { oturumVarMi } from "@/lib/session";
+import { withSiteFromRequest } from "@/lib/api-site-context";
 
-/** Vitrin tarafında düzenleme çubuğu için — oturum var mı (çerez httpOnly okunamaz) */
-export async function GET() {
-  const ok = await oturumVarMi();
-  return NextResponse.json({ ok });
+export async function GET(req: Request) {
+  return withSiteFromRequest(req, async () => {
+    const ok = await oturumVarMi();
+    return NextResponse.json({ ok });
+  });
 }

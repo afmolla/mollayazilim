@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 import type { SayfaBlok } from "./cms-blok";
 
 export type { SayfaBlok } from "./cms-blok";
@@ -19,7 +19,7 @@ export type Sayfa = {
 
 type SayfaDb = { sayfalar: Sayfa[] };
 
-const DOSYA = path.join(/* turbopackIgnore: true */ process.cwd(), "data", "sayfalar.json");
+const DOSYA = path.join(/* turbopackIgnore: true */ getDataDir(), "sayfalar.json");
 
 function slugify(raw: string): string {
   return raw

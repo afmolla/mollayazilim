@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { getDataDir } from "@/lib/data-dir";
 import { publicHref, stripBasePath } from "@/lib/base-path";
 
 export type MenuItem = {
@@ -14,7 +15,7 @@ export type MenuLocation = "header" | "footer";
 
 type Db = { header: MenuItem[]; footer: MenuItem[] };
 
-const FILE = path.join(/* turbopackIgnore: true */ process.cwd(), "data", "menus.json");
+const FILE = path.join(/* turbopackIgnore: true */ getDataDir(), "menus.json");
 
 function varsayilan(): Db {
   return {
