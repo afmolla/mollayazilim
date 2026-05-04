@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { getDataDir } from "@/lib/data-dir";
-import { publicHref, stripSitePrefix } from "@/lib/base-path";
+import { stripSitePrefix } from "@/lib/base-path";
 
 export type MenuItem = {
   label: string;
@@ -74,8 +74,25 @@ function canonicalStoreHref(href: string): string {
   return stripSitePrefix(withSlash).replace(/\/+$/, "") || "/";
 }
 
+function isExternalNavHref(href: string): boolean {
+  const h = (href ?? "").trim();
+  return (
+    h.startsWith("http://") ||
+    h.startsWith("https://") ||
+    h.startsWith("//") ||
+    h.startsWith("mailto:") ||
+    h.startsWith("tel:")
+  );
+}
+
+/** Depoda ve API’de iç rota tutulur (`/anasayfa`); sunucuda vitrin öneki ekleme yok (istemci `useWithBase` ile ekler). */
 function normalizeMenuItemPaths(item: MenuItem): MenuItem {
-  const href = item.href === "#" ? "#" : publicHref(item.href);
+  const href =
+    item.href === "#"
+      ? "#"
+      : isExternalNavHref(item.href)
+        ? item.href
+        : canonicalStoreHref(item.href);
   const children = (item.children ?? []).map(normalizeMenuItemPaths);
   return { ...item, href, children: children.length ? children : undefined };
 }

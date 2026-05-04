@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePrefixedNavHref, useWithBase } from "@/components/SitePrefixProvider";
 
 type MenuItem = { label: string; href: string; newTab?: boolean };
 
@@ -12,6 +12,7 @@ export function SideNav(props: {
   mode: "hover" | "sabit";
 }) {
   const wb = useWithBase();
+  const pf = usePrefixedNavHref();
   const isHover = props.mode === "hover";
 
   const items = useMemo(
@@ -52,7 +53,7 @@ export function SideNav(props: {
             {items.map((n) => (
               <li key={n.href}>
                 <Link
-                  href={n.href}
+                  href={pf(n.href)}
                   target={n.newTab ? "_blank" : undefined}
                   rel={n.newTab ? "noreferrer" : undefined}
                   className={[

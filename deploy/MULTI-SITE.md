@@ -7,4 +7,6 @@
 
 Her site için panel oturumu **çerez yolu = site öneki** ile ayrılır (`/kuafor/panel` girişü `/restaurant/panel` ile karışmaz).
 
+Menü `href` değerleri JSON’da **iç rota** olarak durur (`/hizmetler`); tarayıcıda vitrin öneki **`SitePrefixProvider` + `usePrefixedNavHref`** ile eklenir — böylece hangi vitrindesin o vitrinin linkleri kullanılır.
+
 QR menü: **`/…/qr-menu`** — panelde **İçerik → QR menü**; **Yayında** işareti kapalıysa sayfa 404 (menü linkleri gizlenir).

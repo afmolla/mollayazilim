@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  type ReactNode,
+} from "react";
 import { usePathname } from "next/navigation";
 import { withBase } from "@/lib/base-path";
 
@@ -25,4 +31,29 @@ export function usePrefixedPath(): (path: string) => string {
 /** fetch / Link için kısayol */
 export function useWithBase(): (path: string) => string {
   return usePrefixedPath();
+}
+
+/**
+ * menü `href` alanı iç rotadır (`/hizmetler`); canlıda vitrin öneki (`/kuafor`, `/restaurant`) ekler.
+ * Harici URL’lere dokunmaz.
+ */
+export function usePrefixedNavHref(): (href: string) => string {
+  const wb = useWithBase();
+  return useCallback(
+    (href: string) => {
+      const h = (href ?? "").trim();
+      if (!h || h === "#") return h;
+      if (
+        h.startsWith("http://") ||
+        h.startsWith("https://") ||
+        h.startsWith("//") ||
+        h.startsWith("mailto:") ||
+        h.startsWith("tel:")
+      ) {
+        return h;
+      }
+      return wb(h.startsWith("/") ? h : `/${h}`);
+    },
+    [wb]
+  );
 }

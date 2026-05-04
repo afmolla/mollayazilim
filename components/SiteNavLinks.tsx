@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { MenuItem } from "@/lib/menu-store";
 import { isNavActive, menuItemActive } from "@/lib/nav-active";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 
 export type NavLinkItem = MenuItem;
 
@@ -15,6 +16,7 @@ function linkClass(active: boolean) {
 
 export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
   const pathname = usePathname() ?? "/";
+  const pf = usePrefixedNavHref();
 
   return (
     <ul
@@ -30,7 +32,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
           return (
             <li key={`${n.href}-${i}`} className="shrink-0 list-none">
               <Link
-                href={n.href}
+                href={pf(n.href)}
                 target={n.newTab ? "_blank" : undefined}
                 rel={n.newTab ? "noreferrer" : undefined}
                 className={linkClass(leafActive)}
@@ -57,7 +59,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
               </span>
             ) : (
               <Link
-                href={n.href}
+                href={pf(n.href)}
                 target={n.newTab ? "_blank" : undefined}
                 rel={n.newTab ? "noreferrer" : undefined}
                 className={[linkClass(isNavActive(pathname, n.href, n.newTab) || active), "px-0.5 py-0.5"].join(" ")}
@@ -77,7 +79,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
                   return (
                     <li key={`${c.href}-${ci}`} className="list-none">
                       <Link
-                        href={c.href}
+                        href={pf(c.href)}
                         target={c.newTab ? "_blank" : undefined}
                         rel={c.newTab ? "noreferrer" : undefined}
                         className={

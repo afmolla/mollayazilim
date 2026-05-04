@@ -1,45 +1,9 @@
-import Link from "next/link";
 import { normalizeExternalUrl, parseGoogleMapsInput } from "@/lib/footer-social-map";
 import { whatsappLink } from "@/lib/whatsapp";
 import { ayarlarGetir } from "@/lib/settings-store";
-import { menuGetir, type MenuItem } from "@/lib/menu-store";
+import { menuGetir } from "@/lib/menu-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
-
-function FooterMenuEntry({ item }: { item: MenuItem }) {
-  const hasChildren = (item.children?.length ?? 0) > 0;
-  return (
-    <li className="shrink-0">
-      {item.href && item.href !== "#" ? (
-        <Link
-          href={item.href}
-          className="inline-block whitespace-nowrap hover:text-[var(--brand)]"
-          target={item.newTab ? "_blank" : undefined}
-          rel={item.newTab ? "noreferrer" : undefined}
-        >
-          {item.label}
-        </Link>
-      ) : (
-        <span className="font-medium text-[var(--text)]">{item.label}</span>
-      )}
-      {hasChildren ? (
-        <ul className="mt-1.5 space-y-1 border-l border-[var(--border)] pl-3">
-          {(item.children ?? []).map((c, j) => (
-            <li key={`${c.href}-${j}`}>
-              <Link
-                href={c.href}
-                className="inline-block whitespace-nowrap hover:text-[var(--brand)]"
-                target={c.newTab ? "_blank" : undefined}
-                rel={c.newTab ? "noreferrer" : undefined}
-              >
-                {c.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : null}
-    </li>
-  );
-}
+import { FooterNavLinks } from "@/components/FooterNavLinks";
 
 export async function SiteFooter() {
   const ayar = await ayarlarGetir();
@@ -69,11 +33,7 @@ export async function SiteFooter() {
         </div>
         <div>
           <p className="text-sm font-medium text-[var(--text)]">Hızlı bağlantılar</p>
-          <ul className="mt-3 flex flex-col gap-3 text-sm text-[var(--muted)]">
-            {footerItems.map((n, i) => (
-              <FooterMenuEntry key={`${n.label}-${i}`} item={n} />
-            ))}
-          </ul>
+          <FooterNavLinks items={footerItems} />
         </div>
         <div>
           <p className="text-sm font-medium text-[var(--text)]">İletişim</p>

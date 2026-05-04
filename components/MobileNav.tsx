@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { MenuItem } from "@/lib/menu-store";
 import { isNavActive, menuItemActive } from "@/lib/nav-active";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePrefixedNavHref, useWithBase } from "@/components/SitePrefixProvider";
 
 function filterMenu(items: MenuItem[]): MenuItem[] {
   return items
@@ -20,6 +20,7 @@ export function MobileNav(props: { brand: string; items: MenuItem[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? "/";
   const wb = useWithBase();
+  const pf = usePrefixedNavHref();
   const items = filterMenu(props.items);
 
   function Row({ n, depth }: { n: MenuItem; depth: number }) {
@@ -31,7 +32,7 @@ export function MobileNav(props: { brand: string; items: MenuItem[] }) {
       return (
         <li>
           <Link
-            href={n.href}
+            href={pf(n.href)}
             target={n.newTab ? "_blank" : undefined}
             rel={n.newTab ? "noreferrer" : undefined}
             onClick={() => setOpen(false)}
@@ -63,7 +64,7 @@ export function MobileNav(props: { brand: string; items: MenuItem[] }) {
             {n.label}
             {n.href && n.href !== "#" ? (
               <Link
-                href={n.href}
+                href={pf(n.href)}
                 className="ml-2 text-[11px] font-normal text-[var(--muted)] underline"
                 onClick={(e) => {
                   e.stopPropagation();
