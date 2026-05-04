@@ -3,7 +3,9 @@ import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import QRCode from "qrcode";
 import type { QrMenuData, QrMenuKategori, QrMenuUrun } from "@/lib/qr-menu-store";
+import { useSitePrefix } from "@/components/SitePrefixProvider";
 
 function newId() {
   return `qm_${Math.random().toString(36).slice(2, 10)}`;
@@ -11,12 +13,15 @@ function newId() {
 
 export function PanelQrMenuTab() {
   const wb = useWithBase();
+  const prefix = useSitePrefix();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
   const [data, setData] = useState<QrMenuData | null>(null);
+  const [qrLink, setQrLink] = useState("");
+  const [qrPng, setQrPng] = useState("");
 
   const load = useCallback(async () => {
     setErr("");
@@ -37,6 +42,29 @@ export function PanelQrMenuTab() {
     setLoading(true);
     void load().finally(() => setLoading(false));
   }, [load]);
+
+  useEffect(() => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const link = origin ? `${origin}${prefix || ""}/qr-menu` : "";
+    setQrLink(link);
+    if (!link) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const png = await QRCode.toDataURL(link, {
+          margin: 1,
+          width: 320,
+          errorCorrectionLevel: "M",
+        });
+        if (!cancelled) setQrPng(png);
+      } catch {
+        if (!cancelled) setQrPng("");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [prefix]);
 
   async function saveCurrent() {
     if (!data) return;
@@ -198,6 +226,47 @@ export function PanelQrMenuTab() {
         </label>
       </div>
 
+      <div className="grid gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 md:grid-cols-[1fr_auto] md:items-center">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-[var(--text)]">QR menü linki</p>
+          <p className="mt-1 break-all text-sm text-[var(--muted)]">{qrLink || "—"}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={!qrLink}
+              onClick={() => {
+                if (!qrLink) return;
+                void navigator.clipboard?.writeText(qrLink);
+                setOk("Link kopyalandı.");
+              }}
+              className="rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium hover:bg-[var(--surface-2)] disabled:opacity-60"
+            >
+              Linki kopyala
+            </button>
+            <a
+              href={qrLink || "#"}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium hover:bg-[var(--surface-2)]"
+            >
+              QR menüyü aç →
+            </a>
+          </div>
+        </div>
+        <div className="flex items-center justify-center">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-3 shadow-sm">
+            {qrPng ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={qrPng} alt="QR Menü QR kodu" className="h-40 w-40" />
+            ) : (
+              <div className="flex h-40 w-40 items-center justify-center text-xs text-[var(--muted)]">
+                QR oluşturulamadı
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="flex justify-end">
         <button
           type="button"
@@ -239,7 +308,7 @@ export function PanelQrMenuTab() {
               {kat.ogeler.map((u, ui) => (
                 <div
                   key={u.id}
-                  className="grid gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 md:grid-cols-[1.2fr_1fr_0.7fr_auto]"
+                  className="grid gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 md:grid-cols-[1.1fr_1fr_1fr_0.7fr_auto]"
                 >
                   <input
                     value={u.ad}
@@ -251,6 +320,12 @@ export function PanelQrMenuTab() {
                     value={u.aciklama ?? ""}
                     onChange={(e) => updateUrun(ki, ui, { aciklama: e.target.value })}
                     placeholder="Açıklama"
+                    className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm"
+                  />
+                  <input
+                    value={u.gorselSrc ?? ""}
+                    onChange={(e) => updateUrun(ki, ui, { gorselSrc: e.target.value })}
+                    placeholder="Görsel URL (https://…)"
                     className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm"
                   />
                   <input

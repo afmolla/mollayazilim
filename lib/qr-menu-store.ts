@@ -10,6 +10,10 @@ export type QrMenuUrun = {
   id: string;
   ad: string;
   aciklama?: string;
+  /** İsteğe bağlı görsel URL (https://...) */
+  gorselSrc?: string;
+  /** Görsel alt metni (erişilebilirlik/SEO) */
+  gorselAlt?: string;
   fiyat: string;
   sira: number;
 };
@@ -50,8 +54,23 @@ function varsayilan(): QrMenuData {
         baslik: "Başlangıçlar",
         sira: 0,
         ogeler: [
-          { id: newId(), ad: "Çorba", aciklama: "Günün çorbası", fiyat: "120 ₺", sira: 0 },
-          { id: newId(), ad: "Meze tabağı", fiyat: "280 ₺", sira: 1 },
+          {
+            id: newId(),
+            ad: "Çorba",
+            aciklama: "Günün çorbası",
+            gorselSrc: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&q=80",
+            gorselAlt: "Sıcak çorba",
+            fiyat: "120 ₺",
+            sira: 0,
+          },
+          {
+            id: newId(),
+            ad: "Meze tabağı",
+            gorselSrc: "https://images.unsplash.com/photo-1541013406133-0b59c0d4f2b1?w=800&q=80",
+            gorselAlt: "Meze tabağı",
+            fiyat: "280 ₺",
+            sira: 1,
+          },
         ],
       },
       {
@@ -59,8 +78,23 @@ function varsayilan(): QrMenuData {
         baslik: "Ana yemekler",
         sira: 1,
         ogeler: [
-          { id: newId(), ad: "Izgara köfte", aciklama: "Pilav ve salata ile", fiyat: "420 ₺", sira: 0 },
-          { id: newId(), ad: "Tavuk şiş", fiyat: "380 ₺", sira: 1 },
+          {
+            id: newId(),
+            ad: "Izgara köfte",
+            aciklama: "Pilav ve salata ile",
+            gorselSrc: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80",
+            gorselAlt: "Izgara köfte",
+            fiyat: "420 ₺",
+            sira: 0,
+          },
+          {
+            id: newId(),
+            ad: "Tavuk şiş",
+            gorselSrc: "https://images.unsplash.com/photo-1604908176997-125f25cc500f?w=800&q=80",
+            gorselAlt: "Tavuk şiş",
+            fiyat: "380 ₺",
+            sira: 1,
+          },
         ],
       },
     ],
