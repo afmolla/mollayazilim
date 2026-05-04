@@ -5,6 +5,7 @@ import { useWithBase } from "@/components/SitePrefixProvider";
 import type { MenuItem } from "@/lib/menu-store";
 import { MobileNav } from "@/components/MobileNav";
 import { SiteNavLinks } from "@/components/SiteNavLinks";
+import { SiteAnalyticsBadge } from "@/components/SiteAnalyticsBadge";
 
 export function SiteHeaderClient(props: {
   brand: string;
@@ -30,6 +31,10 @@ export function SiteHeaderClient(props: {
         >
           <SiteNavLinks links={props.navLinks} />
         </nav>
+
+        <div className="hidden shrink-0 md:block">
+          <SiteAnalyticsBadge />
+        </div>
       </div>
     </header>
   );

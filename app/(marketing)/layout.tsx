@@ -4,11 +4,13 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SitePrefixProvider } from "@/components/SitePrefixProvider";
 import { getRequestSite } from "@/lib/site-request";
+import { VfAnalyticsTracker } from "@/components/VfAnalyticsTracker";
 
 function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
+      <VfAnalyticsTracker />
       <main className="flex-1">{children}</main>
       <SiteFooter />
     </>
