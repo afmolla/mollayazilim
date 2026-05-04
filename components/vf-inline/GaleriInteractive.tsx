@@ -17,8 +17,8 @@ function newGalImage(src: string, alt: string): G["images"][number] {
   return { src, alt, hiza: "orta", kolon: 1 };
 }
 
-export function GaleriInteractive(props: {
-  const wb = useWithBase(); initial: G }) {
+export function GaleriInteractive(props: { initial: G }) {
+  const wb = useWithBase();
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [g, setG] = useState<G>(() => ({

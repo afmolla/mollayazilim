@@ -8,8 +8,8 @@ import { CmsSayfaBody } from "@/components/CmsSayfaBody";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 
-export function CmsPageInteractive(props: {
-  const wb = useWithBase(); slug: string; initial: Sayfa }) {
+export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
+  const wb = useWithBase();
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [s, setS] = useState<Sayfa>(() => ({ ...props.initial }));

@@ -12,10 +12,10 @@ import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
 type Ilet = SiteIcerik["iletisim"];
 
 export function IletisimInteractive(props: {
-  const wb = useWithBase();
   initial: Ilet;
   ayar: Pick<SiteAyarlar, "whatsapp" | "adresDetay" | "calismaSaatleri">;
 }) {
+  const wb = useWithBase();
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [ilet, setIlet] = useState<Ilet>(() => ({ ...props.initial }));

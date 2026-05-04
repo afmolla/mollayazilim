@@ -23,8 +23,8 @@ function normalize(s: string) {
   return s.trim().toLocaleLowerCase("tr-TR");
 }
 
-export function PanelMedia(props: {
-  const wb = useWithBase(); onPickUrl?: (url: string) => void }) {
+export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
+  const wb = useWithBase();
   const router = useRouter();
   const [list, setList] = useState<Medya[]>([]);
   const [loading, setLoading] = useState(true);

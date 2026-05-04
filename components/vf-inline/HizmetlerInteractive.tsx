@@ -11,8 +11,8 @@ type Hiz = SiteIcerik["hizmetler"];
 
 type CtxItem = { id: string; label: string; run: () => void };
 
-export function HizmetlerInteractive(props: {
-  const wb = useWithBase(); initial: Hiz }) {
+export function HizmetlerInteractive(props: { initial: Hiz }) {
+  const wb = useWithBase();
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [h, setH] = useState<Hiz>(() => ({
