@@ -1,7 +1,6 @@
 "use client";
 import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type PanelLoginProps = {
@@ -11,7 +10,6 @@ type PanelLoginProps = {
 
 export function PanelLogin(props: PanelLoginProps = {}) {
   const wb = useWithBase();
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,12 +18,16 @@ export function PanelLogin(props: PanelLoginProps = {}) {
     e.preventDefault();
     setError("");
     setLoading(true);
+    const ctrl = new AbortController();
+    const timeoutMs = 20000;
+    const timeoutId = window.setTimeout(() => ctrl.abort(), timeoutMs);
     try {
       const res = await fetch(wb("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
         body: JSON.stringify({ password }),
+        signal: ctrl.signal,
       });
       if (!res.ok) {
         let msg = "Giriş başarısız";
@@ -38,10 +40,16 @@ export function PanelLogin(props: PanelLoginProps = {}) {
         setError(msg);
         return;
       }
-      router.refresh();
-    } catch {
-      setError("Bağlantı hatası. Sayfayı yenileyip tekrar deneyin.");
+      /* router.refresh() bazı ortamlarda takılı kalabiliyor; tam yenileme çerezi güvenle uygular */
+      window.location.assign(wb("/panel"));
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        setError(`İstek zaman aşımı (${timeoutMs / 1000} sn). Sunucuyu kontrol edin.`);
+      } else {
+        setError("Bağlantı hatası. Sayfayı yenileyip tekrar deneyin.");
+      }
     } finally {
+      window.clearTimeout(timeoutId);
       setLoading(false);
     }
   }

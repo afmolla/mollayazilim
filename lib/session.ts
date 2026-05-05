@@ -81,15 +81,23 @@ async function clearLegacyCookie(): Promise<void> {
   jar.set(LEGACY_COOKIE, "", { httpOnly: true, sameSite: "lax", secure: cookieSecure(), path: "/", maxAge: 0 });
 }
 
-export async function oturumAc(): Promise<void> {
-  const name = await resolveSessionCookieName();
+/**
+ * @param siteSubdir Route içinde await öncesi verilmeli (AsyncLocalStorage kaybına karşı),
+ * örn. login handler ilk satırda `getSiteContext()?.subdir ?? "molla"`.
+ */
+export async function oturumAc(siteSubdir?: string): Promise<void> {
+  const name = siteSubdir
+    ? subdirToCookieName(siteSubdir)
+    : await resolveSessionCookieName();
   await writeSessionCookie(name);
   await clearLegacyCookie();
 }
 
-export async function oturumKapat(): Promise<void> {
+export async function oturumKapat(siteSubdir?: string): Promise<void> {
   const jar = await cookies();
-  const name = await resolveSessionCookieName();
+  const name = siteSubdir
+    ? subdirToCookieName(siteSubdir)
+    : await resolveSessionCookieName();
   jar.set(name, "", { httpOnly: true, sameSite: "lax", secure: cookieSecure(), path: "/", maxAge: 0 });
   await clearLegacyCookie();
 }
