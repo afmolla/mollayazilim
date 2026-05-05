@@ -16,7 +16,13 @@ function MarketingShell({ children }: { children: React.ReactNode }) {
       <SiteHeader />
       <VfAnalyticsTracker />
       <main className="flex-1" style={{ paddingTop: "calc(var(--header-h, 64px) + 16px)" }}>
-        {children}
+        <Suspense
+          fallback={
+            <div className="mx-auto max-w-6xl px-4 py-14 text-center text-sm text-[var(--muted)]">Yükleniyor…</div>
+          }
+        >
+          {children}
+        </Suspense>
       </main>
       <SiteFooter />
     </>
@@ -59,7 +65,13 @@ export default async function MarketingLayout({
   return (
     <SitePrefixProvider prefix={prefix}>
       <JsonLdLocalBusiness />
-      <Suspense fallback={<MarketingShell>{children}</MarketingShell>}>
+      <Suspense
+        fallback={
+          <div className="flex min-h-[40vh] flex-col items-center justify-center px-4 text-sm text-[var(--muted)]">
+            Yükleniyor…
+          </div>
+        }
+      >
         <SiteEditModeHost>
           <MarketingShell>{children}</MarketingShell>
         </SiteEditModeHost>

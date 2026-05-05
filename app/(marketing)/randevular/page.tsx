@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Panelden onaylanmış randevu örnekleri — demo içerik; gerçek işletmede KVKK’ya uygun maskeleme önerilir.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 function tarihLabel(iso: string) {
   const d = new Date(iso + "T12:00:00");

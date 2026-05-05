@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
 import { QrMenuPageClient } from "./QrMenuPageClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "QR Menü",

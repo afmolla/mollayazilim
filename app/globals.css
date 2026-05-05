@@ -92,6 +92,10 @@ html[data-theme="luxe"] {
 
 /* Üst menü: satır + sığdırma (Tailwind ile çakışmayacak şekilde min düzen) */
 @layer components {
+  /* Kök Molla `/` — fixed navbar akış dışı; içerik üstten boşluklu başlasın */
+  main.molla-root-main {
+    padding-top: calc(var(--header-h, 64px) + 2rem);
+  }
   .site-header-nav > ul {
     display: flex !important;
     flex-flow: row nowrap !important;

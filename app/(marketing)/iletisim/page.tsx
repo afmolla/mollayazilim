@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Adres, çalışma saatleri ve WhatsApp — demo iletişim bilgileri.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function IletisimPage() {
   const [ayar, c] = await Promise.all([ayarlarGetir(), icerikGetir()]);

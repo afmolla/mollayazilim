@@ -116,6 +116,29 @@ export function PanelApp(props: PanelAppProps) {
   }, [isMasterPanel, tab]);
 
   useEffect(() => {
+    async function touchSession() {
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+      try {
+        const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+        const j = (await res.json()) as { ok?: boolean };
+        if (!j.ok) router.refresh();
+      } catch {
+        router.refresh();
+      }
+    }
+    void touchSession();
+    const id = setInterval(() => void touchSession(), 4 * 60 * 1000);
+    const onVis = () => {
+      if (document.visibilityState === "visible") void touchSession();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [wb, router]);
+
+  useEffect(() => {
     const vfTab = searchParams.get("vf_tab");
     const sablon = searchParams.get("vf_sablon");
     const slug = searchParams.get("vf_slug")?.trim();

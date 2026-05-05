@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 import { sayfaBySlug } from "@/lib/pages-store";
 import { notFound } from "next/navigation";
 import { CmsPageInteractive } from "@/components/vf-inline/CmsPageInteractive";

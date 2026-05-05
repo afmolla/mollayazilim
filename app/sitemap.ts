@@ -5,7 +5,7 @@ import { runWithSiteContext } from "@/lib/site-context";
 import { yayinSayfalar } from "@/lib/pages-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const STATIC_PATHS = ["/anasayfa", "/hizmetler", "/galeri", "/randevu", "/randevular", "/iletisim", "/qr-menu"];
 

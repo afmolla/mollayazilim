@@ -50,8 +50,8 @@ const DEMO_PROJECTS = [
   { key: "emlak" as const, title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
 ];
 
-/** Vercel üretimde kök sayfa `next/image` optimizer ile ara sıra 500; doğrudan img kullan. */
-export const dynamic = "force-dynamic";
+/** ISR: settings en geç ~60 sn içinde yansır; her istekte sıfırdan işlenmez (çok daha hızlı). */
+export const revalidate = 60;
 
 export default async function MollaHome() {
   const ayar = await ayarlarGetir();
@@ -69,16 +69,7 @@ export default async function MollaHome() {
         <MollaNavbar />
 
       <div className="flex min-h-dvh flex-col">
-        {/*
-          Navbar fixed olduğu için akışta yer tutan spacer — yalnızca main padding kullanınca
-          bazı tarayıcılarda (hash + scroll restoration) üst boşluk etkisiz kalabiliyordu.
-        */}
-        <div
-          className="shrink-0"
-          style={{ height: "calc(var(--header-h, 64px) + 2rem)" }}
-          aria-hidden
-        />
-      <main className="relative z-[1] flex-1">
+      <main className="molla-root-main relative z-10 flex-1 scroll-mt-0">
         <section className="mx-auto max-w-6xl px-4 pb-7 pt-0 md:px-6 md:pb-10">
           <div className="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2">
             <div>

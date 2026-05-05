@@ -1,13 +1,16 @@
 "use client";
-import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
+import { useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function PanelLogin() {
+type PanelLoginProps = {
+  /** Kuaför / restoran / emlak paneli: gösterilecek şifre (sunucudan). Ana `/panel` için verilmez. */
+  passwordHint?: string;
+};
+
+export function PanelLogin(props: PanelLoginProps = {}) {
   const wb = useWithBase();
-  const sitePrefix = useSitePrefix();
-  const showSubpanelHint = Boolean(sitePrefix.trim());
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -50,8 +53,11 @@ export function PanelLogin() {
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--brand)]">Yönetim</p>
           <h1 className="mt-1 text-2xl font-bold text-[var(--text)]">Panel girişi</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Şifre sunucu ortamında <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 text-xs">PANEL_PASSWORD</code> ile
-            tanımlanır.
+            Şifre sunucuda <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 text-xs">PANEL_PASSWORD</code> ile
+            tanımlanır (tanımlı değilse geliştirme ortamında varsayılan{" "}
+            <code className="rounded bg-[var(--surface-2)] px-1 py-0.5 text-xs">demo123</code>
+            ). Kuaför / restoran / emlak panellerinde oturum{" "}
+            <strong className="text-[var(--text)]">10 dk</strong> hareketsiz kalınca kapanır.
           </p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
@@ -82,23 +88,14 @@ export function PanelLogin() {
           >
             {loading ? "Giriş yapılıyor…" : "Giriş yap"}
           </button>
-          {showSubpanelHint ? (
-            <p className="mt-4 text-center text-xs leading-relaxed text-[var(--muted)]">
-              Test girişi: sunucudaki <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5">PANEL_PASSWORD</code> ile
-              aynı şifre.
-              {process.env.NEXT_PUBLIC_SUBPANEL_PASSWORD_HINT ? (
-                <>
-                  {" "}
-                  Örnek:{" "}
-                  <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5">
-                    {process.env.NEXT_PUBLIC_SUBPANEL_PASSWORD_HINT}
-                  </code>
-                </>
-              ) : null}
-            </p>
+          {props.passwordHint ? (
+            <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center">
+              <p className="text-xs font-medium text-[var(--muted)]">Bu vitrin paneli şifresi</p>
+              <p className="mt-1 font-mono text-lg font-bold tracking-wide text-[var(--text)]">{props.passwordHint}</p>
+            </div>
           ) : (
             <p className="mt-4 text-center text-[10px] text-[var(--muted)]">
-              Ana yönetim paneli — şifre paylaşılmaz; yalnızca yetkili erişim.
+              Ana yönetim paneli — şifre burada gösterilmez; ortam değişkeninden bilinir.
             </p>
           )}
         </form>

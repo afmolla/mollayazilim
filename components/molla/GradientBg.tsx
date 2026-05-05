@@ -13,8 +13,12 @@ import { type ReactNode } from "react";
 
 export function GradientBg({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-[linear-gradient(155deg,#0c0826_0%,#120a1e_42%,#081c26_100%)]">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+    <div className="relative min-h-dvh bg-[linear-gradient(155deg,#0c0826_0%,#120a1e_42%,#081c26_100%)]">
+      {/*
+        Taşan blur blob’ları burada kesiyoruz; dış sarmalayıcıda overflow-* kullanmak
+        sticky/fixed + uzun sayfa kaydırmasında üst üste binme hissi yaratabiliyor.
+      */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/[0.17] via-fuchsia-600/[0.13] to-cyan-500/[0.16]" />
         <div className="absolute -top-24 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-600/52 via-fuchsia-500/42 to-cyan-400/34 blur-3xl" />
         <div className="absolute -bottom-32 right-[-10%] h-[460px] w-[620px] rounded-full bg-gradient-to-r from-sky-500/38 via-violet-500/34 to-indigo-600/38 blur-3xl" />
