@@ -1,21 +1,17 @@
 import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
-import { getSiteContext } from "@/lib/site-context";
-import { getRequestSite } from "@/lib/site-request";
 import { normalizePublicSiteUrl } from "@/lib/site";
 
 const COOKIE = "kuafor_panel";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 gün
 
-async function cookiePath(): Promise<string> {
-  const p = getSiteContext()?.prefix?.trim();
-  if (p) return p;
-  try {
-    const { prefix } = await getRequestSite();
-    return prefix || "/";
-  } catch {
-    return "/";
-  }
+/**
+ * Tek deploy’da `/panel` ile `/kuafor/panel` aynı oturumu paylaşsın diye `/`.
+ * Önek bazlı path (`/kuafor`) kullanılırsa çerez yalnızca o önek altında gider;
+ * giriş `/kuafor/api/*` üzerinden yapılıp sayfa `/panel` ise tarayıcı çerezi göndermez.
+ */
+function cookiePath(): string {
+  return "/";
 }
 
 /** Yalnızca SITE_URL https ise Secure (HTTP/IIS veya localhost prod `next start` çerez gönderebilir) */
@@ -55,7 +51,7 @@ export async function oturumAc(): Promise<void> {
   const payload = Buffer.from(JSON.stringify({ exp }), "utf8").toString("base64url");
   const token = sign(payload);
   const jar = await cookies();
-  const path = await cookiePath();
+  const path = cookiePath();
   jar.set(COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
@@ -67,7 +63,7 @@ export async function oturumAc(): Promise<void> {
 
 export async function oturumKapat(): Promise<void> {
   const jar = await cookies();
-  const path = await cookiePath();
+  const path = cookiePath();
   jar.set(COOKIE, "", { httpOnly: true, sameSite: "lax", secure: cookieSecure(), path, maxAge: 0 });
 }
 

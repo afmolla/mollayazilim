@@ -15,12 +15,22 @@ export async function SiteFooter() {
         (n) => !n.href.includes("/qr-menu") && n.href !== "/qr-menu",
       );
   const wa = whatsappLink(ayar.whatsapp, "Merhaba, randevu almak istiyorum.");
+  const phone = ayar.iletisimTelefon?.trim();
+  const email = ayar.iletisimEposta?.trim();
   const ig = ayar.instagram?.trim();
   const fb = ayar.facebook?.trim();
+  const tw = ayar.twitter?.trim();
+  const yt = ayar.youtube?.trim();
+  const tt = ayar.tiktok?.trim();
+  const li = ayar.linkedin?.trim();
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
   const igHref = ig ? normalizeExternalUrl(ig) : "";
   const fbHref = fb ? normalizeExternalUrl(fb) : "";
-  const showSocialMap = !!(igHref || fbHref || mapBlock);
+  const twHref = tw ? normalizeExternalUrl(tw) : "";
+  const ytHref = yt ? normalizeExternalUrl(yt) : "";
+  const ttHref = tt ? normalizeExternalUrl(tt) : "";
+  const liHref = li ? normalizeExternalUrl(li) : "";
+  const showSocialMap = (ayar.footerSosyalGoster ?? true) && !!(igHref || fbHref || twHref || ytHref || ttHref || liHref || mapBlock);
 
   return (
     <footer className="mt-auto border-t border-[var(--border)] bg-[var(--surface-2)]">
@@ -37,6 +47,16 @@ export async function SiteFooter() {
         </div>
         <div>
           <p className="text-sm font-medium text-[var(--text)]">İletişim</p>
+          {phone ? (
+            <p className="mt-2 text-sm text-[var(--muted)]">
+              Telefon: <span className="font-medium text-[var(--text)]">{phone}</span>
+            </p>
+          ) : null}
+          {email ? (
+            <p className={phone ? "mt-1 text-sm text-[var(--muted)]" : "mt-2 text-sm text-[var(--muted)]"}>
+              E‑posta: <span className="font-medium text-[var(--text)]">{email}</span>
+            </p>
+          ) : null}
           <a
             href={wa}
             className="mt-2 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-sm font-semibold text-white hover:opacity-95"
@@ -55,7 +75,7 @@ export async function SiteFooter() {
               Sosyal medya ve konum
             </h2>
 
-            {(igHref || fbHref) ? (
+            {(igHref || fbHref || twHref || ytHref || ttHref || liHref) ? (
               <ul className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 {igHref ? (
                   <li>
@@ -78,6 +98,54 @@ export async function SiteFooter() {
                       className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
                     >
                       Facebook
+                    </a>
+                  </li>
+                ) : null}
+                {twHref ? (
+                  <li>
+                    <a
+                      href={twHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      X
+                    </a>
+                  </li>
+                ) : null}
+                {ytHref ? (
+                  <li>
+                    <a
+                      href={ytHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      YouTube
+                    </a>
+                  </li>
+                ) : null}
+                {ttHref ? (
+                  <li>
+                    <a
+                      href={ttHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      TikTok
+                    </a>
+                  </li>
+                ) : null}
+                {liHref ? (
+                  <li>
+                    <a
+                      href={liHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
+                    >
+                      LinkedIn
                     </a>
                   </li>
                 ) : null}

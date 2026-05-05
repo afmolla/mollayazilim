@@ -2,10 +2,14 @@ import Link from "next/link";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { SitePrefixProvider } from "@/components/SitePrefixProvider";
 import { getRequestSite } from "@/lib/site-request";
-import { withBaseFromPrefix } from "@/lib/base-path";
 
 /** Doluysa PHP/static vitrin köküne gider; boşsa Next vitrin köküne. */
 const siteHomeUrl = process.env.NEXT_PUBLIC_SITE_HOME_URL?.trim() ?? "";
+
+function vitrinPublicHomeHref(prefix: string): string {
+  const p = prefix.replace(/\/+$/, "");
+  return p || "/";
+}
 
 export default async function PanelLayout({
   children,
@@ -13,6 +17,8 @@ export default async function PanelLayout({
   children: React.ReactNode;
 }) {
   const { prefix } = await getRequestSite();
+  /** Kök panel (`/panel`) → ana vitrin `/`. Portföy (`/kuafor/panel`) → `/kuafor`. */
+  const siteBackHref = siteHomeUrl || (prefix ? vitrinPublicHomeHref(prefix) : "/");
   const siteHomeClass =
     "text-sm font-medium text-[var(--muted)] hover:text-[var(--brand)]";
 
@@ -26,7 +32,7 @@ export default async function PanelLayout({
                 ← Siteye dön
               </a>
             ) : (
-              <Link href={withBaseFromPrefix(prefix, "/anasayfa")} className={siteHomeClass}>
+              <Link href={siteBackHref} className={siteHomeClass}>
                 ← Siteye dön
               </Link>
             )}

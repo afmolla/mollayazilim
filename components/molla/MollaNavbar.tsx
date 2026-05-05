@@ -1,39 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const NAV = [
   { label: "Hizmetler", href: "#hizmetler" },
   { label: "Demolar", href: "#demolar" },
-  { label: "Yorumlar", href: "#yorumlar" },
   { label: "İletişim", href: "#iletisim" },
 ];
 
 export function MollaNavbar() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 8);
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
-  }, []);
-
   return (
     <header
-      className={[
-        "sticky top-0 z-50",
-        scrolled
-          ? "border-b border-white/10 bg-black/30 backdrop-blur-md supports-[backdrop-filter]:bg-black/20"
-          : "border-b-0 bg-transparent",
-      ].join(" ")}
+      data-fixed-header
+      className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/10 bg-[#070616]/92"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400 text-sm font-black text-black">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 md:px-6">
+        <Link href="/" className="flex min-w-0 items-center gap-2">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400 text-sm font-black text-black">
             M
           </span>
-          <span className="text-sm font-semibold tracking-tight text-white">
+          <span className="min-w-0 truncate whitespace-nowrap text-sm font-semibold tracking-tight text-white sm:max-w-none">
             Molla Yazılım
           </span>
         </Link>

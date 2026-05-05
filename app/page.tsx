@@ -3,6 +3,9 @@ import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { GradientBg } from "@/components/molla/GradientBg";
 import { MollaNavbar } from "@/components/molla/MollaNavbar";
 import { MollaFooter } from "@/components/molla/MollaFooter";
+import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
+import { ayarlarGetir } from "@/lib/settings-store";
+import { parseGoogleMapsInput } from "@/lib/footer-social-map";
 
 function Pill({ children }: { children: React.ReactNode }) {
   return (
@@ -12,9 +15,21 @@ function Pill({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SectionTitle(props: { overline: string; title: string; desc: string }) {
+function SectionTitle(props: {
+  overline: string;
+  title: string;
+  desc: string;
+  anchorId?: string;
+}) {
   return (
     <div className="mx-auto max-w-3xl text-center">
+      {props.anchorId ? (
+        <span
+          id={props.anchorId}
+          className="block scroll-mt-[calc(var(--header-h)+5rem)]"
+          aria-hidden="true"
+        />
+      ) : null}
       <p className="text-xs font-semibold tracking-wide text-white/70">{props.overline}</p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">{props.title}</h2>
       <p className="mt-3 text-sm text-white/70 md:text-base">{props.desc}</p>
@@ -29,50 +44,56 @@ const FEATURES = [
   { title: "Özel tasarım", desc: "Markanıza göre tema, sayfa yapısı ve akışlar." },
 ];
 
+const DEMO_PROJECTS = [
+  { key: "kuafor" as const, title: "Kuaför Demo", href: "/kuafor", meta: "Randevu + panel" },
+  { key: "restaurant" as const, title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
+  { key: "emlak" as const, title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
+];
+
 /** Vercel üretimde kök sayfa `next/image` optimizer ile ara sıra 500; doğrudan img kullan. */
 export const dynamic = "force-dynamic";
 
-const TESTIMONIALS = [
-  {
-    name: "Örnek İşletme",
-    role: "Kurucu",
-    quote: "Paneli özelleştirip aynı gün yayına aldık. Hız ve iletişim çok iyi.",
-  },
-  {
-    name: "Demo Müşteri",
-    role: "Yönetici",
-    quote: "Mobilde çok iyi görünüyor. QR menü ve rezervasyon akışı işimizi kolaylaştırdı.",
-  },
-  {
-    name: "Stüdyo X",
-    role: "Operasyon",
-    quote: "İçerik güncellemesi saniyeler içinde yansıdı. Tam aradığımız sistem.",
-  },
-];
-
 export default async function MollaHome() {
+  const ayar = await ayarlarGetir();
+  const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
+  const visibleDemos = DEMO_PROJECTS.filter((d) => {
+    if (d.key === "kuafor") return ayar.demoKuaforGoster !== false;
+    if (d.key === "restaurant") return ayar.demoRestaurantGoster !== false;
+    if (d.key === "emlak") return ayar.demoEmlakGoster !== false;
+    return true;
+  });
   return (
     <>
       <JsonLdLocalBusiness />
       <GradientBg>
         <MollaNavbar />
 
-      <main>
-        <section className="mx-auto max-w-6xl px-4 pb-10 pt-14 md:px-6 md:pb-16 md:pt-20">
-          <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
+      <div className="flex min-h-dvh flex-col">
+        {/*
+          Navbar fixed olduğu için akışta yer tutan spacer — yalnızca main padding kullanınca
+          bazı tarayıcılarda (hash + scroll restoration) üst boşluk etkisiz kalabiliyordu.
+        */}
+        <div
+          className="shrink-0"
+          style={{ height: "calc(var(--header-h, 64px) + 2rem)" }}
+          aria-hidden
+        />
+      <main className="relative z-[1] flex-1">
+        <section className="mx-auto max-w-6xl px-4 pb-7 pt-0 md:px-6 md:pb-10">
+          <div className="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2">
             <div>
               <Pill>Özel yazılım · Admin panelleri · Sektörel sistemler</Pill>
-              <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:text-5xl">
+              <h1 className="mt-2.5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:mt-3 md:text-5xl">
                 İşletmeniz İçin{" "}
                 <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-200 to-cyan-200 bg-clip-text text-transparent">
                   Özel Yazılım Çözümleri
                 </span>
               </h1>
-              <p className="mt-5 max-w-prose text-base text-white/75 md:text-lg">
+              <p className="mt-3 max-w-prose text-base text-white/75 md:text-lg">
                 Molla Yazılım; işletmeye özel web siteleri, yönetim panelleri ve sektöre özel hazır sistemleri hızlıca
                 uyarlayıp yayına alır. Modern tasarım, yüksek performans ve ölçülebilir sonuçlar.
               </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
                   href="#demolar"
                   className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-black hover:opacity-95"
@@ -87,7 +108,7 @@ export default async function MollaHome() {
                 </a>
               </div>
 
-              <div className="mt-10 grid grid-cols-2 gap-3 text-xs text-white/70 md:grid-cols-4">
+              <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-white/70 md:grid-cols-4">
                 {FEATURES.map((f) => (
                   <div key={f.title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
                     <p className="font-semibold text-white">{f.title}</p>
@@ -143,13 +164,14 @@ export default async function MollaHome() {
           </div>
         </section>
 
-        <section id="hizmetler" className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+        <section className="mx-auto max-w-6xl px-4 py-12 md:px-6">
           <SectionTitle
+            anchorId="hizmetler"
             overline="Hizmetler"
             title="Sektöre özel hazır sistemler + özel geliştirme"
             desc="İhtiyaca göre hazır demoları özelleştiriyor veya sıfırdan özel yazılım geliştiriyoruz."
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             {[
               { title: "Kuaför Sistemi", desc: "Randevu, müşteri yönetimi, vitrin + panel." },
               { title: "Restoran Sistemi", desc: "QR menü, rezervasyon, masa yönetimi." },
@@ -170,76 +192,107 @@ export default async function MollaHome() {
           </div>
         </section>
 
-        <section id="demolar" className="mx-auto max-w-6xl px-4 pb-4 pt-8 md:px-6 md:pb-10">
+        <section className="mx-auto max-w-6xl px-4 pb-4 pt-6 md:px-6 md:pb-10">
           <SectionTitle
+            anchorId="demolar"
             overline="Demo / Projeler"
             title="Canlı demoları inceleyin"
             desc="Her demoda vitrin + panel akışını görebilirsiniz. İsterseniz aynı altyapıyı işletmenize göre uyarlayalım."
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {[
-              { title: "Kuaför Demo", href: "/kuafor", meta: "Randevu + panel" },
-              { title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
-              { title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
-            ].map((p) => (
-              <Link
-                key={p.href}
-                href={p.href}
-                className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
-              >
-                <p className="text-base font-semibold text-white">{p.title}</p>
-                <p className="mt-2 text-sm text-white/70">{p.meta}</p>
-                <p className="mt-5 text-sm font-semibold text-white">
-                  İncele <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section id="yorumlar" className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-          <SectionTitle
-            overline="Müşteri yorumları"
-            title="İşletmeler için hızlı, net ve sürdürülebilir çözümler"
-            desc="Örnek yorumlar. Gerçek projelerde süreç, teslim ve destek odaklı çalışıyoruz."
-          />
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm leading-relaxed text-white/80">“{t.quote}”</p>
-                <div className="mt-5">
-                  <p className="text-sm font-semibold text-white">{t.name}</p>
-                  <p className="text-xs text-white/60">{t.role}</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {visibleDemos.length === 0 ? (
+              <p className="col-span-full text-center text-sm text-white/65">
+                Bu demolar şu an kapalı. Yönetim panelinde <strong className="text-white">Portföy</strong> sekmesinden
+                tekrar açabilirsiniz.
+              </p>
+            ) : (
+              visibleDemos.map((p) => (
+                <div
+                  key={p.href}
+                  className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
+                >
+                  <p className="text-base font-semibold text-white">{p.title}</p>
+                  <p className="mt-2 text-sm text-white/70">{p.meta}</p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <Link
+                      href={p.href}
+                      className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
+                    >
+                      Siteyi aç <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
+                    </Link>
+                    <Link
+                      href={`${p.href}/panel`}
+                      className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                    >
+                      Paneli aç
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-20 md:px-6">
-          <div className="rounded-[32px] border border-white/10 bg-gradient-to-r from-indigo-500/20 via-fuchsia-500/10 to-cyan-400/10 p-8 md:p-10">
-            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-              <div>
-                <p className="text-xs font-semibold text-white/70">CTA</p>
-                <p className="mt-2 text-2xl font-bold tracking-tight text-white">
-                  İhtiyacınızı anlatın, 24 saat içinde demo planı çıkaralım.
-                </p>
-                <p className="mt-2 max-w-prose text-sm text-white/70">
-                  Kuaför, restoran veya emlak gibi sektörlerde hazır altyapı ile hızlıca başlayabiliriz.
-                </p>
+        <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6">
+          <div className="grid gap-6 md:grid-cols-2 md:items-start">
+            <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 md:p-7">
+              <span
+                id="iletisim"
+                className="block scroll-mt-[calc(var(--header-h)+5rem)]"
+                aria-hidden="true"
+              />
+              <p className="text-xs font-semibold tracking-wide text-white/70">İletişim</p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
+                Projeni 15 dakikada netleştirelim
+              </h2>
+              <p className="mt-2.5 text-sm text-white/70 md:text-base">
+                Hangi sektörde olursanız olun (kuaför, restoran, emlak…), mevcut demoları işletmene göre uyarlayıp hızlıca
+                yayına alabiliriz.
+              </p>
+              <p className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.12] px-4 py-3 text-sm text-white/90">
+                Projeyi başlatmak veya satın alma sürecine geçmek için formu doldurun ya da WhatsApp üzerinden yazın —
+                ücretsiz keşif için en geç aynı gün dönüş yapıyoruz.
+              </p>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-sm font-semibold text-white">Hızlı bilgi</p>
+                <ul className="mt-2 grid gap-1 text-sm text-white/70">
+                  <li>• Ortalama ilk dönüş: aynı gün</li>
+                  <li>• Demo + fiyat aralığı: 24 saat içinde</li>
+                  <li>• Teslim: ihtiyaca göre günler içinde</li>
+                </ul>
               </div>
-              <a
-                href="#iletisim"
-                className="inline-flex rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black hover:opacity-95"
-              >
-                Teklif al
-              </a>
+              {mapBlock?.type === "iframe" ? (
+                <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-sm">
+                  <iframe
+                    title="Google Haritalar"
+                    src={mapBlock.src}
+                    className="h-[min(50vh,300px)] w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              ) : mapBlock?.type === "link" ? (
+                <div className="mt-4">
+                  <a
+                    href={mapBlock.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                  >
+                    Haritada aç
+                  </a>
+                </div>
+              ) : null}
             </div>
+
+            <MollaLeadForm sourcePath="/" whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp} />
           </div>
         </section>
       </main>
 
       <MollaFooter />
+      </div>
     </GradientBg>
     </>
   );

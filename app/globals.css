@@ -61,9 +61,21 @@
 
 /* Yükseklik zinciri + tema yokken bile okunabilir sayfa (gizli sekme / CSS gecikmesi) */
 @layer base {
+  :root {
+    /* Header yüksekliği sabit (h-16) */
+    --header-h: 64px;
+  }
   html {
     height: 100%;
     color-scheme: light;
+    /*
+      Global scroll-padding bazı tarayıcılarda fixed header + scroll restoration ile
+      “yukarı/aşağı oynayınca yazı banner altına giriyor” hissi yaratabiliyor.
+      Anchor offset için sayfa içindeki scroll-margin kullanıyoruz.
+    */
+    scroll-padding-top: 0px;
+    /* Tarayıcı scroll anchoring bazen hash/geri kaydırmada üst boşluğu “yerinden oynatır” */
+    overflow-anchor: none;
   }
   body {
     min-height: 100%;

@@ -1,20 +1,6 @@
 import { portfolioPrefixes } from "@/lib/site-config";
 
-function normalizeBasePath(raw: string | undefined): string {
-  const v = (raw ?? "").trim();
-  if (!v || v === "/") return "";
-  const withLeading = v.startsWith("/") ? v : `/${v}`;
-  return withLeading.replace(/\/+$/, "") || "";
-}
-
-function envFallbackPrefix(): string {
-  const raw = process.env.NEXT_PUBLIC_BASE_PATH;
-  if (raw === undefined) return normalizeBasePath("/kuafor") || "/kuafor";
-  const n = normalizeBasePath(raw);
-  return n || portfolioPrefixes()[0];
-}
-
-/** Tam URL yolundan (`/restaurant/hizmetler`) portföy önekini çıkarır. */
+/** Tam URL yolundan (`/restaurant/hizmetler`) portföy önekini çıkarır. Kök `/panel` vb. için "". */
 export function inferPrefixFromPathname(pathname: string): string {
   const p = (pathname ?? "").split("?")[0] || "/";
   for (const base of portfolioPrefixes()) {
@@ -22,7 +8,7 @@ export function inferPrefixFromPathname(pathname: string): string {
       return base;
     }
   }
-  return envFallbackPrefix();
+  return "";
 }
 
 /** Bilinen portföy öneklerini kaldırır; iç route (`/hizmetler`) döner. */
@@ -43,7 +29,7 @@ export function getBasePathFromPathname(pathname: string | null | undefined): st
   if (typeof window !== "undefined") {
     return inferPrefixFromPathname(window.location.pathname);
   }
-  return envFallbackPrefix();
+  return "";
 }
 
 export function withBaseFromPrefix(prefix: string, path: string): string {

@@ -1,25 +1,49 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PanelDashboard } from "@/components/PanelDashboard";
+import { PanelLeads } from "@/components/PanelLeads";
+import { PanelSeo } from "@/components/PanelSeo";
 import { PanelMedia } from "@/components/PanelMedia";
 import { PanelMenus } from "@/components/PanelMenus";
 import { PanelSettings } from "@/components/PanelSettings";
 import { PanelUnifiedIcerik } from "@/components/PanelUnifiedIcerik";
 import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
+import { PanelPortfoyHub } from "@/components/PanelPortfoyHub";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
-type TabId = "randevular" | "icerik" | "site_duzenle" | "medya" | "menuler" | "ayarlar" | "yedek";
+type TabId =
+  | "portfoy"
+  | "randevular"
+  | "leads"
+  | "seo"
+  | "icerik"
+  | "site_duzenle"
+  | "medya"
+  | "menuler"
+  | "ayarlar"
+  | "yedek";
 
 function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
   const vfTab = sp.get("vf_tab");
   const sablon = sp.get("vf_sablon");
   const slug = sp.get("vf_slug")?.trim();
-  const allowed = new Set<TabId>(["randevular", "icerik", "site_duzenle", "medya", "menuler", "ayarlar", "yedek"]);
+  const allowed = new Set<TabId>([
+    "portfoy",
+    "randevular",
+    "leads",
+    "seo",
+    "icerik",
+    "site_duzenle",
+    "medya",
+    "menuler",
+    "ayarlar",
+    "yedek",
+  ]);
   if (vfTab && allowed.has(vfTab as TabId)) return vfTab as TabId;
   if (Boolean(slug) || (Boolean(sablon) && isPanelContentTab(sablon ?? ""))) return "icerik";
   return "randevular";
@@ -32,8 +56,10 @@ type PanelAppProps = {
   panelSolMenuBaslangic?: "acik" | "dar";
 };
 
-const NAV: { id: TabId; label: string; short: string }[] = [
+const NAV_BASE: { id: TabId; label: string; short: string }[] = [
   { id: "randevular", label: "Randevular", short: "Ra" },
+  { id: "leads", label: "Lead’ler", short: "Le" },
+  { id: "seo", label: "SEO", short: "Seo" },
   { id: "icerik", label: "İçerik", short: "İç" },
   { id: "site_duzenle", label: "Site düzenle", short: "Sd" },
   { id: "medya", label: "Medya", short: "Me" },
@@ -41,6 +67,12 @@ const NAV: { id: TabId; label: string; short: string }[] = [
   { id: "ayarlar", label: "Ayarlar", short: "Ay" },
   { id: "yedek", label: "Yedek", short: "Ye" },
 ];
+
+const NAV_MASTER_FIRST: { id: TabId; label: string; short: string } = {
+  id: "portfoy",
+  label: "Portföy",
+  short: "Po",
+};
 
 function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
   if (typeof window === "undefined") return baslangic === "dar";
@@ -56,6 +88,12 @@ function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
 
 export function PanelApp(props: PanelAppProps) {
   const wb = useWithBase();
+  const sitePrefix = useSitePrefix();
+  const isMasterPanel = !sitePrefix.trim();
+  const navItems = useMemo(
+    () => (isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE),
+    [isMasterPanel]
+  );
   const sabitle = props.panelSolMenuSabitle ?? true;
   const baslangic = props.panelSolMenuBaslangic ?? "acik";
   const router = useRouter();
@@ -74,10 +112,14 @@ export function PanelApp(props: PanelAppProps) {
   const [collapsed, setCollapsed] = useState(() => readCollapsedPref(baslangic));
 
   useEffect(() => {
+    if (!isMasterPanel && tab === "portfoy") setTab("randevular");
+  }, [isMasterPanel, tab]);
+
+  useEffect(() => {
     const vfTab = searchParams.get("vf_tab");
     const sablon = searchParams.get("vf_sablon");
     const slug = searchParams.get("vf_slug")?.trim();
-    const allowed = new Set(NAV.map((n) => n.id));
+    const allowed = new Set(navItems.map((n) => n.id));
     const wantsContent =
       Boolean(slug) || (Boolean(sablon) && isPanelContentTab(sablon ?? ""));
 
@@ -90,11 +132,13 @@ export function PanelApp(props: PanelAppProps) {
 
     const q = searchParams.toString();
     queueMicrotask(() => {
-      if (vfTab && allowed.has(vfTab as TabId)) setTab(vfTab as TabId);
+      if (vfTab === "portfoy" && !isMasterPanel) {
+        setTab("randevular");
+      } else if (vfTab && allowed.has(vfTab as TabId)) setTab(vfTab as TabId);
       else if (wantsContent) setTab("icerik");
       if (dirty && q) router.replace(wb("/panel"), { scroll: false });
     });
-  }, [searchParams, router, wb]);
+  }, [searchParams, router, wb, navItems, isMasterPanel]);
 
   const persistCollapsed = (next: boolean) => {
     setCollapsed(next);
@@ -156,7 +200,7 @@ export function PanelApp(props: PanelAppProps) {
           </button>
         </div>
         <nav className="flex flex-col gap-0.5 py-3">
-          {NAV.map((n) => (
+          {navItems.map((n) => (
             <button
               key={n.id}
               type="button"
@@ -173,8 +217,14 @@ export function PanelApp(props: PanelAppProps) {
       </aside>
 
       <div className="min-w-0 space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-        {tab === "randevular" ? (
+        {tab === "portfoy" ? (
+          <PanelPortfoyHub />
+        ) : tab === "randevular" ? (
           <PanelDashboard />
+        ) : tab === "leads" ? (
+          <PanelLeads />
+        ) : tab === "seo" ? (
+          <PanelSeo />
         ) : tab === "icerik" ? (
           <PanelUnifiedIcerik vfSnapshot={vfIcerikSnapshot} />
         ) : tab === "site_duzenle" ? (

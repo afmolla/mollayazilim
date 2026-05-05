@@ -21,8 +21,8 @@ export const getRequestSite = cache(async (): Promise<SiteRequestInfo> => {
       return { prefix: "", subdir: "molla" };
     }
 
-    let prefix = h.get("x-site-prefix")?.trim() ?? "";
-    let subdir = h.get("x-data-subdir")?.trim() ?? "";
+    const prefix = h.get("x-site-prefix")?.trim() ?? "";
+    const subdir = h.get("x-data-subdir")?.trim() ?? "";
     const fromProxy = siteFromProxyHeaders(prefix, subdir);
     if (fromProxy) return fromProxy;
     if (!prefix) {

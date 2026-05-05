@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 type SiteAyarlar = {
   salonAd: string;
   whatsapp: string;
+  iletisimWhatsapp?: string;
+  iletisimTelefon?: string;
+  iletisimEposta?: string;
   adresKisa: string;
   adresDetay: string;
   calismaSaatleri: string;
@@ -16,7 +19,12 @@ type SiteAyarlar = {
   panelSolMenuBaslangic?: "acik" | "dar";
   instagram?: string;
   facebook?: string;
+  twitter?: string;
+  youtube?: string;
+  tiktok?: string;
+  linkedin?: string;
   googleMaps?: string;
+  footerSosyalGoster?: boolean;
 };
 
 export function PanelSettings() {
@@ -29,13 +37,21 @@ export function PanelSettings() {
   const [form, setForm] = useState<SiteAyarlar>({
     salonAd: "",
     whatsapp: "",
+    iletisimWhatsapp: "",
+    iletisimTelefon: "",
+    iletisimEposta: "",
     adresKisa: "",
     adresDetay: "",
     calismaSaatleri: "",
     sehir: "",
     instagram: "",
     facebook: "",
+    twitter: "",
+    youtube: "",
+    tiktok: "",
+    linkedin: "",
     googleMaps: "",
+    footerSosyalGoster: true,
     panelSolMenuSabitle: true,
     panelSolMenuBaslangic: "acik",
   });
@@ -59,9 +75,17 @@ export function PanelSettings() {
         menuDavranis: j.ayarlar.menuDavranis ?? "hover",
         panelSolMenuSabitle: j.ayarlar.panelSolMenuSabitle ?? true,
         panelSolMenuBaslangic: j.ayarlar.panelSolMenuBaslangic ?? "acik",
+        iletisimWhatsapp: j.ayarlar.iletisimWhatsapp ?? "",
+        iletisimTelefon: j.ayarlar.iletisimTelefon ?? "",
+        iletisimEposta: j.ayarlar.iletisimEposta ?? "",
         instagram: j.ayarlar.instagram ?? "",
         facebook: j.ayarlar.facebook ?? "",
+        twitter: j.ayarlar.twitter ?? "",
+        youtube: j.ayarlar.youtube ?? "",
+        tiktok: j.ayarlar.tiktok ?? "",
+        linkedin: j.ayarlar.linkedin ?? "",
         googleMaps: j.ayarlar.googleMaps ?? "",
+        footerSosyalGoster: j.ayarlar.footerSosyalGoster ?? true,
       });
       setErr("");
       setLoading(false);
@@ -126,6 +150,29 @@ export function PanelSettings() {
               value={form.whatsapp}
               onChange={(v) => setForm((s) => ({ ...s, whatsapp: v }))}
             />
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+              <p className="text-sm font-semibold text-[var(--text)]">İletişim (kurumsal)</p>
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                Bu alanlar vitrin/kurumsal sayfalarda (örn. Molla footer + teklif formu) kullanılır.
+              </p>
+              <div className="mt-4 grid gap-4 md:grid-cols-3">
+                <Field
+                  label="İletişim WhatsApp (9055...)"
+                  value={form.iletisimWhatsapp ?? ""}
+                  onChange={(v) => setForm((s) => ({ ...s, iletisimWhatsapp: v }))}
+                />
+                <Field
+                  label="Telefon (+90 ...)"
+                  value={form.iletisimTelefon ?? ""}
+                  onChange={(v) => setForm((s) => ({ ...s, iletisimTelefon: v }))}
+                />
+                <Field
+                  label="E‑posta"
+                  value={form.iletisimEposta ?? ""}
+                  onChange={(v) => setForm((s) => ({ ...s, iletisimEposta: v }))}
+                />
+              </div>
+            </div>
             <p className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--muted)]">
               Vitrinde menü bağlantıları üst çubukta <strong className="text-[var(--text)]">ortada</strong> görünür.
               Sol açılır menü yalnızca <strong className="text-[var(--text)]">yönetim panelinde</strong> (/panel).
@@ -200,8 +247,23 @@ export function PanelSettings() {
           <h2 className="font-semibold text-[var(--text)]">Sosyal / Harita</h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
             Bu alanlar sitede sayfanın <strong className="font-medium text-[var(--text)]">en altında</strong>, telif satırının hemen
-            üzerinde gösterilir (Instagram / Facebook düğmeleri ve harita).
+            üzerinde gösterilir. Boş bıraktıklarınız görünmez.
           </p>
+          <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={form.footerSosyalGoster ?? true}
+              onChange={(e) => setForm((s) => ({ ...s, footerSosyalGoster: e.target.checked }))}
+            />
+            <span>
+              <span className="font-medium text-[var(--text)]">Footer sosyal alanını göster</span>
+              <span className="mt-1 block text-sm text-[var(--muted)]">
+                Kapalıysa altta sosyal medya/harita bölümü hiç görünmez.
+              </span>
+            </span>
+          </label>
+
           <div className="mt-4 grid gap-4 md:grid-cols-3">
             <Field
               label="Instagram URL"
@@ -212,6 +274,26 @@ export function PanelSettings() {
               label="Facebook URL"
               value={form.facebook ?? ""}
               onChange={(v) => setForm((s) => ({ ...s, facebook: v }))}
+            />
+            <Field
+              label="X / Twitter URL"
+              value={form.twitter ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s, twitter: v }))}
+            />
+            <Field
+              label="YouTube URL"
+              value={form.youtube ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s, youtube: v }))}
+            />
+            <Field
+              label="TikTok URL"
+              value={form.tiktok ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s, tiktok: v }))}
+            />
+            <Field
+              label="LinkedIn URL"
+              value={form.linkedin ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s, linkedin: v }))}
             />
             <Field
               label="Google Maps URL"

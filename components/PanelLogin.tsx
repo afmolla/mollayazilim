@@ -1,11 +1,13 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function PanelLogin() {
   const wb = useWithBase();
+  const sitePrefix = useSitePrefix();
+  const showSubpanelHint = Boolean(sitePrefix.trim());
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,11 +25,19 @@ export function PanelLogin() {
         body: JSON.stringify({ password }),
       });
       if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        setError(j.error ?? "Giriş başarısız");
+        let msg = "Giriş başarısız";
+        try {
+          const j = (await res.json()) as { error?: string };
+          msg = j.error ?? msg;
+        } catch {
+          msg = res.status === 401 ? "Geçersiz şifre" : `Sunucu yanıtı (${res.status})`;
+        }
+        setError(msg);
         return;
       }
       router.refresh();
+    } catch {
+      setError("Bağlantı hatası. Sayfayı yenileyip tekrar deneyin.");
     } finally {
       setLoading(false);
     }
@@ -72,6 +82,25 @@ export function PanelLogin() {
           >
             {loading ? "Giriş yapılıyor…" : "Giriş yap"}
           </button>
+          {showSubpanelHint ? (
+            <p className="mt-4 text-center text-xs leading-relaxed text-[var(--muted)]">
+              Test girişi: sunucudaki <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5">PANEL_PASSWORD</code> ile
+              aynı şifre.
+              {process.env.NEXT_PUBLIC_SUBPANEL_PASSWORD_HINT ? (
+                <>
+                  {" "}
+                  Örnek:{" "}
+                  <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5">
+                    {process.env.NEXT_PUBLIC_SUBPANEL_PASSWORD_HINT}
+                  </code>
+                </>
+              ) : null}
+            </p>
+          ) : (
+            <p className="mt-4 text-center text-[10px] text-[var(--muted)]">
+              Ana yönetim paneli — şifre paylaşılmaz; yalnızca yetkili erişim.
+            </p>
+          )}
         </form>
       </div>
     </div>
