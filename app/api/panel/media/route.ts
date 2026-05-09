@@ -46,7 +46,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "multipart/form-data bekleniyor" }, { status: 400 });
     }
     const fd = await req.formData();
-    const file = fd.get("file");
+    /** `@types/node` FormData çakışması — Web FormData kullanılır */
+    const file = (fd as unknown as globalThis.FormData).get("file");
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Dosya bulunamadı (file)" }, { status: 400 });
     }

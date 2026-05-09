@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,10 +25,16 @@ type SiteAyarlar = {
   linkedin?: string;
   googleMaps?: string;
   footerSosyalGoster?: boolean;
+  mobilSiparisAcik?: boolean;
+  mobilMinVersiyon?: string;
+  mobilIosIndirUrl?: string;
+  mobilAndroidIndirUrl?: string;
+  mobilAndroidApkUrl?: string;
 };
 
 export function PanelSettings() {
   const wb = useWithBase();
+  const sitePrefix = useSitePrefix();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -52,6 +58,11 @@ export function PanelSettings() {
     linkedin: "",
     googleMaps: "",
     footerSosyalGoster: true,
+    mobilSiparisAcik: false,
+    mobilMinVersiyon: "",
+    mobilIosIndirUrl: "",
+    mobilAndroidIndirUrl: "",
+    mobilAndroidApkUrl: "",
     panelSolMenuSabitle: true,
     panelSolMenuBaslangic: "acik",
   });
@@ -86,6 +97,11 @@ export function PanelSettings() {
         linkedin: j.ayarlar.linkedin ?? "",
         googleMaps: j.ayarlar.googleMaps ?? "",
         footerSosyalGoster: j.ayarlar.footerSosyalGoster ?? true,
+        mobilSiparisAcik: j.ayarlar.mobilSiparisAcik ?? false,
+        mobilMinVersiyon: j.ayarlar.mobilMinVersiyon ?? "",
+        mobilIosIndirUrl: j.ayarlar.mobilIosIndirUrl ?? "",
+        mobilAndroidIndirUrl: j.ayarlar.mobilAndroidIndirUrl ?? "",
+        mobilAndroidApkUrl: j.ayarlar.mobilAndroidApkUrl ?? "",
       });
       setErr("");
       setLoading(false);
@@ -93,7 +109,7 @@ export function PanelSettings() {
       setErr("Ayarlar yüklenemedi");
       setLoading(false);
     });
-  }, [router]);
+  }, [router, wb]);
 
   async function save() {
     setSaving(true);
@@ -242,6 +258,70 @@ export function PanelSettings() {
             </div>
           </div>
         </div>
+
+        {sitePrefix.replace(/\/+$/, "") === "/restaurant" ? (
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
+            <h2 className="font-semibold text-[var(--text)]">Mobil sipariş</h2>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Kapalıyken mobil uygulama menüyü okuyamaz ve sipariş oluşturamaz. Menü içeriği için{" "}
+              <strong className="font-medium text-[var(--text)]">İçerik → QR menü</strong> veya ilgili panel ekranını kullanın.
+            </p>
+            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={form.mobilSiparisAcik ?? false}
+                onChange={(e) => setForm((s) => ({ ...s, mobilSiparisAcik: e.target.checked }))}
+              />
+              <span>
+                <span className="font-medium text-[var(--text)]">Mobil siparişi aç</span>
+                <span className="mt-1 block text-sm text-[var(--muted)]">
+                  API: <code className="rounded bg-[var(--surface)] px-1">GET /api/public/menu</code>,{" "}
+                  <code className="rounded bg-[var(--surface)] px-1">POST /api/public/order</code> — istekte{" "}
+                  <code className="rounded bg-[var(--surface)] px-1">x-site-prefix: /restaurant</code> ve{" "}
+                  <code className="rounded bg-[var(--surface)] px-1">x-data-subdir: restaurant</code> gönderilir.
+                </span>
+              </span>
+            </label>
+            <div className="mt-4">
+              <Field
+                label="Zorunlu minimum uygulama sürümü (örn. 1.0.0)"
+                value={form.mobilMinVersiyon ?? ""}
+                onChange={(v) => setForm((s) => ({ ...s, mobilMinVersiyon: v }))}
+              />
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                Doldurduğunuzda, bu sürümden düşük mobil uygulamalar menü ve sipariş alamaz; kullanıcı güncelleme ekranı görür.
+                Boş bırakırsanız sürüm zorunluluğu yok. Uygulama sürümü <code className="rounded bg-[var(--surface-2)] px-1">x-app-version</code> başlığı ile gider.
+              </p>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <Field
+                label="App Store indirme linki (iPhone)"
+                value={form.mobilIosIndirUrl ?? ""}
+                onChange={(v) => setForm((s) => ({ ...s, mobilIosIndirUrl: v }))}
+              />
+              <Field
+                label="Google Play indirme linki (Android)"
+                value={form.mobilAndroidIndirUrl ?? ""}
+                onChange={(v) => setForm((s) => ({ ...s, mobilAndroidIndirUrl: v }))}
+              />
+            </div>
+            <div className="mt-4">
+              <Field
+                label="Android APK (doğrudan indir)"
+                value={form.mobilAndroidApkUrl ?? ""}
+                onChange={(v) => setForm((s) => ({ ...s, mobilAndroidApkUrl: v }))}
+              />
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                Site kökündeki dosya için örnek: <code className="rounded bg-[var(--surface-2)] px-1">/apk/molla-restaurant.apk</code> — dosyayı sunucuda{" "}
+                <code className="rounded bg-[var(--surface-2)] px-1">public/apk/</code> altına koyun. Tam harici URL de verebilirsiniz.
+              </p>
+            </div>
+            <p className="mt-2 text-xs text-[var(--muted)]">
+              Mağaza linkleri için tam URL yapıştırın (https://…). APK yalnızca Android&apos;te kurulur; iPhone için App Store linki kullanın.
+            </p>
+          </div>
+        ) : null}
 
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
           <h2 className="font-semibold text-[var(--text)]">Sosyal / Harita</h2>

@@ -115,7 +115,7 @@ export function PanelMenus() {
       setErr("Menüler yüklenemedi");
       setLoading(false);
     });
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     (async () => {
@@ -128,7 +128,7 @@ export function PanelMenus() {
       const j = (await res.json()) as { sayfalar: { slug: string; baslik: string; yayin: boolean }[] };
       setCmsPages((j.sayfalar ?? []).filter((x) => x.slug && x.baslik));
     })().catch(() => {});
-  }, [router]);
+  }, [router, wb]);
 
   const items = tab === "header" ? db.header : db.footer;
   const qn = useMemo(() => normalize(q), [q]);

@@ -34,6 +34,18 @@ export type SiteAyarlar = {
   googleMaps?: string;
   /** Footer'da sosyal medya bloklarını göster */
   footerSosyalGoster?: boolean;
+  /** Restoran mobil uygulama / API üzerinden sipariş kabulü */
+  mobilSiparisAcik?: boolean;
+  /**
+   * Mobil uygulama zorunlu minimum sürüm (ör. 1.2.0). Doluysa düşük sürüm menü/sipariş alamaz.
+   * Uygulama `x-app-version` başlığı gönderir.
+   */
+  mobilMinVersiyon?: string;
+  /** Mobil uygulama mağaza linkleri (footer’da gösterilir) */
+  mobilIosIndirUrl?: string;
+  mobilAndroidIndirUrl?: string;
+  /** Android APK doğrudan indirme (ör. `/apk/molla-restaurant.apk` veya tam URL) */
+  mobilAndroidApkUrl?: string;
   /**
    * Yalnız kök vitrin (/) — “Demo / Projeler” kartlarının görünürlüğü.
    * Belirtilmezse true kabul edilir.
@@ -105,6 +117,10 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     typeof patch.footerSosyalGoster === "boolean"
       ? patch.footerSosyalGoster
       : (cur.footerSosyalGoster ?? true);
+  const mobilSiparisAcik =
+    typeof patch.mobilSiparisAcik === "boolean"
+      ? patch.mobilSiparisAcik
+      : (cur.mobilSiparisAcik ?? false);
   const demoKuaforGoster =
     typeof patch.demoKuaforGoster === "boolean"
       ? patch.demoKuaforGoster
@@ -146,6 +162,11 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     linkedin: (patch.linkedin ?? cur.linkedin ?? "").trim() || undefined,
     googleMaps: (patch.googleMaps ?? cur.googleMaps ?? "").trim() || undefined,
     footerSosyalGoster,
+    mobilSiparisAcik,
+    mobilMinVersiyon: (patch.mobilMinVersiyon ?? cur.mobilMinVersiyon ?? "").trim() || undefined,
+    mobilIosIndirUrl: (patch.mobilIosIndirUrl ?? cur.mobilIosIndirUrl ?? "").trim() || undefined,
+    mobilAndroidIndirUrl: (patch.mobilAndroidIndirUrl ?? cur.mobilAndroidIndirUrl ?? "").trim() || undefined,
+    mobilAndroidApkUrl: (patch.mobilAndroidApkUrl ?? cur.mobilAndroidApkUrl ?? "").trim() || undefined,
     demoKuaforGoster,
     demoRestaurantGoster,
     demoEmlakGoster,

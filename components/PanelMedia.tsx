@@ -52,7 +52,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
     setList(j.medya);
     setErr("");
     setLoading(false);
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -86,7 +86,7 @@ export function PanelMedia(props: { onPickUrl?: (url: string) => void }) {
       }
     })();
     return () => ac.abort();
-  }, [router]);
+  }, [router, wb]);
 
   const filtered = useMemo(() => {
     const qn = normalize(q);

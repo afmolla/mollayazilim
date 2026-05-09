@@ -1,7 +1,7 @@
 "use client";
 import { useWithBase } from "@/components/SitePrefixProvider";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import type { QrMenuData, QrMenuKategori, QrMenuUrun } from "@/lib/qr-menu-store";
@@ -23,30 +23,36 @@ export function PanelQrMenuTab() {
   const [qrLink, setQrLink] = useState("");
   const [qrPng, setQrPng] = useState("");
 
-  const load = useCallback(async () => {
-    setErr("");
-    const res = await fetch(wb("/api/panel/qr-menu"), { cache: "no-store", credentials: "same-origin" });
-    if (res.status === 401) {
-      router.refresh();
-      return;
-    }
-    if (!res.ok) {
-      setErr("QR menü yüklenemedi.");
-      return;
-    }
-    const j = (await res.json()) as { menu: QrMenuData };
-    setData(j.menu);
-  }, [router]);
-
   useEffect(() => {
-    setLoading(true);
-    void load().finally(() => setLoading(false));
-  }, [load]);
+    let cancelled = false;
+    void (async () => {
+      setErr("");
+      try {
+        const res = await fetch(wb("/api/panel/qr-menu"), { cache: "no-store", credentials: "same-origin" });
+        if (cancelled) return;
+        if (res.status === 401) {
+          router.refresh();
+          return;
+        }
+        if (!res.ok) {
+          setErr("QR menü yüklenemedi.");
+          return;
+        }
+        const j = (await res.json()) as { menu: QrMenuData };
+        setData(j.menu);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [wb, router]);
 
   useEffect(() => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
     const link = origin ? `${origin}${prefix || ""}/qr-menu` : "";
-    setQrLink(link);
+    queueMicrotask(() => setQrLink(link));
     if (!link) return;
     let cancelled = false;
     void (async () => {

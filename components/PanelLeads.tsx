@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWithBase } from "@/components/SitePrefixProvider";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -187,18 +187,18 @@ export function PanelLeads() {
         <div className="flex flex-wrap gap-2">
           {(
             [
-              { id: "hepsi", label: `Hepsi (${counts.hepsi})` },
-              { id: "yeni", label: `Yeni (${counts.yeni})` },
-              { id: "aranacak", label: `Aranacak (${counts.aranacak})` },
-              { id: "kapandi", label: `Kapandı (${counts.kapandi})` },
+              { id: "hepsi" as const, label: `Hepsi (${counts.hepsi})` },
+              { id: "yeni" as const, label: `Yeni (${counts.yeni})` },
+              { id: "aranacak" as const, label: `Aranacak (${counts.aranacak})` },
+              { id: "kapandi" as const, label: `Kapandı (${counts.kapandi})` },
             ] as const
           ).map((t) => (
             <button
               key={t.id}
               type="button"
-              onClick={() => setStatus(t.id as any)}
+              onClick={() => setStatus(t.id)}
               className={
-                status === (t.id as any)
+                status === t.id
                   ? "rounded-xl bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-[var(--on-brand)]"
                   : "rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-2)]"
               }

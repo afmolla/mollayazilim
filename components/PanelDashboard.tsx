@@ -84,7 +84,7 @@ export function PanelDashboard() {
         /* ignore */
       }
     })();
-  }, []);
+  }, [wb]);
 
   useEffect(() => {
     const ac = new AbortController();

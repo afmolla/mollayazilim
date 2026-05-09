@@ -27,7 +27,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       rules.push({
         userAgent: "*",
         allow: "/",
-        disallow: [`${prefix}/panel`, `${prefix}/api/`],
+        disallow: [`${prefix}/panel`, `${prefix}/api/`, `/_next/`],
       });
     });
   }

@@ -116,7 +116,7 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
     return () => {
       cancelled = true;
     };
-  }, [vfEdit]);
+  }, [vfEdit, wb]);
 
   const inline = vfEdit && sessionOk === true;
 

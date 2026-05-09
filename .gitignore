@@ -43,3 +43,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Android APK dağıtımı (public kökünden servis; binary repoda tutulmaz)
+/public/apk/*.apk

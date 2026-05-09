@@ -41,7 +41,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     return () => {
       c = true;
     };
-  }, [inline]);
+  }, [inline, wb]);
 
   const patch = useCallback(
     async (partial: Partial<Hiz>) => {
@@ -70,7 +70,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
         setSaveMsg("err");
       }
     },
-    [router]
+    [router, wb]
   );
 
   const schedule = useCallback(

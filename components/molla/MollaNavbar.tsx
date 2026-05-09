@@ -8,7 +8,15 @@ const NAV = [
   { label: "İletişim", href: "#iletisim" },
 ];
 
+function waMeLink(phone: string, text: string) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  if (!digits) return "#";
+  return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
+}
+
 export function MollaNavbar() {
+  const waNum = process.env.NEXT_PUBLIC_MOLLA_WHATSAPP ?? "905551234567";
+  const waHref = waMeLink(waNum, "Merhaba, web sitesi / panel teklifi almak istiyorum.");
   return (
     <header
       data-fixed-header
@@ -33,6 +41,14 @@ export function MollaNavbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden rounded-xl bg-[#25D366] px-4 py-2 text-sm font-semibold text-white hover:opacity-95 md:inline-flex"
+          >
+            WhatsApp
+          </a>
           <a
             href="#demolar"
             className="hidden rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 md:inline-flex"

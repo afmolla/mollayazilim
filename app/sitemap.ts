@@ -15,6 +15,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const subdir = dataSubdirForPrefix(prefix);
     await runWithSiteContext({ prefix, subdir }, async () => {
       const base = await siteUrl();
+      // Kök landing sayfa (ajans) sitemap’e girsin.
+      // (portfolioPrefixes varsayılan olarak "/" içermiyor.)
+      if (!prefix) {
+        out.push({
+          url: `${base}/`,
+          lastModified: new Date(),
+          changeFrequency: "weekly",
+          priority: 1,
+        });
+      }
       for (const p of STATIC_PATHS) {
         if (p === "/qr-menu") {
           const q = await qrMenuGetir();

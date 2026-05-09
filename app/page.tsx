@@ -15,6 +15,15 @@ function Pill({ children }: { children: React.ReactNode }) {
   );
 }
 
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+      <p className="text-xs font-semibold text-white/60">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-white">{value}</p>
+    </div>
+  );
+}
+
 function SectionTitle(props: {
   overline: string;
   title: string;
@@ -38,10 +47,10 @@ function SectionTitle(props: {
 }
 
 const FEATURES = [
-  { title: "Hızlı teslim", desc: "Hazır altyapı + özelleştirme ile günler içinde demo." },
-  { title: "Mobil uyumlu", desc: "Tüm ekranlarda premium görünüm ve etkileşim." },
-  { title: "Panel dahil", desc: "İçerik, medya, menüler, ayarlar — tek panelden." },
-  { title: "Özel tasarım", desc: "Markanıza göre tema, sayfa yapısı ve akışlar." },
+  { title: "Hızlı demo", desc: "Hazır altyapı + özelleştirme ile 24 saat içinde demo." },
+  { title: "Mobil + SEO", desc: "Hızlı açılan, Google uyumlu modern sayfalar." },
+  { title: "Panel dahil", desc: "İçerik, medya, menüler, ayarlar — tek panel." },
+  { title: "Ölçülebilir", desc: "Form/WhatsApp lead takibi ve net dönüşüm akışı." },
 ];
 
 const DEMO_PROJECTS = [
@@ -50,12 +59,46 @@ const DEMO_PROJECTS = [
   { key: "emlak" as const, title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
 ];
 
+const PACKAGES = [
+  {
+    title: "Başlangıç",
+    badge: "Kurumsal",
+    desc: "Tek sayfa veya çoklu sayfa kurumsal web sitesi. Hızlı yayına çıkın.",
+    items: ["Modern tasarım", "Mobil uyum", "SEO temel kurulum", "İletişim/WhatsApp CTA"],
+    cta: "Teklif al",
+    href: "#iletisim",
+    featured: false,
+  },
+  {
+    title: "Pro",
+    badge: "Vitrin + Panel",
+    desc: "İçerik yönetimi paneli ile siteyi kendiniz yönetin. Lead’ler panelde toplansın.",
+    items: ["Admin paneli", "Menü & sayfa yönetimi", "Medya yöneticisi", "Lead formu + takip"],
+    cta: "Demo + teklif iste",
+    href: "#iletisim",
+    featured: true,
+  },
+  {
+    title: "Sektörel",
+    badge: "Hazır sistem",
+    desc: "Kuaför / restoran / emlak gibi hazır demoları işletmenize göre uyarlayalım.",
+    items: ["Hazır demo altyapısı", "Hızlı özelleştirme", "İhtiyaca göre modül", "Yedekleme & bakım opsiyonu"],
+    cta: "Demoları incele",
+    href: "#demolar",
+    featured: false,
+  },
+] as const;
+
 /** ISR: settings en geç ~60 sn içinde yansır; her istekte sıfırdan işlenmez (çok daha hızlı). */
 export const revalidate = 60;
 
 export default async function MollaHome() {
   const ayar = await ayarlarGetir();
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
+  const waDigits = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
+  const waHref = waDigits
+    ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Merhaba, web sitesi / panel teklifi almak istiyorum.")}`
+    : "#";
   const visibleDemos = DEMO_PROJECTS.filter((d) => {
     if (d.key === "kuafor") return ayar.demoKuaforGoster !== false;
     if (d.key === "restaurant") return ayar.demoRestaurantGoster !== false;
@@ -69,20 +112,21 @@ export default async function MollaHome() {
         <MollaNavbar />
 
       <div className="flex min-h-dvh flex-col">
-      <main className="molla-root-main relative z-10 flex-1 scroll-mt-0">
+      <main className="molla-root-main relative z-10 flex-1 scroll-mt-0 pb-20 md:pb-0">
         <section className="mx-auto max-w-6xl px-4 pb-7 pt-0 md:px-6 md:pb-10">
           <div className="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2">
             <div>
-              <Pill>Özel yazılım · Admin panelleri · Sektörel sistemler</Pill>
+              <Pill>Web sitesi · Admin panel · Sektörel demo</Pill>
               <h1 className="mt-2.5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:mt-3 md:text-5xl">
                 İşletmeniz İçin{" "}
                 <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-200 to-cyan-200 bg-clip-text text-transparent">
-                  Özel Yazılım Çözümleri
+                  Satış Odaklı Web Sitesi
                 </span>
               </h1>
               <p className="mt-3 max-w-prose text-base text-white/75 md:text-lg">
-                Molla Yazılım; işletmeye özel web siteleri, yönetim panelleri ve sektöre özel hazır sistemleri hızlıca
-                uyarlayıp yayına alır. Modern tasarım, yüksek performans ve ölçülebilir sonuçlar.
+                Molla Yazılım; işletmenize özel <strong className="text-white">web sitesi</strong> ve{" "}
+                <strong className="text-white">yönetim paneli</strong> geliştirir. Amacımız: ziyaretçi geldiğinde 3 saniyede
+                “ne satıyorsunuz?” net olsun ve dönüşüm (WhatsApp / form / randevu) aksın.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
@@ -95,8 +139,15 @@ export default async function MollaHome() {
                   href="#iletisim"
                   className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                 >
-                  İletişime geç
+                  Teklif al
                 </a>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <Stat label="Ücretsiz keşif" value="15 dk görüşme" />
+                <Stat label="Demo süresi" value="24 saat" />
+                <Stat label="Yayına çıkış" value="3–10 gün" />
+                <Stat label="Dönüş takibi" value="Panel + lead" />
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-white/70 md:grid-cols-4">
@@ -224,6 +275,138 @@ export default async function MollaHome() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+          <SectionTitle
+            overline="Paketler"
+            title="İhtiyacınıza göre net başlangıç"
+            desc="Önce hızlı demo çıkarıyoruz; sonra paketi işletmenize göre netleştiriyoruz."
+          />
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {PACKAGES.map((p) => (
+              <div
+                key={p.title}
+                className={[
+                  "rounded-3xl border p-6",
+                  p.featured
+                    ? "border-fuchsia-300/30 bg-gradient-to-b from-white/10 to-white/5 shadow-2xl"
+                    : "border-white/10 bg-white/5",
+                ].join(" ")}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-base font-semibold text-white">{p.title}</p>
+                    <p className="mt-1 text-xs font-semibold text-white/60">{p.badge}</p>
+                  </div>
+                  {p.featured ? (
+                    <span className="rounded-full border border-emerald-300/25 bg-emerald-500/[0.12] px-3 py-1 text-xs font-semibold text-emerald-100">
+                      En popüler
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-3 text-sm text-white/70">{p.desc}</p>
+                <ul className="mt-4 grid gap-2 text-sm text-white/75">
+                  {p.items.map((it) => (
+                    <li key={it} className="flex gap-2">
+                      <span className="mt-[0.22rem] h-1.5 w-1.5 shrink-0 rounded-full bg-white/40" aria-hidden="true" />
+                      <span>{it}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6">
+                  <a
+                    href={p.href}
+                    className={[
+                      "inline-flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold",
+                      p.featured
+                        ? "bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 text-black hover:opacity-95"
+                        : "border border-white/15 bg-white/5 text-white hover:bg-white/10",
+                    ].join(" ")}
+                  >
+                    {p.cta}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+          <SectionTitle
+            overline="Süreç"
+            title="3 adımda yayına"
+            desc="Sürpriz yok: kapsam, demo, yayına çıkış. Hepsi net planla."
+          />
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                n: "01",
+                t: "Keşif (15 dk)",
+                d: "Sektör, hedef, örnek siteler ve içerik ihtiyacı netleşir.",
+              },
+              {
+                n: "02",
+                t: "Demo (24 saat)",
+                d: "Tasarım + akış + CTA’lar demo üzerinde görünür hale gelir.",
+              },
+              {
+                n: "03",
+                t: "Yayına çıkış (3–10 gün)",
+                d: "Alan adı, SEO temel kurulum, hız ve takip ile canlıya alınır.",
+              },
+            ].map((x) => (
+              <div key={x.n} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                <p className="text-xs font-semibold tracking-wide text-white/60">{x.n}</p>
+                <p className="mt-2 text-base font-semibold text-white">{x.t}</p>
+                <p className="mt-2 text-sm text-white/70">{x.d}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 rounded-3xl border border-emerald-400/25 bg-emerald-500/[0.10] p-6">
+            <p className="text-sm font-semibold text-white">Taahhüt</p>
+            <p className="mt-2 text-sm text-white/80">
+              İlk görüşmeden sonra <strong className="text-white">24 saat içinde demo planı</strong> ve{" "}
+              <strong className="text-white">teslim takvimi</strong> paylaşırız. Uymuyorsa başlamayız.
+            </p>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-6 pt-4 md:px-6">
+          <SectionTitle
+            overline="SSS"
+            title="Sık sorulan sorular"
+            desc="Netleştirelim: süreç, teslim ve içerik yönetimi."
+          />
+          <div className="mx-auto mt-8 grid max-w-3xl gap-3">
+            {[
+              {
+                q: "Web sitesi yaptığınızı 3 saniyede nasıl anlatıyorsunuz?",
+                a: "İlk ekran başlığı sektör + vaadi net söyler. CTA tek tıklık (WhatsApp / form / randevu). Hemen altında demo/kanıt ve süreç yer alır.",
+              },
+              {
+                q: "Teslim süresi ne kadar?",
+                a: "İhtiyaca göre değişir. Genelde 24 saat içinde demo, 3–10 gün içinde yayına çıkış planlarıyla ilerliyoruz.",
+              },
+              {
+                q: "Panel ile neleri yönetebilirim?",
+                a: "Menüler, sayfalar, medya, SEO ayarları, içerikler ve gelen lead’ler tek panelden yönetilebilir.",
+              },
+            ].map((x) => (
+              <details
+                key={x.q}
+                className="group rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+              >
+                <summary className="cursor-pointer list-none text-sm font-semibold text-white/90">
+                  <span>{x.q}</span>
+                  <span className="float-right text-white/50 group-open:text-white/80" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm text-white/70">{x.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
         <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6">
           <div className="grid gap-6 md:grid-cols-2 md:items-start">
             <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 md:p-7">
@@ -281,6 +464,25 @@ export default async function MollaHome() {
           </div>
         </section>
       </main>
+
+      <div className="fixed inset-x-0 bottom-0 z-[90] border-t border-white/10 bg-[#070616]/95 backdrop-blur-md md:hidden">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-[#25D366] text-sm font-semibold text-white"
+          >
+            WhatsApp
+          </a>
+          <a
+            href="#iletisim"
+            className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 text-sm font-semibold text-black"
+          >
+            Teklif al
+          </a>
+        </div>
+      </div>
 
       <MollaFooter />
       </div>

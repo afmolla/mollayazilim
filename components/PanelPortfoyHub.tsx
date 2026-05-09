@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWithBase } from "@/components/SitePrefixProvider";
 
 type DemoFlags = {
@@ -53,21 +53,28 @@ export function PanelPortfoyHub() {
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
 
-  const load = useCallback(async () => {
-    const res = await fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" });
-    if (!res.ok) return;
-    const j = (await res.json()) as { ayarlar?: Partial<DemoFlags> };
-    const a = j.ayarlar ?? {};
-    setFlags({
-      demoKuaforGoster: a.demoKuaforGoster !== false,
-      demoRestaurantGoster: a.demoRestaurantGoster !== false,
-      demoEmlakGoster: a.demoEmlakGoster !== false,
-    });
-  }, [wb]);
-
   useEffect(() => {
-    void load().finally(() => setLoading(false));
-  }, [load]);
+    let cancelled = false;
+    void (async () => {
+      const res = await fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" });
+      if (!res.ok || cancelled) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+      const j = (await res.json()) as { ayarlar?: Partial<DemoFlags> };
+      const a = j.ayarlar ?? {};
+      if (cancelled) return;
+      setFlags({
+        demoKuaforGoster: a.demoKuaforGoster !== false,
+        demoRestaurantGoster: a.demoRestaurantGoster !== false,
+        demoEmlakGoster: a.demoEmlakGoster !== false,
+      });
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [wb]);
 
   async function patchFlags(patch: Partial<DemoFlags>) {
     const next = { ...flags, ...patch };

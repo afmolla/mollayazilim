@@ -54,7 +54,7 @@ export function IletisimInteractive(props: {
     return () => {
       c = true;
     };
-  }, [inline]);
+  }, [inline, wb]);
 
   const patchContent = useCallback(
     async (partial: Partial<Ilet>) => {
@@ -83,7 +83,7 @@ export function IletisimInteractive(props: {
         setSaveMsg("err");
       }
     },
-    [router]
+    [router, wb]
   );
 
   const patchSettings = useCallback(
@@ -117,7 +117,7 @@ export function IletisimInteractive(props: {
         setSaveMsg("err");
       }
     },
-    [router]
+    [router, wb]
   );
 
   const scheduleIlet = useCallback(

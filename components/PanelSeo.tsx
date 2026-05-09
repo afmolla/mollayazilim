@@ -54,7 +54,7 @@ export function PanelSeo() {
       setErr("SEO ayarları yüklenemedi");
       setLoading(false);
     });
-  }, [router]);
+  }, [router, wb]);
 
   async function save() {
     setSaving(true);

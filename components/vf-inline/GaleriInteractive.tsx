@@ -47,7 +47,7 @@ export function GaleriInteractive(props: { initial: G }) {
     return () => {
       c = true;
     };
-  }, [inline]);
+  }, [inline, wb]);
 
   const patch = useCallback(
     async (partial: Partial<G>) => {
@@ -76,7 +76,7 @@ export function GaleriInteractive(props: { initial: G }) {
         setSaveMsg("err");
       }
     },
-    [router]
+    [router, wb]
   );
 
   const schedule = useCallback(

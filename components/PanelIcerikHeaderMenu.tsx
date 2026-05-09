@@ -38,7 +38,7 @@ export function PanelIcerikHeaderMenu() {
     }
     const j = (await res.json()) as Db;
     setDb(j);
-  }, [router]);
+  }, [router, wb]);
 
   useEffect(() => {
     (async () => {
@@ -62,7 +62,7 @@ export function PanelIcerikHeaderMenu() {
       const j = (await res.json()) as { sayfalar: { slug: string; baslik: string; yayin: boolean }[] };
       setCmsPages((j.sayfalar ?? []).filter((x) => x.slug && x.baslik));
     })().catch(() => {});
-  }, [router]);
+  }, [router, wb]);
 
   const items = db.header;
 

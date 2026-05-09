@@ -33,6 +33,27 @@ function originFromRequestHeaders(h: Headers): string | null {
   return null;
 }
 
+/**
+ * Statik dosyalar (`public/apk/...`) her zaman alan kökünden sunulur; çoklu vitrin önekinden bağımsızdır.
+ */
+export async function siteOrigin(): Promise<string> {
+  const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  if (raw) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  try {
+    const inferred = originFromRequestHeaders(await headers());
+    if (inferred) return inferred;
+  } catch {
+    /* build / özel ortam */
+  }
+  return "http://localhost:3000";
+}
+
 export async function siteUrl(): Promise<string> {
   const ctx = getSiteContext();
   const prefix = ctx?.prefix ?? (await getRequestSite()).prefix;

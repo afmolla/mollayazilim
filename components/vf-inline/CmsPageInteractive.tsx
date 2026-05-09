@@ -35,7 +35,7 @@ export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
     return () => {
       c = true;
     };
-  }, [inline, props.slug]);
+  }, [inline, props.slug, wb]);
 
   const save = useCallback(
     async (next: Sayfa) => {
@@ -71,7 +71,7 @@ export function CmsPageInteractive(props: { slug: string; initial: Sayfa }) {
         setSaveMsg("err");
       }
     },
-    [props.slug, router]
+    [props.slug, router, wb]
   );
 
   const schedule = useCallback(

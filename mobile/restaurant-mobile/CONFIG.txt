@@ -1,0 +1,16 @@
+Expo ortam değişkeni (proje kökünde .env — Git tarafından izlenmez):
+EXPO_PUBLIC_API_BASE=http://localhost:3000
+
+Gerçek telefonda bilgisayardaki Next için LAN IP kullanın, örn:
+EXPO_PUBLIC_API_BASE=http://192.168.1.10:3000
+
+Android emülatörde bilgisayara erişim için genelde:
+EXPO_PUBLIC_API_BASE=http://10.0.2.2:3000
+
+---
+Zorunlu güncelleme akışı:
+1) Panel `/restaurant/panel` → Ayarlar → "Zorunlu minimum uygulama sürümü" alanını yükselt (örn. 1.0.0 → 1.1.0).
+2) Mobil tarafta `app.json` içindeki `expo.version` ve package.json `version` değerini yeni sürüme çek, build yayınla.
+3) Eski uygulama açılışta bloklanır; yeni sürüm `x-app-version` ile sunucuya uyduğu sürece menü/sipariş çalışır.
+
+Siparişler: `/restaurant/panel` → Siparişler sekmesi (`data/restaurant/siparisler.json`).

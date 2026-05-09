@@ -3,7 +3,7 @@ import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyURLSearchParams } from "next/navigation";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PanelDashboard } from "@/components/PanelDashboard";
 import { PanelLeads } from "@/components/PanelLeads";
 import { PanelSeo } from "@/components/PanelSeo";
@@ -14,11 +14,13 @@ import { PanelUnifiedIcerik } from "@/components/PanelUnifiedIcerik";
 import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { PanelPortfoyHub } from "@/components/PanelPortfoyHub";
+import { PanelSiparisler } from "@/components/PanelSiparisler";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
 type TabId =
   | "portfoy"
   | "randevular"
+  | "siparisler"
   | "leads"
   | "seo"
   | "icerik"
@@ -35,6 +37,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
   const allowed = new Set<TabId>([
     "portfoy",
     "randevular",
+    "siparisler",
     "leads",
     "seo",
     "icerik",
@@ -58,6 +61,7 @@ type PanelAppProps = {
 
 const NAV_BASE: { id: TabId; label: string; short: string }[] = [
   { id: "randevular", label: "Randevular", short: "Ra" },
+  { id: "siparisler", label: "Siparişler", short: "Si" },
   { id: "leads", label: "Lead’ler", short: "Le" },
   { id: "seo", label: "SEO", short: "Seo" },
   { id: "icerik", label: "İçerik", short: "İç" },
@@ -89,11 +93,15 @@ function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
 export function PanelApp(props: PanelAppProps) {
   const wb = useWithBase();
   const sitePrefix = useSitePrefix();
+  const pathname = usePathname() ?? "";
   const isMasterPanel = !sitePrefix.trim();
-  const navItems = useMemo(
-    () => (isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE),
-    [isMasterPanel]
-  );
+  const navItems = useMemo(() => {
+    const base = isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE;
+    if (sitePrefix.replace(/\/+$/, "") !== "/restaurant") {
+      return base.filter((x) => x.id !== "siparisler");
+    }
+    return base;
+  }, [isMasterPanel, sitePrefix]);
   const sabitle = props.panelSolMenuSabitle ?? true;
   const baslangic = props.panelSolMenuBaslangic ?? "acik";
   const router = useRouter();
@@ -112,8 +120,13 @@ export function PanelApp(props: PanelAppProps) {
   const [collapsed, setCollapsed] = useState(() => readCollapsedPref(baslangic));
 
   useEffect(() => {
-    if (!isMasterPanel && tab === "portfoy") setTab("randevular");
+    if (!isMasterPanel && tab === "portfoy") queueMicrotask(() => setTab("randevular"));
   }, [isMasterPanel, tab]);
+
+  useEffect(() => {
+    const onRestaurant = pathname.startsWith("/restaurant");
+    if (!onRestaurant && tab === "siparisler") queueMicrotask(() => setTab("randevular"));
+  }, [pathname, tab]);
 
   useEffect(() => {
     async function touchSession() {
@@ -244,6 +257,8 @@ export function PanelApp(props: PanelAppProps) {
           <PanelPortfoyHub />
         ) : tab === "randevular" ? (
           <PanelDashboard />
+        ) : tab === "siparisler" ? (
+          <PanelSiparisler />
         ) : tab === "leads" ? (
           <PanelLeads />
         ) : tab === "seo" ? (

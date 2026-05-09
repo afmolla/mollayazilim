@@ -30,7 +30,7 @@ export function useVfInlineSession() {
     return () => {
       cancelled = true;
     };
-  }, [vfEdit]);
+  }, [vfEdit, wb]);
 
   const inline = vfEdit && sessionOk === true;
   return { vfEdit, sessionOk, inline };

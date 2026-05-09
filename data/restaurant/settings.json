@@ -11,6 +11,8 @@
     "panelSolMenuBaslangic": "acik",
     "instagram": "",
     "facebook": "",
-    "googleMaps": ""
+    "googleMaps": "",
+    "mobilSiparisAcik": true,
+    "mobilMinVersiyon": "1.0.0"
   }
 }
