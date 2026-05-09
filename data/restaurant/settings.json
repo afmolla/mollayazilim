@@ -13,6 +13,7 @@
     "facebook": "",
     "googleMaps": "",
     "mobilSiparisAcik": true,
-    "mobilMinVersiyon": "1.0.0"
+    "mobilMinVersiyon": "1.0.0",
+    "mobilAndroidApkUrl": "/apk/molla-restaurant.apk"
   }
 }

@@ -1,5 +1,10 @@
-Bu klasöre ürettiğiniz APK dosyasını koyun (ör. molla-restaurant.apk).
-Panel → Site ayarları → "Android APK" alanına örnek: /apk/molla-restaurant.apk
+Bu klasöre ürettiğiniz APK dosyasını tam bu ada koyun:
+  public/apk/molla-restaurant.apk
+
+Restoran vitrininde varsayılan ayar: data/restaurant/settings.json → mobilAndroidApkUrl = "/apk/molla-restaurant.apk"
+Değiştirmek için: /restaurant/panel → Site ayarları → "Android APK (doğrudan indir)"
+
+Tam URL de yazılabilir (ör. GitHub Releases).
 
 Derleme (Expo EAS, ücretli kotası olabilir):
   cd mobile/restaurant-mobile
