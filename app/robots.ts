@@ -15,26 +15,46 @@ function siteHost(): string {
   return "localhost:3000";
 }
 
+async function resolveRootSitemapUrl(): Promise<string> {
+  const env = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  if (env) {
+    return `${env.replace(/\/$/, "")}/sitemap.xml`;
+  }
+  let url = "";
+  await runWithSiteContext({ prefix: "", subdir: "molla" }, async () => {
+    const b = await siteUrl();
+    url = `${b.replace(/\/$/, "")}/sitemap.xml`;
+  });
+  return url;
+}
+
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const rules: MetadataRoute.Robots["rules"] = [];
-  const sitemaps: string[] = [];
+
+  await runWithSiteContext({ prefix: "", subdir: "molla" }, async () => {
+    rules.push({
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/panel", "/panel/", "/api/", "/_next/"],
+    });
+  });
 
   for (const prefix of portfolioPrefixes()) {
     const subdir = dataSubdirForPrefix(prefix);
     await runWithSiteContext({ prefix, subdir }, async () => {
-      const base = await siteUrl();
-      sitemaps.push(`${base}/sitemap.xml`);
       rules.push({
         userAgent: "*",
         allow: "/",
-        disallow: [`${prefix}/panel`, `${prefix}/api/`, `/_next/`],
+        disallow: [`${prefix}/panel`, `${prefix}/panel/`, "/api/", "/_next/"],
       });
     });
   }
 
+  const sitemap = await resolveRootSitemapUrl();
+
   return {
     rules,
-    sitemap: sitemaps.length === 1 ? sitemaps[0] : sitemaps,
+    ...(sitemap ? { sitemap } : {}),
     host: siteHost(),
   };
 }

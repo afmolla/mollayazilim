@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { JsonLdLocalBusiness } from "@/components/JsonLd";
 import { GradientBg } from "@/components/molla/GradientBg";
 import { MollaNavbar } from "@/components/molla/MollaNavbar";
@@ -6,6 +7,48 @@ import { MollaFooter } from "@/components/molla/MollaFooter";
 import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { parseGoogleMapsInput } from "@/lib/footer-social-map";
+import { siteUrl } from "@/lib/site";
+import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const ayar = await ayarlarGetir();
+  const base = await siteUrl();
+  const canonical = base.endsWith("/") ? base : `${base}/`;
+  const title =
+    ayar.seoTitle?.trim() ||
+    "Molla Yazılım | İstanbul Web Sitesi, QR Menü & Admin Panel — Özel Yazılım";
+  const description =
+    ayar.seoDescription?.trim() ||
+    "İstanbul ve Türkiye geneli kurumsal web sitesi, QR menü, randevu sistemi, kuaför / restoran / emlak vitrinleri ve admin panel. Ücretsiz keşif, hızlı demo, SEO uyumlu yayın.";
+  const keywords = ayar.seoKeywords
+    ?.split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+  const ogImage = ayar.seoOgImage?.trim();
+
+  return {
+    title: { absolute: title },
+    description,
+    keywords: keywords?.length ? keywords : undefined,
+    robots: ayar.seoIndex === false ? { index: false, follow: true } : { index: true, follow: true },
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "Molla Yazılım",
+      locale: "tr_TR",
+      type: "website",
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+    },
+    twitter: {
+      card: ogImage ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(ogImage ? { images: [ogImage] } : {}),
+    },
+  };
+}
 
 function Pill({ children }: { children: React.ReactNode }) {
   return (
@@ -379,20 +422,7 @@ export default async function MollaHome() {
             desc="Netleştirelim: süreç, teslim ve içerik yönetimi."
           />
           <div className="mx-auto mt-8 grid max-w-3xl gap-3">
-            {[
-              {
-                q: "Web sitesi yaptığınızı 3 saniyede nasıl anlatıyorsunuz?",
-                a: "İlk ekran başlığı sektör + vaadi net söyler. CTA tek tıklık (WhatsApp / form / randevu). Hemen altında demo/kanıt ve süreç yer alır.",
-              },
-              {
-                q: "Teslim süresi ne kadar?",
-                a: "İhtiyaca göre değişir. Genelde 24 saat içinde demo, 3–10 gün içinde yayına çıkış planlarıyla ilerliyoruz.",
-              },
-              {
-                q: "Panel ile neleri yönetebilirim?",
-                a: "Menüler, sayfalar, medya, SEO ayarları, içerikler ve gelen lead’ler tek panelden yönetilebilir.",
-              },
-            ].map((x) => (
+            {MOLLA_LANDING_FAQ.map((x) => (
               <details
                 key={x.q}
                 className="group rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
