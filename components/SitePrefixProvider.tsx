@@ -7,8 +7,7 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import { usePathname } from "next/navigation";
-import { withBase } from "@/lib/base-path";
+import { withBaseFromPrefix } from "@/lib/base-path";
 
 const Ctx = createContext<string>("");
 
@@ -22,10 +21,13 @@ export function useSitePrefix(): string {
   return useContext(Ctx);
 }
 
-/** İstemci: geçerli vitrin yolundan (`/restaurant/hizmetler`) önekli URL üretir. */
+/**
+ * Proxy ile `/restaurant` → içte `/anasayfa` yeniden yazıldığında `usePathname()` iç/dış URL ile
+ * uyuşmayabiliyor; hydration takılması / yanlış href üretimini önlemek için önek sunucudan (`SitePrefixProvider`) gelir.
+ */
 export function usePrefixedPath(): (path: string) => string {
-  const pathname = usePathname() ?? "/";
-  return useCallback((path: string) => withBase(path, pathname), [pathname]);
+  const prefix = useSitePrefix();
+  return useCallback((path: string) => withBaseFromPrefix(prefix, path), [prefix]);
 }
 
 /** fetch / Link için kısayol */

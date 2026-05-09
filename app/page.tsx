@@ -258,12 +258,14 @@ export default async function MollaHome() {
                   <div className="mt-5 flex flex-wrap gap-2">
                     <Link
                       href={p.href}
+                      prefetch={false}
                       className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
                     >
                       Siteyi aç <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
                     </Link>
                     <Link
                       href={`${p.href}/panel`}
+                      prefetch={false}
                       className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
                     >
                       Paneli aç
