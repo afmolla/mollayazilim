@@ -17,12 +17,22 @@ function normalizeList(raw: string | undefined): string[] {
   return out;
 }
 
+/** Ortam değişkeni boş/bozuksa vitrin yolları kaybolmasın */
+const DEFAULT_PORTFOLIO_PREFIXES = [
+  "/kuafor",
+  "/kuafor-kadin",
+  "/restaurant",
+  "/emlak",
+  "/avukat",
+] as const;
+
 export function portfolioPrefixes(): string[] {
   const fromEnv = process.env.NEXT_PUBLIC_PORTFOLIO_PREFIXES;
   if (fromEnv !== undefined && fromEnv.trim() !== "") {
-    return normalizeList(fromEnv);
+    const list = normalizeList(fromEnv);
+    if (list.length > 0) return list;
   }
-  return ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat"];
+  return [...DEFAULT_PORTFOLIO_PREFIXES];
 }
 
 export function slugFromPrefix(prefix: string): string {

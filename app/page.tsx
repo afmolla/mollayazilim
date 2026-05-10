@@ -122,6 +122,13 @@ const FEATURES = [
 type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat";
 
 function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
+  /** Yerelde panelden kapatılmış olsa bile demoları göster (proxy + vitrin testi için).
+   * Üretimde panel bayrakları geçerlidir. Yerelde bayrakları dinlemek için:
+   * NEXT_PUBLIC_RESPECT_DEMO_FLAGS=1 */
+  const respectFlags =
+    process.env.NODE_ENV !== "development" || process.env.NEXT_PUBLIC_RESPECT_DEMO_FLAGS === "1";
+  if (!respectFlags) return true;
+
   switch (key) {
     case "kuafor":
       return ayar.demoKuaforGoster !== false;
