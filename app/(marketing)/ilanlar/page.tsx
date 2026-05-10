@@ -49,8 +49,8 @@ function SideNavLink(props: {
       className={[
         "block rounded-lg px-3 py-2 text-sm transition",
         props.active
-          ? "border border-[#ffd800]/80 bg-[#fffef5] font-semibold text-[#1a1a1a]"
-          : "border border-transparent text-[#333] hover:border-[#ddd] hover:bg-white",
+          ? "border border-sky-500/40 bg-[var(--surface-2)] font-semibold text-[var(--text)] shadow-[var(--emlak-shadow)]"
+          : "border border-transparent text-[var(--muted)] hover:border-[var(--border)] hover:bg-[var(--surface-2)]/90",
       ].join(" ")}
     >
       {props.children}
@@ -99,26 +99,26 @@ export default async function IlanlarPage({
   ];
 
   return (
-    <div className="emlak-portal-root min-h-[70vh] bg-[#ebebeb] pb-16 pt-0 md:pb-24">
-      <div className="border-b border-[#d5d5d5] bg-[#ffd800]">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#3d3d00] md:px-6">
+    <div className="emlak-portal-root min-h-[70vh] pb-16 pt-0 md:pb-24">
+      <div className="border-b border-[var(--border)] bg-[var(--surface-2)]">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)] md:px-6">
           <span>Örnek ilan portalı — gerçek alım/satış/kiralama değildir</span>
-          <span className="hidden sm:inline">Demo vitrin · Atlas Emlak şablonu</span>
+          <span className="hidden text-sky-300/90 sm:inline">Demo vitrin · Atlas Emlak şablonu</span>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 pt-6 md:px-6 md:pt-8">
-        <div className="flex flex-col gap-3 border-b border-[#d0d0d0] pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-semibold text-[#666]">Konut · ikinci el</p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#1a1a1a] md:text-3xl">İlanlar</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#555]">
+            <p className="text-xs font-semibold text-sky-400/90">Konut · ikinci el</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--text)] md:text-3xl">İlanlar</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
               Sol menüden kategori ve şehir seçin; detaylı arama ile kelime ve fiyat daraltması yapın — klasified
               portal düzeni (demo).
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-md border border-[#ccc] bg-white px-3 py-1.5 text-sm font-semibold text-[#222] shadow-sm">
+            <span className="rounded-md border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-sm font-semibold text-[var(--text)] shadow-[var(--emlak-shadow)]">
               {rows.length} ilan
             </span>
           </div>
@@ -136,8 +136,8 @@ export default async function IlanlarPage({
                 className={[
                   "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition",
                   active
-                    ? "bg-[#1a1a1a] text-white shadow-md"
-                    : "border border-[#ccc] bg-white text-[#333] hover:border-[#999]",
+                    ? "bg-sky-500 text-[var(--on-brand)] shadow-md shadow-sky-500/20"
+                    : "border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] hover:border-sky-500/40 hover:text-[var(--text)]",
                 ].join(" ")}
               >
                 {t.label}
@@ -150,10 +150,10 @@ export default async function IlanlarPage({
           <aside className="mb-8 space-y-5 lg:mb-0">
             <div className="lg:sticky lg:top-24">
               <nav
-                className="rounded-xl border border-[#d8d8d8] bg-white p-3 shadow-sm"
+                className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 shadow-[var(--emlak-shadow)]"
                 aria-label="Kategori menüsü"
               >
-                <p className="border-b border-[#eee] pb-2 text-xs font-bold uppercase tracking-wide text-[#888]">
+                <p className="border-b border-[var(--border)] pb-2 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
                   Kategoriler
                 </p>
                 <div className="mt-2 space-y-1">
@@ -170,10 +170,10 @@ export default async function IlanlarPage({
               </nav>
 
               <nav
-                className="mt-4 rounded-xl border border-[#d8d8d8] bg-white p-3 shadow-sm"
+                className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3 shadow-[var(--emlak-shadow)]"
                 aria-label="Şehir seçimi"
               >
-                <p className="border-b border-[#eee] pb-2 text-xs font-bold uppercase tracking-wide text-[#888]">
+                <p className="border-b border-[var(--border)] pb-2 text-xs font-bold uppercase tracking-wide text-[var(--muted)]">
                   Popüler lokasyonlar
                 </p>
                 <div className="mt-2 space-y-1">
@@ -192,57 +192,57 @@ export default async function IlanlarPage({
                 </div>
               </nav>
 
-              <div className="mt-4 rounded-xl border border-[#d8d8d8] bg-white p-4 shadow-sm">
-                <p className="text-xs font-bold uppercase tracking-wide text-[#888]">Detaylı arama</p>
+              <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 shadow-[var(--emlak-shadow)]">
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--muted)]">Detaylı arama</p>
                 <form className="mt-3 space-y-3" method="get">
                   {tip ? <input type="hidden" name="tip" value={tip} /> : null}
                   <label className="block">
-                    <span className="text-[11px] font-medium text-[#666]">Kelime</span>
+                    <span className="text-[11px] font-medium text-[var(--muted)]">Kelime</span>
                     <input
                       name="q"
                       defaultValue={q}
                       placeholder="Mahalle, başlık…"
-                      className="mt-1 w-full rounded-lg border border-[#ccc] bg-[#fafafa] px-2.5 py-2 text-sm text-[#222] outline-none ring-[#ffd800]/40 focus:ring-2"
+                      className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--surface-3)] px-2.5 py-2 text-sm text-[var(--text)] outline-none ring-sky-500/30 focus:ring-2"
                     />
                   </label>
                   <label className="block">
-                    <span className="text-[11px] font-medium text-[#666]">İl / ilçe</span>
+                    <span className="text-[11px] font-medium text-[var(--muted)]">İl / ilçe</span>
                     <input
                       name="il"
                       defaultValue={il}
                       placeholder="Örn. Kadıköy"
-                      className="mt-1 w-full rounded-lg border border-[#ccc] bg-[#fafafa] px-2.5 py-2 text-sm text-[#222] outline-none ring-[#ffd800]/40 focus:ring-2"
+                      className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--surface-3)] px-2.5 py-2 text-sm text-[var(--text)] outline-none ring-sky-500/30 focus:ring-2"
                     />
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <label className="block">
-                      <span className="text-[11px] font-medium text-[#666]">Min ₺</span>
+                      <span className="text-[11px] font-medium text-[var(--muted)]">Min ₺</span>
                       <input
                         name="min"
                         defaultValue={sp.min ?? ""}
                         inputMode="numeric"
-                        className="mt-1 w-full rounded-lg border border-[#ccc] bg-[#fafafa] px-2 py-2 text-sm"
+                        className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--surface-3)] px-2 py-2 text-sm text-[var(--text)]"
                       />
                     </label>
                     <label className="block">
-                      <span className="text-[11px] font-medium text-[#666]">Max ₺</span>
+                      <span className="text-[11px] font-medium text-[var(--muted)]">Max ₺</span>
                       <input
                         name="max"
                         defaultValue={sp.max ?? ""}
                         inputMode="numeric"
-                        className="mt-1 w-full rounded-lg border border-[#ccc] bg-[#fafafa] px-2 py-2 text-sm"
+                        className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--surface-3)] px-2 py-2 text-sm text-[var(--text)]"
                       />
                     </label>
                   </div>
                   <button
                     type="submit"
-                    className="w-full rounded-lg bg-[#ffd800] px-3 py-2.5 text-sm font-bold text-[#1a1a1a] shadow-sm hover:bg-[#f5d400]"
+                    className="w-full rounded-lg bg-sky-500 px-3 py-2.5 text-sm font-bold text-[var(--on-brand)] shadow-sm shadow-sky-500/25 hover:bg-sky-400"
                   >
                     Ara
                   </button>
                   <Link
                     href={`${base}/ilanlar`}
-                    className="block w-full rounded-lg border border-[#ccc] py-2 text-center text-sm font-medium text-[#444] hover:bg-[#f5f5f5]"
+                    className="block w-full rounded-lg border border-[var(--border)] py-2 text-center text-sm font-medium text-[var(--muted)] hover:bg-[var(--surface-3)] hover:text-[var(--text)]"
                   >
                     Sıfırla
                   </Link>
@@ -252,14 +252,14 @@ export default async function IlanlarPage({
           </aside>
 
           <div className="min-w-0">
-            <ul className="divide-y divide-[#ddd] overflow-hidden rounded-xl border border-[#ccc] bg-white shadow-sm">
+            <ul className="divide-y divide-[var(--border)] overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-2)] shadow-[var(--emlak-shadow)]">
               {rows.length === 0 ? (
                 <li className="px-6 py-14 text-center">
-                  <p className="font-semibold text-[#222]">Sonuç bulunamadı</p>
-                  <p className="mt-2 text-sm text-[#666]">Filtreleri genişletin veya şehir seçimini temizleyin.</p>
+                  <p className="font-semibold text-[var(--text)]">Sonuç bulunamadı</p>
+                  <p className="mt-2 text-sm text-[var(--muted)]">Filtreleri genişletin veya şehir seçimini temizleyin.</p>
                   <Link
                     href={`${base}/ilanlar`}
-                    className="mt-6 inline-flex rounded-lg bg-[#ffd800] px-5 py-2.5 text-sm font-bold text-[#1a1a1a]"
+                    className="mt-6 inline-flex rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-bold text-[var(--on-brand)] shadow-md shadow-sky-500/20"
                   >
                     Tüm ilanlara dön
                   </Link>
@@ -269,9 +269,9 @@ export default async function IlanlarPage({
                   <li key={x.id}>
                     <Link
                       href={`${base}/ilan/${encodeURIComponent(x.id)}`}
-                      className="group flex flex-col gap-3 border-l-4 border-transparent p-4 transition hover:border-[#ffd800] hover:bg-[#fffef8] sm:flex-row sm:items-stretch sm:gap-4 sm:p-5"
+                      className="group flex flex-col gap-3 border-l-4 border-transparent p-4 transition hover:border-sky-500 hover:bg-[var(--surface-3)]/80 sm:flex-row sm:items-stretch sm:gap-4 sm:p-5"
                     >
-                      <div className="relative h-44 shrink-0 overflow-hidden rounded-lg bg-[#eee] sm:h-auto sm:w-48 sm:min-h-[9rem]">
+                      <div className="relative h-44 shrink-0 overflow-hidden rounded-lg bg-[var(--surface-3)] sm:h-auto sm:w-48 sm:min-h-[9rem]">
                         <Image
                           src={x.kapakSrc}
                           alt={x.baslik}
@@ -284,17 +284,17 @@ export default async function IlanlarPage({
                         </span>
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
-                        <h2 className="text-lg font-semibold leading-snug text-[#1a1a1a] group-hover:text-[#0369a1] md:text-xl">
+                        <h2 className="text-lg font-semibold leading-snug text-[var(--text)] group-hover:text-sky-400 md:text-xl">
                           {x.baslik}
                         </h2>
-                        <p className="line-clamp-2 text-sm text-[#555]">{x.ozet}</p>
-                        <p className="mt-1 text-xs text-[#777]">
+                        <p className="line-clamp-2 text-sm text-[var(--muted)]">{x.ozet}</p>
+                        <p className="mt-1 text-xs text-slate-500">
                           {fmtIlanKonum(x)} · {x.oda} · {x.metrekare} m²
                         </p>
                       </div>
-                      <div className="flex shrink-0 flex-col items-start justify-center border-t border-[#eee] pt-3 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0 md:min-w-[10rem] md:items-end">
-                        <p className="text-xl font-bold text-[#0369a1] md:text-2xl">{fmtIlanPrice(x)}</p>
-                        <span className="mt-1 text-[11px] font-medium text-[#888]">İncele →</span>
+                      <div className="flex shrink-0 flex-col items-start justify-center border-t border-[var(--border)] pt-3 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0 md:min-w-[10rem] md:items-end">
+                        <p className="text-xl font-bold text-[var(--brand)] md:text-2xl">{fmtIlanPrice(x)}</p>
+                        <span className="mt-1 text-[11px] font-medium text-[var(--muted)]">İncele →</span>
                       </div>
                     </Link>
                   </li>

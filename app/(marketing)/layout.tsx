@@ -75,7 +75,10 @@ export default async function MarketingLayout({
         }
       >
         <SiteEditModeHost>
-          <div data-vitrin={subdir} className="flex min-h-0 flex-1 flex-col">
+          <div
+            data-vitrin={subdir}
+            className="flex min-h-[100dvh] w-full flex-1 flex-col bg-[var(--surface)] text-[var(--text)]"
+          >
             <MarketingShell>{children}</MarketingShell>
           </div>
         </SiteEditModeHost>

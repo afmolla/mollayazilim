@@ -603,7 +603,7 @@ export function AnasayfaInteractive(props: {
       <section
         className={
           isRestaurant
-            ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[#0a0908]"
+            ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
             : isEmlak
               ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
               : isAvukat
@@ -798,7 +798,7 @@ export function AnasayfaInteractive(props: {
       <section
         className={
           isRestaurant
-            ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[#0c0a09] px-4 py-20 md:px-6"
+            ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[var(--surface-2)] px-4 py-20 md:px-6"
             : isEmlak
               ? "relative mx-auto max-w-6xl border-t border-emerald-900/25 bg-[var(--surface-2)] px-4 py-20 md:px-6"
               : isAvukat
@@ -895,7 +895,7 @@ export function AnasayfaInteractive(props: {
                 isKuaforErkek &&
                   "!rounded-xl !border-zinc-600/55 !bg-zinc-950/45 !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/40",
                 isKuaforKadin &&
-                  "!rounded-[1.75rem] !border-rose-100 !bg-[var(--surface)] !shadow-[0_22px_55px_rgba(190,24,93,0.07)] transition hover:border-[var(--brand)]/30",
+                  "!rounded-xl !border-[var(--border)] !bg-[var(--surface-2)]/95 !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/35",
                 vfHizaFlexClass(x.hiza),
                 vfKolonClass(x.kolon),
               ]

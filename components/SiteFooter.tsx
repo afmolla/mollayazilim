@@ -34,6 +34,20 @@ export async function SiteFooter() {
   const ttHref = tt ? normalizeExternalUrl(tt) : "";
   const liHref = li ? normalizeExternalUrl(li) : "";
   const showSocialMap = (ayar.footerSosyalGoster ?? true) && !!(igHref || fbHref || twHref || ytHref || ttHref || liHref || mapBlock);
+  const socialLinks: { href: string; label: string }[] = [
+    ...(igHref ? [{ href: igHref, label: "Instagram" }] : []),
+    ...(fbHref ? [{ href: fbHref, label: "Facebook" }] : []),
+    ...(twHref ? [{ href: twHref, label: "X" }] : []),
+    ...(ytHref ? [{ href: ytHref, label: "YouTube" }] : []),
+    ...(ttHref ? [{ href: ttHref, label: "TikTok" }] : []),
+    ...(liHref ? [{ href: liHref, label: "LinkedIn" }] : []),
+  ];
+  const mapHref =
+    mapBlock?.type === "link"
+      ? mapBlock.href
+      : mapBlock?.type === "iframe"
+        ? mapBlock.src
+        : "";
 
   const iosStore = ayar.mobilIosIndirUrl?.trim();
   const androidStore = ayar.mobilAndroidIndirUrl?.trim();
@@ -66,6 +80,31 @@ export async function SiteFooter() {
             <p className={phone ? "mt-1 text-sm text-[var(--muted)]" : "mt-2 text-sm text-[var(--muted)]"}>
               E‑posta: <span className="font-medium text-[var(--text)]">{email}</span>
             </p>
+          ) : null}
+          {showSocialMap ? (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {socialLinks.map((s) => (
+                <a
+                  key={s.href}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 text-[12px] font-medium text-[var(--muted)] transition hover:border-[var(--brand)]/45 hover:text-[var(--brand)]"
+                >
+                  {s.label}
+                </a>
+              ))}
+              {mapHref ? (
+                <a
+                  href={mapHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 text-[12px] font-medium text-[var(--muted)] transition hover:border-[var(--brand)]/45 hover:text-[var(--brand)]"
+                >
+                  Konum
+                </a>
+              ) : null}
+            </div>
           ) : null}
           <a
             href={wa}
@@ -122,117 +161,6 @@ export async function SiteFooter() {
                 </li>
               ) : null}
             </ul>
-          </div>
-        </div>
-      ) : null}
-
-      {showSocialMap ? (
-        <div className="border-t border-[var(--border)] bg-[var(--surface)]">
-          <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-            <h2 className="text-center text-sm font-semibold tracking-wide text-[var(--text)]">
-              Sosyal medya ve konum
-            </h2>
-
-            {(igHref || fbHref || twHref || ytHref || ttHref || liHref) ? (
-              <ul className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                {igHref ? (
-                  <li>
-                    <a
-                      href={igHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      Instagram
-                    </a>
-                  </li>
-                ) : null}
-                {fbHref ? (
-                  <li>
-                    <a
-                      href={fbHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      Facebook
-                    </a>
-                  </li>
-                ) : null}
-                {twHref ? (
-                  <li>
-                    <a
-                      href={twHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      X
-                    </a>
-                  </li>
-                ) : null}
-                {ytHref ? (
-                  <li>
-                    <a
-                      href={ytHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      YouTube
-                    </a>
-                  </li>
-                ) : null}
-                {ttHref ? (
-                  <li>
-                    <a
-                      href={ttHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      TikTok
-                    </a>
-                  </li>
-                ) : null}
-                {liHref ? (
-                  <li>
-                    <a
-                      href={liHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 text-sm font-medium text-[var(--text)] transition hover:border-[var(--brand)]/50 hover:text-[var(--brand)]"
-                    >
-                      LinkedIn
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
-            ) : null}
-
-            {mapBlock?.type === "iframe" ? (
-              <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-2xl border border-[var(--border)] shadow-sm">
-                <iframe
-                  title="Konum haritası"
-                  src={mapBlock.src}
-                  className="h-[min(50vh,320px)] w-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  allowFullScreen
-                />
-              </div>
-            ) : mapBlock?.type === "link" ? (
-              <div className="mt-8 text-center">
-                <a
-                  href={mapBlock.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl bg-[var(--surface-2)] px-6 py-3 text-sm font-semibold text-[var(--text)] ring-1 ring-[var(--border)] transition hover:ring-[var(--brand)]/40"
-                >
-                  Haritada aç
-                </a>
-              </div>
-            ) : null}
           </div>
         </div>
       ) : null}

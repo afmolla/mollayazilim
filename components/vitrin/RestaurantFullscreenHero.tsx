@@ -51,11 +51,11 @@ export function RestaurantFullscreenHero(props: KuaforHeroProps) {
           priority
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060504] via-[#0a0908]/72 to-[#0a0908]/40"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--surface)] via-[#242019]/78 to-[#2e2824]/38"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[#0a0908]/92 via-transparent to-transparent md:block"
+          className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[var(--surface)]/92 via-transparent to-transparent md:block"
           aria-hidden
         />
       </div>

@@ -8,7 +8,7 @@ function SocialButton(props: { href: string; label: string }) {
       href={props.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-[2.5rem] min-w-[7rem] items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-semibold text-white/80 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
+      className="inline-flex h-8 items-center justify-center rounded-full border border-white/10 bg-white/5 px-3 text-[12px] font-semibold text-white/75 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
     >
       {props.label}
     </a>
@@ -59,6 +59,16 @@ export async function MollaFooter() {
           <p className="mt-1 text-sm text-white/70">
             E‑posta: <span className="font-medium text-white">{email}</span>
           </p>
+          {showSocial ? (
+            <div className="mt-3 flex flex-wrap gap-2 md:justify-end">
+              {igHref ? <SocialButton href={igHref} label="Instagram" /> : null}
+              {fbHref ? <SocialButton href={fbHref} label="Facebook" /> : null}
+              {twHref ? <SocialButton href={twHref} label="X" /> : null}
+              {ytHref ? <SocialButton href={ytHref} label="YouTube" /> : null}
+              {ttHref ? <SocialButton href={ttHref} label="TikTok" /> : null}
+              {liHref ? <SocialButton href={liHref} label="LinkedIn" /> : null}
+            </div>
+          ) : null}
           <div className="mt-4 flex flex-wrap gap-2 md:justify-end">
             <a
               href={wa}
@@ -71,22 +81,6 @@ export async function MollaFooter() {
           </div>
         </div>
       </div>
-
-      {showSocial ? (
-        <div className="border-t border-white/10 py-8">
-          <div className="mx-auto max-w-6xl px-4 md:px-6">
-            <p className="text-center text-xs font-semibold tracking-wide text-white/60">Sosyal medya</p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              {igHref ? <SocialButton href={igHref} label="Instagram" /> : null}
-              {fbHref ? <SocialButton href={fbHref} label="Facebook" /> : null}
-              {twHref ? <SocialButton href={twHref} label="X" /> : null}
-              {ytHref ? <SocialButton href={ytHref} label="YouTube" /> : null}
-              {ttHref ? <SocialButton href={ttHref} label="TikTok" /> : null}
-              {liHref ? <SocialButton href={liHref} label="LinkedIn" /> : null}
-            </div>
-          </div>
-        </div>
-      ) : null}
 
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
         © {new Date().getFullYear()} Molla Yazılım — Özel yazılım & panel çözümleri

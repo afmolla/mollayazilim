@@ -17,14 +17,32 @@ export function SiteHeaderClient(props: {
   const pathname = usePathname() ?? "";
   const isRestaurant = pathname.includes("/restaurant");
   const isEmlak = pathname.includes("/emlak");
+  const isAvukat = pathname.includes("/avukat");
+  const isKuaforKadin = pathname.includes("/kuafor-kadin");
+  const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
+  /** Beyaz şerit navbar yerine cam koyu vitrinler */
+  const darkNav =
+    isRestaurant ||
+    isEmlak ||
+    isAvukat ||
+    isKuaforErkek ||
+    isKuaforKadin;
   return (
     <header
       data-fixed-header
       className={
         isRestaurant
-          ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-white/10 bg-black/45 backdrop-blur-xl"
-          : isEmlak
-            ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-[var(--border)] bg-[var(--surface)] shadow-[var(--emlak-shadow)] backdrop-blur-md"
+          ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-amber-900/25 bg-[#14110e]/88 backdrop-blur-xl"
+          : darkNav
+            ? isEmlak
+              ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-sky-500/15 bg-[#0a1628]/92 backdrop-blur-xl"
+              : isAvukat
+                ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-amber-500/20 bg-[#0c1525]/94 backdrop-blur-xl"
+                : isKuaforKadin
+                  ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-rose-500/20 bg-[#140810]/92 backdrop-blur-xl"
+                  : isKuaforErkek
+                    ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-orange-500/20 bg-[#09090b]/92 backdrop-blur-xl"
+                    : "fixed inset-x-0 top-0 z-50 h-16 border-b border-white/10 bg-black/45 backdrop-blur-xl"
             : "fixed inset-x-0 top-0 z-50 h-16 border-b border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md"
       }
     >
@@ -36,7 +54,9 @@ export function SiteHeaderClient(props: {
             className={
               isRestaurant
                 ? "truncate font-[family-name:var(--font-restaurant)] text-base font-semibold uppercase tracking-[0.18em] text-[#f5f0e8] md:text-[15px]"
-                : "truncate text-lg font-bold tracking-tight text-[var(--text)]"
+                : darkNav
+                  ? "truncate text-lg font-bold tracking-tight text-white drop-shadow-sm"
+                  : "truncate text-lg font-bold tracking-tight text-[var(--text)]"
             }
           >
             {props.brand}

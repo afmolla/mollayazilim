@@ -173,7 +173,7 @@ export function IletisimInteractive(props: {
           scheduleIlet(next);
         }}
       />
-      <div className="mt-10 space-y-6 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8">
+      <div className="mt-10 space-y-6 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-8">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">Adres</h2>
           <EditableText

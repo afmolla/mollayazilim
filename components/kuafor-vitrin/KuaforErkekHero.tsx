@@ -49,9 +49,9 @@ export function KuaforErkekHero(props: KuaforHeroProps) {
 
   return (
     <div className="relative min-h-[100dvh] overflow-hidden">
-      <div className="lg:grid lg:min-h-[100dvh] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="lg:grid lg:min-h-[100dvh] lg:grid-cols-[minmax(0,1.22fr)_minmax(0,0.88fr)]">
         <div
-          className="relative min-h-[48vh] lg:min-h-full"
+          className="relative min-h-[58vh] lg:min-h-full"
           data-vf-zone="hero-image"
           onContextMenu={heroImageCtx({ home, updateHome, openCtx })}
         >
@@ -68,11 +68,11 @@ export function KuaforErkekHero(props: KuaforHeroProps) {
             className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10 lg:bg-gradient-to-r lg:from-black/75 lg:via-black/20 lg:to-transparent"
             aria-hidden
           />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--surface)] to-transparent lg:hidden" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
         </div>
 
         <div className="relative flex flex-col justify-center px-5 py-14 sm:px-8 lg:px-12 lg:py-20 xl:px-16">
-          <div className="absolute inset-0 -z-10 bg-[var(--surface)] lg:bg-[var(--surface)]" />
+          <div className="absolute inset-0 -z-10 bg-zinc-950 lg:bg-zinc-950" />
           <EditableText
             active={inline}
             tag="p"

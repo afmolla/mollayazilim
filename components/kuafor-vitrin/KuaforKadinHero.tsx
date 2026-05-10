@@ -33,7 +33,7 @@ function heroImageCtx(props: Pick<KuaforHeroProps, "home" | "updateHome" | "open
     ]);
 }
 
-/** Kadın kuaförü — açık tonlar, serif başlık, büyük yuvarlatılmış vitrin görseli */
+/** Kadın kuaförü — erkek vitrin ile aynı kemik: tam yükseklik görsel + koyu panel (beyaz blok yok) */
 export function KuaforKadinHero(props: KuaforHeroProps) {
   const {
     home,
@@ -48,37 +48,50 @@ export function KuaforKadinHero(props: KuaforHeroProps) {
   } = props;
 
   return (
-    <div className="relative min-h-[100dvh] overflow-x-hidden overflow-y-visible">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.55]"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(ellipse 90% 55% at 50% -15%, rgba(251, 207, 232, 0.55) 0%, transparent 55%), radial-gradient(ellipse 70% 45% at 100% 40%, rgba(254, 243, 199, 0.35) 0%, transparent 50%)",
-        }}
-      />
+    <div className="relative min-h-[100dvh] overflow-hidden">
+      <div className="lg:grid lg:min-h-[100dvh] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <div
+          className="relative min-h-[58vh] lg:min-h-full"
+          data-vf-zone="hero-image"
+          onContextMenu={heroImageCtx({ home, updateHome, openCtx })}
+        >
+          <Image
+            key={home.heroImageSrc}
+            src={home.heroImageSrc}
+            alt={home.heroImageAlt}
+            fill
+            className="object-cover"
+            sizes="(max-width:1024px) 100vw, 58vw"
+            priority
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#140810] via-fuchsia-950/35 to-transparent lg:bg-gradient-to-r lg:from-[#140810]/90 lg:via-fuchsia-950/25 lg:to-transparent"
+            aria-hidden
+          />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#140810] to-transparent lg:hidden" />
+        </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 md:px-6 md:pb-24 md:pt-16">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="relative flex flex-col justify-center px-5 py-14 sm:px-8 lg:px-12 lg:py-20 xl:px-16">
+          <div className="absolute inset-0 -z-10 bg-[#140810]" />
           <EditableText
             active={inline}
             tag="p"
-            className="inline-flex rounded-full border border-[var(--border)] bg-[var(--surface)]/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand)] shadow-sm backdrop-blur-sm"
+            className="text-[11px] font-bold uppercase tracking-[0.35em] text-[var(--brand)]"
             value={home.badge}
             onCommit={(v) => updateHome((h) => ({ ...h, badge: v }))}
           />
           <EditableText
             active={inline}
             tag="h1"
-            className="font-[family-name:var(--font-restaurant)] mt-8 text-[clamp(2.25rem,6vw,3.75rem)] font-semibold leading-[1.08] tracking-tight text-[var(--text)]"
+            className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-tight text-[var(--text)] sm:text-5xl xl:text-6xl"
             value={home.baslik}
             onCommit={(v) => updateHome((h) => ({ ...h, baslik: v }))}
           />
-          <div className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[var(--muted)]">
+          <div className="mt-6 max-w-lg text-lg leading-relaxed text-[var(--muted)]">
             <EditableText
               active={inline}
               tag="span"
-              className="font-medium text-[var(--text)]"
+              className="font-semibold text-[var(--text)]"
               value={salonAdLive}
               onCommit={(v) => {
                 const next = v.trim() || salonAdLive;
@@ -95,7 +108,7 @@ export function KuaforKadinHero(props: KuaforHeroProps) {
               onCommit={(v) => updateHome((h) => ({ ...h, aciklama: v }))}
             />
           </div>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-10 flex flex-wrap gap-3">
             <CtaBlock
               inline={inline}
               href={publicHref(home.ctaPrimaryHref, pathname)}
@@ -114,7 +127,7 @@ export function KuaforKadinHero(props: KuaforHeroProps) {
                   },
                 ])
               }
-              className="rounded-full bg-[var(--brand)] px-9 py-3.5 text-sm font-semibold text-[var(--on-brand)] shadow-[0_14px_40px_rgba(190,24,93,0.28)]"
+              className="rounded-xl bg-[var(--brand)] px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-[var(--on-brand)] shadow-[0_12px_40px_rgba(244,114,182,0.35)]"
             />
             <CtaBlock
               inline={inline}
@@ -134,44 +147,26 @@ export function KuaforKadinHero(props: KuaforHeroProps) {
                   },
                 ])
               }
-              className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-9 py-3.5 text-sm font-semibold text-[var(--text)] shadow-sm"
+              className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-7 py-3.5 text-sm font-semibold text-[var(--text)]"
             />
           </div>
         </div>
+      </div>
 
-        <div
-          className="relative mx-auto mt-14 max-w-5xl"
-          data-vf-zone="hero-image"
-          onContextMenu={heroImageCtx({ home, updateHome, openCtx })}
-        >
-          <div className="relative aspect-[16/10] overflow-hidden rounded-[2.25rem] shadow-[0_28px_80px_rgba(120,53,15,0.18)] ring-1 ring-[var(--border)]">
-            <Image
-              key={home.heroImageSrc}
-              src={home.heroImageSrc}
-              alt={home.heroImageAlt}
-              fill
-              className="object-cover"
-              sizes="(max-width:1024px) 100vw, 1024px"
-              priority
-            />
-          </div>
-        </div>
+      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen max-w-[100vw]">
+        <KuaforHeroGalleryStrip variant="kadin" />
+      </div>
 
-        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mt-10 w-screen max-w-[100vw]">
-          <KuaforHeroGalleryStrip variant="kadin" />
-        </div>
-
-        <div className="mx-auto mt-12 max-w-3xl">
-          <VfHeroImageStack
-            variant="altTailOnly"
-            home={home}
-            inline={inline}
-            updateHome={updateHome}
-            openCtx={openCtx}
-            heroAltBlokMenuItems={heroAltBlokMenuItems}
-            tailPlaceholder="Metin veya ek görsel — düzenleme modunda bu alana sağ tıklayın"
-          />
-        </div>
+      <div className="mx-auto max-w-6xl px-4 pb-14 pt-4 md:px-6 md:pb-20 md:pt-8">
+        <VfHeroImageStack
+          variant="altTailOnly"
+          home={home}
+          inline={inline}
+          updateHome={updateHome}
+          openCtx={openCtx}
+          heroAltBlokMenuItems={heroAltBlokMenuItems}
+          tailPlaceholder="Metin veya ek görsel — düzenleme modunda bu alana sağ tıklayın"
+        />
       </div>
     </div>
   );
