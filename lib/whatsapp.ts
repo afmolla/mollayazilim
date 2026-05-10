@@ -9,8 +9,19 @@ export function whatsappRandevuMesaji(params: {
   saat: string;
   hizmet: string;
   salonAd?: string;
+  /** Restoran rezervasyon metni (kuaför/avukat için kullanılmaz) */
+  tip?: "rezervasyon";
 }): string {
   const salon = params.salonAd ?? "Salonumuz";
+  if (params.tip === "rezervasyon") {
+    return (
+      `Merhaba ${params.ad}, ${salon} rezervasyon bilginiz:\n\n` +
+      `• Tarih: ${params.tarih}\n` +
+      `• Saat: ${params.saat}\n` +
+      `• Masa / talep: ${params.hizmet}\n\n` +
+      `Rezervasyonunuz onaylanmıştır. Görüşmek üzere!`
+    );
+  }
   return (
     `Merhaba ${params.ad}, ${salon} randevu bilginiz:\n\n` +
     `• Tarih: ${params.tarih}\n` +

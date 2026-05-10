@@ -1,39 +1,95 @@
 {
   "menu": {
-    "baslik": "Dijital menü",
-    "altBaslik": "Tarayıcıdan hızlıca sipariş öncesi inceleyin.",
+    "baslik": "Atlas Dijital Menü",
+    "altBaslik": "Güncel fiyat ve şef önerileri — demo vitrin. Alerji için mutfağa danışınız.",
     "yayin": true,
-    "guncellenme": "2026-05-04T12:00:00.000Z",
+    "guncellenme": "2026-05-09T12:00:00.000Z",
     "kategoriler": [
       {
-        "id": "cat_starter",
-        "baslik": "Başlangıçlar",
-        "aciklama": "",
+        "id": "cat_corba",
+        "baslik": "Çorbalar",
+        "aciklama": "Günün çorbası sosyal medyadan duyurulur.",
         "sira": 0,
         "ogeler": [
-          { "id": "u1", "ad": "Mercimek çorbası", "aciklama": "Günün çorbası", "fiyat": "95 ₺", "sira": 0 },
-          { "id": "u2", "ad": "Humus tabağı", "aciklama": "Lavaş ile", "fiyat": "165 ₺", "sira": 1 },
-          { "id": "u3", "ad": "Sigara böreği", "fiyat": "140 ₺", "sira": 2 }
+          { "id": "c1", "ad": "Ezogelin çorbası", "aciklama": "Limon ile", "fiyat": "95 ₺", "sira": 0 },
+          { "id": "c2", "ad": "İşkembe", "aciklama": "Sarımsaklı sirke", "fiyat": "105 ₺", "sira": 1 },
+          { "id": "c3", "ad": "Sebze çorbası", "fiyat": "90 ₺", "sira": 2 },
+          { "id": "c4", "ad": "Balık suyu (Çarşamba)", "fiyat": "110 ₺", "sira": 3 }
         ]
       },
       {
-        "id": "cat_main",
-        "baslik": "Ana yemekler",
+        "id": "cat_meze",
+        "baslik": "Mezeler & ara sıcak",
         "sira": 1,
         "ogeler": [
-          { "id": "u4", "ad": "Izgara köfte", "aciklama": "Pilav, közlenmiş biber", "fiyat": "420 ₺", "sira": 0 },
-          { "id": "u5", "ad": "Kuzu tandır", "fiyat": "580 ₺", "sira": 1 },
-          { "id": "u6", "ad": "Levrek (ızgara)", "aciklama": "Mevsim salata", "fiyat": "520 ₺", "sira": 2 }
+          { "id": "m1", "ad": "Humus tabağı", "aciklama": "Ev yapımı lavaş", "fiyat": "165 ₺", "sira": 0 },
+          { "id": "m2", "ad": "Sigara böreği", "aciklama": "Cacık ile", "fiyat": "145 ₺", "sira": 1 },
+          { "id": "m3", "ad": "Kalamar tava", "aciklama": "Tarator", "fiyat": "285 ₺", "sira": 2 },
+          { "id": "m4", "ad": "Karides güveç", "fiyat": "420 ₺", "sira": 3 },
+          { "id": "m5", "ad": "Patlıcanlı kebap (ara)", "fiyat": "195 ₺", "sira": 4 },
+          { "id": "m6", "ad": "Çiğ köfte", "aciklama": "Glutensiz seçenek", "fiyat": "155 ₺", "sira": 5 }
         ]
       },
       {
-        "id": "cat_dessert",
-        "baslik": "Tatlı & içecek",
+        "id": "cat_salata",
+        "baslik": "Salatalar",
         "sira": 2,
         "ogeler": [
-          { "id": "u7", "ad": "Sütlaç", "fiyat": "120 ₺", "sira": 0 },
-          { "id": "u8", "ad": "Künefe", "fiyat": "185 ₺", "sira": 1 },
-          { "id": "u9", "ad": "Ev yapımı limonata", "fiyat": "85 ₺", "sira": 2 }
+          { "id": "s1", "ad": "Roka & parmesan", "aciklama": "Limon sos", "fiyat": "185 ₺", "sira": 0 },
+          { "id": "s2", "ad": "Akdeniz yeşillik", "aciklama": "Keçi peyniri", "fiyat": "195 ₺", "sira": 1 },
+          { "id": "s3", "ad": "Quinoa tabule", "fiyat": "210 ₺", "sira": 2 },
+          { "id": "s4", "ad": "Çoban salata", "fiyat": "165 ₺", "sira": 3 }
+        ]
+      },
+      {
+        "id": "cat_pide",
+        "baslik": "Odun fırını",
+        "sira": 3,
+        "ogeler": [
+          { "id": "p1", "ad": "Kıymalı pide", "fiyat": "220 ₺", "sira": 0 },
+          { "id": "p2", "ad": "Kaşarlı sucuklu", "fiyat": "245 ₺", "sira": 1 },
+          { "id": "p3", "ad": "Lahmacun (2 ad.)", "aciklama": "Salata ile", "fiyat": "380 ₺", "sira": 2 }
+        ]
+      },
+      {
+        "id": "cat_ana",
+        "baslik": "Ana yemekler",
+        "sira": 4,
+        "ogeler": [
+          { "id": "a1", "ad": "Izgara köfte tabağı", "aciklama": "Pilav, köz", "fiyat": "440 ₺", "sira": 0 },
+          { "id": "a2", "ad": "Kuzu tandır", "aciklama": "Yoğurtlu", "fiyat": "590 ₺", "sira": 1 },
+          { "id": "a3", "ad": "Levrek (ızgara)", "aciklama": "Mevsim salata", "fiyat": "540 ₺", "sira": 2 },
+          { "id": "a4", "ad": "Somon dil", "aciklama": "Ispanak püre", "fiyat": "620 ₺", "sira": 3 },
+          { "id": "a5", "ad": "Mantarlı risotto", "fiyat": "410 ₺", "sira": 4 },
+          { "id": "a6", "ad": "Tavuk şiş", "aciklama": "Bulgur pilavı", "fiyat": "395 ₺", "sira": 5 },
+          { "id": "a7", "ad": "Vegan köfte (sezon)", "fiyat": "360 ₺", "sira": 6 },
+          { "id": "a8", "ad": "Kuzu şiş", "fiyat": "560 ₺", "sira": 7 }
+        ]
+      },
+      {
+        "id": "cat_tatli",
+        "baslik": "Tatlılar",
+        "sira": 5,
+        "ogeler": [
+          { "id": "t1", "ad": "Sütlaç", "fiyat": "125 ₺", "sira": 0 },
+          { "id": "t2", "ad": "Künefe", "aciklama": "Kaymak ile", "fiyat": "185 ₺", "sira": 1 },
+          { "id": "t3", "ad": "Sufle (çikolata)", "fiyat": "175 ₺", "sira": 2 },
+          { "id": "t4", "ad": "Dondurma (3 top)", "fiyat": "145 ₺", "sira": 3 },
+          { "id": "t5", "ad": "Meyve tabağı", "fiyat": "165 ₺", "sira": 4 }
+        ]
+      },
+      {
+        "id": "cat_icecek",
+        "baslik": "İçecekler",
+        "sira": 6,
+        "ogeler": [
+          { "id": "i1", "ad": "Ev yapımı limonata", "fiyat": "85 ₺", "sira": 0 },
+          { "id": "i2", "ad": "Vişne kompostosu", "fiyat": "95 ₺", "sira": 1 },
+          { "id": "i3", "ad": "Ayran", "fiyat": "55 ₺", "sira": 2 },
+          { "id": "i4", "ad": "Soda / maden suyu", "fiyat": "45 ₺", "sira": 3 },
+          { "id": "i5", "ad": "Türk kahvesi", "fiyat": "75 ₺", "sira": 4 },
+          { "id": "i6", "ad": "Espresso / americano", "fiyat": "85 ₺", "sira": 5 },
+          { "id": "i7", "ad": "Çay (demlik)", "fiyat": "40 ₺", "sira": 6 }
         ]
       }
     ]

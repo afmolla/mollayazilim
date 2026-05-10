@@ -16,7 +16,7 @@ export default async function PanelLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { prefix } = await getRequestSite();
+  const { prefix, subdir } = await getRequestSite();
   /** Kök panel (`/panel`) → ana vitrin `/`. Portföy (`/kuafor/panel`) → `/kuafor`. */
   const siteBackHref = siteHomeUrl || (prefix ? vitrinPublicHomeHref(prefix) : "/");
   const siteHomeClass =
@@ -24,8 +24,8 @@ export default async function PanelLayout({
 
   return (
     <SitePrefixProvider prefix={prefix}>
-      <div className="flex min-h-screen flex-col bg-[var(--surface-2)]">
-        <header className="shrink-0 border-b border-[var(--border)] bg-[var(--surface)]">
+      <div data-panel-vitrin={subdir} className="flex min-h-screen flex-col bg-[var(--surface-2)]">
+        <header className="panel-top-bar shrink-0 border-b border-[var(--border)] bg-[var(--surface)]">
           <div className="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
             {siteHomeUrl ? (
               <a href={siteHomeUrl} className={siteHomeClass}>

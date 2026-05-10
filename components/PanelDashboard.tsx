@@ -3,7 +3,7 @@ import { useWithBase } from "@/components/SitePrefixProvider";
 
 import type { Randevu, RandevuDurum } from "@/lib/types";
 import { whatsappLink, whatsappRandevuMesaji } from "@/lib/whatsapp";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 function tarihEtiket(iso: string, saat: string) {
@@ -24,6 +24,8 @@ function normalize(s: string) {
 export function PanelDashboard() {
   const wb = useWithBase();
   const router = useRouter();
+  const pathname = usePathname() ?? "";
+  const isRestaurant = pathname.includes("/restaurant");
   const [list, setList] = useState<Randevu[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -161,6 +163,7 @@ export function PanelDashboard() {
       saat: r.saat,
       hizmet: r.hizmet,
       salonAd: salonAdLive || "Salon",
+      ...(isRestaurant ? { tip: "rezervasyon" as const } : {}),
     });
     return whatsappLink(r.telefon, msg);
   }
@@ -190,9 +193,13 @@ export function PanelDashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text)]">Randevular</h1>
+          <h1 className="text-2xl font-bold text-[var(--text)]">
+            {isRestaurant ? "Rezervasyonlar" : "Randevular"}
+          </h1>
           <p className="text-sm text-[var(--muted)]">
-            Onaylayın; müşteriye tek tıkla WhatsApp mesajı gönderin.
+            {isRestaurant
+              ? "Onaylayın; misafire tek tıkla WhatsApp ile rezervasyon bilgisi gönderin."
+              : "Onaylayın; müşteriye tek tıkla WhatsApp mesajı gönderin."}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -245,7 +252,9 @@ export function PanelDashboard() {
             id="q"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Ara: ad, telefon, hizmet…"
+            placeholder={
+              isRestaurant ? "Ara: ad, telefon, masa tipi…" : "Ara: ad, telefon, hizmet…"
+            }
             className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm text-[var(--text)] outline-none ring-[var(--brand)] focus:ring-2"
           />
         </div>
@@ -262,7 +271,7 @@ export function PanelDashboard() {
           <thead className="border-b border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)]">
             <tr>
               <th className="px-4 py-3 font-medium">Müşteri</th>
-              <th className="px-4 py-3 font-medium">Hizmet</th>
+              <th className="px-4 py-3 font-medium">{isRestaurant ? "Misafir / masa" : "Hizmet"}</th>
               <th className="px-4 py-3 font-medium">Tarih / saat</th>
               <th className="px-4 py-3 font-medium">Durum</th>
               <th className="px-4 py-3 font-medium">Not</th>
@@ -356,7 +365,9 @@ export function PanelDashboard() {
         </table>
       </div>
       {filtered.length === 0 ? (
-        <p className="text-center text-[var(--muted)]">Henüz randevu yok.</p>
+        <p className="text-center text-[var(--muted)]">
+          {isRestaurant ? "Henüz rezervasyon yok." : "Henüz randevu yok."}
+        </p>
       ) : null}
     </div>
   );

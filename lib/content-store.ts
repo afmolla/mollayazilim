@@ -52,6 +52,19 @@ export type SiteIcerik = {
     sayfaAciklama: string;
     whatsappMesaj: string;
   };
+  /** Randevu / masa ayırt formu — vitrine göre seçenekler (kuaför ≠ restoran). */
+  randevuForm?: {
+    selectLabel: string;
+    options: string[];
+    pageTitle?: string;
+    pageDescription?: string;
+    submitButtonLabel?: string;
+    intro?: string;
+    /** Vitrin `/randevular` başlığı (örn. restoran: Onaylı rezervasyonlar) */
+    approvedListTitle?: string;
+    approvedListIntro?: string;
+    successMessage?: string;
+  };
 };
 
 type Db = { icerik: SiteIcerik };
@@ -120,6 +133,42 @@ function varsayilan(): SiteIcerik {
       sayfaAciklama: "Adres, çalışma saatleri ve WhatsApp — iletişim bilgileri.",
       whatsappMesaj: "Merhaba, randevu ve fiyat bilgisi almak istiyorum.",
     },
+    randevuForm: {
+      selectLabel: "Hizmet",
+      options: [
+        "Saç kesimi",
+        "Sakal şekillendirme",
+        "Saç + sakal paket",
+        "Fön / şekillendirme",
+        "Boyama / röfle",
+        "Keratin / bakım",
+      ],
+      pageTitle: "Online randevu",
+      pageDescription:
+        "Randevu talebiniz panele düşer; onayladığınızda müşteri listesinde görünür.",
+      submitButtonLabel: "Randevu talebi gönder",
+      intro:
+        "Form gönderildiğinde talep beklemede olarak kaydedilir; panelden onayladığınızda randevu listesinde görünebilir.",
+    },
+  };
+}
+
+function mergeRandevuForm(
+  base: NonNullable<SiteIcerik["randevuForm"]>,
+  patch?: SiteIcerik["randevuForm"],
+): NonNullable<SiteIcerik["randevuForm"]> {
+  if (!patch) return base;
+  return {
+    selectLabel: patch.selectLabel ?? base.selectLabel,
+    /** `options` dizisi dosyada varsa (boş bile olsa) patch kullanılır; yoksa kuaför varsayılanına düşülmez */
+    options: Array.isArray(patch.options) ? patch.options : base.options,
+    pageTitle: patch.pageTitle ?? base.pageTitle,
+    pageDescription: patch.pageDescription ?? base.pageDescription,
+    submitButtonLabel: patch.submitButtonLabel ?? base.submitButtonLabel,
+    intro: patch.intro ?? base.intro,
+    approvedListTitle: patch.approvedListTitle ?? base.approvedListTitle,
+    approvedListIntro: patch.approvedListIntro ?? base.approvedListIntro,
+    successMessage: patch.successMessage ?? base.successMessage,
   };
 }
 
@@ -189,11 +238,15 @@ export async function icerikGetir(): Promise<SiteIcerik> {
     const db = JSON.parse(raw) as Partial<Db>;
     const stored = db.icerik;
     if (!stored) return v;
+    const rf = v.randevuForm
+      ? mergeRandevuForm(v.randevuForm, stored.randevuForm)
+      : stored.randevuForm;
     return {
       home: mergeHome(v.home, stored.home),
       hizmetler: mergeHizmetler(v.hizmetler, stored.hizmetler),
       galeri: mergeGaleri(v.galeri, stored.galeri),
       iletisim: mergeIletisim(v.iletisim, stored.iletisim),
+      ...(rf ? { randevuForm: rf } : {}),
     };
   } catch {
     return v;
@@ -208,6 +261,7 @@ export async function icerikKaydet(patch: Partial<SiteIcerik>): Promise<SiteIcer
     hizmetler: mergeHizmetler(cur.hizmetler, patch.hizmetler),
     galeri: mergeGaleri(cur.galeri, patch.galeri),
     iletisim: mergeIletisim(cur.iletisim, patch.iletisim),
+    randevuForm: mergeRandevuForm(cur.randevuForm ?? varsayilan().randevuForm!, patch.randevuForm),
   };
   await fs.mkdir(path.dirname(FILE), { recursive: true });
   await fs.writeFile(FILE, JSON.stringify({ icerik: next } satisfies Db, null, 2), "utf8");

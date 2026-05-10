@@ -1,45 +1,46 @@
 {
   "randevular": [
     {
-      "id": "demo-1",
-      "ad": "Ahmet Y.",
+      "id": "rs-demo-1",
+      "ad": "Selin T.",
       "telefon": "905551112233",
-      "hizmet": "Saç kesimi + sakal",
-      "tarih": "2026-05-02",
-      "saat": "10:00",
+      "hizmet": "4 kişi — iç mekan",
+      "tarih": "2026-05-10",
+      "saat": "19:30",
       "durum": "onaylandi",
-      "notlar": "VIP köşe",
-      "olusturulma": "2026-04-28T10:00:00.000Z"
+      "notlar": "Bebek sandalyesi",
+      "olusturulma": "2026-05-08T10:00:00.000Z"
     },
     {
-      "id": "demo-2",
-      "ad": "Elif K.",
+      "id": "rs-demo-2",
+      "ad": "Burak M.",
       "telefon": "905559998877",
-      "hizmet": "Fön + kesim",
-      "tarih": "2026-05-02",
-      "saat": "14:30",
+      "hizmet": "2 kişi — teras",
+      "tarih": "2026-05-10",
+      "saat": "21:00",
       "durum": "onaylandi",
-      "olusturulma": "2026-04-28T11:00:00.000Z"
+      "olusturulma": "2026-05-08T11:00:00.000Z"
     },
     {
-      "id": "demo-3",
-      "ad": "Murat D.",
+      "id": "rs-demo-3",
+      "ad": "Perakende A.Ş.",
       "telefon": "905554445566",
-      "hizmet": "Sakal şekillendirme",
-      "tarih": "2026-05-03",
-      "saat": "11:15",
+      "hizmet": "6+ kişi — grup / iş yemeği",
+      "tarih": "2026-05-12",
+      "saat": "13:00",
       "durum": "beklemede",
-      "olusturulma": "2026-04-29T09:00:00.000Z"
+      "notlar": "Projeksiyon isteniyor",
+      "olusturulma": "2026-05-09T09:00:00.000Z"
     },
     {
-      "id": "demo-4",
-      "ad": "Zeynep A.",
+      "id": "rs-demo-4",
+      "ad": "Deniz K.",
       "telefon": "905557776655",
-      "hizmet": "Boyama + bakım",
-      "tarih": "2026-05-03",
-      "saat": "16:00",
+      "hizmet": "Doğum günü / özel süsleme",
+      "tarih": "2026-05-14",
+      "saat": "20:00",
       "durum": "beklemede",
-      "olusturulma": "2026-04-29T10:30:00.000Z"
+      "olusturulma": "2026-05-09T10:30:00.000Z"
     }
   ]
 }

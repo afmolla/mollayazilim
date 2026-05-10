@@ -1,0 +1,18 @@
+{
+  "header": [
+    { "href": "/anasayfa", "label": "Ana Sayfa", "newTab": false },
+    { "href": "/hizmetler", "label": "Uzmanlıklar", "newTab": false },
+    { "href": "/p/ekip", "label": "Ekibimiz", "newTab": false },
+    { "href": "/p/yayinlar", "label": "Yayınlar", "newTab": false },
+    { "href": "/galeri", "label": "Ofis", "newTab": false },
+    { "href": "/randevu", "label": "Görüşme talebi", "newTab": false },
+    { "href": "/p/kvkk", "label": "KVKK", "newTab": false },
+    { "href": "/iletisim", "label": "İletişim", "newTab": false }
+  ],
+  "footer": [
+    { "href": "/randevu", "label": "Ön görüşme" },
+    { "href": "/p/kvkk", "label": "KVKK aydınlatma" },
+    { "href": "/iletisim", "label": "İletişim" },
+    { "href": "/panel", "label": "Yönetim paneli" }
+  ]
+}

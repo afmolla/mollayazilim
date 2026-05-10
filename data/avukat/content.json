@@ -1,0 +1,108 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "Beşiktaş Levent · İstanbul",
+      "baslik": "Hukuki süreçlerde net yol haritası",
+      "aciklama": "Demir & Ortakları; ceza, iş, aile ve icra başlıklarında ön görüşme ve dosya stratejisi sunar. Bu vitrin tamamen demodur — gerçek vekalet ilişkisi için doğrudan büroya başvurmalısınız.",
+      "ctaPrimaryLabel": "Ön görüşme talebi",
+      "ctaPrimaryHref": "/randevu",
+      "ctaSecondaryLabel": "Uzmanlık alanları",
+      "ctaSecondaryHref": "/hizmetler",
+      "heroImageSrc": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1400&q=80",
+      "heroImageAlt": "Adalet terazisi ve hukuk kitapları — stok görsel (demo)",
+      "heroAltBloklar": [
+        {
+          "id": "kvkk-note",
+          "tur": "metin",
+          "metin": "Baro kayıtlı avukat kadrosu · Gizlilik ve KVKK bilgilendirmesi · İstanbul merkez ofis",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "Öne çıkan ilkeler",
+      "bolumAciklama": "Şeffaf ücretlendirme görüşmesi, yazılı süre takibi ve müvekkil ile düzenli bilgilendirme — örnek kurumsal mesaj.",
+      "features": [
+        {
+          "baslik": "Çok disiplinli ekip",
+          "aciklama": "Ceza, iş, aile ve şirketler hukuku alanlarında danışmanlık ve dava takibi (demo tanım)."
+        },
+        {
+          "baslik": "Ön görüşme",
+          "aciklama": "İlk değerlendirme sonrası dosya veya arabuluculuk yönlendirmesi — talepler panele düşer."
+        },
+        {
+          "baslik": "Yazılı iletişim",
+          "aciklama": "Hearing tarihleri ve evrak listesi e-posta ile özet; portal entegrasyonu gerçek projede genişler."
+        },
+        {
+          "baslik": "Hızlı vitrin",
+          "aciklama": "Mobil uyumlu site ve SEO uyumlu sayfa yapısı — Page Experience dostu."
+        }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Örnek uzmanlık tablosu — ücret ve süreler dosya niteliğine göre değişir; ücret tarifesi görüşmede paylaşılır.",
+      "rows": [
+        { "ad": "Ceza hukuku & soruşturma", "sure": "İlk görüşme 45 dk", "fiyat": "Ücret tarifesi + masraf" },
+        { "ad": "İş hukuku & arabuluculuk", "sure": "75 dk ön görüşme", "fiyat": "Saatlik / paket" },
+        { "ad": "Aile hukuku & boşanma", "sure": "Dosya bazlı", "fiyat": "Peşin / taksit" },
+        { "ad": "İcra & iflas takibi", "sure": "Takip mesajları", "fiyat": "Masraf + vekalet" },
+        { "ad": "Şirketler hukuku & sözleşme", "sure": "Revizyon turu", "fiyat": "Proje teklifi" },
+        { "ad": "KVKK & dijital uyum", "sure": "Denetim / politika", "fiyat": "Paket" },
+        { "ad": "Gayrimenkul & kira uyuşmazlığı", "sure": "Tahliye / alacak", "fiyat": "Dosya bazlı" },
+        { "ad": "Tüketici & sigorta hukuku", "sure": "Ön inceleme", "fiyat": "Teklif" }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Toplantı salonu ve temsil görselleri — gerçek projede ofis ve ekip fotoğrafları kullanın.",
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1000&q=80",
+          "alt": "Toplantı masası — dosya değerlendirme"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1000&q=80",
+          "alt": "El sıkışma — anlaşma ve uzlaşma"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1000&q=80",
+          "alt": "Hukuk kütüphanesi"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=1000&q=80",
+          "alt": "Adliye önü — temsil görseli"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1000&q=80",
+          "alt": "Ofis çalışma alanı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1000&q=80",
+          "alt": "Ekip toplantısı — demo"
+        }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "Levent’te merkez ofis; ön görüşme için randevu talep ediniz. Bu iletişim bilgileri demo içindir.",
+      "whatsappMesaj": "Merhaba, Demir & Ortakları — hukuki ön görüşme talep ediyorum (demo site)."
+    },
+    "randevuForm": {
+      "pageTitle": "Ön görüşme talebi",
+      "pageDescription": "Talebiniz panele düşer; demo vitrin gerçek hukuki ilişki oluşturmaz.",
+      "intro": "Formda paylaştığınız bilgiler örnek panelde listelenir. Acil hukuki durumlarda doğrudan telefon ile yetkili bir avukata başvurmanız önerilir.",
+      "approvedListTitle": "Onaylı görüşme talepleri",
+      "approvedListIntro": "Bu sayfa yalnızca onaylanmış ön görüşme taleplerini listeler — demo vitrin. Bekleyen talepler panelde kalır.",
+      "selectLabel": "Konu",
+      "submitButtonLabel": "Talebi gönder",
+      "options": [
+        "Ceza / soruşturma",
+        "İş hukuku & işten çıkarma",
+        "Aile hukuku & boşanma",
+        "İcra / alacak takibi",
+        "Şirketler & ticari sözleşme",
+        "KVKK / uyum",
+        "Gayrimenkul / kira",
+        "Diğer"
+      ]
+    }
+  }
+}

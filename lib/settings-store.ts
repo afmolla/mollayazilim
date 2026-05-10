@@ -51,8 +51,11 @@ export type SiteAyarlar = {
    * Belirtilmezse true kabul edilir.
    */
   demoKuaforGoster?: boolean;
+  /** Ana vitrinde kadın kuaförü (`/kuafor-kadin`) demo kartı */
+  demoKuaforKadinGoster?: boolean;
   demoRestaurantGoster?: boolean;
   demoEmlakGoster?: boolean;
+  demoAvukatGoster?: boolean;
 };
 
 type Db = { ayarlar: SiteAyarlar };
@@ -82,8 +85,10 @@ function varsayilan(): SiteAyarlar {
     panelSolMenuBaslangic: "acik",
     footerSosyalGoster: true,
     demoKuaforGoster: true,
+    demoKuaforKadinGoster: true,
     demoRestaurantGoster: true,
     demoEmlakGoster: true,
+    demoAvukatGoster: true,
   };
 }
 
@@ -125,6 +130,10 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     typeof patch.demoKuaforGoster === "boolean"
       ? patch.demoKuaforGoster
       : (cur.demoKuaforGoster ?? true);
+  const demoKuaforKadinGoster =
+    typeof patch.demoKuaforKadinGoster === "boolean"
+      ? patch.demoKuaforKadinGoster
+      : (cur.demoKuaforKadinGoster ?? true);
   const demoRestaurantGoster =
     typeof patch.demoRestaurantGoster === "boolean"
       ? patch.demoRestaurantGoster
@@ -133,6 +142,10 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     typeof patch.demoEmlakGoster === "boolean"
       ? patch.demoEmlakGoster
       : (cur.demoEmlakGoster ?? true);
+  const demoAvukatGoster =
+    typeof patch.demoAvukatGoster === "boolean"
+      ? patch.demoAvukatGoster
+      : (cur.demoAvukatGoster ?? true);
   const seoIndex = typeof patch.seoIndex === "boolean" ? patch.seoIndex : (cur.seoIndex ?? true);
   const next: SiteAyarlar = {
     ...cur,
@@ -168,8 +181,10 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     mobilAndroidIndirUrl: (patch.mobilAndroidIndirUrl ?? cur.mobilAndroidIndirUrl ?? "").trim() || undefined,
     mobilAndroidApkUrl: (patch.mobilAndroidApkUrl ?? cur.mobilAndroidApkUrl ?? "").trim() || undefined,
     demoKuaforGoster,
+    demoKuaforKadinGoster,
     demoRestaurantGoster,
     demoEmlakGoster,
+    demoAvukatGoster,
   };
 
   await fs.mkdir(path.dirname(FILE), { recursive: true });

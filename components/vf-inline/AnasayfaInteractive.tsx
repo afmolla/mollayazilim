@@ -13,8 +13,27 @@ import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
 import { VfContextMenu, type VfMenuItem } from "@/components/vf-inline/VfContextMenu";
 import { vfHizaFlexClass, vfKolonClass } from "@/components/vf-inline/vf-layout";
+import { VfHeroImageStack } from "@/components/vf-inline/VfHeroImageStack";
+import { RestaurantFullscreenHero } from "@/components/vitrin/RestaurantFullscreenHero";
+import { EmlakFullscreenHero } from "@/components/vitrin/EmlakFullscreenHero";
+import { AvukatFullscreenHero } from "@/components/vitrin/AvukatFullscreenHero";
+import { CtaBlock } from "@/components/vf-inline/CtaBlock";
+import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
+import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
 type Home = SiteIcerik["home"];
+
+export type EmlakPreviewIlan = {
+  id: string;
+  baslik: string;
+  il: string;
+  ilce: string;
+  tip: "satilik" | "kiralik";
+  fiyat: number;
+  kapakSrc: string;
+  oda: string;
+  metrekare: number;
+};
 
 function cloneHome(h: Home): Home {
   return {
@@ -30,41 +49,18 @@ function newFeatureCard(): HomeFeature {
   return { id: newVfId(), baslik: "Yeni kart", aciklama: "Metin ekleyin.", hiza: "orta", kolon: 1 };
 }
 
-function CtaBlock(props: {
-  inline: boolean;
-  className: string;
-  href: string;
-  label: string;
-  onLabel: (v: string) => void;
-  onCtxHref: (e: ReactMouseEvent) => void;
+export function AnasayfaInteractive(props: {
+  initialHome: Home;
+  salonAd: string;
+  emlakPreview?: EmlakPreviewIlan[];
 }) {
-  const { inline, className, href, label, onLabel, onCtxHref } = props;
-  if (!inline) {
-    return (
-      <Link href={href} className={className}>
-        {label}
-      </Link>
-    );
-  }
-  return (
-    <div className="inline-flex flex-col gap-0.5">
-      <span className={`${className} inline-flex`} onContextMenu={onCtxHref}>
-        <EditableText active value={label} onCommit={onLabel} className="font-semibold" />
-      </span>
-      <Link
-        href={href}
-        className="text-[11px] font-medium text-[var(--muted)] underline underline-offset-2 hover:text-[var(--text)]"
-        tabIndex={0}
-      >
-        Linki aç →
-      </Link>
-    </div>
-  );
-}
-
-export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string }) {
   const wb = useWithBase();
   const pathname = usePathname() ?? "/";
+  const isRestaurant = pathname.includes("/restaurant");
+  const isEmlak = pathname.includes("/emlak");
+  const isKuaforKadin = pathname.includes("/kuafor-kadin");
+  const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
+  const isAvukat = pathname.includes("/avukat");
   const searchParams = useSearchParams();
   const router = useRouter();
   const vfEdit = searchParams.get("vf_edit") === "1";
@@ -605,7 +601,17 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
       />
 
       <section
-        className="border-b border-[var(--border)] bg-[var(--surface)]"
+        className={
+          isRestaurant
+            ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[#0a0908]"
+            : isEmlak
+              ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
+              : isAvukat
+                ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[#0a1628]"
+                : isKuaforKadin || isKuaforErkek
+                  ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
+                  : "border-b border-[var(--border)] bg-[var(--surface)]"
+        }
         data-vf-zone="hero"
         onContextMenu={(e) =>
           openCtx(e, [
@@ -635,6 +641,68 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
           ])
         }
       >
+        {isRestaurant ? (
+          <RestaurantFullscreenHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : isEmlak ? (
+          <EmlakFullscreenHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+            emlakPreview={props.emlakPreview}
+          />
+        ) : isKuaforKadin ? (
+          <KuaforKadinHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : isKuaforErkek ? (
+          <KuaforErkekHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : isAvukat ? (
+          <AvukatFullscreenHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : (
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-2 md:items-center md:px-6 md:py-24">
           <div className="min-w-0">
             <EditableText
@@ -715,144 +783,32 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
               />
             </div>
           </div>
-          <div
-            className="min-w-0"
-            data-vf-zone="hero-image"
-            onContextMenu={(e) =>
-              openCtx(e, [
-                {
-                  id: "img-url",
-                  label: "Görsel URL değiştir…",
-                  run: () => {
-                    const u = window.prompt("Görsel adresi", home.heroImageSrc);
-                    if (u == null) return;
-                    updateHome((h) => ({ ...h, heroImageSrc: u.trim() || h.heroImageSrc }));
-                  },
-                },
-                {
-                  id: "img-alt",
-                  label: "Alt metin…",
-                  run: () => {
-                    const a = window.prompt("Alt metin", home.heroImageAlt);
-                    if (a == null) return;
-                    updateHome((h) => ({ ...h, heroImageAlt: a }));
-                  },
-                },
-              ])
-            }
-          >
-            <div
-              className="overflow-hidden rounded-2xl border border-[var(--border)] shadow-2xl"
-              style={{ aspectRatio: "4/3" }}
-            >
-              <Image
-                key={home.heroImageSrc}
-                src={home.heroImageSrc}
-                alt={home.heroImageAlt}
-                width={900}
-                height={675}
-                className="h-auto w-full object-cover"
-                sizes="(max-width: 768px) 100vw, 480px"
-                priority
-              />
-            </div>
-
-            {(home.heroAltBloklar ?? []).length > 0 || inline ? (
-              <div className="mt-4 grid grid-cols-1 gap-4" data-vf-hero-below>
-                {(home.heroAltBloklar ?? []).map((bl, bi) => (
-                  <div
-                    key={bl.id}
-                    data-vf-hero-blok
-                    className={["min-w-0 w-full flex flex-col", vfHizaFlexClass(bl.hiza)].join(" ")}
-                    onContextMenu={(e) => openCtx(e, heroAltBlokMenuItems(bl, bi))}
-                  >
-                    {bl.tur === "metin" ? (
-                      <EditableText
-                        active={inline}
-                        tag="p"
-                        className="w-full text-sm leading-relaxed text-[var(--muted)]"
-                        multiline
-                        value={bl.metin}
-                        onCommit={(v) =>
-                          updateHome((h) => ({
-                            ...h,
-                            heroAltBloklar: (h.heroAltBloklar ?? []).map((x) =>
-                              x.id === bl.id && x.tur === "metin" ? { ...x, metin: v } : x
-                            ),
-                          }))
-                        }
-                      />
-                    ) : (
-                      <div className="w-full overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]">
-                        <Image
-                          key={bl.src}
-                          src={bl.src}
-                          alt={bl.alt}
-                          width={800}
-                          height={450}
-                          className="h-auto max-h-64 w-full object-cover"
-                          sizes="(max-width: 768px) 100vw, 400px"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {inline ? (
-                  <div
-                    data-vf-hero-tail
-                    className="flex min-h-[3.5rem] items-center justify-center rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface-2)]/40 px-2 py-3 text-center text-[11px] text-[var(--muted)]"
-                    onContextMenu={(e) =>
-                      openCtx(e, [
-                        {
-                          id: "tail-txt",
-                          label: "Buraya metin ekle",
-                          run: () =>
-                            updateHome((h) => ({
-                              ...h,
-                              heroAltBloklar: [
-                                ...(h.heroAltBloklar ?? []),
-                                { id: newVfId(), tur: "metin", metin: "Yeni metin — çift tıklayarak düzenleyin." },
-                              ],
-                            })),
-                        },
-                        {
-                          id: "tail-img",
-                          label: "Buraya görsel ekle",
-                          run: () => {
-                            const src = window.prompt(
-                              "Görsel URL (https://…)",
-                              "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80"
-                            );
-                            if (src == null || !src.trim()) return;
-                            const alt = window.prompt("Alt metin", "Görsel") ?? "";
-                            updateHome((h) => ({
-                              ...h,
-                              heroAltBloklar: [
-                                ...(h.heroAltBloklar ?? []),
-                                {
-                                  id: newVfId(),
-                                  tur: "gorsel",
-                                  src: src.trim(),
-                                  alt: alt.trim() || "Görsel",
-                                },
-                              ],
-                            }));
-                          },
-                        },
-                      ])
-                    }
-                  >
-                    Görselin altı — boş alanda sağ tık: metin veya görsel
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
+          <VfHeroImageStack
+            home={home}
+            inline={inline}
+            updateHome={updateHome}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+            priority
+          />
         </div>
+        )}
       </section>
 
       <section
-        className="mx-auto max-w-6xl px-4 py-16 md:px-6"
+        className={
+          isRestaurant
+            ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[#0c0a09] px-4 py-20 md:px-6"
+            : isEmlak
+              ? "relative mx-auto max-w-6xl border-t border-emerald-900/25 bg-[var(--surface-2)] px-4 py-20 md:px-6"
+              : isAvukat
+                ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[#0c1829] px-4 py-20 md:px-6"
+                : isKuaforErkek
+                  ? "relative mx-auto max-w-6xl border-t border-[var(--border)] bg-[var(--surface-2)] px-4 py-20 md:px-6"
+                  : isKuaforKadin
+                    ? "relative mx-auto max-w-6xl border-t border-[var(--border)] bg-[var(--surface)] px-4 py-20 md:px-6"
+                    : "mx-auto max-w-6xl px-4 py-16 md:px-6"
+        }
         data-vf-zone="below"
         onContextMenu={(e) =>
           openCtx(e, [
@@ -867,20 +823,50 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
         <EditableText
           active={inline}
           tag="h2"
-          className="block text-center text-2xl font-bold text-[var(--text)]"
+          className={
+            isRestaurant
+              ? "block text-center font-[family-name:var(--font-restaurant)] text-3xl font-semibold tracking-tight text-[#faf7f2] md:text-4xl"
+              : isEmlak
+                ? "block text-center text-3xl font-bold tracking-tight text-[var(--text)] md:text-4xl"
+                : isAvukat
+                  ? "block text-center text-3xl font-semibold tracking-tight text-[#e8eef8] md:text-4xl"
+                  : isKuaforErkek
+                    ? "block text-center text-3xl font-extrabold uppercase tracking-tight text-[var(--text)] md:text-4xl"
+                    : isKuaforKadin
+                      ? "font-[family-name:var(--font-restaurant)] block text-center text-3xl font-semibold tracking-tight text-[var(--text)] md:text-[2.65rem]"
+                      : "block text-center text-2xl font-bold text-[var(--text)]"
+          }
           value={home.bolumBaslik}
           onCommit={(v) => updateHome((h) => ({ ...h, bolumBaslik: v }))}
         />
         <EditableText
           active={inline}
           tag="p"
-          className="mx-auto mt-2 block max-w-2xl text-center text-[var(--muted)]"
+          className={
+            isRestaurant
+              ? "mx-auto mt-3 block max-w-2xl text-center text-base text-[#a89f94]"
+              : isEmlak
+                ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-[var(--muted)] md:text-base"
+                : isAvukat
+                  ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-slate-400 md:text-base"
+                  : isKuaforErkek
+                    ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-[var(--muted)] md:text-base"
+                    : "mx-auto mt-2 block max-w-2xl text-center text-[var(--muted)]"
+          }
           multiline
           value={home.bolumAciklama}
           onCommit={(v) => updateHome((h) => ({ ...h, bolumAciklama: v }))}
         />
         <div
-          className="mt-10 grid gap-6 md:grid-cols-3 md:items-stretch"
+          className={
+            isRestaurant
+              ? "mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:items-stretch"
+              : isEmlak || isAvukat
+                ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
+                : isKuaforErkek || isKuaforKadin
+                  ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
+                  : "mt-10 grid gap-6 md:grid-cols-3 md:items-stretch"
+          }
           onContextMenu={(e) => {
             if (!inline) return;
             const t = e.target as HTMLElement;
@@ -900,15 +886,39 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
               data-vf-card
               className={[
                 "flex h-full min-h-[10.5rem] w-full flex-col rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm",
+                isRestaurant &&
+                  "!border-white/[0.08] !bg-white/[0.03] !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/35",
+                isEmlak &&
+                  "!rounded-2xl !border-emerald-900/30 !bg-[var(--surface)] !shadow-sm transition hover:border-emerald-600/35",
+                isAvukat &&
+                  "!rounded-2xl !border-white/[0.08] !bg-white/[0.04] !shadow-none backdrop-blur-md transition hover:border-amber-400/25",
+                isKuaforErkek &&
+                  "!rounded-xl !border-zinc-600/55 !bg-zinc-950/45 !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/40",
+                isKuaforKadin &&
+                  "!rounded-[1.75rem] !border-rose-100 !bg-[var(--surface)] !shadow-[0_22px_55px_rgba(190,24,93,0.07)] transition hover:border-[var(--brand)]/30",
                 vfHizaFlexClass(x.hiza),
                 vfKolonClass(x.kolon),
-              ].join(" ")}
+              ]
+                .filter(Boolean)
+                .join(" ")}
               onContextMenu={(e) => openCtx(e, featureMenuItems(i))}
             >
               <EditableText
                 active={inline}
                 tag="h3"
-                className="w-full font-semibold text-[var(--text)]"
+                className={
+                  isRestaurant
+                    ? "w-full font-[family-name:var(--font-restaurant)] text-lg font-semibold text-[#faf7f2]"
+                    : isEmlak
+                      ? "w-full text-lg font-semibold text-[var(--text)]"
+                      : isAvukat
+                        ? "w-full text-lg font-semibold text-[#e8eef8]"
+                        : isKuaforErkek
+                          ? "w-full text-lg font-bold text-[var(--text)]"
+                          : isKuaforKadin
+                            ? "font-[family-name:var(--font-restaurant)] w-full text-xl font-semibold text-[var(--text)]"
+                            : "w-full font-semibold text-[var(--text)]"
+                }
                 value={x.baslik}
                 onCommit={(v) =>
                   updateHome((h) => {
@@ -921,7 +931,13 @@ export function AnasayfaInteractive(props: { initialHome: Home; salonAd: string 
               <EditableText
                 active={inline}
                 tag="p"
-                className="mt-2 w-full text-sm text-[var(--muted)]"
+                className={
+                  isRestaurant
+                    ? "mt-2 w-full text-sm text-[#a89f94]"
+                    : isAvukat
+                      ? "mt-2 w-full text-sm text-slate-400"
+                      : "mt-2 w-full text-sm text-[var(--muted)]"
+                }
                 multiline
                 value={x.aciklama}
                 onCommit={(v) =>

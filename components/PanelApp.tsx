@@ -15,11 +15,13 @@ import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { PanelPortfoyHub } from "@/components/PanelPortfoyHub";
 import { PanelSiparisler } from "@/components/PanelSiparisler";
+import { PanelIlanlar } from "@/components/PanelIlanlar";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
 type TabId =
   | "portfoy"
   | "randevular"
+  | "ilanlar"
   | "siparisler"
   | "leads"
   | "seo"
@@ -37,6 +39,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
   const allowed = new Set<TabId>([
     "portfoy",
     "randevular",
+    "ilanlar",
     "siparisler",
     "leads",
     "seo",
@@ -57,6 +60,12 @@ const NAV_COLLAPSE_KEY = "kuafor-panel-nav-collapsed";
 type PanelAppProps = {
   panelSolMenuSabitle?: boolean;
   panelSolMenuBaslangic?: "acik" | "dar";
+};
+
+const NAV_ILAN: { id: TabId; label: string; short: string } = {
+  id: "ilanlar",
+  label: "İlanlar",
+  short: "İl",
 };
 
 const NAV_BASE: { id: TabId; label: string; short: string }[] = [
@@ -96,11 +105,25 @@ export function PanelApp(props: PanelAppProps) {
   const pathname = usePathname() ?? "";
   const isMasterPanel = !sitePrefix.trim();
   const navItems = useMemo(() => {
-    const base = isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE;
-    if (sitePrefix.replace(/\/+$/, "") !== "/restaurant") {
-      return base.filter((x) => x.id !== "siparisler");
+    const pfx = sitePrefix.replace(/\/+$/, "");
+    let core = isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE;
+    if (pfx !== "/restaurant") {
+      core = core.filter((x) => x.id !== "siparisler");
     }
-    return base;
+    if (pfx === "/emlak") {
+      const raIdx = core.findIndex((x) => x.id === "randevular");
+      if (raIdx >= 0) {
+        core = [...core.slice(0, raIdx + 1), NAV_ILAN, ...core.slice(raIdx + 1)];
+      }
+    } else {
+      core = core.filter((x) => x.id !== "ilanlar");
+    }
+    if (pfx === "/restaurant") {
+      core = core.map((x) =>
+        x.id === "randevular" ? { ...x, label: "Rezervasyonlar", short: "Re" } : x,
+      );
+    }
+    return core;
   }, [isMasterPanel, sitePrefix]);
   const sabitle = props.panelSolMenuSabitle ?? true;
   const baslangic = props.panelSolMenuBaslangic ?? "acik";
@@ -124,8 +147,13 @@ export function PanelApp(props: PanelAppProps) {
   }, [isMasterPanel, tab]);
 
   useEffect(() => {
-    const onRestaurant = pathname.startsWith("/restaurant");
+    const onRestaurant = pathname.includes("/restaurant");
     if (!onRestaurant && tab === "siparisler") queueMicrotask(() => setTab("randevular"));
+  }, [pathname, tab]);
+
+  useEffect(() => {
+    const onEmlak = pathname.includes("/emlak");
+    if (!onEmlak && tab === "ilanlar") queueMicrotask(() => setTab("randevular"));
   }, [pathname, tab]);
 
   useEffect(() => {
@@ -259,6 +287,8 @@ export function PanelApp(props: PanelAppProps) {
           <PanelDashboard />
         ) : tab === "siparisler" ? (
           <PanelSiparisler />
+        ) : tab === "ilanlar" ? (
+          <PanelIlanlar />
         ) : tab === "leads" ? (
           <PanelLeads />
         ) : tab === "seo" ? (

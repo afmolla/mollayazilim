@@ -1,28 +1,31 @@
 {
   "sayfalar": [
     {
-      "slug": "test",
-      "baslik": "Test",
-      "aciklama": "test",
-      "icerikHtml": "test merhaba\n<figure class=\"mt-6\">\n  <img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>\n",
+      "slug": "hakkimizda",
+      "baslik": "Hakkımızda",
+      "aciklama": "Atlas Kuaför Studio — Nişantaşı’nda kesim, renk ve bakım.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Atlas Kuaför Studio, Şişli–Nişantaşı bölgesinde <strong class=\"text-[var(--text)]\">modern berber ve kuaför</strong> hizmeti sunan bir demo vitrindir. Amacımız: müşterinin salona girmeden önce hizmetleri, fiyat aralığını ve randevu akışını net görmesi.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Ekibimiz çizgi, fade ve sakal kontüründe güncel trendleri takip eder; boyama ve keratin gibi kimyasal işlemlerde ön konsültasyon önerilir. Tüm metinler panelden düzenlenebilir — bu sayfa örnek kurumsal içeriktir.</p>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=80\" alt=\"Salon çalışma alanı\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n  <figcaption class=\"mt-2 text-sm text-[var(--muted)]\">Yıkama ve bakım ünitesi — demo görsel</figcaption>\n</figure>\n<h2 class=\"mt-10 text-xl font-semibold text-[var(--text)]\">Çalışma biçimimiz</h2>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li>Randevu öncelikli; yürüyerek gelen misafirler için müsaitlik durumuna göre.</li>\n  <li>Nakit ve kart; taksit kampanyaları dönemsel duyurulur.</li>\n  <li>Kurumsal paketler ve düğün hazırlığı için WhatsApp hattı.</li>\n</ul>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-05-01T23:38:13.764Z"
+      "guncellenme": "2026-05-09T12:00:00.000Z"
     },
     {
-      "slug": "testsa",
-      "baslik": "gsdfs",
-      "icerikHtml": "<figure class=\"mt-6\"><img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" /></figure>",
-      "bloklar": [
-        {
-          "type": "image",
-          "src": "/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png",
-          "alt": "Görsel"
-        }
-      ],
+      "slug": "hijyen-politikasi",
+      "baslik": "Hijyen & sterilizasyon",
+      "aciklama": "Salon içi hijyen uygulamaları (demo metin).",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Bu bölüm <strong class=\"text-[var(--text)]\">örnek hijyen politikası</strong> metnidir; gerçek işletmenizde mevzuata ve salon içi prosedürünüze göre güncelleyin.</p>\n<ul class=\"mt-6 list-disc space-y-3 pl-5 text-[var(--muted)]\">\n  <li>Makas, tarak ve clipper başlıkları müşteri sonrası UV veya sıvı sterilizan ile işlemden geçer.</li>\n  <li>Yaka ve havlu tek kullanımlık veya müşteri bazlı temiz set olarak sunulur.</li>\n  <li>Yıkama üniteleri ve tezgâhlar her kullanımda yüzey dezenfektanı ile silinir.</li>\n  <li>Personele düzenli hijyen ve yeni teknik eğitimi — kayıt panelden takip edilebilir (demo).</li>\n</ul>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=1200&q=80\" alt=\"Sterilize edilmiş berber aletleri\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-05-01T23:35:28.824Z"
+      "guncellenme": "2026-05-09T12:00:00.000Z"
+    },
+    {
+      "slug": "kampanya-mart",
+      "baslik": "Mart kampanyası",
+      "aciklama": "Saç + sakal paketinde örnek indirim — demo.",
+      "icerikHtml": "<p class=\"rounded-2xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm text-[var(--text)]\"><strong>Mart ayı</strong> boyunca <strong>saç + sakal paketi</strong> için vitrin üzerinden iletişime geçen ilk kayıtlara örnek <strong>%15</strong> indirim duyurusu (tamamen demo içeriktir).</p>\n<p class=\"mt-6 text-[var(--muted)] leading-relaxed\">Kampanya koşulları gerçek işletmede değişir. Panelden bu sayfayı güncelleyerek tarih, şart ve kota ekleyebilirsiniz.</p>\n<p class=\"mt-6\"><a href=\"/randevu\" class=\"inline-flex rounded-xl bg-[var(--brand)] px-5 py-3 font-semibold text-[var(--on-brand)] no-underline\">Randevu formuna git</a></p>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-09T12:00:00.000Z"
     }
   ]
 }

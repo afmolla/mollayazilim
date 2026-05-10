@@ -1,16 +1,16 @@
 {
   "ayarlar": {
-    "salonAd": "Kuaför Studio",
+    "salonAd": "Urban Fade Lab",
     "whatsapp": "905551234567",
-    "adresKisa": "Nişantaşı · İstanbul",
-    "adresDetay": "Teşvikiye Mah. Örnek Sok. No:1, Şişli / İstanbul",
-    "calismaSaatleri": "Her gün 09:00 — 21:00",
+    "adresKisa": "Teşvikiye · Nişantaşı · İstanbul",
+    "adresDetay": "Teşvikiye Mah. Abdi İpekçi Cad. No:42 D:1, Şişli / İstanbul",
+    "calismaSaatleri": "Pzt–Cum 09:00 — 21:00 · Cmt–Paz 10:00 — 20:00",
     "sehir": "İstanbul",
     "menuDavranis": "hover",
-    "panelSolMenuSabitle": false,
+    "panelSolMenuSabitle": true,
     "panelSolMenuBaslangic": "acik",
-    "instagram": "instagram.com/deneme",
-    "facebook": "facebook.com/deneme",
-    "googleMaps": "maps.com/deneme"
+    "instagram": "https://www.instagram.com/urbanfadelab.demo/",
+    "facebook": "",
+    "googleMaps": "https://maps.google.com/?q=Ni%C5%9Fanta%C5%9F%C4%B1+%C4%B0stanbul"
   }
 }

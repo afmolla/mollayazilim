@@ -6,8 +6,10 @@ import { useWithBase } from "@/components/SitePrefixProvider";
 
 type DemoFlags = {
   demoKuaforGoster: boolean;
+  demoKuaforKadinGoster: boolean;
   demoRestaurantGoster: boolean;
   demoEmlakGoster: boolean;
+  demoAvukatGoster: boolean;
 };
 
 const ROWS = [
@@ -19,11 +21,18 @@ const ROWS = [
     flagKey: null as null | keyof DemoFlags,
   },
   {
-    label: "Kuaför vitrin",
-    desc: "/kuafor — tüm sayfalar bu önek altında",
+    label: "Erkek kuaförü vitrin",
+    desc: "/kuafor — berber / fade demo",
     site: "/kuafor",
     panel: "/kuafor/panel",
     flagKey: "demoKuaforGoster" as const,
+  },
+  {
+    label: "Kadın kuaförü vitrin",
+    desc: "/kuafor-kadin — renk & bakım demo",
+    site: "/kuafor-kadin",
+    panel: "/kuafor-kadin/panel",
+    flagKey: "demoKuaforKadinGoster" as const,
   },
   {
     label: "Restoran vitrin",
@@ -39,14 +48,23 @@ const ROWS = [
     panel: "/emlak/panel",
     flagKey: "demoEmlakGoster" as const,
   },
+  {
+    label: "Avukatlık vitrin (demo)",
+    desc: "/avukat — hukuk bürosu şablonu",
+    site: "/avukat",
+    panel: "/avukat/panel",
+    flagKey: "demoAvukatGoster" as const,
+  },
 ];
 
 export function PanelPortfoyHub() {
   const wb = useWithBase();
   const [flags, setFlags] = useState<DemoFlags>({
     demoKuaforGoster: true,
+    demoKuaforKadinGoster: true,
     demoRestaurantGoster: true,
     demoEmlakGoster: true,
+    demoAvukatGoster: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -66,8 +84,10 @@ export function PanelPortfoyHub() {
       if (cancelled) return;
       setFlags({
         demoKuaforGoster: a.demoKuaforGoster !== false,
+        demoKuaforKadinGoster: a.demoKuaforKadinGoster !== false,
         demoRestaurantGoster: a.demoRestaurantGoster !== false,
         demoEmlakGoster: a.demoEmlakGoster !== false,
+        demoAvukatGoster: a.demoAvukatGoster !== false,
       });
       setLoading(false);
     })();

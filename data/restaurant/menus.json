@@ -1,7 +1,8 @@
 {
   "header": [
     { "href": "/anasayfa", "label": "Ana Sayfa", "newTab": false },
-    { "href": "/hizmetler", "label": "Menü", "newTab": false },
+    { "href": "/p/hakkimizda", "label": "Hakkımızda", "newTab": false },
+    { "href": "/hizmetler", "label": "Öne çıkanlar", "newTab": false },
     { "href": "/qr-menu", "label": "QR Menü", "newTab": false },
     { "href": "/galeri", "label": "Galeri", "newTab": false },
     { "href": "/randevular", "label": "Rezervasyonlar", "newTab": false },
@@ -10,7 +11,9 @@
   ],
   "footer": [
     { "href": "/qr-menu", "label": "QR Menü" },
+    { "href": "/p/ozel-etkinlik", "label": "Özel etkinlik" },
     { "href": "/randevu", "label": "Rezervasyon" },
+    { "href": "/iletisim", "label": "İletişim" },
     { "href": "/panel", "label": "Yönetim paneli" }
   ]
 }

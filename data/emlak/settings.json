@@ -2,13 +2,16 @@
   "ayarlar": {
     "salonAd": "Atlas Emlak",
     "whatsapp": "905551234567",
+    "iletisimTelefon": "+90 216 555 01 20",
+    "iletisimEposta": "info@atlasemlak.demo",
     "adresKisa": "Kadıköy · İstanbul",
-    "adresDetay": "Örnek Mah. Örnek Cad. No:1, Kadıköy / İstanbul",
-    "calismaSaatleri": "Her gün 09:00 — 19:00",
+    "adresDetay": "Caferağa Mah. Mühürdar Cad. İş Hanı No:88 Kat:3, Kadıköy / İstanbul",
+    "calismaSaatleri": "Hafta içi 09:30 — 19:00 · Cumartesi 10:00 — 17:00",
     "sehir": "İstanbul",
     "menuDavranis": "hover",
     "panelSolMenuSabitle": true,
-    "panelSolMenuBaslangic": "acik"
+    "panelSolMenuBaslangic": "acik",
+    "instagram": "https://www.instagram.com/atlas.emlak.demo/",
+    "googleMaps": "https://maps.google.com/?q=Kad%C4%B1k%C3%B6y+M%C3%BCh%C3%BCrdar"
   }
 }
-

@@ -6,8 +6,8 @@
     "iletisimTelefon": "+90 555 123 45 67",
     "iletisimEposta": "test@mollayazilim.com",
     "seoTitle": "Molla Yazılım | Özel Yazılım & Admin Panelleri",
-    "seoDescription": "Molla Yazılım; işletmeye özel web siteleri, yönetim panelleri ve sektöre özel sistemler geliştirir. Kuaför, restoran, emlak gibi hazır demoları hızlıca özelleştirip yayına alır. Ücretsiz keşif ve hızlı demo planı.",
-    "seoKeywords": "özel yazılım, web sitesi, yönetim paneli, admin panel, kurumsal web sitesi, randevu sistemi, qr menü, restoran sistemi, kuaför sistemi, emlak sistemi, İstanbul yazılım, yazılım ajansı, web tasarım İstanbul, firma web sitesi, mobil uyumlu site, seo uyumlu web sitesi",
+    "seoDescription": "Molla Yazılım; işletmeye özel web siteleri, yönetim panelleri ve sektöre özel sistemler geliştirir. Kuaför, restoran, emlak ve hukuk bürosu gibi hazır demoları hızlıca özelleştirip yayına alır. Ücretsiz keşif ve hızlı demo planı.",
+    "seoKeywords": "özel yazılım, web sitesi, yönetim paneli, admin panel, kurumsal web sitesi, randevu sistemi, qr menü, restoran sistemi, kuaför sistemi, emlak sistemi, avukat sitesi demo, hukuk bürosu web sitesi, İstanbul yazılım, yazılım ajansı, web tasarım İstanbul, firma web sitesi, mobil uyumlu site, seo uyumlu web sitesi",
     "seoIndex": true,
     "adresKisa": "Tekirdağ Kapaklı · Türkiye",
     "adresDetay": "",
@@ -18,7 +18,9 @@
     "panelSolMenuBaslangic": "acik",
     "footerSosyalGoster": true,
     "demoKuaforGoster": true,
+    "demoKuaforKadinGoster": true,
     "demoRestaurantGoster": true,
-    "demoEmlakGoster": true
+    "demoEmlakGoster": true,
+    "demoAvukatGoster": true
   }
 }

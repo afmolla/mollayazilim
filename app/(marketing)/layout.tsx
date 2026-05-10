@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SitePrefixProvider } from "@/components/SitePrefixProvider";
 import { getRequestSite } from "@/lib/site-request";
+import { VitrinDemoRibbon } from "@/components/vitrin/VitrinDemoRibbon";
 import { VfAnalyticsTracker } from "@/components/VfAnalyticsTracker";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { siteUrl } from "@/lib/site";
@@ -25,6 +26,7 @@ function MarketingShell({ children }: { children: React.ReactNode }) {
         </Suspense>
       </main>
       <SiteFooter />
+      <VitrinDemoRibbon />
     </>
   );
 }
@@ -61,7 +63,7 @@ export default async function MarketingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { prefix } = await getRequestSite();
+  const { prefix, subdir } = await getRequestSite();
   return (
     <SitePrefixProvider prefix={prefix}>
       <JsonLdLocalBusiness />
@@ -73,7 +75,9 @@ export default async function MarketingLayout({
         }
       >
         <SiteEditModeHost>
-          <MarketingShell>{children}</MarketingShell>
+          <div data-vitrin={subdir} className="flex min-h-0 flex-1 flex-col">
+            <MarketingShell>{children}</MarketingShell>
+          </div>
         </SiteEditModeHost>
       </Suspense>
     </SitePrefixProvider>

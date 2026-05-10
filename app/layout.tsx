@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Outfit } from "next/font/google";
+import { Cormorant_Garamond, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 import { normalizePublicSiteUrl } from "@/lib/site";
@@ -8,6 +8,20 @@ import { normalizePublicSiteUrl } from "@/lib/site";
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+/** Restoran vitrin başlıkları — fine dining serif */
+const restaurantDisplay = Cormorant_Garamond({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-restaurant",
+  display: "swap",
+});
+
+/** Emlak vitrin başlıkları — okunaklı sans */
+const emlakDisplay = Plus_Jakarta_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-emlak-display",
   display: "swap",
 });
 
@@ -75,7 +89,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className={`${outfit.variable} h-full`} suppressHydrationWarning>
+    <html
+      lang="tr"
+      className={`${outfit.variable} ${restaurantDisplay.variable} ${emlakDisplay.variable} h-full`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapInlineScript() }} />
       </head>

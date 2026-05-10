@@ -1,43 +1,95 @@
 {
   "icerik": {
     "home": {
-      "badge": "İstanbul · Emlak vitrin",
-      "baslik": "Doğru ilan, doğru müşteri",
-      "aciklama": "İlan yönetimi, filtreleme ve yönetim paneli — emlak vitrini için modern demo.",
+      "badge": "Kadıköy merkez · İstanbul",
+      "baslik": "Gayrimenkulde güvenilir eşleştirme",
+      "aciklama": "Atlas Emlak danışmanları satılık ve kiralık konut portföyünü güncel tutar; ilanlar panelden yayına alınır, vitrinde anında filtrelenir. Bu site tamamen demo içeriktir.",
       "ctaPrimaryLabel": "İlanları incele",
-      "ctaPrimaryHref": "/p/ilanlar",
+      "ctaPrimaryHref": "/ilanlar",
       "ctaSecondaryLabel": "İletişim",
       "ctaSecondaryHref": "/iletisim",
-      "heroImageSrc": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=80",
-      "heroImageAlt": "Modern konut ve şehir manzarası",
-      "heroAltBloklar": [],
-      "bolumBaslik": "Neden bu demo?",
-      "bolumAciklama": "SEO uyumlu ilan sayfaları, hızlı filtreleme ve panelden içerik yönetimi.",
+      "heroImageSrc": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80",
+      "heroImageAlt": "Modern konut projesi — cephe ve peyzaj",
+      "heroAltBloklar": [
+        {
+          "id": "ek-stats",
+          "tur": "metin",
+          "metin": "Portföy: İstanbul Anadolu & Avrupa · Tekirdağ yatırım · Kiralık & satılık — demo veri",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "Nasıl çalışıyoruz?",
+      "bolumAciklama": "Ön görüşmede bütçe ve lokasyonu netleştiriyoruz; uygun ilanları paylaşıyor, yerinde gösterim ve tapu sürecinde yanınızda oluyoruz — örnek kurumsal metin.",
       "features": [
-        { "baslik": "İlan yönetimi", "aciklama": "Başlık, açıklama, görseller ve etiketler panelden." },
-        { "baslik": "Filtreleme", "aciklama": "Konum, fiyat aralığı, oda sayısı gibi kriterler." },
-        { "baslik": "Hızlı yayın", "aciklama": "Güncellemeler anında vitrinde görünür." }
+        {
+          "baslik": "Güncel ilanlar",
+          "aciklama": "Yeni gelen daireler önce vitrine; panelden yayın tarihi ve etiketler."
+        },
+        {
+          "baslik": "Şeffaf süreç",
+          "aciklama": "Ön provizyon ve masraf kalemleri yazılı özet — demo şablon."
+        },
+        {
+          "baslik": "Uzman ekip",
+          "aciklama": "Kiralama hızlı kapanış; satışta ekspertiz ve tapu takibi koordinasyonu."
+        },
+        {
+          "baslik": "Yatırım analizi",
+          "aciklama": "Getiri tahmini ve bölge karşılaştırması — gerçek projede genişletilir."
+        }
       ]
     },
     "hizmetler": {
-      "sayfaAciklama": "Emlak vitrini demo — gerçek projede ilan tipleri ve filtreler özelleştirilebilir.",
+      "sayfaAciklama": "Atlas Emlak’ın sunduğu danışmanlık başlıkları — vitrin sayfası örneği.",
       "rows": [
-        { "ad": "İlan yönetimi", "sure": "—", "fiyat": "Panel dahil" },
-        { "ad": "Görsel galeri", "sure": "—", "fiyat": "Sürükle-bırak" },
-        { "ad": "SEO sayfaları", "sure": "—", "fiyat": "Otomatik" }
+        { "ad": "Satılık konut danışmanlığı", "sure": "Keşif — gösterim", "fiyat": "Komisyon tablosu" },
+        { "ad": "Kiralık portföy yönetimi", "sure": "Sözleşme yenileme", "fiyat": "Hizmet bedeli" },
+        { "ad": "Yatırım ve getiri analizi", "sure": "Rapor teslimi", "fiyat": "Teklif usulü" },
+        { "ad": "Değerleme koordinasyonu", "sure": "Randevulu", "fiyat": "Partner eksper" },
+        { "ad": "Tapu & evrak takibi", "sure": "Dosya bazlı", "fiyat": "Paket dahil" },
+        { "ad": "Kurumsal kiracı eşleştirme", "sure": "Proje bazlı", "fiyat": "Görüşme" }
       ]
     },
     "galeri": {
-      "sayfaAciklama": "Demo görseller.",
+      "sayfaAciklama": "Satılan ve kiralanan örnek projelerden görseller — stok fotoğraf, demo.",
       "images": [
-        { "src": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80", "alt": "Konut" },
-        { "src": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80", "alt": "Ev dış cephe" }
+        {
+          "src": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000&q=80",
+          "alt": "Şehir ve konut — genel"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1000&q=80",
+          "alt": "Villa dış cephe"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80",
+          "alt": "Modern villa havuz"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000&q=80",
+          "alt": "Oturma alanı — iç mimari"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1000&q=80",
+          "alt": "Salon ve mutfak birlikte"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000&q=80",
+          "alt": "Lüks konut bahçe"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1000&q=80",
+          "alt": "Apartman giriş holü"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=1000&q=80",
+          "alt": "Çatı terası — şehir manzarası"
+        }
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "İletişim bilgileri ve WhatsApp.",
-      "whatsappMesaj": "Merhaba, ilanlar hakkında bilgi almak istiyorum."
+      "sayfaAciklama": "Ofis ziyareti için randevu önerilir; WhatsApp hattı hafta içi aktif.",
+      "whatsappMesaj": "Merhaba Atlas Emlak, Kadıköy civarında 3+1 satılık ilanlarınızı görmek istiyorum."
     }
   }
 }
-

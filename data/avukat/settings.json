@@ -1,0 +1,21 @@
+{
+  "ayarlar": {
+    "salonAd": "Demir & Ortakları Hukuk Bürosu",
+    "whatsapp": "905551234567",
+    "iletisimWhatsapp": "905551234567",
+    "iletisimTelefon": "+90 212 555 01 02",
+    "iletisimEposta": "info@demirortaklari.demo",
+    "seoTitle": "İstanbul Avukatlık Bürosu | Ceza, İş ve Aile Hukuku — Demo",
+    "seoDescription": "Demo hukuk bürosu vitrin: uzmanlık alanları, randevu talebi ve iletişim. Gerçek hukuki danışmanlık için uzman avukata başvurun.",
+    "seoKeywords": "avukat İstanbul, hukuk bürosu demo, ceza hukuku, iş hukuku, aile hukuku, icra takibi",
+    "seoIndex": true,
+    "adresKisa": "Levent · İstanbul",
+    "adresDetay": "Levent Mah. Büyükdere Cad. İş Kuleleri No:1 D:45, Beşiktaş / İstanbul",
+    "calismaSaatleri": "Hafta içi 09:00 — 18:30",
+    "sehir": "İstanbul",
+    "menuDavranis": "hover",
+    "panelSolMenuSabitle": true,
+    "panelSolMenuBaslangic": "acik",
+    "footerSosyalGoster": true
+  }
+}

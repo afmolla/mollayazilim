@@ -22,7 +22,7 @@ export function portfolioPrefixes(): string[] {
   if (fromEnv !== undefined && fromEnv.trim() !== "") {
     return normalizeList(fromEnv);
   }
-  return ["/kuafor", "/restaurant", "/emlak"];
+  return ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat"];
 }
 
 export function slugFromPrefix(prefix: string): string {

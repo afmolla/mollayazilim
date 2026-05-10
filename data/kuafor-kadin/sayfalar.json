@@ -1,0 +1,31 @@
+{
+  "sayfalar": [
+    {
+      "slug": "hakkimizda",
+      "baslik": "Hakkımızda",
+      "aciklama": "Aura Femme Studio — renk, bakım ve özel gün deneyimi.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Aura Femme Studio, <strong class=\"text-[var(--text)]\">Kadıköy – Caddebostan</strong> hattında kadın kuaförü ve renk danışmanlığı sunan demo bir vitrindir. Amaç: salona gelmeden önce hizmet kapsamı, süre beklentisi ve randevu akışını netleştirmek.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Boya ve kimyasal işlemlerde ön analiz; keratin / onarıcı bakımda saç hedefi ve evde devam ürünleri hakkında öneri. Tüm metinler panelden düzenlenebilir.</p>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1560066989-138aa9bad922?w=1200&q=80\" alt=\"Salon oturma alanı\" class=\"w-full rounded-[1.5rem] border border-[var(--border)] shadow-lg\" />\n  <figcaption class=\"mt-2 text-sm text-[var(--muted)]\">Doğal ışık ve ferah oturma — demo görsel</figcaption>\n</figure>\n<h2 class=\"mt-10 text-xl font-semibold text-[var(--text)]\">Nasıl çalışıyoruz?</h2>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li>Renk ve bakım öncesi kısa görüşme; saç hedefi ve bütçe aralığı.</li>\n  <li>Yoğun günlerde randevu önceliği; prova seansı düğün paketlerinde.</li>\n  <li>WhatsApp hattı ile hızlı yönlendirme ve panel onaylı kayıt.</li>\n</ul>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-09T12:00:00.000Z"
+    },
+    {
+      "slug": "hijyen-politikasi",
+      "baslik": "Hijyen & konfor",
+      "aciklama": "Salon hijyen uygulamaları (demo metin).",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Bu metin <strong class=\"text-[var(--text)]\">örnek politikadır</strong>; işletmenize göre güncellenmelidir.</p>\n<ul class=\"mt-6 list-disc space-y-3 pl-5 text-[var(--muted)]\">\n  <li>Tarak ve fırçalar müşteri bazlı steril veya tek kullanımlık set olarak hazırlanır.</li>\n  <li>Yıkama tezgâhları ve boya istasyonları kullanım sonrası yüzey temizliği.</li>\n  <li>Havalandırma ve randevulu yoğunluk ile bekleme süresini dengeleme.</li>\n</ul>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-09T12:00:00.000Z"
+    },
+    {
+      "slug": "kampanya-bahar",
+      "baslik": "Bahar bakım kampanyası",
+      "aciklama": "Keratin ve nem bakımında örnek kampanya — demo.",
+      "icerikHtml": "<p class=\"rounded-2xl border border-rose-300/40 bg-rose-500/10 px-4 py-3 text-sm text-[var(--text)]\"><strong>Bahar dönemi</strong> boyunca <strong>keratin öncesi nem terapisi</strong> için iletişime geçen ilk kayıtlara örnek indirim duyurusu (demo).</p>\n<p class=\"mt-6 text-[var(--muted)] leading-relaxed\">Kampanya şartları gerçek işletmede değişir; panelden tarih ve kota ekleyebilirsiniz.</p>\n<p class=\"mt-6\"><a href=\"/randevu\" class=\"inline-flex rounded-full bg-[var(--brand)] px-6 py-3 font-semibold text-[var(--on-brand)] no-underline\">Randevu formuna git</a></p>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-09T12:00:00.000Z"
+    }
+  ]
+}

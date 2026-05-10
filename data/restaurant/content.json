@@ -1,63 +1,118 @@
 {
   "icerik": {
     "home": {
-      "badge": "İstanbul · Restoran vitrin",
-      "baslik": "Lezzet ve atmosfer bir arada",
-      "aciklama": "QR menü, online rezervasyon ve güncel içerik — tek panelden yönetin. Misafirleriniz menüyü telefondan anında görür.",
+      "badge": "Atlas Restaurant · Kadıköy Moda",
+      "baslik": "Akdeniz mutfağı, zamansız davet",
+      "aciklama": "Atlas Restaurant’ta günlük taze malzeme, odun fırını ve deniz ürünleri öne çıkar. QR menü, masa ayırtma ve şef önerileri tek panelden güncellenir — misafir mobilde anında görür.",
       "ctaPrimaryLabel": "QR menüyü aç",
       "ctaPrimaryHref": "/qr-menu",
       "ctaSecondaryLabel": "Masa ayırt",
       "ctaSecondaryHref": "/randevu",
-      "heroImageSrc": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80",
-      "heroImageAlt": "Restoran iç mekan — sıcak aydınlatma ve masalar",
-      "heroAltBloklar": [],
-      "bolumBaslik": "Neden bu vitrin?",
-      "bolumAciklama": "Mobil uyumlu menü, vitrin sayfaları ve yönetim paneli — işletmenize yakın bir demo.",
+      "heroImageSrc": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=85",
+      "heroImageAlt": "Şık restoran ambiyansı — mum ışığı ve akşam servisi (demo görsel)",
+      "heroAltBloklar": [
+        {
+          "id": "chef-note",
+          "tur": "metin",
+          "metin": "Çarşamba balık günü · Perşembe meze tablası · Hafta sonu brunch (demo duyuru)",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "Deneyim",
+      "bolumAciklama": "İç mekan ve bahçe masa seçenekleri; iş yemeği ve doğum günü için özel menü teklifi panel üzerinden iletilebilir.",
       "features": [
         {
           "baslik": "QR menü",
-          "aciklama": "Kategoriler ve fiyatlar panelden düzenlenir; yayında veya gizli olabilir."
+          "aciklama": "Kategori, fiyat ve içerik anında yayında; alkollü içecek bloğu tek tuşla gizlenebilir."
         },
         {
           "baslik": "Rezervasyon",
-          "aciklama": "Masa taleplerini panelden onaylayın veya iptal edin."
+          "aciklama": "Kişi sayısı ve masa bölgesi talebi panele düşer; onaylı kayıt listede görünür."
         },
         {
-          "baslik": "Hızlı güncelleme",
-          "aciklama": "Menü, galeri ve iletişim bilgileri anında sitede yansır."
+          "baslik": "Şef menüsü",
+          "aciklama": "Sezon ürünleri için günlük öneriler — vitrin ve QR menüde senkron."
+        },
+        {
+          "baslik": "Mobil sipariş",
+          "aciklama": "Demo APK ile paket servis akışı (panelden açık/kapalı)."
         }
       ]
     },
     "hizmetler": {
-      "sayfaAciklama": "Örnek yemek listesi — panelden satırları düzenleyebilirsiniz.",
+      "sayfaAciklama": "Öne çıkan tabaklar — tam liste QR menü ve panelden güncellenir.",
       "rows": [
-        { "ad": "Izgara köfte tabağı", "sure": "25 dk", "fiyat": "420 ₺" },
-        { "ad": "Kuzu tandır", "sure": "35 dk", "fiyat": "580 ₺" },
-        { "ad": "Levrek (ızgara)", "sure": "30 dk", "fiyat": "520 ₺" },
-        { "ad": "Mevsim salata", "sure": "10 dk", "fiyat": "180 ₺" },
-        { "ad": "Sütlaç", "sure": "5 dk", "fiyat": "120 ₺" }
+        { "ad": "Günün çorbası", "sure": "—", "fiyat": "95 ₺" },
+        { "ad": "Karides güveç (starter)", "sure": "20 dk", "fiyat": "420 ₺" },
+        { "ad": "Odun fırını lahmacun (2 kişilik)", "sure": "25 dk", "fiyat": "380 ₺" },
+        { "ad": "Izgara köfte tabağı", "sure": "25 dk", "fiyat": "440 ₺" },
+        { "ad": "Kuzu tandır", "sure": "35 dk", "fiyat": "590 ₺" },
+        { "ad": "Levrek (ızgara) — mevsim salata", "sure": "30 dk", "fiyat": "540 ₺" },
+        { "ad": "Risotto mantarlı", "sure": "28 dk", "fiyat": "410 ₺" },
+        { "ad": "Sezon salata ( keçi peynirli )", "sure": "12 dk", "fiyat": "195 ₺" },
+        { "ad": "Künefe / sütlaç", "sure": "10 dk", "fiyat": "125–185 ₺" },
+        { "ad": "Ev yapımı limonata & komposto", "sure": "—", "fiyat": "85–95 ₺" }
       ]
     },
     "galeri": {
-      "sayfaAciklama": "Restoran ve yemek görselleri — kendi fotoğraflarınızla değiştirin.",
+      "sayfaAciklama": "Yemek, iç mekan ve teras — demo görseller. Kendi fotoğraf çekimlerinizle değiştirin.",
       "images": [
         {
-          "src": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
-          "alt": "Şık servis edilmiş ana yemek"
+          "src": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&q=80",
+          "alt": "Şık sunum — ana yemek"
         },
         {
-          "src": "https://images.unsplash.com/photo-1555396273-367ea4eb66db?w=900&q=80",
-          "alt": "Restoran masaları ve ambiyans"
+          "src": "https://images.unsplash.com/photo-1555396273-367ea4eb66db?w=1000&q=80",
+          "alt": "Restoran iç mekan — sıcak ambiyans"
         },
         {
-          "src": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&q=80",
-          "alt": "Renkli salata kasesi"
+          "src": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1000&q=80",
+          "alt": "Renkli salata ve tabak düzeni"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000&q=80",
+          "alt": "Yakın çekim tabak — fine dining hissi"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1000&q=80",
+          "alt": "Şarap ve servis — akşam yemeği"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1000&q=80",
+          "alt": "Bar ve içecek hazırlığı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1000&q=80",
+          "alt": "Teras oturma — Akdeniz esintili"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1424847651672-bf20a4b0982a?w=1000&q=80",
+          "alt": "Tatlı tabağı — sunum"
         }
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "Rezervasyon ve adres için bize ulaşın.",
-      "whatsappMesaj": "Merhaba, masa ayırtmak istiyorum."
+      "sayfaAciklama": "Moda sahil hattına yürüme mesafesi; vale ve tekne iskelesi için önceden bilgi veriniz.",
+      "whatsappMesaj": "Merhaba Atlas Restaurant, bu akşam 2 kişi iç masa için uygunluk var mı?"
+    },
+    "randevuForm": {
+      "pageTitle": "Masa ayırt",
+      "pageDescription": "Rezervasyon talebiniz panele düşer; onay sonrası listede görünür.",
+      "intro": "Özel gün ve grup rezervasyonlarında menü ön seçimi için sizi arayabiliriz — demo süreç metnidir.",
+      "selectLabel": "Misafir / masa",
+      "submitButtonLabel": "Rezervasyon talebi gönder",
+      "successMessage": "Rezervasyon talebiniz alındı. Panelden onaylandığında onaylı rezervasyon listesinde görünebilir.",
+      "approvedListTitle": "Onaylı rezervasyonlar",
+      "approvedListIntro": "Bu sayfa yalnızca onaylanmış masa rezervasyonlarını gösterir — panel akışıyla uyumlu demo. Bekleyen talepler yönetim panelinde kalır.",
+      "options": [
+        "2 kişi — iç mekan",
+        "4 kişi — iç mekan",
+        "6+ kişi — grup / iş yemeği",
+        "Teras / bahçe",
+        "Doğum günü / özel süsleme",
+        "Paket servis / gel-al",
+        "Şef menüsü (ön bildirim)"
+      ]
     }
   }
 }

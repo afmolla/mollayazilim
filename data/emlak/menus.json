@@ -1,13 +1,17 @@
 {
   "header": [
-    { "href": "/anasayfa", "label": "Ana Sayfa" },
-    { "href": "/hizmetler", "label": "Özellikler" },
-    { "href": "/galeri", "label": "Galeri" },
-    { "href": "/iletisim", "label": "İletişim" }
+    { "href": "/anasayfa", "label": "Ana Sayfa", "newTab": false },
+    { "href": "/ilanlar", "label": "İlanlar", "newTab": false },
+    { "href": "/p/kurumsal", "label": "Kurumsal", "newTab": false },
+    { "href": "/p/alici-rehberi", "label": "Alıcı rehberi", "newTab": false },
+    { "href": "/hizmetler", "label": "Hizmetler", "newTab": false },
+    { "href": "/galeri", "label": "Portföy görselleri", "newTab": false },
+    { "href": "/iletisim", "label": "İletişim", "newTab": false }
   ],
   "footer": [
+    { "href": "/ilanlar", "label": "İlan ara" },
+    { "href": "/p/alici-rehberi", "label": "İlk kez alıcı?" },
     { "href": "/iletisim", "label": "İletişim" },
     { "href": "/panel", "label": "Yönetim paneli" }
   ]
 }
-

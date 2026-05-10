@@ -1,0 +1,123 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "Kadın kuaförü · Kadıköy",
+      "baslik": "Işıltını yeniden tanımla",
+      "aciklama": "Aura Femme Studio’da renk bilimi, uzun süreli bakım ritüelleri ve düğün / özel gün hazırlığı aynı çatı altında — ferah salon, doğal ışık ve kişiye özel konsültasyon (demo vitrin).",
+      "ctaPrimaryLabel": "Randevu al",
+      "ctaPrimaryHref": "/randevu",
+      "ctaSecondaryLabel": "Hizmet kataloğu",
+      "ctaSecondaryHref": "/hizmetler",
+      "heroImageSrc": "https://images.unsplash.com/photo-1560066989-138aa9bad922?w=1600&q=85",
+      "heroImageAlt": "Aura Femme Studio — açık ve davetkâr salon oturumu, doğal tonlar",
+      "heroAltBloklar": [
+        {
+          "id": "trust-strip",
+          "tur": "metin",
+          "metin": "Renk uzmanı ekip · Amonyaksız seçenekler · Özel gün provası için esnek saatler",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "Sen & saç arasındaki denge",
+      "bolumAciklama": "Her işlem öncesi saç ve deri analizi; boyama ve kimyasal işlemlerde şeffaf süreç kartı ve bakım sonrası takip önerileri.",
+      "features": [
+        {
+          "id": "color",
+          "baslik": "Renk & form",
+          "aciklama": "Balyaj, ombre, yaşayan doğal tonlar ve yüz hatlarına göre kesim önerisi.",
+          "kolon": 1
+        },
+        {
+          "id": "care",
+          "baslik": "Onarıcı bakım",
+          "aciklama": "Keratin, botox saç ve nem terapileri — yoğun şehir ritmine uygun bakım planı.",
+          "kolon": 1
+        },
+        {
+          "id": "event",
+          "baslik": "Özel gün stüdyosu",
+          "aciklama": "Düğün ve davet provası; prova tarihi ve ürün listesi panelden takip edilebilir.",
+          "kolon": 1
+        },
+        {
+          "id": "wellness",
+          "baslik": "Konfor & mahremiyet",
+          "aciklama": "Ayrı yıkama alanı, ferah bekleme köşesi ve randevulu yoğunluğu dengeleyen akış.",
+          "kolon": 1
+        }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Süre ve fiyatlar örnek vitrin içindir; işlem öncesi konsültasyon önerilir. Güncel tarife için WhatsApp veya randevu formundan yazabilirsiniz.",
+      "rows": [
+        { "ad": "Kesim & şekillendirme", "sure": "45–60 dk", "fiyat": "1.100 ₺" },
+        { "ad": "Fön & profesyonel finish", "sure": "35–50 dk", "fiyat": "850 ₺" },
+        { "ad": "Tam boya / diyagonal teknik", "sure": "120+ dk", "fiyat": "3.200 ₺+" },
+        { "ad": "Balyaj / röfle set", "sure": "150+ dk", "fiyat": "4.800 ₺+" },
+        { "ad": "Keratin / amino kompleks bakım", "sure": "120 dk", "fiyat": "4.400 ₺" },
+        { "ad": "Botox saç bakımı", "sure": "75 dk", "fiyat": "2.600 ₺" },
+        { "ad": "Düğün hazırlık paketi (provayı içerir)", "sure": "Paket", "fiyat": "Teklif" },
+        { "ad": "Kaş şekillendirme (bilgi)", "sure": "30 dk", "fiyat": "480 ₺" }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Salon atmosferi, renk çalışmaları ve bakım anları — demo görselleri kendi üretiminizle kolayca değiştirin.",
+      "images": [
+        {
+          "src": "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=85",
+          "alt": "Profesyonel styling — ön kamera hazırlığı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=85",
+          "alt": "Yıkama ve bakım ünitesi — sıcak tonlar"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1560066989-138aa9bad922?w=1200&q=85",
+          "alt": "Salon oturma alanı — doğal ışık"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=1200&q=85",
+          "alt": "Renk ürünleri ve serum seçimi"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1595475884562-073c698d94dc?w=1200&q=85",
+          "alt": "Saç kesim istasyonu — kadın kuaförü"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=85",
+          "alt": "Modern salon iç mekân detayı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=1200&q=85",
+          "alt": "Renk paleti ve konsültasyon köşesi"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1200&q=85",
+          "alt": "Salon aynası ve doğal gülümseme"
+        }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "Caddebostan hattında kolay ulaşım; randevu önerilir. WhatsApp ile de yazabilirsiniz.",
+      "whatsappMesaj": "Merhaba Aura Femme Studio, uygun randevu ve hizmet bilgisi rica ediyorum."
+    },
+    "randevuForm": {
+      "pageTitle": "Online randevu",
+      "pageDescription": "Talebiniz panele düşer; onay sonrası randevu listenizde görünür — demo vitrin akışı.",
+      "intro": "Form gönderildiğinde talep beklemede kaydedilir. Ekibimiz en kısa sürede dönüş yapar; onayladığınızda kayıt listede yer alır.",
+      "approvedListTitle": "Onaylı randevular",
+      "approvedListIntro": "Bu sayfa yalnızca onaylanmış randevuları gösterir — panel akışıyla uyumlu demo.",
+      "selectLabel": "Hizmet",
+      "submitButtonLabel": "Randevu talebi gönder",
+      "options": [
+        "Kesim & şekillendirme",
+        "Fön & profesyonel finish",
+        "Tam boya / balyaj",
+        "Keratin / amino bakım",
+        "Düğün paketi",
+        "Kaş şekillendirme",
+        "Diğer"
+      ]
+    }
+  }
+}

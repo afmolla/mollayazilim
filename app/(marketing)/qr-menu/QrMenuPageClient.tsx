@@ -2,16 +2,39 @@
 
 import type { QrMenuData } from "@/lib/qr-menu-store";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export function QrMenuPageClient({ menu }: { menu: QrMenuData }) {
+  const pathname = usePathname() ?? "";
+  const isRestaurant = pathname.includes("/restaurant");
   const sorted = [...menu.kategoriler].sort((a, b) => a.sira - b.sira);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-14">
+    <div
+      className={
+        isRestaurant
+          ? "restaurant-menu-root mx-auto max-w-5xl px-4 py-12 md:px-6 md:py-16"
+          : "mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-14"
+      }
+    >
       <header className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-[var(--text)] md:text-4xl">{menu.baslik}</h1>
+        <h1
+          className={
+            isRestaurant
+              ? "font-[family-name:var(--font-restaurant)] text-4xl font-semibold tracking-tight text-[#faf7f2] md:text-5xl"
+              : "text-3xl font-bold tracking-tight text-[var(--text)] md:text-4xl"
+          }
+        >
+          {menu.baslik}
+        </h1>
         {menu.altBaslik ? (
-          <p className="mt-3 text-base text-[var(--muted)] md:text-lg">{menu.altBaslik}</p>
+          <p
+            className={
+              isRestaurant ? "mt-4 text-base text-[#a89f94] md:text-lg" : "mt-3 text-base text-[var(--muted)] md:text-lg"
+            }
+          >
+            {menu.altBaslik}
+          </p>
         ) : null}
       </header>
 
@@ -32,7 +55,11 @@ export function QrMenuPageClient({ menu }: { menu: QrMenuData }) {
                   return (
                     <li
                       key={u.id}
-                      className="group flex gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                      className={
+                        isRestaurant
+                          ? "group flex gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-3 shadow-none backdrop-blur-sm transition hover:border-[var(--brand)]/30 hover:bg-white/[0.06]"
+                          : "group flex gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                      }
                     >
                       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
                         {hasImg ? (

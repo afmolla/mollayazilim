@@ -1,0 +1,16 @@
+{
+  "ayarlar": {
+    "salonAd": "Aura Femme Studio",
+    "whatsapp": "905559876543",
+    "adresKisa": "Bağdat Caddesi · Kadıköy · İstanbul",
+    "adresDetay": "Caddebostan Mah. Örnek Sok. No:18 Kat:2, Kadıköy / İstanbul",
+    "calismaSaatleri": "Sal–Paz 10:00 — 20:00 · Pazartesi kapalı",
+    "sehir": "İstanbul",
+    "menuDavranis": "hover",
+    "panelSolMenuSabitle": true,
+    "panelSolMenuBaslangic": "acik",
+    "instagram": "https://www.instagram.com/aurafemmestudio.demo/",
+    "facebook": "",
+    "googleMaps": "https://maps.google.com/?q=Kad%C4%B1k%C3%B6y+%C4%B0stanbul"
+  }
+}

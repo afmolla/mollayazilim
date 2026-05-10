@@ -16,6 +16,8 @@ async function jsonLdBody() {
   const ayar = await ayarlarGetir();
   const isMolla = subdir === "molla";
   const isRestaurant = subdir === "restaurant";
+  const isEmlak = subdir === "emlak";
+  const isAvukat = subdir === "avukat";
   const base = await siteUrl();
   const baseNorm = base.replace(/\/$/, "");
   const logoUrl = `${baseNorm}/icon.svg`;
@@ -67,6 +69,54 @@ async function jsonLdBody() {
     );
   }
 
+  if (isAvukat) {
+    const avukatPayload = {
+      "@context": "https://schema.org",
+      "@type": "LegalService",
+      name: ayar.salonAd,
+      url: base,
+      description:
+        ayar.seoDescription?.trim() ||
+        "Demo hukuk bürosu vitrin — uzmanlıklar ve görüşme talebi.",
+      ...(ayar.adresDetay?.trim()
+        ? {
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: ayar.adresDetay,
+              addressLocality: ayar.sehir || "İstanbul",
+              addressCountry: "TR",
+            },
+          }
+        : {}),
+      ...(ayar.iletisimTelefon?.trim() ? { telephone: ayar.iletisimTelefon.trim() } : {}),
+    };
+    return (
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(avukatPayload) }} />
+    );
+  }
+
+  if (isEmlak) {
+    const emlakPayload = {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      name: ayar.salonAd,
+      url: base,
+      description:
+        ayar.seoDescription?.trim() ||
+        "Emlak vitrin demo — ilan listesi ve iletişim.",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: ayar.sehir || "İstanbul",
+        streetAddress: ayar.adresDetay || "İstanbul",
+        addressCountry: "TR",
+      },
+      ...(ayar.iletisimTelefon?.trim() ? { telephone: ayar.iletisimTelefon.trim() } : {}),
+    };
+    return (
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(emlakPayload) }} />
+    );
+  }
+
   const data = {
     "@context": "https://schema.org",
     "@type": isRestaurant ? "Restaurant" : "HairSalon",
@@ -74,11 +124,11 @@ async function jsonLdBody() {
     url: base,
     description: isRestaurant
       ? "Restoran vitrin: QR menü, rezervasyon ve iletişim."
-      : "Modern kuaför ve berber hizmetleri: kesim, sakal, boya ve bakım. Online randevu.",
+      : "Kuaför ve berber demo vitrin — randevu ve iletişim.",
     address: {
       "@type": "PostalAddress",
       addressLocality: ayar.sehir || "İstanbul",
-      streetAddress: ayar.adresDetay,
+      streetAddress: ayar.adresDetay || "İstanbul",
       addressCountry: "TR",
     },
     priceRange: "$$",

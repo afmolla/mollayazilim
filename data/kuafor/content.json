@@ -1,127 +1,124 @@
 {
   "icerik": {
     "home": {
-      "badge": "İstanbul · Demo vitrin Test",
-      "baslik": "Tarzınızı yenileyin",
-      "aciklama": "Kesim, sakal ve bakım hizmetlerinde modern teknikler, hızlı randevu ve şeffaf panel yönetimi — müşteriye sunulabilir demo.",
-      "ctaPrimaryLabel": "Randevu al j",
+      "badge": "Erkek kuaförü · Nişantaşı",
+      "baslik": "KESİM. KONTÜR. KARAKTER.",
+      "aciklama": "Urban Fade Lab’da klasik berber işçiliği ile modern fade teknikleri bir arada — şeffaf süreler, premium ürünler ve randevuyla akışı kontrol altında tutan salon ritmi (demo vitrin).",
+      "ctaPrimaryLabel": "Randevu oluştur",
       "ctaPrimaryHref": "/randevu",
-      "ctaSecondaryLabel": "Hizmetler",
+      "ctaSecondaryLabel": "Tarife göz at",
       "ctaSecondaryHref": "/hizmetler",
-      "heroImageSrc": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&q=80",
-      "heroImageAlt": "Berber salonu iç mekan — profesyonel çalışma alanı test",
-      "heroAltBloklar": [],
-      "bolumBaslik": "Neden bu demo?",
-      "bolumAciklama": "SEO uyumlu sayfalar, mobil uyum ve tek tık WhatsApp — gerçek işletme vitrinine yakın deneyim.",
+      "heroImageSrc": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1600&q=85",
+      "heroImageAlt": "Urban Fade Lab — kesim anı, berber istasyonu ve konsantre ışık",
+      "heroAltBloklar": [
+        {
+          "id": "trust-strip",
+          "tur": "metin",
+          "metin": "★ 4,9 · Tek kullanımlık havlu · Clipper & makas sterilizasyon · Bekleme alanı rezerve çizgisi",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "İŞÇİLİK ÜZERİNE",
+      "bolumAciklama": "Fade’dan hot towel finish’e kadar her adım görünür; yoğun saatlerde bile ritmi koruyan randevu düzeni ve WhatsApp ile hızlı iletişim.",
       "features": [
         {
-          "baslik": "Performans",
-          "aciklama": "Next.js ile sunucu tarafı render ve hızlı geçişler.",
+          "id": "fade",
+          "baslik": "Fade & çizgi",
+          "aciklama": "Skin fade, drop fade ve temp fade — yüz hatlarına göre konsültasyonla net çizgi.",
           "kolon": 1
         },
         {
-          "id": "de304f30-0fb7-467e-abb3-f2d605d1a0af",
-          "baslik": "Yeni kart",
-          "aciklama": "Metin ekleyin.",
-          "hiza": "orta",
+          "id": "blade",
+          "baslik": "Sakal mimarisi",
+          "aciklama": "Kontür, sıcak havlu ve makine işçiliği ile gün boyu formunu koruyan sakal.",
           "kolon": 1
         },
         {
-          "baslik": "Panel entegrasyonu",
-          "aciklama": "Randevuları onaylayın; müşteriye anında mesaj gönderin."
-        },
-        {
-          "baslik": "4 tema",
-          "aciklama": "Klasik berberden minimal tasarıma tek tıkla geçiş."
-        },
-        {
-          "baslik": "Yeni",
-          "aciklama": "Açıklama"
-        },
-        {
-          "baslik": "Yeni",
-          "aciklama": "Açıklama"
-        },
-        {
-          "id": "2c0c7f67-3b4e-4fbb-921e-2015d376c07f",
-          "baslik": "Yeni kart",
-          "aciklama": "Metin ekleyin.",
-          "hiza": "orta",
+          "id": "pace",
+          "baslik": "Zaman disiplini",
+          "aciklama": "Randevulu akış; panel üzerinden onaylı kayıt ve personel bildirimi.",
           "kolon": 1
         },
         {
-          "id": "efb20d9e-7118-4807-95c8-34da5e3504f3",
-          "baslik": "Yeni kart",
-          "aciklama": "Metin ekleyin.",
-          "hiza": "orta",
+          "id": "gear",
+          "baslik": "Ekipman & hijyen",
+          "aciklama": "Profesyonel clipper başlıkları, tek kullanımlık önlük ve istasyon başına sterilizasyon rutini.",
           "kolon": 1
         }
       ]
     },
     "hizmetler": {
-      "sayfaAciklama": "Demo vitrin — gerçek işletmede fiyatlar panele bağlı güncellenebilir.",
+      "sayfaAciklama": "Süre ve fiyatlar örnek vitrin içindir; yoğunluğa göre değişebilir. Güncel tarife için WhatsApp veya randevu formundan yazabilirsiniz.",
       "rows": [
-        {
-          "ad": "Saç kesimi",
-          "sure": "30 dk",
-          "fiyat": "850 ₺"
-        },
-        {
-          "ad": "Sakal şekillendirme",
-          "sure": "20 dk",
-          "fiyat": "450 ₺"
-        },
-        {
-          "ad": "Saç + sakal paket",
-          "sure": "45 dk",
-          "fiyat": "1.100 ₺"
-        },
-        {
-          "ad": "Fön / şekillendirme",
-          "sure": "25 dk",
-          "fiyat": "600 ₺"
-        },
-        {
-          "ad": "Boyama / röfle",
-          "sure": "90+ dk",
-          "fiyat": "2.400 ₺+"
-        },
-        {
-          "ad": "Keratin / bakım",
-          "sure": "120 dk",
-          "fiyat": "3.200 ₺"
-        },
-        {
-          "ad": "",
-          "sure": "",
-          "fiyat": ""
-        }
+        { "ad": "Signature fade / klasik kesim", "sure": "35–45 dk", "fiyat": "920 ₺" },
+        { "ad": "Skin fade + sakal kontür", "sure": "55 dk", "fiyat": "1.280 ₺" },
+        { "ad": "Sadece sakal şekillendirme", "sure": "25 dk", "fiyat": "520 ₺" },
+        { "ad": "Çocuk kesimi (12 yaşa kadar)", "sure": "30 dk", "fiyat": "620 ₺" },
+        { "ad": "Grey blending / touch-up", "sure": "40 dk", "fiyat": "1.100 ₺" },
+        { "ad": "Saç boyama (erkek)", "sure": "50–70 dk", "fiyat": "1.650 ₺+" },
+        { "ad": "Keratin saç bakımı", "sure": "90 dk", "fiyat": "3.400 ₺" },
+        { "ad": "VIP köşe — hafta sonu slot", "sure": "Paket", "fiyat": "Teklif" }
       ]
     },
     "galeri": {
-      "sayfaAciklama": "Unsplash üzerinden telif dostu demo görseller. Gerçek müşteri için kendi çekimlerinizi kullanın.",
+      "sayfaAciklama": "Salon atmosferi, kesim detayları ve ürün seçimi — tamamı demo görselleriyle; kendi çekimlerinizle kolayca değiştirin.",
       "images": [
         {
-          "src": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80",
-          "alt": "Berber koltuğu ve ayna — modern salon"
+          "src": "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=1200&q=85",
+          "alt": "Berber tezgâhı — makas ve metal detay"
         },
         {
-          "src": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80",
-          "alt": "Profesyonel saç kesimi anı"
+          "src": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1200&q=85",
+          "alt": "Kesim sırasında konsantre ışık"
         },
         {
-          "src": "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=800&q=80",
-          "alt": "Berber aletleri ve detay"
+          "src": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=85",
+          "alt": "Berber koltuğu ve ayna yansıması"
         },
         {
-          "src": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80",
-          "alt": "Salon iç mekan geniş açı"
+          "src": "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1200&q=85",
+          "alt": "Minimal bekleme alanı — koyu tonlar"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=85",
+          "alt": "Geniş açı salon panoraması"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?w=1200&q=85",
+          "alt": "Sakal şekillendirme detayı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=1200&q=85",
+          "alt": "Profesyonel ürün rafı"
+        },
+        {
+          "src": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=85",
+          "alt": "Yıkama ünitesi — konforlu tepsi"
         }
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "Adres, çalışma saatleri ve WhatsApp — iletişim bilgileri.",
-      "whatsappMesaj": "Merhaba, randevu ve fiyat bilgisi almak istiyorum."
+      "sayfaAciklama": "Teşvikiye’de merkezi konum; haftanın her günü uzatılmış mesai. WhatsApp üzerinden de yazabilirsiniz.",
+      "whatsappMesaj": "Merhaba Urban Fade Lab, uygun kesim saati ve tarife bilgisi rica ediyorum."
+    },
+    "randevuForm": {
+      "pageTitle": "Online randevu",
+      "pageDescription": "Talebiniz panele düşer; onay sonrası randevu listenizde görünür — demo vitrin akışı.",
+      "intro": "Form gönderildiğinde talep beklemede kaydedilir. Ekibimiz en kısa sürede dönüş yapar; onayladığınızda kayıt listede yer alır.",
+      "approvedListTitle": "Onaylı randevular",
+      "approvedListIntro": "Bu sayfa yalnızca onaylanmış randevuları gösterir — panel akışıyla uyumlu demo. Bekleyen talepler panelde kalır.",
+      "selectLabel": "Hizmet",
+      "submitButtonLabel": "Randevu talebi gönder",
+      "options": [
+        "Signature fade / klasik kesim",
+        "Skin fade + sakal kontür",
+        "Sadece sakal şekillendirme",
+        "Çocuk kesimi",
+        "Grey blending",
+        "Saç boyama",
+        "Keratin bakım",
+        "VIP köşe"
+      ]
     }
   }
 }

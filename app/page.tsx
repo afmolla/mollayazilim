@@ -5,9 +5,9 @@ import { GradientBg } from "@/components/molla/GradientBg";
 import { MollaNavbar } from "@/components/molla/MollaNavbar";
 import { MollaFooter } from "@/components/molla/MollaFooter";
 import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
-import { ayarlarGetir } from "@/lib/settings-store";
+import { ayarlarGetir, type SiteAyarlar } from "@/lib/settings-store";
 import { parseGoogleMapsInput } from "@/lib/footer-social-map";
-import { siteUrl } from "@/lib/site";
+import { siteOrigin, siteUrl } from "@/lib/site";
 import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     "Molla Yazılım | İstanbul Web Sitesi, QR Menü & Admin Panel — Özel Yazılım";
   const description =
     ayar.seoDescription?.trim() ||
-    "İstanbul ve Türkiye geneli kurumsal web sitesi, QR menü, randevu sistemi, kuaför / restoran / emlak vitrinleri ve admin panel. Ücretsiz keşif, hızlı demo, SEO uyumlu yayın.";
+    "Molla Yazılım; kurumsal web sitesi ve yönetim paneli geliştirir. Hazır sektörel vitrin demolarıyla hızlı başlangıç, ücretsiz keşif ve SEO uyumlu yayın.";
   const keywords = ayar.seoKeywords
     ?.split(",")
     .map((x) => x.trim())
@@ -96,10 +96,54 @@ const FEATURES = [
   { title: "Ölçülebilir", desc: "Form/WhatsApp lead takibi ve net dönüşüm akışı." },
 ];
 
-const DEMO_PROJECTS = [
-  { key: "kuafor" as const, title: "Kuaför Demo", href: "/kuafor", meta: "Randevu + panel" },
-  { key: "restaurant" as const, title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
-  { key: "emlak" as const, title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
+type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat";
+
+function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
+  switch (key) {
+    case "kuafor":
+      return ayar.demoKuaforGoster !== false;
+    case "kuaforKadin":
+      return ayar.demoKuaforKadinGoster !== false;
+    case "restaurant":
+      return ayar.demoRestaurantGoster !== false;
+    case "emlak":
+      return ayar.demoEmlakGoster !== false;
+    case "avukat":
+      return ayar.demoAvukatGoster !== false;
+  }
+}
+
+/** Ana vitrin (#demolar) — kuaför iki ayrı kart; avukat tek blok; restoran+emlak birlikte */
+const DEMO_GROUPS: readonly {
+  id: string;
+  title: string;
+  desc: string;
+  items: readonly { key: DemoKey; title: string; href: string; meta: string }[];
+}[] = [
+  {
+    id: "kuaför",
+    title: "Kuaför demoları",
+    desc: "Erkek berber vitrinı (/kuafor) ve kadın kuaförü vitrinı (/kuafor-kadin) — farklı tasarım, aynı panel mantığı.",
+    items: [
+      { key: "kuafor", title: "Erkek kuaförü", href: "/kuafor", meta: "Berber vitrin + panel" },
+      { key: "kuaforKadin", title: "Kadın kuaförü", href: "/kuafor-kadin", meta: "Renk & bakım vitrin" },
+    ],
+  },
+  {
+    id: "avukat",
+    title: "Avukatlık vitrini",
+    desc: "Hukuk bürosu için kurumsal sayfalar, görüşme talebi ve içerik yönetimi.",
+    items: [{ key: "avukat", title: "Avukatlık Demo", href: "/avukat", meta: "Hukuk vitrin + görüşme talebi" }],
+  },
+  {
+    id: "diger",
+    title: "Diğer sektör demoları",
+    desc: "Restoran QR menü / rezervasyon ve emlak ilan vitrinleri.",
+    items: [
+      { key: "restaurant", title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
+      { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
+    ],
+  },
 ];
 
 const PACKAGES = [
@@ -124,7 +168,7 @@ const PACKAGES = [
   {
     title: "Sektörel",
     badge: "Hazır sistem",
-    desc: "Kuaför / restoran / emlak gibi hazır demoları işletmenize göre uyarlayalım.",
+    desc: "Kuaför, restoran, emlak, hukuk gibi hazır demoları işletmenize göre uyarlayalım.",
     items: ["Hazır demo altyapısı", "Hızlı özelleştirme", "İhtiyaca göre modül", "Yedekleme & bakım opsiyonu"],
     cta: "Demoları incele",
     href: "#demolar",
@@ -137,17 +181,15 @@ export const revalidate = 60;
 
 export default async function MollaHome() {
   const ayar = await ayarlarGetir();
+  const origin = (await siteOrigin()).replace(/\/$/, "");
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
   const waDigits = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
   const waHref = waDigits
     ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Merhaba, web sitesi / panel teklifi almak istiyorum.")}`
     : "#";
-  const visibleDemos = DEMO_PROJECTS.filter((d) => {
-    if (d.key === "kuafor") return ayar.demoKuaforGoster !== false;
-    if (d.key === "restaurant") return ayar.demoRestaurantGoster !== false;
-    if (d.key === "emlak") return ayar.demoEmlakGoster !== false;
-    return true;
-  });
+  const gorunurDemoSayisi = DEMO_GROUPS.flatMap((g) => g.items).filter((it) =>
+    demoGosterilir(it.key, ayar),
+  ).length;
   return (
     <>
       <JsonLdLocalBusiness />
@@ -216,7 +258,13 @@ export default async function MollaHome() {
                       Sayfaları ve menüleri panelden yönetin, anında yayına yansısın.
                     </p>
                     <div className="mt-4 grid gap-2">
-                      {["Randevular / Rezervasyonlar", "Medya yöneticisi", "QR menü", "Yedekleme"].map((x) => (
+                      {[
+                        "Randevular / rezervasyon",
+                        "İlanlar · hukuk vitrinleri",
+                        "Medya yöneticisi",
+                        "QR menü",
+                        "Yedekleme",
+                      ].map((x) => (
                         <div
                           key={x}
                           className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-white/80"
@@ -256,11 +304,15 @@ export default async function MollaHome() {
             title="Sektöre özel hazır sistemler + özel geliştirme"
             desc="İhtiyaca göre hazır demoları özelleştiriyor veya sıfırdan özel yazılım geliştiriyoruz."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { title: "Kuaför Sistemi", desc: "Randevu, müşteri yönetimi, vitrin + panel." },
+              {
+                title: "Kuaför (erkek & kadın)",
+                desc: "İki ayrı demo vitrin; randevu akışı, içerik ve panel — berber ve kadın salonu tasarımları.",
+              },
               { title: "Restoran Sistemi", desc: "QR menü, rezervasyon, masa yönetimi." },
               { title: "Emlak Sistemi", desc: "İlan yönetimi, filtreleme, admin paneli." },
+              { title: "Avukatlık Vitrini", desc: "Hukuk odaklı sayfalar, görüşme talebi + panel." },
             ].map((x) => (
               <div key={x.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
                 <p className="text-base font-semibold text-white">{x.title}</p>
@@ -282,40 +334,67 @@ export default async function MollaHome() {
             anchorId="demolar"
             overline="Demo / Projeler"
             title="Canlı demoları inceleyin"
-            desc="Her demoda vitrin + panel akışını görebilirsiniz. İsterseniz aynı altyapıyı işletmenize göre uyarlayalım."
+            desc="Kuaför (erkek / kadın), avukatlık, restoran ve emlak — örnek vitrinlerdir; gerçek bir işletmeyi temsil etmezler. Her demoda vitrin + panel akışını görebilirsiniz."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {visibleDemos.length === 0 ? (
-              <p className="col-span-full text-center text-sm text-white/65">
+          <div className="mt-8 space-y-12">
+            {gorunurDemoSayisi === 0 ? (
+              <p className="text-center text-sm text-white/65">
                 Bu demolar şu an kapalı. Yönetim panelinde <strong className="text-white">Portföy</strong> sekmesinden
                 tekrar açabilirsiniz.
               </p>
             ) : (
-              visibleDemos.map((p) => (
-                <div
-                  key={p.href}
-                  className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
-                >
-                  <p className="text-base font-semibold text-white">{p.title}</p>
-                  <p className="mt-2 text-sm text-white/70">{p.meta}</p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <Link
-                      href={p.href}
-                      prefetch={false}
-                      className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
+              DEMO_GROUPS.map((group) => {
+                const kartlar = group.items.filter((it) => demoGosterilir(it.key, ayar));
+                if (kartlar.length === 0) return null;
+                return (
+                  <div key={group.id}>
+                    <h3 className="text-lg font-bold tracking-tight text-white md:text-xl">{group.title}</h3>
+                    <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-white/65">{group.desc}</p>
+                    <div
+                      className={
+                        group.id === "avukat"
+                          ? "mt-5 grid max-w-md gap-4 sm:grid-cols-1"
+                          : "mt-5 grid gap-4 sm:grid-cols-2"
+                      }
                     >
-                      Siteyi aç <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
-                    </Link>
-                    <Link
-                      href={`${p.href}/panel`}
-                      prefetch={false}
-                      className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
-                    >
-                      Paneli aç
-                    </Link>
+                      {kartlar.map((p) => (
+                        <div
+                          key={p.key}
+                          className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
+                        >
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <p className="min-w-0 flex-1 text-base font-semibold text-white">{p.title}</p>
+                            <span className="shrink-0 rounded-full border border-amber-400/35 bg-amber-500/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-100">
+                              Demo
+                            </span>
+                          </div>
+                          <p className="mt-2 text-sm text-white/70">{p.meta}</p>
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            <Link
+                              href={p.href}
+                              prefetch={false}
+                              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
+                            >
+                              Siteyi aç{" "}
+                              <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
+                            </Link>
+                            <Link
+                              href={`${p.href}/panel`}
+                              prefetch={false}
+                              className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                            >
+                              Paneli aç
+                            </Link>
+                          </div>
+                          <p className="mt-4 break-all font-mono text-[11px] leading-snug text-white/45" title="Tam vitrin adresi">
+                            {`${origin}${p.href}`}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </section>

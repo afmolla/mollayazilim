@@ -1,28 +1,22 @@
 {
   "sayfalar": [
     {
-      "slug": "test",
-      "baslik": "Test",
-      "aciklama": "test",
-      "icerikHtml": "test merhaba\n<figure class=\"mt-6\">\n  <img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>\n",
+      "slug": "hakkimizda",
+      "baslik": "Hakkımızda",
+      "aciklama": "Atlas Restaurant — Akdeniz ve Anadolu mutfağından esinlenen demo vitrin.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Atlas Restaurant, <strong class=\"text-[var(--text)]\">Kadıköy Moda</strong>’da konumlanan örnek bir restoran vitrinidir. Mutfağımızda mevsim sebzeleri, günlük balık ve odun fırını ile güçlendirilmiş Anadolu lezzetlerini modern sunumla bir araya getiriyoruz — metinler tamamen demo amaçlıdır.</p>\n<h2 class=\"mt-10 text-xl font-semibold text-[var(--text)]\">Mutfak felsefesi</h2>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Yerel üreticilerden tedarik, düşük tuz ve tereyağı dengesi, vejetaryen seçenekler için ayrı hazırlık alanı. Şef önerisi günlük tahtada ve QR menüde güncellenir.</p>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1200&q=80\" alt=\"Mutfak hazırlık\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-05-01T23:38:13.764Z"
+      "guncellenme": "2026-05-09T12:00:00.000Z"
     },
     {
-      "slug": "testsa",
-      "baslik": "gsdfs",
-      "icerikHtml": "<figure class=\"mt-6\"><img src=\"/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png\" alt=\"Görsel\" class=\"w-full rounded-2xl border border-[var(--border)]\" /></figure>",
-      "bloklar": [
-        {
-          "type": "image",
-          "src": "/uploads/f2b9cf5f-a811-4eb9-b3c9-fb7dcd6cd2f3.png",
-          "alt": "Görsel"
-        }
-      ],
+      "slug": "ozel-etkinlik",
+      "baslik": "Özel etkinlik & iş yemeği",
+      "aciklama": "Doğum günü, özel menü ve grup rezervasyonu — demo bilgi.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\"><strong class=\"text-[var(--text)]\">12 kişiye kadar</strong> uzun masa; daha büyük gruplarda bahçe katı ve ses sistemi için ön görüşme önerilir. Örnek paketler:</p>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li>İş yemeği: üç seçmeli ana yemek, meze tablası, kahve ikramı.</li>\n  <li>Kutlama: pasta ve fotoğraf köşesi koordinasyonu (demo metin).</li>\n  <li>Kokteyl formatında ayaküstü servis — kişi sayısına göre bartender.</li>\n</ul>\n<p class=\"mt-6\"><a href=\"/randevu\" class=\"inline-flex rounded-xl bg-[var(--brand)] px-5 py-3 font-semibold text-[var(--on-brand)] no-underline\">Rezervasyon talebi oluştur</a></p>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-05-01T23:35:28.824Z"
+      "guncellenme": "2026-05-09T12:00:00.000Z"
     }
   ]
 }

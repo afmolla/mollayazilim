@@ -4,16 +4,16 @@ import { useWithBase } from "@/components/SitePrefixProvider";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const HIZMETLER = [
-  "Saç kesimi",
-  "Sakal şekillendirme",
-  "Saç + sakal paket",
-  "Fön / şekillendirme",
-  "Boyama / röfle",
-  "Keratin / bakım",
-];
+export type RandevuFormConfig = {
+  selectLabel: string;
+  options: string[];
+  submitButtonLabel?: string;
+  /** Gönderim sonrası mesaj (örn. restoran: rezervasyon ifadesi) */
+  successMessage?: string;
+};
 
-export function RandevuForm() {
+export function RandevuForm(props: { config: RandevuFormConfig }) {
+  const { config } = props;
   const wb = useWithBase();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ export function RandevuForm() {
       return;
     }
     if (!body.hizmet.trim()) {
-      setFieldError({ key: "hizmet", text: "Hizmet seçin." });
+      setFieldError({ key: "hizmet", text: `${config.selectLabel} seçin.` });
       return;
     }
     if (!body.tarih) {
@@ -75,7 +75,9 @@ export function RandevuForm() {
       }
       setMsg({
         ok: true,
-        text: "Talebiniz alındı. Panelden onaylandığında sitede görünebilir.",
+        text:
+          config.successMessage ??
+          "Talebiniz alındı. Panelden onaylandığında sitede görünebilir.",
       });
       e.currentTarget.reset();
       router.refresh();
@@ -85,6 +87,8 @@ export function RandevuForm() {
       setLoading(false);
     }
   }
+
+  const submitLabel = config.submitButtonLabel ?? "Randevu talebi gönder";
 
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-lg space-y-5">
@@ -115,7 +119,7 @@ export function RandevuForm() {
       </div>
       <div>
         <label htmlFor="hizmet" className="block text-sm font-medium text-[var(--text)]">
-          Hizmet
+          {config.selectLabel}
         </label>
         <select
           id="hizmet"
@@ -127,7 +131,7 @@ export function RandevuForm() {
           <option value="" disabled>
             Seçin
           </option>
-          {HIZMETLER.map((h) => (
+          {config.options.map((h) => (
             <option key={h} value={h}>
               {h}
             </option>
@@ -190,7 +194,7 @@ export function RandevuForm() {
         disabled={loading}
         className="w-full rounded-xl bg-[var(--brand)] py-3 font-semibold text-[var(--on-brand)] disabled:opacity-60"
       >
-        {loading ? "Gönderiliyor…" : "Randevu talebi gönder"}
+        {loading ? "Gönderiliyor…" : submitLabel}
       </button>
     </form>
   );
