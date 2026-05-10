@@ -25,13 +25,36 @@ export async function generateMetadata(): Promise<Metadata> {
     .map((x) => x.trim())
     .filter(Boolean);
   const ogImage = ayar.seoOgImage?.trim();
+  const googleVer = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+  const yandexVer = process.env.NEXT_PUBLIC_YANDEX_VERIFICATION?.trim();
 
   return {
     title: { absolute: title },
     description,
     keywords: keywords?.length ? keywords : undefined,
-    robots: ayar.seoIndex === false ? { index: false, follow: true } : { index: true, follow: true },
+    robots:
+      ayar.seoIndex === false
+        ? { index: false, follow: true }
+        : {
+            index: true,
+            follow: true,
+            googleBot: {
+              index: true,
+              follow: true,
+              "max-video-preview": -1,
+              "max-image-preview": "large",
+              "max-snippet": -1,
+            },
+          },
     alternates: { canonical },
+    ...(googleVer || yandexVer
+      ? {
+          verification: {
+            ...(googleVer ? { google: googleVer } : {}),
+            ...(yandexVer ? { yandex: yandexVer } : {}),
+          },
+        }
+      : {}),
     openGraph: {
       title,
       description,
@@ -42,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
     twitter: {
-      card: ogImage ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title,
       description,
       ...(ogImage ? { images: [ogImage] } : {}),

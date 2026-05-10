@@ -1,7 +1,48 @@
 import { siteUrl } from "@/lib/site";
+import type { SiteAyarlar } from "@/lib/settings-store";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { getRequestSite } from "@/lib/site-request";
 import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
+
+function normalizeSocialUrl(
+  raw: string | undefined,
+  kind: "instagram" | "facebook" | "twitter" | "linkedin" | "youtube" | "tiktok",
+): string | null {
+  const t = raw?.trim();
+  if (!t) return null;
+  if (/^https?:\/\//i.test(t)) return t;
+  const u = t.replace(/^@/, "").replace(/^\//, "");
+  switch (kind) {
+    case "instagram":
+      return `https://www.instagram.com/${u}`;
+    case "facebook":
+      return `https://www.facebook.com/${u}`;
+    case "twitter":
+      return `https://twitter.com/${u}`;
+    case "linkedin":
+      return u.includes("/") ? `https://www.linkedin.com/${u}` : `https://www.linkedin.com/in/${u}`;
+    case "youtube":
+      return u.startsWith("channel/") || u.startsWith("@")
+        ? `https://www.youtube.com/${u}`
+        : `https://www.youtube.com/channel/${u}`;
+    case "tiktok":
+      return `https://www.tiktok.com/@${u.replace(/^@/, "")}`;
+    default:
+      return null;
+  }
+}
+
+function sameAsFromAyar(ayar: SiteAyarlar): string[] {
+  const urls = [
+    normalizeSocialUrl(ayar.instagram, "instagram"),
+    normalizeSocialUrl(ayar.facebook, "facebook"),
+    normalizeSocialUrl(ayar.twitter, "twitter"),
+    normalizeSocialUrl(ayar.linkedin, "linkedin"),
+    normalizeSocialUrl(ayar.youtube, "youtube"),
+    normalizeSocialUrl(ayar.tiktok, "tiktok"),
+  ].filter(Boolean) as string[];
+  return urls;
+}
 
 export async function JsonLdLocalBusiness() {
   try {
@@ -25,6 +66,23 @@ async function jsonLdBody() {
   if (isMolla) {
     const orgDescription =
       "Kurumsal web sitesi, özel yazılım ve yönetim paneli. QR menü, randevu ve sektörel hazır demolar — SEO uyumlu teslim.";
+    const sameAs = sameAsFromAyar(ayar);
+    const contactPoint =
+      ayar.iletisimTelefon?.trim() || ayar.iletisimEposta?.trim()
+        ? [
+            {
+              "@type": "ContactPoint",
+              contactType: "sales",
+              ...(ayar.iletisimTelefon?.trim()
+                ? { telephone: ayar.iletisimTelefon.trim() }
+                : {}),
+              ...(ayar.iletisimEposta?.trim() ? { email: ayar.iletisimEposta.trim() } : {}),
+              areaServed: "TR",
+              availableLanguage: ["Turkish"],
+            },
+          ]
+        : undefined;
+    const street = ayar.adresDetay?.trim();
     const graphPayload = {
       "@context": "https://schema.org",
       "@graph": [
@@ -35,8 +93,21 @@ async function jsonLdBody() {
           url: baseNorm,
           logo: { "@type": "ImageObject", url: logoUrl },
           description: orgDescription,
+          ...(sameAs.length ? { sameAs } : {}),
+          ...(contactPoint ? { contactPoint } : {}),
           ...(ayar.iletisimEposta ? { email: ayar.iletisimEposta.trim() } : {}),
           ...(ayar.iletisimTelefon ? { telephone: ayar.iletisimTelefon.trim() } : {}),
+          ...(street || ayar.sehir
+            ? {
+                address: {
+                  "@type": "PostalAddress",
+                  ...(street ? { streetAddress: street } : {}),
+                  addressLocality: ayar.sehir?.trim() || "İstanbul",
+                  addressCountry: "TR",
+                },
+              }
+            : {}),
+          areaServed: [{ "@type": "Country", name: "Turkey" }],
         },
         {
           "@type": "WebSite",
@@ -46,6 +117,27 @@ async function jsonLdBody() {
           inLanguage: "tr-TR",
           publisher: { "@id": `${baseNorm}/#organization` },
           description: ayar.seoDescription?.trim() || orgDescription,
+          isPartOf: { "@id": `${baseNorm}/#organization` },
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": `${baseNorm}/#service`,
+          name: "Molla Yazılım",
+          url: baseNorm,
+          image: logoUrl,
+          description:
+            ayar.seoDescription?.trim() ||
+            "Web sitesi geliştirme, admin panel, QR menü ve randevu sistemleri; kuaför, restoran, emlak ve hukuk vitrin demoları.",
+          provider: { "@id": `${baseNorm}/#organization` },
+          areaServed: "TR",
+          knowsAbout: [
+            "web geliştirme",
+            "admin panel",
+            "QR menü",
+            "randevu sistemi",
+            "kurumsal web sitesi",
+            "SEO",
+          ],
         },
         {
           "@type": "FAQPage",
