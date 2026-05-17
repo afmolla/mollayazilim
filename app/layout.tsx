@@ -26,6 +26,8 @@ const emlakDisplay = Plus_Jakarta_Sans({
 });
 
 const SITE_URL = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) || "https://mollayazilim.com";
+const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+const YANDEX_VERIFICATION = process.env.NEXT_PUBLIC_YANDEX_VERIFICATION?.trim();
 
 /**
  * Kök metadata tamamen statik: generateMetadata + headers()/async zinciri
@@ -34,6 +36,14 @@ const SITE_URL = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) || "ht
  */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  ...(GOOGLE_VERIFICATION || YANDEX_VERIFICATION
+    ? {
+        verification: {
+          ...(GOOGLE_VERIFICATION ? { google: GOOGLE_VERIFICATION } : {}),
+          ...(YANDEX_VERIFICATION ? { yandex: YANDEX_VERIFICATION } : {}),
+        },
+      }
+    : {}),
   title: {
     default: "Molla Yazılım | Özel Yazılım & Admin Panelleri",
     template: "%s | Molla Yazılım",
@@ -44,11 +54,16 @@ export const metadata: Metadata = {
     "web sitesi",
     "kurumsal web sitesi",
     "özel yazılım",
+    "yazılım ajansı",
     "admin panel",
     "yönetim paneli",
     "randevu sistemi",
     "qr menü",
-    "İstanbul",
+    "İstanbul web tasarım",
+    "web sitesi yaptırma",
+    "kuaför randevu sistemi",
+    "restoran web sitesi",
+    "emlak ilan sitesi",
   ],
   authors: [{ name: "Molla Yazılım" }],
   openGraph: {

@@ -1,19 +1,7 @@
 import type { MetadataRoute } from "next";
-import { normalizePublicSiteUrl, siteUrl } from "@/lib/site";
+import { normalizePublicSiteUrl, resolveSiteHost, siteUrl } from "@/lib/site";
 import { portfolioPrefixes, dataSubdirForPrefix } from "@/lib/site-config";
 import { runWithSiteContext } from "@/lib/site-context";
-
-function siteHost(): string {
-  const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
-  if (raw) {
-    try {
-      return new URL(raw).host;
-    } catch {
-      /* ignore */
-    }
-  }
-  return "localhost:3000";
-}
 
 async function resolveRootSitemapUrl(): Promise<string> {
   const env = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
@@ -51,10 +39,11 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   }
 
   const sitemap = await resolveRootSitemapUrl();
+  const host = await resolveSiteHost();
 
   return {
     rules,
     ...(sitemap ? { sitemap } : {}),
-    host: siteHost(),
+    ...(host ? { host } : {}),
   };
 }

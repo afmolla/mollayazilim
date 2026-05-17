@@ -18,7 +18,7 @@ export function normalizePublicSiteUrl(raw: string | undefined): string {
  * Deploy’da env boşken build zamanı `localhost` gömülür; metadata/RSC üretimde patlayabiliyor.
  * Vercel istek başlıkları + VERCEL_URL ile gerçek kökeni türet.
  */
-function originFromRequestHeaders(h: Headers): string | null {
+export function originFromRequestHeaders(h: Headers): string | null {
   const hostRaw = h.get("x-forwarded-host") ?? h.get("host") ?? "";
   const host = hostRaw.split(",")[0]?.trim() ?? "";
   if (host && !host.startsWith("localhost") && !host.startsWith("127.")) {
@@ -36,6 +36,37 @@ function originFromRequestHeaders(h: Headers): string | null {
 /**
  * Statik dosyalar (`public/apk/...`) her zaman alan kökünden sunulur; çoklu vitrin önekinden bağımsızdır.
  */
+/**
+ * robots.txt `Host` ve benzeri için üretim alan adı.
+ * localhost / 127.* döndürmez — env yoksa Vercel veya istek başlığından çıkarır.
+ */
+export async function resolveSiteHost(): Promise<string | undefined> {
+  const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  if (raw) {
+    try {
+      const host = new URL(raw).host;
+      if (host && !host.startsWith("localhost") && !host.startsWith("127.")) return host;
+    } catch {
+      /* ignore */
+    }
+  }
+  const vu = process.env.VERCEL_URL?.trim();
+  if (vu) {
+    const clean = vu.replace(/^https?:\/\//i, "").split("/")[0]?.trim() ?? "";
+    if (clean && !clean.startsWith("localhost") && !clean.startsWith("127.")) return clean;
+  }
+  try {
+    const inferred = originFromRequestHeaders(await headers());
+    if (inferred) {
+      const host = new URL(inferred).host;
+      if (host && !host.startsWith("localhost") && !host.startsWith("127.")) return host;
+    }
+  } catch {
+    /* build */
+  }
+  return undefined;
+}
+
 export async function siteOrigin(): Promise<string> {
   const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
   if (raw) {

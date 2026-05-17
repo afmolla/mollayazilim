@@ -118,6 +118,14 @@ async function jsonLdBody() {
           publisher: { "@id": `${baseNorm}/#organization` },
           description: ayar.seoDescription?.trim() || orgDescription,
           isPartOf: { "@id": `${baseNorm}/#organization` },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: `${baseNorm}/?q={search_term_string}`,
+            },
+            "query-input": "required name=search_term_string",
+          },
         },
         {
           "@type": "ProfessionalService",

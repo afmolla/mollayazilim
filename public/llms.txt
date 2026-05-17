@@ -1,0 +1,23 @@
+# Molla Yazılım
+
+> İstanbul ve Türkiye geneli: işletmeye özel web sitesi, yönetim paneli, QR menü, randevu ve sektörel vitrin demoları.
+
+## Hizmetler
+
+- Kurumsal web sitesi ve mobil uyumlu vitrin
+- Admin / yönetim paneli (içerik, menü, medya, SEO, lead)
+- QR menü, randevu, emlak ilan, kuaför/restoran/avukat demoları
+- SEO temel kurulum: meta, canonical, sitemap, yapılandırılmış veri
+
+## Önemli sayfalar
+
+- Ana sayfa: https://mollayazilim.com/
+- Kuaför demo: https://mollayazilim.com/kuafor
+- Restoran demo: https://mollayazilim.com/restaurant
+- Emlak demo: https://mollayazilim.com/emlak
+- İletişim: https://mollayazilim.com/#iletisim
+
+## İletişim
+
+- Site: https://mollayazilim.com
+- E-posta: info@mollayazilim.com
