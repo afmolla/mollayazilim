@@ -40,29 +40,35 @@ export function originFromRequestHeaders(h: Headers): string | null {
  * robots.txt `Host` ve benzeri için üretim alan adı.
  * localhost / 127.* döndürmez — env yoksa Vercel veya istek başlığından çıkarır.
  */
+function isUsablePublicHost(host: string): boolean {
+  if (!host || host.startsWith("localhost") || host.startsWith("127.")) return false;
+  if (host.endsWith(".vercel.app")) return false;
+  return true;
+}
+
 export async function resolveSiteHost(): Promise<string | undefined> {
   const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
   if (raw) {
     try {
       const host = new URL(raw).host;
-      if (host && !host.startsWith("localhost") && !host.startsWith("127.")) return host;
+      if (isUsablePublicHost(host)) return host;
     } catch {
       /* ignore */
     }
-  }
-  const vu = process.env.VERCEL_URL?.trim();
-  if (vu) {
-    const clean = vu.replace(/^https?:\/\//i, "").split("/")[0]?.trim() ?? "";
-    if (clean && !clean.startsWith("localhost") && !clean.startsWith("127.")) return clean;
   }
   try {
     const inferred = originFromRequestHeaders(await headers());
     if (inferred) {
       const host = new URL(inferred).host;
-      if (host && !host.startsWith("localhost") && !host.startsWith("127.")) return host;
+      if (isUsablePublicHost(host)) return host;
     }
   } catch {
     /* build */
+  }
+  const vu = process.env.VERCEL_URL?.trim();
+  if (vu) {
+    const clean = vu.replace(/^https?:\/\//i, "").split("/")[0]?.trim() ?? "";
+    if (isUsablePublicHost(clean)) return clean;
   }
   return undefined;
 }
