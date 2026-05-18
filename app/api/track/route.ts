@@ -18,8 +18,11 @@ function newVid(): string {
 
 export async function POST(req: Request) {
   return withSiteFromRequest(req, async () => {
-    const body = (await req.json().catch(() => ({}))) as { path?: string };
+    const body = (await req.json().catch(() => ({}))) as { path?: string; referer?: string };
     const path = String(body.path ?? "").slice(0, 200) || "/";
+    const refererHeader = req.headers.get("referer")?.slice(0, 500) ?? "";
+    const refererBody = String(body.referer ?? "").slice(0, 500);
+    const referer = refererBody || refererHeader || undefined;
 
     const res = NextResponse.json({ ok: true });
 
@@ -37,6 +40,7 @@ export async function POST(req: Request) {
       path,
       ip: pickClientIp(req),
       ua: ua(req),
+      ...(referer ? { referer } : {}),
     });
 
     return res;

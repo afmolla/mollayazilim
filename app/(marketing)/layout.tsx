@@ -7,7 +7,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SitePrefixProvider } from "@/components/SitePrefixProvider";
 import { getRequestSite } from "@/lib/site-request";
 import { VitrinDemoRibbon } from "@/components/vitrin/VitrinDemoRibbon";
-import { VfAnalyticsTracker } from "@/components/VfAnalyticsTracker";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { siteUrl } from "@/lib/site";
 
@@ -15,7 +14,6 @@ function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
-      <VfAnalyticsTracker />
       <main className="flex-1" style={{ paddingTop: "calc(var(--header-h, 64px) + 16px)" }}>
         <Suspense
           fallback={

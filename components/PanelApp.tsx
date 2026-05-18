@@ -6,6 +6,7 @@ import type { ReadonlyURLSearchParams } from "next/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PanelDashboard } from "@/components/PanelDashboard";
 import { PanelLeads } from "@/components/PanelLeads";
+import { PanelVisitors } from "@/components/PanelVisitors";
 import { PanelSeo } from "@/components/PanelSeo";
 import { PanelMedia } from "@/components/PanelMedia";
 import { PanelMenus } from "@/components/PanelMenus";
@@ -24,6 +25,7 @@ type TabId =
   | "ilanlar"
   | "siparisler"
   | "leads"
+  | "ziyaretciler"
   | "seo"
   | "icerik"
   | "site_duzenle"
@@ -42,6 +44,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
     "ilanlar",
     "siparisler",
     "leads",
+    "ziyaretciler",
     "seo",
     "icerik",
     "site_duzenle",
@@ -72,6 +75,7 @@ const NAV_BASE: { id: TabId; label: string; short: string }[] = [
   { id: "randevular", label: "Randevular", short: "Ra" },
   { id: "siparisler", label: "Siparişler", short: "Si" },
   { id: "leads", label: "Lead’ler", short: "Le" },
+  { id: "ziyaretciler", label: "Ziyaretçiler", short: "Zi" },
   { id: "seo", label: "SEO", short: "Seo" },
   { id: "icerik", label: "İçerik", short: "İç" },
   { id: "site_duzenle", label: "Site düzenle", short: "Sd" },
@@ -291,6 +295,8 @@ export function PanelApp(props: PanelAppProps) {
           <PanelIlanlar />
         ) : tab === "leads" ? (
           <PanelLeads />
+        ) : tab === "ziyaretciler" ? (
+          <PanelVisitors />
         ) : tab === "seo" ? (
           <PanelSeo />
         ) : tab === "icerik" ? (

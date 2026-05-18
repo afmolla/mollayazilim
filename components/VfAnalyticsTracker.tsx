@@ -10,14 +10,19 @@ export function VfAnalyticsTracker() {
   const wb = useWithBase();
 
   useEffect(() => {
-    const p = pathname || "/";
+    const p =
+      typeof window !== "undefined"
+        ? `${window.location.pathname}${window.location.search}`
+        : pathname || "/";
+    if (p.startsWith("/panel") || p.includes("/panel/")) return;
     const url = wb("/api/track");
+    const referer = typeof document !== "undefined" ? document.referrer.slice(0, 500) : "";
     try {
       void fetch(url, {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ path: p }),
+        body: JSON.stringify({ path: p, ...(referer ? { referer } : {}) }),
         cache: "no-store",
       });
     } catch {

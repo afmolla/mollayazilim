@@ -3,6 +3,8 @@ import "./globals.css";
 import { Cormorant_Garamond, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { themeBootstrapInlineScript } from "@/lib/theme-constants";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { VfAnalyticsTracker } from "@/components/VfAnalyticsTracker";
 import { normalizePublicSiteUrl } from "@/lib/site";
 
 const outfit = Outfit({
@@ -116,6 +118,8 @@ export default function RootLayout({
         className="min-h-full bg-[var(--surface)] font-sans text-[var(--text)] antialiased"
         suppressHydrationWarning
       >
+        <GoogleAnalytics />
+        <VfAnalyticsTracker />
         <ThemeProvider>
           <div className="flex min-h-full flex-col">{children}</div>
         </ThemeProvider>

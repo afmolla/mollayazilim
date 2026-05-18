@@ -8,6 +8,12 @@ export type AnalyticsHit = {
   path: string;
   ip: string;
   ua: string;
+  referer?: string;
+};
+
+export type VisitorHitRow = AnalyticsHit & {
+  browser: string;
+  device: string;
 };
 
 export type AnalyticsSnapshot = {
@@ -20,8 +26,29 @@ export type AnalyticsSnapshot = {
   /** today unique visitors (vid set size) */
   todayUniques: number;
   /** today unique -> last ip/ua (for admin view) */
-  todayMeta: Record<string, { ip: string; ua: string; lastPath: string; lastTs: string }>;
+  todayMeta: Record<
+    string,
+    { ip: string; ua: string; lastPath: string; lastTs: string; referer?: string }
+  >;
 };
+
+const HITS_RETAIN_LINES = 10_000;
+
+export function parseUserAgent(ua: string): { browser: string; device: string } {
+  const u = ua.toLowerCase();
+  let browser = "Diğer";
+  if (u.includes("edg/")) browser = "Edge";
+  else if (u.includes("chrome/") && !u.includes("edg/")) browser = "Chrome";
+  else if (u.includes("firefox/")) browser = "Firefox";
+  else if (u.includes("safari/") && !u.includes("chrome/")) browser = "Safari";
+  else if (u.includes("opr/") || u.includes("opera")) browser = "Opera";
+
+  let device = "Masaüstü";
+  if (u.includes("mobile") || u.includes("iphone") || u.includes("android")) device = "Mobil";
+  else if (u.includes("ipad") || u.includes("tablet")) device = "Tablet";
+
+  return { browser, device };
+}
 
 function dayKey(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -65,6 +92,19 @@ async function writeSnapshot(s: AnalyticsSnapshot) {
   await fs.writeFile(snapshot, JSON.stringify(s, null, 2), "utf8");
 }
 
+async function trimHitsFile() {
+  const { hits } = await files();
+  try {
+    const raw = await fs.readFile(hits, "utf8");
+    const lines = raw.split("\n").filter(Boolean);
+    if (lines.length <= HITS_RETAIN_LINES) return;
+    const kept = lines.slice(-HITS_RETAIN_LINES);
+    await fs.writeFile(hits, `${kept.join("\n")}\n`, "utf8");
+  } catch {
+    /* yoksa sorun değil */
+  }
+}
+
 function pruneLastSeen(lastSeen: Record<string, number>, keepMs: number) {
   const now = Date.now();
   for (const [k, v] of Object.entries(lastSeen)) {
@@ -80,14 +120,79 @@ export async function recordHit(hit: AnalyticsHit): Promise<void> {
   snap.todayHits += 1;
   const wasNewToday = !snap.todayMeta[hit.vid];
   if (wasNewToday) snap.todayUniques += 1;
-  snap.todayMeta[hit.vid] = { ip: hit.ip, ua: hit.ua, lastPath: hit.path, lastTs: hit.ts };
+  snap.todayMeta[hit.vid] = {
+    ip: hit.ip,
+    ua: hit.ua,
+    lastPath: hit.path,
+    lastTs: hit.ts,
+    ...(hit.referer ? { referer: hit.referer } : {}),
+  };
   snap.lastSeen[hit.vid] = now;
 
   pruneLastSeen(snap.lastSeen, 48 * 60 * 60 * 1000);
 
   await fs.mkdir(path.dirname(hits), { recursive: true });
   await fs.appendFile(hits, `${JSON.stringify(hit)}\n`, "utf8");
+  if (snap.todayHits % 100 === 0) await trimHitsFile();
   await writeSnapshot(snap);
+}
+
+async function readAllHits(): Promise<AnalyticsHit[]> {
+  const { hits } = await files();
+  try {
+    const raw = await fs.readFile(hits, "utf8");
+    const out: AnalyticsHit[] = [];
+    for (const line of raw.split("\n")) {
+      if (!line.trim()) continue;
+      try {
+        const j = JSON.parse(line) as Partial<AnalyticsHit>;
+        if (typeof j.ts !== "string" || typeof j.vid !== "string") continue;
+        out.push({
+          ts: j.ts,
+          vid: j.vid,
+          path: String(j.path ?? "/").slice(0, 200),
+          ip: String(j.ip ?? "unknown").slice(0, 80),
+          ua: String(j.ua ?? "").slice(0, 300),
+          ...(j.referer ? { referer: String(j.referer).slice(0, 500) } : {}),
+        });
+      } catch {
+        /* skip bad line */
+      }
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+function hitMatchesQuery(hit: AnalyticsHit, q: string): boolean {
+  const n = q.trim().toLowerCase();
+  if (!n) return true;
+  const { browser, device } = parseUserAgent(hit.ua);
+  const blob = [hit.ip, hit.path, hit.vid, hit.ua, hit.referer ?? "", browser, device].join(" ").toLowerCase();
+  return blob.includes(n);
+}
+
+export async function listVisitorHits(opts: {
+  limit: number;
+  offset: number;
+  q?: string;
+}): Promise<{ total: number; hits: VisitorHitRow[] }> {
+  const limit = Math.min(Math.max(opts.limit, 1), 500);
+  const offset = Math.max(opts.offset, 0);
+  const q = opts.q?.trim() ?? "";
+
+  let rows = await readAllHits();
+  rows.sort((a, b) => (a.ts < b.ts ? 1 : -1));
+  if (q) rows = rows.filter((h) => hitMatchesQuery(h, q));
+
+  const total = rows.length;
+  const slice = rows.slice(offset, offset + limit);
+  const hits: VisitorHitRow[] = slice.map((h) => {
+    const { browser, device } = parseUserAgent(h.ua);
+    return { ...h, browser, device };
+  });
+  return { total, hits };
 }
 
 export async function getStats(): Promise<{
@@ -95,16 +200,46 @@ export async function getStats(): Promise<{
   onlineNow: number;
   todayHits: number;
   todayUniques: number;
-  recent: Array<{ vid: string; ip: string; lastTs: string; lastPath: string }>;
+  totalLogged: number;
+  recent: Array<{
+    vid: string;
+    ip: string;
+    lastTs: string;
+    lastPath: string;
+    ua: string;
+    referer?: string;
+    browser: string;
+    device: string;
+  }>;
 }> {
   const snap = await readSnapshot();
   const ONLINE_WINDOW_MS = 3 * 60 * 1000;
   const now = Date.now();
   const onlineNow = Object.values(snap.lastSeen).filter((t) => now - t <= ONLINE_WINDOW_MS).length;
   const recent = Object.entries(snap.todayMeta)
-    .map(([vid, m]) => ({ vid, ip: m.ip, lastTs: m.lastTs, lastPath: m.lastPath }))
+    .map(([vid, m]) => {
+      const { browser, device } = parseUserAgent(m.ua);
+      return {
+        vid,
+        ip: m.ip,
+        lastTs: m.lastTs,
+        lastPath: m.lastPath,
+        ua: m.ua,
+        ...(m.referer ? { referer: m.referer } : {}),
+        browser,
+        device,
+      };
+    })
     .sort((a, b) => (a.lastTs < b.lastTs ? 1 : -1))
     .slice(0, 50);
-  return { day: snap.day, onlineNow, todayHits: snap.todayHits, todayUniques: snap.todayUniques, recent };
+  const all = await readAllHits();
+  return {
+    day: snap.day,
+    onlineNow,
+    todayHits: snap.todayHits,
+    todayUniques: snap.todayUniques,
+    totalLogged: all.length,
+    recent,
+  };
 }
 
