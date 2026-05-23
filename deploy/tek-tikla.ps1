@@ -15,6 +15,10 @@ Write-Host ""
 
 Set-Location $AppRoot
 
+# Tam cozum: PORT-80-ZORLA (env + build + 80)
+& "$PSScriptRoot\PORT-80-ZORLA.ps1"
+exit $LASTEXITCODE
+
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   throw "Node.js yok: https://nodejs.org/"
 }

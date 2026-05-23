@@ -1,7 +1,8 @@
 PORT 80 — :3000 YOK
 ==================
 
-CALISTIR.cmd  ->  Yonetici olarak calistir
+PORT-80.cmd veya CALISTIR.cmd  ->  Yonetici olarak calistir
+(:3000 calisiyorsa PORT-80.cmd kullan)
 
 Site dogrudan port 80'de acilir:
   http://localhost/
