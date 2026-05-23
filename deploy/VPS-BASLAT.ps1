@@ -159,7 +159,11 @@ if (Get-Module WebAdministration -ListAvailable) {
     $pp = $site.physicalPath
     if ($pp -ne $AppRoot) {
       Write-Host "IIS yolu guncelleniyor: $pp -> $AppRoot"
-      Set-ItemProperty "IIS:\Sites\mollayazilim.com" -Name physicalPath -Value $AppRoot
+      try {
+        Set-ItemProperty "IIS:\Sites\mollayazilim.com" -Name physicalPath -Value $AppRoot
+      } catch {
+        Write-Host "IIS yolu guncellenemedi (Yonetici gerekir): $_" -ForegroundColor Yellow
+      }
     }
     Start-Website -Name "mollayazilim.com" -ErrorAction SilentlyContinue
     Write-Host "IIS: mollayazilim.com -> $AppRoot"
@@ -169,5 +173,24 @@ if (Get-Module WebAdministration -ListAvailable) {
   }
 }
 
+$iisLocalOk = $false
+try {
+  $w = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 15
+  Write-Host "IIS localhost OK: HTTP $($w.StatusCode)" -ForegroundColor Green
+  $iisLocalOk = $true
+} catch {
+  Write-Host "IIS http://localhost/ calismiyor: $($_.Exception.Message)" -ForegroundColor Yellow
+}
+
 Write-Host ""
-Write-Host "Test: http://localhost/  (IIS)"
+if ($iisLocalOk) {
+  Write-Host "Test: http://localhost/  (IIS :80, :3000 yazma)"
+} else {
+  Write-Host "Sunucuda localhost icin YONETICI PowerShell:" -ForegroundColor Yellow
+  Write-Host "  cd $AppRoot\deploy"
+  Write-Host "  .\SUNUCU-LOCALHOST-TAM.ps1"
+  Write-Host ""
+  Write-Host "veya SUNUCU-LOCALHOST.cmd cift tik (UAC onayla)"
+  Write-Host ""
+  Write-Host "Neden: ARR modulu veya localhost IIS binding eksik (PC'de var, VPS'te olmayabilir)."
+}

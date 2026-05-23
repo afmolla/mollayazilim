@@ -5,6 +5,21 @@ Uygulama klasörü: **`C:\inetpub\wwwroot\mollayazilim`**
 
 ---
 
+## Sunucuda localhost bos (PC'de calisiyor)
+
+VPS/RDP icinde **Yonetici** PowerShell:
+
+```powershell
+cd C:\inetpub\wwwroot\mollayazilim\deploy
+# Eski klasor adi ise:
+# $env:MOLLAYAZILIM_ROOT = "C:\inetpub\wwwroot\mollyazilim"
+.\SUNUCU-LOCALHOST-TAM.ps1
+```
+
+veya `SUNUCU-LOCALHOST.cmd` (UAC onayla). ARR + IIS binding + PM2 + test yapar.
+
+---
+
 ## Yerelde test (IIS — port 80)
 
 Tarayıcı: **http://localhost/** (adres cubugunda **:3000 yok**)

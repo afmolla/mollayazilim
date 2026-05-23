@@ -9,8 +9,17 @@ $ErrorActionPreference = "Stop"
 Import-Module WebAdministration -ErrorAction Stop
 
 $siteName = "mollayazilim.com"
-$physicalPath = "C:\inetpub\wwwroot\mollayazilim"
 $poolName = "MollayazilimPool"
+
+if ($env:MOLLAYAZILIM_ROOT -and (Test-Path $env:MOLLAYAZILIM_ROOT)) {
+  $physicalPath = (Resolve-Path $env:MOLLAYAZILIM_ROOT).Path
+} else {
+  $physicalPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+  if (-not (Test-Path (Join-Path $physicalPath "web.config"))) {
+    $alt = "C:\inetpub\wwwroot\mollyazilim"
+    if (Test-Path (Join-Path $alt "web.config")) { $physicalPath = $alt }
+  }
+}
 
 Write-Host "=== localhost IIS duzelt ===" -ForegroundColor Cyan
 
