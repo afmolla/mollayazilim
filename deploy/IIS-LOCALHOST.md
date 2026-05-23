@@ -1,45 +1,51 @@
-# IIS modu — port 80 (localhost / mollayazilim.com)
+# localhost bos / hala :3000 aciyorum
 
-Vercel yok. Tarayici **asla `:3000` gostermez**.
+## Neden?
 
-```
-Tarayici  ->  IIS :80 / :443  ->  Node 127.0.0.1:3000 (PM2, sadece sunucu icinde)
-```
+- **http://localhost:3000** = Node dogrudan (npm run dev/start)
+- **http://localhost/** = IIS port **80** → arka planda Node **3000** (tarayicida port gorunmez)
 
-## Yerel
+IIS'in Node'a baglanmasi icin **ARR (Application Request Routing)** sart.  
+Sadece URL Rewrite yuklu; **ARR yoksa localhost 404/bos kalir.**
 
-1. **Yonetici** bir kez: `deploy\Install-Mollayazilim-NextIIS.ps1`
-2. `deploy\LOCAL-BASLAT.ps1` veya `MOLLAYAZILIM-LOCALHOST.cmd`
-3. Ac: **http://localhost/**
+## Cozum (bir kez, Yonetici)
 
-## VPS / canli
+### 1) ARR kur
 
-- **https://mollayazilim.com** (DNS -> sunucu)
-- Ayni IIS + PM2 mantigi
+https://www.iis.net/downloads/microsoft/application-request-routing
 
-## .env
+- **Application Request Routing 3.0** MSI indir ve kur
+- Kurulumda **URL Rewrite** da istenirse kur
 
-| Ortam | `NEXT_PUBLIC_SITE_URL` |
-|--------|-------------------------|
-| Yerel IIS | `http://localhost` |
-| Canli | `https://mollayazilim.com` |
+### 2) Proxy ac
 
-## 502 Bad Gateway
+IIS Yoneticisi → **Sunucu adi** (sol ust) → **Application Request Routing Cache**  
+→ **Server Proxy Settings** → **Enable proxy** = **True** → Uygula
 
-PM2 / Node ayakta degil:
+### 3) Site ayari
 
 ```powershell
 cd C:\inetpub\wwwroot\mollayazilim\deploy
+.\LOCALHOST-IIS-DUZELT.ps1
 .\LOCAL-BASLAT.ps1
 ```
 
-## Gelistirme (hot reload)
+### 4) Tarayici
 
-IIS uzerinden uretim build kullanilir. Kod degisince:
+**http://localhost/**  (adres cubugunda **:3000 olmasin**)
 
-```powershell
-npm run build
-pm2 restart mollayazilim
-```
+## Hizli test
 
-Gelistirme icin istege bagli `npm run dev` (:3000) — sadece gelistirici; normal kullanim `http://localhost/`.
+| Adres | Beklenen |
+|--------|----------|
+| http://127.0.0.1:3000/ | 200 (Node calisiyor) |
+| http://localhost/ | 200 (ARR + IIS sonrasi) |
+
+## VPS
+
+Ayni: ARR + `web.config` + PM2. Canli: https://mollayazilim.com
+
+## ARR kurmadan (gecici)
+
+Sadece gelistirme: `npm run dev` → http://localhost:3000  
+Canli site IIS ile calisir; yerelde ARR kurana kadar :3000 normal.
