@@ -11,7 +11,7 @@
     npm ci
     npm run build
     npm install -g pm2
-    pm2 start npm --name mollayazilim -- start
+    pm2 start deploy\ecosystem.config.cjs
     pm2 save
 
   Her güncelleme (PC'de push sonrası sunucuda):

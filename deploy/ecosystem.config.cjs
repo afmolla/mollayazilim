@@ -1,16 +1,15 @@
 const path = require("path");
 
-/** PM2: proje kokunden Next production (port 3000) */
+/** PM2: Windows VPS — npm.cmd KULLANMA (pm2 start npm hata verir) */
 const root = path.join(__dirname, "..");
-const nextBin = path.join(root, "node_modules", "next", "dist", "bin", "next");
+const launcher = path.join(__dirname, "start-next.cjs");
 
 module.exports = {
   apps: [
     {
       name: "mollayazilim",
       cwd: root,
-      script: nextBin,
-      args: "start -p 3000",
+      script: launcher,
       interpreter: "node",
       node_args: "--max-old-space-size=8192",
       env: {
@@ -20,6 +19,7 @@ module.exports = {
       autorestart: true,
       max_restarts: 10,
       min_uptime: "10s",
+      windowsHide: true,
     },
   ],
 };
