@@ -7,7 +7,7 @@ const { spawn } = require("child_process");
 const root = path.join(__dirname, "..");
 const nextCli = path.join(root, "node_modules", "next", "dist", "bin", "next");
 
-const port = process.env.PORT || process.env.HTTP_PLATFORM_PORT || "3000";
+const port = process.env.PORT || process.env.HTTP_PLATFORM_PORT || "80";
 const child = spawn(process.execPath, [nextCli, "start", "-H", "0.0.0.0", "-p", String(port)], {
   cwd: root,
   stdio: "inherit",

@@ -1,6 +1,6 @@
 const path = require("path");
 
-/** PM2: Windows VPS — npm.cmd KULLANMA (pm2 start npm hata verir) */
+/** PM2: site dogrudan port 80 (tarayicida :3000 yok) */
 const root = path.join(__dirname, "..");
 const launcher = path.join(__dirname, "start-next.cjs");
 
@@ -14,7 +14,7 @@ module.exports = {
       node_args: "--max-old-space-size=8192",
       env: {
         NODE_ENV: "production",
-        PORT: "3000",
+        PORT: "80",
       },
       autorestart: true,
       max_restarts: 10,

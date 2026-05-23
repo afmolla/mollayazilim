@@ -11,8 +11,8 @@ if not %errorlevel%==0 (
 )
 
 echo.
-echo  Mollayazilim kurulum / localhost duzeltme
-echo  (git gerekmez, Notepad acilmaz)
+echo  Mollayazilim — PORT 80 ( :3000 yok )
+echo  git gerekmez
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\tek-tikla.ps1"

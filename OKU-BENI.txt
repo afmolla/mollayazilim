@@ -1,17 +1,16 @@
-SUNUCUDA TEK YAPMAN GEREKEN
-============================
+PORT 80 — :3000 YOK
+==================
 
-1) Bu klasorde CALISTIR.cmd dosyasina SAG TIK
-2) "Yonetici olarak calistir"
-3) UAC -> Evet
-4) Bitince tarayici: http://localhost/
+CALISTIR.cmd  ->  Yonetici olarak calistir
 
-git pull KULLANMA.
-.ps1 dosyasina cift tiklama (Notepad acilir).
+Site dogrudan port 80'de acilir:
+  http://localhost/
+  http://mollayazilim.com/
 
-ARR winget ile kurulur (HttpPlatform MSI artik yok).
+:3000 KULLANMA.
 
-Bu dosya yoksa GitHub'dan ZIP indir:
-https://github.com/afmolla/mollayazilim/archive/refs/heads/main.zip
-Ac -> mollayazilim-main icindekileri C:\inetpub\wwwroot\mollayazilim icine kopyala
-Sonra CALISTIR.cmd
+IIS bu modda kapali (port cakismasi olmasin diye).
+PM2 siteyi 80'de tutar.
+
+Guncelleme (git yok):
+  GitHub ZIP -> klasore kopyala -> CALISTIR.cmd
