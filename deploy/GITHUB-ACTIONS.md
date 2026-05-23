@@ -13,10 +13,12 @@ Hicbir sey yapma. `deploy-mollayazilim.yml` artik Secrets yoksa **job'u atlar** 
 Guncelleme VPS'te elle:
 
 ```powershell
-cd C:\inetpub\wwwroot\mollyazilim
-git pull
-powershell -ExecutionPolicy Bypass -File deploy\sunucu-guncelle.ps1
+cd C:\inetpub\wwwroot\mollyazilim\deploy
+.\git-pull.ps1
+.\sunucu-guncelle.ps1
 ```
+
+`git pull origin main` calismiyorsa: `deploy\git-pull.ps1` (klasor / remote / stash duzeltir).
 
 ### Otomatik deploy istiyorsan
 
