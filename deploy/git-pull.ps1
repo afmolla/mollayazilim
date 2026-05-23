@@ -1,80 +1,106 @@
 #Requires -Version 5.1
 <#
-  VPS / yerel: git pull duzeltmesi
+  git pull (duzeltmeli)
 
   cd C:\inetpub\wwwroot\mollayazilim\deploy
   .\git-pull.ps1
 
-  Klasor farkli ise:
-  $env:MOLLAYAZILIM_ROOT = "C:\inetpub\wwwroot\mollayazilim"
-  .\git-pull.ps1
+  Zorla esitle:
+  .\git-pull.ps1 -HardReset
+
+  git hic yok / pull imkansiz:
+  .\GITHUB-ZIP-GUNCELLE.ps1
 #>
+param([switch]$HardReset)
+
 $ErrorActionPreference = "Stop"
 $RepoUrl = "https://github.com/afmolla/mollayazilim.git"
 $Branch = "main"
+$AppRoot = "C:\inetpub\wwwroot\mollayazilim"
 
-$candidates = @(
-  $env:MOLLAYAZILIM_ROOT,
-  "C:\inetpub\wwwroot\mollayazilim",
-  "C:\inetpub\wwwroot\mollayazilim",
-  (Resolve-Path (Join-Path $PSScriptRoot "..") -ErrorAction SilentlyContinue).Path
-) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique
-
-$AppRoot = $null
-foreach ($c in $candidates) {
-  if (Test-Path (Join-Path $c ".git")) { $AppRoot = $c; break }
-  if (Test-Path (Join-Path $c "package.json")) { $AppRoot = $c; break }
+if ($env:MOLLAYAZILIM_ROOT -and (Test-Path $env:MOLLAYAZILIM_ROOT)) {
+  $AppRoot = $env:MOLLAYAZILIM_ROOT
+} elseif (Test-Path (Join-Path (Join-Path $PSScriptRoot "..") ".git")) {
+  $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 }
 
-if (-not $AppRoot) {
-  $AppRoot = "C:\inetpub\wwwroot\mollayazilim"
-  Write-Host "Git klasoru yok, klonlaniyor: $AppRoot"
-  New-Item -ItemType Directory -Path (Split-Path $AppRoot -Parent) -Force | Out-Null
-  git clone $RepoUrl $AppRoot
-  if ($LASTEXITCODE -ne 0) { exit 1 }
-  Write-Host "Tamam. Klasor: $AppRoot"
-  exit 0
+# git PATH (Administrator bazen farkli)
+$git = Get-Command git -ErrorAction SilentlyContinue
+if (-not $git) {
+  $gitExe = "C:\Program Files\Git\cmd\git.exe"
+  if (Test-Path $gitExe) { $env:Path = "C:\Program Files\Git\cmd;" + $env:Path }
+  else { throw "git bulunamadi. Kur: https://git-scm.com/download/win  veya: .\GITHUB-ZIP-GUNCELLE.ps1" }
+}
+
+Write-Host "=== git pull ===" -ForegroundColor Cyan
+Write-Host "git: $(git --version)"
+Write-Host "Klasor: $AppRoot"
+
+if (-not (Test-Path $AppRoot)) {
+  New-Item -ItemType Directory -Path $AppRoot -Force | Out-Null
 }
 
 Set-Location $AppRoot
-Write-Host "Klasor: $AppRoot"
+
+# safe.directory (Windows Server)
+git config --global --add safe.directory $AppRoot 2>$null
+git config --global --add safe.directory "*" 2>$null
 
 if (-not (Test-Path ".git")) {
-  Write-Host "HATA: .git yok. ZIP ile kopyalandiysa once klonlayin:" -ForegroundColor Red
+  Write-Host ""
+  Write-Host ".git YOK — bu klasor git reposu degil (ZIP kopyasi olabilir)." -ForegroundColor Yellow
+  Write-Host "Secenek A — yeniden klonla (onerilen):"
   Write-Host "  cd C:\inetpub\wwwroot"
-  Write-Host "  ren mollayazilim mollayazilim_eski"
+  Write-Host "  ren mollayazilim mollayazilim_yedek"
   Write-Host "  git clone $RepoUrl mollayazilim"
+  Write-Host ""
+  Write-Host "Secenek B — git olmadan ZIP:"
+  Write-Host "  cd C:\inetpub\wwwroot\mollayazilim\deploy"
+  Write-Host "  .\GITHUB-ZIP-GUNCELLE.ps1"
   exit 1
 }
 
-$origin = (git remote get-url origin 2>$null)
-if ($origin -ne $RepoUrl) {
-  Write-Host "Remote guncelleniyor: $origin -> $RepoUrl"
+$origin = git remote get-url origin 2>$null
+if ($origin -and $origin -ne $RepoUrl) {
   git remote set-url origin $RepoUrl
+  Write-Host "remote -> $RepoUrl"
 }
 
 $dirty = git status --porcelain
-if ($dirty) {
-  Write-Host "Yerel degisiklik var - stash..." -ForegroundColor Yellow
-  git stash push -m "git-pull.ps1 $(Get-Date -Format o)"
+if ($dirty -and -not $HardReset) {
+  Write-Host "Yerel degisiklik var — stash..." -ForegroundColor Yellow
+  git stash push -u -m "git-pull $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
 }
 
-git fetch origin $Branch
+Write-Host "fetch..."
+git fetch origin $Branch 2>&1 | ForEach-Object { Write-Host $_ }
 if ($LASTEXITCODE -ne 0) {
   Write-Host ""
-  Write-Host "fetch basarisiz. Olasiliklar:" -ForegroundColor Red
-  Write-Host "  - Internet / firewall"
-  Write-Host "  - Private repo: Personal Access Token gerekir"
-  Write-Host "    git pull https://TOKEN@github.com/afmolla/mollayazilim.git main"
+  Write-Host "FETCH BASARISIZ" -ForegroundColor Red
+  Write-Host "  - Internet / firewall / TLS"
+  Write-Host "  - Repo private ise: GitHub Personal Access Token"
+  Write-Host ""
+  Write-Host "Git olmadan guncelle:"
+  Write-Host "  .\GITHUB-ZIP-GUNCELLE.ps1"
   exit 1
 }
 
 git checkout $Branch 2>$null
-git pull origin $Branch
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "pull basarisiz. Deneyin:" -ForegroundColor Yellow
-  Write-Host "  git reset --hard origin/$Branch"
-  exit 1
+
+if ($HardReset) {
+  Write-Host "hard reset origin/$Branch ..."
+  git reset --hard "origin/$Branch"
+  git clean -fd
+} else {
+  git pull origin $Branch 2>&1 | ForEach-Object { Write-Host $_ }
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "PULL BASARISIZ — zorla esitle:" -ForegroundColor Yellow
+    Write-Host "  .\git-pull.ps1 -HardReset"
+    Write-Host "veya: .\GITHUB-ZIP-GUNCELLE.ps1"
+    exit 1
+  }
 }
 
+Write-Host ""
 Write-Host "OK: $(git log -1 --oneline)" -ForegroundColor Green
