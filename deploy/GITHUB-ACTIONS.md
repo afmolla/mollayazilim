@@ -1,14 +1,15 @@
 # GitHub Actions — neden kirmizi X?
 
-## 1) "Deploy mollayazilim.com" failed
+## 1) "No jobs were run" veya Deploy maili
 
-**Sebep:** Workflow VPS'e SSH ile baglanir; **Secrets tanimli degilse** veya yanlis path.
+**Sebep:** Eski ayarda push'ta Deploy calisiyordu ama **Secrets yok** — tum job'lar atlaninca GitHub mail atiyordu.
 
-**Site calisiyor olabilir** — bu hata sadece otomatik deploy'un calismadigini gosterir.
+**Simdiki durum:** Deploy workflow **sadece elle** (Actions -> Deploy mollayazilim.com -> Run workflow).  
+Her `git push` sadece **CI** (lint + build) calistirir — deploy maili gelmez.
 
-### Otomatik deploy istemiyorsan
+### Otomatik deploy (istege bagli)
 
-Hicbir sey yapma. `deploy-mollayazilim.yml` artik Secrets yoksa **job'u atlar** (push sonrasi kirmizi X gelmez).
+Secrets ekledikten sonra `.github/workflows/deploy-mollayazilim.yml` icinde `push:` satirinin yorumunu ac.
 
 Guncelleme VPS'te elle:
 

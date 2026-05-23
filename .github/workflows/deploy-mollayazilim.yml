@@ -1,18 +1,28 @@
-# VPS otomatik deploy — SADECE elle veya Secrets doluysa
-# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (C:/inetpub/wwwroot/mollayazilim)
+# VPS deploy — SADECE ELLE calistir (push'ta mail/ hata yok)
+# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH = C:/inetpub/wwwroot/mollayazilim
+# Otomatik push deploy icin Secrets ekledikten sonra asagidaki "push" satirinin yorumunu ac.
 
 name: Deploy mollayazilim.com
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
 jobs:
-  deploy:
+  deploy-skip-notice:
+    if: ${{ secrets.SSH_HOST == '' || secrets.SSH_USER == '' || secrets.SSH_KEY == '' || secrets.DEPLOY_PATH == '' }}
     runs-on: ubuntu-latest
-    # Secrets yoksa job atlanir (kirmizi X olmaz)
+    steps:
+      - name: Secrets eksik
+        run: |
+          echo "Deploy atlandi: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH tanimli degil."
+          echo "Repo Settings -> Secrets -> Actions"
+          echo "Veya VPS'te: deploy\sunucu-guncelle.ps1"
+
+  deploy:
     if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.SSH_KEY != '' && secrets.DEPLOY_PATH != '' }}
+    runs-on: ubuntu-latest
     steps:
       - name: SSH deploy (Windows VPS)
         uses: appleboy/ssh-action@v1.2.0
