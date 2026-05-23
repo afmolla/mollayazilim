@@ -9,6 +9,8 @@ SUNUCUDA TEK YAPMAN GEREKEN
 git pull KULLANMA.
 .ps1 dosyasina cift tiklama (Notepad acilir).
 
+ARR winget ile kurulur (HttpPlatform MSI artik yok).
+
 Bu dosya yoksa GitHub'dan ZIP indir:
 https://github.com/afmolla/mollayazilim/archive/refs/heads/main.zip
 Ac -> mollayazilim-main icindekileri C:\inetpub\wwwroot\mollayazilim icine kopyala
