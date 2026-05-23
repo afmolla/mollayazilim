@@ -12,7 +12,7 @@
     "build:notify": "npm run build && node scripts/notify-done.cjs Build bitti",
     "rebuild:notify": "npm run rebuild && node scripts/notify-done.cjs Rebuild bitti",
     "rebuild": "npm run clean && npm run build",
-    "start": "node --max-old-space-size=8192 ./node_modules/next/dist/bin/next start",
+    "start": "node --max-old-space-size=8192 ./node_modules/next/dist/bin/next start -p 3000",
     "lint": "eslint --cache --cache-location .next/cache/eslint --ext .ts,.tsx \"app\" \"components\" \"lib\" --max-warnings=0"
   },
   "dependencies": {

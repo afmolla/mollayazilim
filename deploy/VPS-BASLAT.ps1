@@ -82,38 +82,61 @@ if (-not (Test-Path (Join-Path $AppRoot "node_modules"))) {
 }
 
 $buildId = Join-Path $AppRoot ".next\BUILD_ID"
-if (-not (Test-Path $buildId)) {
-  Write-Host "npm run build..."
+$nextBin = Join-Path $AppRoot "node_modules\next\dist\bin\next"
+if ((-not (Test-Path $buildId)) -or (-not (Test-Path $nextBin))) {
+  Write-Host "npm run build (production)..."
   $env:NODE_ENV = "production"
   npm run build
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "HATA: build basarisiz." -ForegroundColor Red
+    Write-Host "HATA: build basarisiz. Yukaridaki npm hatasini duzeltin." -ForegroundColor Red
     exit 1
   }
+}
+if (-not (Test-Path $buildId)) {
+  Write-Host "HATA: .next\BUILD_ID yok - build tamamlanmadi." -ForegroundColor Red
+  exit 1
 }
 
 $env:NODE_ENV = "production"
 
+$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
+if (-not (Test-Path $eco)) {
+  Write-Host "HATA: ecosystem.config.cjs yok: $eco" -ForegroundColor Red
+  exit 1
+}
+
 if (Get-Command pm2 -ErrorAction SilentlyContinue) {
-  pm2 describe $Pm2Name 2>$null | Out-Null
-  if ($LASTEXITCODE -eq 0) {
-    pm2 restart $Pm2Name
-  }
-  else {
-    pm2 delete $Pm2Name 2>$null | Out-Null
-    pm2 start npm --name $Pm2Name -- start
-    pm2 save
-  }
+  pm2 delete $Pm2Name 2>$null | Out-Null
+  pm2 start $eco
+  pm2 save
+  Start-Sleep -Seconds 6
   pm2 list
+
+  $online = $false
+  try {
+    $list = pm2 jlist 2>$null | ConvertFrom-Json
+    $app = $list | Where-Object { $_.name -eq $Pm2Name } | Select-Object -First 1
+    if ($app -and $app.pm2_env.status -eq "online") { $online = $true }
+  }
+  catch { }
+
+  if (-not $online) {
+    Write-Host "" 
+    Write-Host "PM2 errored - son loglar:" -ForegroundColor Red
+    pm2 logs $Pm2Name --lines 35 --nostream 2>$null
+    Write-Host ""
+    Write-Host "Elle dene: cd $AppRoot ; npm run start" -ForegroundColor Yellow
+    exit 1
+  }
 }
 else {
   Write-Host "PM2 yok - npm install -g pm2 onerilir. Arka planda start..." -ForegroundColor Yellow
   $arg = "/c cd /d `"$AppRoot`" && set NODE_ENV=production && npm run start"
   Start-Process -FilePath "cmd.exe" -ArgumentList $arg -WindowStyle Minimized
-  Start-Sleep -Seconds 8
+  Start-Sleep -Seconds 10
 }
 
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 2
 if (Test-PortListen $Port) {
   try {
     $url = "http://127.0.0.1:$Port/"

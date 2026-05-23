@@ -39,15 +39,15 @@ npm ci
 npm run build
 
 $pm2 = Get-Command pm2 -ErrorAction SilentlyContinue
-if ($pm2) {
-  pm2 describe $Pm2Name 2>$null | Out-Null
-  if ($LASTEXITCODE -eq 0) {
-    pm2 restart $Pm2Name
-  } else {
-    pm2 start npm --name $Pm2Name -- start
-    pm2 save
-  }
-  Write-Host "PM2: $Pm2Name yenilendi"
+$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
+if ($pm2 -and (Test-Path $eco)) {
+  pm2 delete $Pm2Name 2>$null | Out-Null
+  pm2 start $eco
+  pm2 save
+  Write-Host "PM2: $Pm2Name (ecosystem.config.cjs)"
+} elseif ($pm2) {
+  pm2 restart $Pm2Name
+  Write-Host "PM2: $Pm2Name restart"
 } else {
   Write-Host "PM2 yok — elle: cd $AppRoot && npm run start"
 }
