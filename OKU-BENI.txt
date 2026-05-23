@@ -1,0 +1,15 @@
+SUNUCUDA TEK YAPMAN GEREKEN
+============================
+
+1) Bu klasorde CALISTIR.cmd dosyasina SAG TIK
+2) "Yonetici olarak calistir"
+3) UAC -> Evet
+4) Bitince tarayici: http://localhost/
+
+git pull KULLANMA.
+.ps1 dosyasina cift tiklama (Notepad acilir).
+
+Bu dosya yoksa GitHub'dan ZIP indir:
+https://github.com/afmolla/mollayazilim/archive/refs/heads/main.zip
+Ac -> mollayazilim-main icindekileri C:\inetpub\wwwroot\mollayazilim icine kopyala
+Sonra CALISTIR.cmd

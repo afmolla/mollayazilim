@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Eski yontem: ARR + PM2 :3000 — tek-tikla HttpPlatform kullanir -->
+<configuration>
+  <system.webServer>
+    <directoryBrowse enabled="false" />
+    <defaultDocument enabled="false" />
+    <rewrite>
+      <rules>
+        <rule name="NextProxy" stopProcessing="true">
+          <match url="(.*)" />
+          <action type="Rewrite" url="http://127.0.0.1:3000/{R:1}" appendQueryString="true" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
