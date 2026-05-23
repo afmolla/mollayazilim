@@ -6,7 +6,6 @@
     cd C:\inetpub\wwwroot\mollayazilim\deploy
     .\SUNUCU-LOCALHOST-TAM.ps1
 
-  Eski klasor adi (mollyazilim) otomatik bulunur.
 #>
 $ErrorActionPreference = "Stop"
 
@@ -14,18 +13,11 @@ function Resolve-MollaRoot {
   if ($env:MOLLAYAZILIM_ROOT -and (Test-Path (Join-Path $env:MOLLAYAZILIM_ROOT "web.config"))) {
     return (Resolve-Path $env:MOLLAYAZILIM_ROOT).Path
   }
-  $candidates = @(
-    (Join-Path $PSScriptRoot ".."),
-    "C:\inetpub\wwwroot\mollayazilim",
-    "C:\inetpub\wwwroot\mollyazilim"
-  )
-  foreach ($c in $candidates) {
-    try {
-      $p = (Resolve-Path $c -ErrorAction Stop).Path
-      if (Test-Path (Join-Path $p "web.config")) { return $p }
-    } catch { }
-  }
-  throw "Proje bulunamadi. Klasor: C:\inetpub\wwwroot\mollayazilim veya mollyazilim"
+  $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+  if (Test-Path (Join-Path $root "web.config")) { return $root }
+  $fixed = "C:\inetpub\wwwroot\mollayazilim"
+  if (Test-Path (Join-Path $fixed "web.config")) { return $fixed }
+  throw "Proje bulunamadi: C:\inetpub\wwwroot\mollayazilim"
 }
 
 function Test-PortListen {

@@ -11,8 +11,6 @@ VPS/RDP icinde **Yonetici** PowerShell:
 
 ```powershell
 cd C:\inetpub\wwwroot\mollayazilim\deploy
-# Eski klasor adi ise:
-# $env:MOLLAYAZILIM_ROOT = "C:\inetpub\wwwroot\mollyazilim"
 .\SUNUCU-LOCALHOST-TAM.ps1
 ```
 

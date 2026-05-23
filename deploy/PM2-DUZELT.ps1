@@ -12,10 +12,6 @@ $ErrorActionPreference = "Stop"
 $AppRoot = if ($env:MOLLAYAZILIM_ROOT) { $env:MOLLAYAZILIM_ROOT } else {
   (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 }
-if (-not (Test-Path (Join-Path $AppRoot "deploy\ecosystem.config.cjs"))) {
-  $alt = "C:\inetpub\wwwroot\mollyazilim"
-  if (Test-Path (Join-Path $alt "deploy\ecosystem.config.cjs")) { $AppRoot = $alt }
-}
 
 Set-Location $AppRoot
 $eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
