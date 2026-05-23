@@ -10,12 +10,14 @@ Sadece URL Rewrite yuklu; **ARR yoksa localhost 404/bos kalir.**
 
 ## Cozum (bir kez, Yonetici)
 
-### 1) ARR kur
+### 1) ARR kur (otomatik)
 
-https://www.iis.net/downloads/microsoft/application-request-routing
+```powershell
+cd C:\inetpub\wwwroot\mollayazilim\deploy
+.\INSTALL-ARR.ps1
+```
 
-- **Application Request Routing 3.0** MSI indir ve kur
-- Kurulumda **URL Rewrite** da istenirse kur
+veya: `winget install Microsoft.IIS.ApplicationRequestRouting`
 
 ### 2) Proxy ac
 
