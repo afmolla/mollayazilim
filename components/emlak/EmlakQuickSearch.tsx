@@ -34,7 +34,7 @@ export function EmlakQuickSearch({ defaultTip = "" }: { defaultTip?: "" | "satil
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Örn. Moda, deniz manzaralı, 3+1…"
+            placeholder="Örn. Merkez, deniz manzaralı, 3+1…"
             className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--text)] outline-none ring-[var(--brand)]/30 placeholder:text-[var(--muted)] focus:ring-2"
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), submit())}
           />
@@ -63,7 +63,7 @@ export function EmlakQuickSearch({ defaultTip = "" }: { defaultTip?: "" | "satil
           <input
             value={il}
             onChange={(e) => setIl(e.target.value)}
-            placeholder="İstanbul, Kadıköy…"
+            placeholder="Tekirdağ, Kapaklı…"
             className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm outline-none ring-[var(--brand)]/30 focus:ring-2"
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), submit())}
           />

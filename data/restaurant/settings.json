@@ -1,19 +1,13 @@
 {
   "ayarlar": {
-    "salonAd": "Atlas Restaurant",
+    "salonAd": "Merkez Restoran",
     "whatsapp": "905551234567",
-    "adresKisa": "Moda · Kadıköy · İstanbul",
-    "adresDetay": "Caferağa Mah. Moda Cad. No:12, Kadıköy / İstanbul",
-    "calismaSaatleri": "Her gün 12:00 — 24:00 · Mutfak 23:00’e kadar",
-    "sehir": "İstanbul",
+    "adresKisa": "Kapaklı · Tekirdağ",
+    "adresDetay": "Merkez Mah. Restoran Cad. No:12, Kapaklı / Tekirdağ",
+    "calismaSaatleri": "Her gün 11:00 — 23:00",
+    "sehir": "Tekirdağ",
     "menuDavranis": "hover",
-    "panelSolMenuSabitle": true,
-    "panelSolMenuBaslangic": "acik",
-    "instagram": "https://www.instagram.com/atlas.restaurant.demo/",
-    "facebook": "",
-    "googleMaps": "https://maps.google.com/?q=Moda+Cad+Kad%C4%B1k%C3%B6y",
-    "mobilSiparisAcik": true,
-    "mobilMinVersiyon": "1.0.0",
-    "mobilAndroidApkUrl": "/apk/molla-restaurant.apk"
+    "footerSosyalGoster": true,
+    "mobilSiparisAcik": true
   }
 }

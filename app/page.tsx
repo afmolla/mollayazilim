@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = base.endsWith("/") ? base : `${base}/`;
   const title =
     ayar.seoTitle?.trim() ||
-    "Molla Yazılım | İstanbul Web Sitesi, QR Menü & Admin Panel — Özel Yazılım";
+    "Molla Yazılım | Tekirdağ Kapaklı Web Sitesi, QR Menü & Admin Panel";
   const description =
     ayar.seoDescription?.trim() ||
     "Molla Yazılım; kurumsal web sitesi ve yönetim paneli geliştirir. Hazır sektörel vitrin demolarıyla hızlı başlangıç, ücretsiz keşif ve SEO uyumlu yayın.";
@@ -364,7 +364,7 @@ export default async function MollaHome() {
             anchorId="demolar"
             overline="Demo / Projeler"
             title="Canlı demoları inceleyin"
-            desc="Kuaför (erkek / kadın), avukatlık, restoran ve emlak — örnek vitrinlerdir; gerçek bir işletmeyi temsil etmezler. Her demoda vitrin + panel akışını görebilirsiniz."
+            desc="Kuaför (erkek / kadın), avukatlık, restoran ve emlak — örnek vitrinlerdir; gerçek bir işletmeyi temsil etmezler. Her deMerkez vitrin + panel akışını görebilirsiniz."
           />
           <div className="mt-8 space-y-12">
             {gorunurDemoSayisi === 0 ? (

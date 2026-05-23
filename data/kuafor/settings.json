@@ -1,16 +1,13 @@
 {
   "ayarlar": {
-    "salonAd": "Urban Fade Lab",
+    "salonAd": "Atlas Kuaför Studio",
     "whatsapp": "905551234567",
-    "adresKisa": "Teşvikiye · Nişantaşı · İstanbul",
-    "adresDetay": "Teşvikiye Mah. Abdi İpekçi Cad. No:42 D:1, Şişli / İstanbul",
-    "calismaSaatleri": "Pzt–Cum 09:00 — 21:00 · Cmt–Paz 10:00 — 20:00",
-    "sehir": "İstanbul",
+    "adresKisa": "Kapaklı Merkez · Tekirdağ",
+    "adresDetay": "Cumhuriyet Mah. Örnek Cad. No:12, Kapaklı / Tekirdağ",
+    "calismaSaatleri": "Her gün 09:00 — 21:00",
+    "sehir": "Tekirdağ",
     "menuDavranis": "hover",
-    "panelSolMenuSabitle": true,
-    "panelSolMenuBaslangic": "acik",
-    "instagram": "https://www.instagram.com/urbanfadelab.demo/",
-    "facebook": "",
-    "googleMaps": "https://maps.google.com/?q=Ni%C5%9Fanta%C5%9F%C4%B1+%C4%B0stanbul"
+    "footerSosyalGoster": true,
+    "googleMaps": "https://maps.google.com/?q=Kapakl%C4%B1+Tekirda%C4%9F"
   }
 }

@@ -19,7 +19,7 @@ export function PanelIlanlar() {
   const [form, setForm] = useState({
     baslik: "",
     ozet: "",
-    il: "İstanbul",
+    il: "Tekirdağ",
     ilce: "",
     mahalle: "",
     tip: "satilik" as IlanTip,

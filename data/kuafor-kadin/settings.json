@@ -1,16 +1,13 @@
 {
   "ayarlar": {
-    "salonAd": "Aura Femme Studio",
-    "whatsapp": "905559876543",
-    "adresKisa": "Bağdat Caddesi · Kadıköy · İstanbul",
-    "adresDetay": "Caddebostan Mah. Örnek Sok. No:18 Kat:2, Kadıköy / İstanbul",
-    "calismaSaatleri": "Sal–Paz 10:00 — 20:00 · Pazartesi kapalı",
-    "sehir": "İstanbul",
+    "salonAd": "Luna Güzellik Studio",
+    "whatsapp": "905551234567",
+    "adresKisa": "Kapaklı · Tekirdağ",
+    "adresDetay": "Atatürk Mah. Güzellik Sok. No:18 Kat:2, Kapaklı / Tekirdağ",
+    "calismaSaatleri": "Her gün 10:00 — 20:00",
+    "sehir": "Tekirdağ",
     "menuDavranis": "hover",
-    "panelSolMenuSabitle": true,
-    "panelSolMenuBaslangic": "acik",
-    "instagram": "https://www.instagram.com/aurafemmestudio.demo/",
-    "facebook": "",
-    "googleMaps": "https://maps.google.com/?q=Kad%C4%B1k%C3%B6y+%C4%B0stanbul"
+    "footerSosyalGoster": true,
+    "googleMaps": "https://maps.google.com/?q=Kapakl%C4%B1+Tekirda%C4%9F"
   }
 }

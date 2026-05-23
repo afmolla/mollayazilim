@@ -53,6 +53,11 @@ export async function MollaFooter() {
         </div>
         <div className="md:text-right">
           <p className="text-sm font-semibold text-white">İletişim</p>
+          {ayar.adresKisa?.trim() ? (
+            <p className="mt-2 text-sm text-white/70">
+              Konum: <span className="font-medium text-white">{ayar.adresKisa.trim()}</span>
+            </p>
+          ) : null}
           <p className="mt-2 text-sm text-white/70">
             WhatsApp / Telefon: <span className="font-medium text-white">{phone}</span>
           </p>

@@ -129,7 +129,7 @@ export function PanelSeo() {
             value={form.seoKeywords ?? ""}
             onChange={(v) => setForm((s) => ({ ...s, seoKeywords: v }))}
             multiline
-            hint="Virgülle ayır: kuaför, istanbul, randevu..."
+            hint="Virgülle ayır: kuaför, kapaklı, restoran, emlak..."
           />
         </div>
 

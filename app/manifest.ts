@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Molla Yazılım — Web sitesi & özel yazılım",
     short_name: "Molla Yazılım",
     description:
-      "İşletmeye özel web sitesi, admin panel ve sektörel hazır sistemler. İstanbul ve Türkiye geneli.",
+      "Tekirdağ Kapaklı: kuaför, güzellik salonu, restoran, avukat bürosu ve emlak için web sitesi, admin panel ve hazır vitrin demoları.",
     start_url: "/",
     display: "standalone",
     background_color: "#070616",

@@ -3,16 +3,16 @@ export type MollaFaqItem = { q: string; a: string };
 
 export const MOLLA_LANDING_FAQ: MollaFaqItem[] = [
   {
-    q: "İstanbul’da web sitesi ve panel için süre ne kadar?",
+    q: "Tekirdağ Kapaklı’da web sitesi ve panel için süre ne kadar?",
     a: "Keşif görüşmesinden sonra çoğu projede 24 saat içinde demo çıkarıyoruz; içerik hazırsa yayına çıkış genelde 3–10 gün aralığında planlanır. Kapsam büyüdükçe takvim birlikte netleştirilir.",
   },
   {
     q: "SEO uyumlu site teslim ediyor musunuz?",
-    a: "Evet. Teknik temel (meta, canonical, site haritası, yapılandırılmış veri, mobil uyum ve performans) teslim kapsamındadır. Rekabetçi anahtar kelimelerde üst sıralar ise içerik, otorite ve sürekli iyileştirme gerektirir; bunun için ayrıca içerik ve ölçüm önerileri sunuyoruz.",
+    a: "Evet. Teknik temel (meta, canonical, site haritası, yapılandırılmış veri, mobil uyum ve performans) teslim kapsamındadır. Kuaför, güzellik salonu, restoran, avukat bürosu ve emlak gibi sektörlerde rekabetçi anahtar kelimeler için içerik ve sürekli iyileştirme önerileri sunuyoruz.",
   },
   {
-    q: "Web sitesi yaptığınızı 3 saniyede nasıl anlatıyorsunuz?",
-    a: "İlk ekran başlığı sektör + vaadi net söyler. CTA tek tıklık (WhatsApp / form / randevu). Hemen altında demo/kanıt ve süreç yer alır.",
+    q: "Hangi sektörler için hazır demo var?",
+    a: "Kuaför ve güzellik salonu, restoran (QR menü), emlak ilan vitrini ve avukat bürosu demoları hazır. İşletmenize göre özelleştirip hızlıca yayına alıyoruz.",
   },
   {
     q: "Teslim süresi ne kadar?",

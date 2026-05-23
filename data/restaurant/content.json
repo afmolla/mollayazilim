@@ -1,7 +1,7 @@
 {
   "icerik": {
     "home": {
-      "badge": "Atlas Restaurant · Kadıköy Moda",
+      "badge": "Atlas Restaurant · Kapaklı",
       "baslik": "Akdeniz mutfağı, zamansız davet",
       "aciklama": "Atlas Restaurant’ta günlük taze malzeme, odun fırını ve deniz ürünleri öne çıkar. QR menü, masa ayırtma ve şef önerileri tek panelden güncellenir — misafir mobilde anında görür.",
       "ctaPrimaryLabel": "QR menüyü aç",
@@ -92,7 +92,7 @@
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "Moda sahil hattına yürüme mesafesi; vale ve tekne iskelesi için önceden bilgi veriniz.",
+      "sayfaAciklama": "Merkez sahil hattına yürüme mesafesi; vale ve tekne iskelesi için önceden bilgi veriniz.",
       "whatsappMesaj": "Merhaba Atlas Restaurant, bu akşam 2 kişi iç masa için uygunluk var mı?"
     },
     "randevuForm": {

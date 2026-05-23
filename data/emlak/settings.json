@@ -2,16 +2,13 @@
   "ayarlar": {
     "salonAd": "Atlas Emlak",
     "whatsapp": "905551234567",
-    "iletisimTelefon": "+90 216 555 01 20",
-    "iletisimEposta": "info@atlasemlak.demo",
-    "adresKisa": "Kadıköy · İstanbul",
-    "adresDetay": "Caferağa Mah. Mühürdar Cad. İş Hanı No:88 Kat:3, Kadıköy / İstanbul",
-    "calismaSaatleri": "Hafta içi 09:30 — 19:00 · Cumartesi 10:00 — 17:00",
-    "sehir": "İstanbul",
+    "seoTitle": "Tekirdağ Kapaklı Emlak | Konut & Yatırım — Demo",
+    "seoDescription": "Kapaklı ve Tekirdağ bölgesinde konut, kiralık ve satılık ilan vitrini — demo.",
+    "adresKisa": "Kapaklı · Tekirdağ",
+    "adresDetay": "Merkez Mah. Emlak Cad. No:88 Kat:3, Kapaklı / Tekirdağ",
+    "calismaSaatleri": "Hafta içi 09:00 — 19:00",
+    "sehir": "Tekirdağ",
     "menuDavranis": "hover",
-    "panelSolMenuSabitle": true,
-    "panelSolMenuBaslangic": "acik",
-    "instagram": "https://www.instagram.com/atlas.emlak.demo/",
-    "googleMaps": "https://maps.google.com/?q=Kad%C4%B1k%C3%B6y+M%C3%BCh%C3%BCrdar"
+    "footerSosyalGoster": true
   }
 }

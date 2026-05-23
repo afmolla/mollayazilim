@@ -92,7 +92,7 @@ export default async function IlanlarPage({
   ];
 
   const cityQuick: { label: string; ilVal: string }[] = [
-    { label: "İstanbul", ilVal: "İstanbul" },
+    { label: "Kapaklı", ilVal: "Tekirdağ" },
     { label: "Tekirdağ", ilVal: "Tekirdağ" },
     { label: "Ankara", ilVal: "Ankara" },
     { label: "İzmir", ilVal: "İzmir" },
@@ -210,7 +210,7 @@ export default async function IlanlarPage({
                     <input
                       name="il"
                       defaultValue={il}
-                      placeholder="Örn. Kadıköy"
+                      placeholder="Örn. Kapaklı"
                       className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--surface-3)] px-2.5 py-2 text-sm text-[var(--text)] outline-none ring-sky-500/30 focus:ring-2"
                     />
                   </label>

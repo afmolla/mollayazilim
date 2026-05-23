@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     template: "%s | Molla Yazılım",
   },
   description:
-    "Web sitesi, admin panel ve sektörel hazır sistemler (kuaför, restoran, emlak). Hızlı demo, modern tasarım ve ölçülebilir dönüşüm odaklı kurulum.",
+    "Tekirdağ Kapaklı: kuaför, güzellik salonu, restoran, avukat bürosu ve emlak için web sitesi, admin panel ve hazır vitrin demoları. Hızlı demo ve SEO uyumlu teslim.",
   keywords: [
     "web sitesi",
     "kurumsal web sitesi",
@@ -61,10 +61,13 @@ export const metadata: Metadata = {
     "yönetim paneli",
     "randevu sistemi",
     "qr menü",
-    "İstanbul web tasarım",
-    "web sitesi yaptırma",
-    "kuaför randevu sistemi",
+    "Tekirdağ web tasarım",
+    "Kapaklı web sitesi",
+    "kuaför web sitesi",
+    "güzellik salonu web sitesi",
     "restoran web sitesi",
+    "restaurant qr menü",
+    "avukat bürosu web sitesi",
     "emlak ilan sitesi",
   ],
   authors: [{ name: "Molla Yazılım" }],
@@ -75,7 +78,7 @@ export const metadata: Metadata = {
     siteName: "Molla Yazılım",
     title: "Molla Yazılım | Web Sitesi & Admin Panel",
     description:
-      "Web sitesi, admin panel ve sektörel hazır sistemler. Hızlı demo ve net teslim planı ile yayına çıkın.",
+      "Tekirdağ Kapaklı: kuaför, restoran, emlak ve avukat bürosu için web sitesi ve admin panel. Hızlı demo, SEO uyumlu teslim.",
   },
   robots: { index: true, follow: true },
   alternates: { canonical: SITE_URL },
@@ -83,7 +86,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Molla Yazılım | Web Sitesi & Admin Panel",
     description:
-      "Web sitesi, admin panel ve sektörel hazır sistemler. Hızlı demo ve net teslim planı ile yayına çıkın.",
+      "Tekirdağ Kapaklı: kuaför, restoran, emlak ve avukat bürosu için web sitesi ve admin panel. Hızlı demo, SEO uyumlu teslim.",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

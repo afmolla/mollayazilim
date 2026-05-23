@@ -76,7 +76,7 @@ async function contentFile(): Promise<string> {
 function varsayilan(): SiteIcerik {
   return {
     home: {
-      badge: "İstanbul · Demo vitrin",
+      badge: "Kapaklı · Tekirdağ · Demo vitrin",
       baslik: "Tarzınızı yenileyin",
       aciklama:
         "Kesim, sakal ve bakım hizmetlerinde modern teknikler, hızlı randevu ve şeffaf panel yönetimi — müşteriye sunulabilir demo.",

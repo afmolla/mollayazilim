@@ -1,7 +1,7 @@
 {
   "icerik": {
     "home": {
-      "badge": "Kadıköy merkez · İstanbul",
+      "badge": "Kapaklı merkez · Tekirdağ",
       "baslik": "Gayrimenkulde güvenilir eşleştirme",
       "aciklama": "Atlas Emlak danışmanları satılık ve kiralık konut portföyünü güncel tutar; ilanlar panelden yayına alınır, vitrinde anında filtrelenir. Bu site tamamen demo içeriktir.",
       "ctaPrimaryLabel": "İlanları incele",
@@ -14,7 +14,7 @@
         {
           "id": "ek-stats",
           "tur": "metin",
-          "metin": "Portföy: İstanbul Anadolu & Avrupa · Tekirdağ yatırım · Kiralık & satılık — demo veri",
+          "metin": "Portföy: Tekirdağ Kapaklı · Çevre ilçeler · Kiralık & satılık — demo veri",
           "hiza": "orta"
         }
       ],
@@ -89,7 +89,7 @@
     },
     "iletisim": {
       "sayfaAciklama": "Ofis ziyareti için randevu önerilir; WhatsApp hattı hafta içi aktif.",
-      "whatsappMesaj": "Merhaba Atlas Emlak, Kadıköy civarında 3+1 satılık ilanlarınızı görmek istiyorum."
+      "whatsappMesaj": "Merhaba Atlas Emlak, Kapaklı civarında 3+1 satılık ilanlarınızı görmek istiyorum."
     }
   }
 }

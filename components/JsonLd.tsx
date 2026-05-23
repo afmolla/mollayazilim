@@ -102,7 +102,8 @@ async function jsonLdBody() {
                 address: {
                   "@type": "PostalAddress",
                   ...(street ? { streetAddress: street } : {}),
-                  addressLocality: ayar.sehir?.trim() || "İstanbul",
+                  addressLocality: ayar.sehir?.trim() || "Tekirdağ",
+                  ...(ayar.adresKisa?.trim() ? { addressRegion: "Kapaklı" } : {}),
                   addressCountry: "TR",
                 },
               }
@@ -135,7 +136,7 @@ async function jsonLdBody() {
           image: logoUrl,
           description:
             ayar.seoDescription?.trim() ||
-            "Web sitesi geliştirme, admin panel, QR menü ve randevu sistemleri; kuaför, restoran, emlak ve hukuk vitrin demoları.",
+            "Web sitesi geliştirme, admin panel, QR menü ve randevu sistemleri; kuaför, güzellik salonu, restoran, avukat bürosu ve emlak vitrin demoları.",
           provider: { "@id": `${baseNorm}/#organization` },
           areaServed: "TR",
           knowsAbout: [
@@ -144,7 +145,15 @@ async function jsonLdBody() {
             "QR menü",
             "randevu sistemi",
             "kurumsal web sitesi",
+            "kuaför web sitesi",
+            "güzellik salonu",
+            "restoran web sitesi",
+            "restaurant",
+            "avukat bürosu",
+            "emlak ilan sitesi",
             "SEO",
+            "Tekirdağ",
+            "Kapaklı",
           ],
         },
         {
@@ -183,7 +192,7 @@ async function jsonLdBody() {
             address: {
               "@type": "PostalAddress",
               streetAddress: ayar.adresDetay,
-              addressLocality: ayar.sehir || "İstanbul",
+              addressLocality: ayar.sehir || "Tekirdağ",
               addressCountry: "TR",
             },
           }
@@ -206,8 +215,8 @@ async function jsonLdBody() {
         "Emlak vitrin demo — ilan listesi ve iletişim.",
       address: {
         "@type": "PostalAddress",
-        addressLocality: ayar.sehir || "İstanbul",
-        streetAddress: ayar.adresDetay || "İstanbul",
+        addressLocality: ayar.sehir || "Tekirdağ",
+        streetAddress: ayar.adresDetay || "Kapaklı, Tekirdağ",
         addressCountry: "TR",
       },
       ...(ayar.iletisimTelefon?.trim() ? { telephone: ayar.iletisimTelefon.trim() } : {}),
@@ -227,8 +236,8 @@ async function jsonLdBody() {
       : "Kuaför ve berber demo vitrin — randevu ve iletişim.",
     address: {
       "@type": "PostalAddress",
-      addressLocality: ayar.sehir || "İstanbul",
-      streetAddress: ayar.adresDetay || "İstanbul",
+      addressLocality: ayar.sehir || "Tekirdağ",
+      streetAddress: ayar.adresDetay || "Kapaklı, Tekirdağ",
       addressCountry: "TR",
     },
     priceRange: "$$",

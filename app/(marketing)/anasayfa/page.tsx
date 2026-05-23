@@ -15,7 +15,7 @@ const kuaförMeta: Metadata = {
   description:
     "Atlas Kuaför Studio — kesim, sakal, boya ve bakım. Hızlı online randevu, profesyonel ekip.",
   openGraph: {
-    title: "Atlas Kuaför Studio | İstanbul",
+    title: "Atlas Kuaför Studio | Tekirdağ Kapaklı",
     description: "Modern kuaför ve berber deneyimi. Randevu alın, tarzınızı yenileyin.",
   },
 };

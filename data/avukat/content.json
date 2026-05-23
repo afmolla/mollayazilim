@@ -1,7 +1,7 @@
 {
   "icerik": {
     "home": {
-      "badge": "Beşiktaş Levent · İstanbul",
+      "badge": "Kapaklı merkez · Tekirdağ",
       "baslik": "Hukuki süreçlerde net yol haritası",
       "aciklama": "Demir & Ortakları; ceza, iş, aile ve icra başlıklarında ön görüşme ve dosya stratejisi sunar. Bu vitrin tamamen demodur — gerçek vekalet ilişkisi için doğrudan büroya başvurmalısınız.",
       "ctaPrimaryLabel": "Ön görüşme talebi",
@@ -14,7 +14,7 @@
         {
           "id": "kvkk-note",
           "tur": "metin",
-          "metin": "Baro kayıtlı avukat kadrosu · Gizlilik ve KVKK bilgilendirmesi · İstanbul merkez ofis",
+          "metin": "Baro kayıtlı avukat kadrosu · Gizlilik ve KVKK bilgilendirmesi · Kapaklı merkez ofis",
           "hiza": "orta"
         }
       ],
@@ -82,7 +82,7 @@
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "Levent’te merkez ofis; ön görüşme için randevu talep ediniz. Bu iletişim bilgileri demo içindir.",
+      "sayfaAciklama": "Kapaklı merkez ofis; ön görüşme için randevu talep ediniz. Bu iletişim bilgileri demo içindir.",
       "whatsappMesaj": "Merhaba, Demir & Ortakları — hukuki ön görüşme talep ediyorum (demo site)."
     },
     "randevuForm": {

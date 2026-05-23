@@ -117,7 +117,7 @@ export function MollaLeadForm(props: Props) {
             value={company}
             onChange={(e) => setCompany(e.target.value)}
             className="h-11 w-full rounded-xl border border-white/10 bg-black/30 px-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-white/30"
-            placeholder="Örn: Kuaför · İstanbul"
+            placeholder="Örn: Kuaför · Kapaklı"
             autoComplete="organization"
           />
         </label>
