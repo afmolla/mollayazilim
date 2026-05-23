@@ -60,10 +60,9 @@ pm2 start $eco
 pm2 save 2>$null | Out-Null
 Start-Sleep -Seconds 12
 
-# Firewall 80
-if (Get-Command netsh -ErrorAction SilentlyContinue) {
-  netsh advfirewall firewall add rule name="Mollayazilim HTTP 80" dir=in action=allow protocol=TCP localport=80 2>$null | Out-Null
-}
+# Guvenlik duvari (80 ac, eski 3000 kurallarini temizle)
+Write-Host "Guvenlik duvari port 80 + 3100 (API)..."
+& "$PSScriptRoot\AC-FIREWALL.ps1"
 
 $listening = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
 if (-not $listening) {

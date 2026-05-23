@@ -14,3 +14,8 @@ PM2 siteyi 80'de tutar.
 
 Guncelleme (git yok):
   GitHub ZIP -> klasore kopyala -> CALISTIR.cmd
+
+Guvenlik duvari (elle):
+  deploy\AC-FIREWALL.ps1  (Yonetici)
+  Acilir: TCP 80 (site), 3100 (vampir API), 22 (SSH)
+  3000 DISARI KAPALI — site 80'de
