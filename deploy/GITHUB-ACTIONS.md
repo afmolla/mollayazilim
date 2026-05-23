@@ -2,10 +2,10 @@
 
 ## 1) "No jobs were run" veya Deploy maili
 
-**Sebep:** Eski ayarda push'ta Deploy calisiyordu ama **Secrets yok** — tum job'lar atlaninca GitHub mail atiyordu.
+**Sebep:** Job seviyesinde `secrets` ile `if` kullanilinca GitHub **hic job calistirmiyordu** → "No jobs were run" maili.
 
-**Simdiki durum:** Deploy workflow **sadece elle** (Actions -> Deploy mollayazilim.com -> Run workflow).  
-Her `git push` sadece **CI** (lint + build) calistirir — deploy maili gelmez.
+**Simdiki durum:** Tek job; secrets yoksa bilgi mesaji, varsa SSH deploy. Deploy workflow **sadece elle** calistirilir.  
+Her `git push` sadece **CI** (lint + build) calistirir.
 
 ### Otomatik deploy (istege bagli)
 

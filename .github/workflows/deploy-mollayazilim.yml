@@ -1,6 +1,6 @@
-# VPS deploy — SADECE ELLE calistir (push'ta mail/ hata yok)
+# VPS deploy — elle: Actions -> Deploy mollayazilim.com -> Run workflow
 # Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH = C:/inetpub/wwwroot/mollayazilim
-# Otomatik push deploy icin Secrets ekledikten sonra asagidaki "push" satirinin yorumunu ac.
+# Otomatik push deploy: Secrets ekledikten sonra asagidaki push: yorumunu ac.
 
 name: Deploy mollayazilim.com
 
@@ -10,21 +10,18 @@ on:
   #   branches: [main]
 
 jobs:
-  deploy-skip-notice:
-    if: ${{ secrets.SSH_HOST == '' || secrets.SSH_USER == '' || secrets.SSH_KEY == '' || secrets.DEPLOY_PATH == '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Secrets eksik
-        run: |
-          echo "Deploy atlandi: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH tanimli degil."
-          echo "Repo Settings -> Secrets -> Actions"
-          echo "Veya VPS'te: deploy\sunucu-guncelle.ps1"
-
   deploy:
-    if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.SSH_KEY != '' && secrets.DEPLOY_PATH != '' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Secrets eksik (deploy atlandi)
+        if: ${{ secrets.SSH_HOST == '' || secrets.SSH_USER == '' || secrets.SSH_KEY == '' || secrets.DEPLOY_PATH == '' }}
+        run: |
+          echo "::notice::Deploy atlandi — SSH secrets tanimli degil."
+          echo "Repo Settings -> Secrets -> Actions: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH"
+          echo "VPS elle: deploy\sunucu-guncelle.ps1"
+
       - name: SSH deploy (Windows VPS)
+        if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.SSH_KEY != '' && secrets.DEPLOY_PATH != '' }}
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
