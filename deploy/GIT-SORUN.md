@@ -14,10 +14,21 @@ veya `GUNCELLE.cmd` cift tik.
 
 ## git pull
 
+**Notepad aciliyorsa** `git pull` yerine:
+
+```cmd
+cd C:\inetpub\wwwroot\mollayazilim\deploy
+SUNUCU-BASLAT.cmd
+```
+
+veya:
+
 ```powershell
 cd C:\inetpub\wwwroot\mollayazilim\deploy
 .\git-pull.ps1
 ```
+
+`.ps1` dosyasina cift tiklama = Notepad (normal). Calistirmak icin `.cmd` kullan.
 
 Cakisma / hata:
 

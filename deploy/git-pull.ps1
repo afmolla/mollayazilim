@@ -92,7 +92,8 @@ if ($HardReset) {
   git reset --hard "origin/$Branch"
   git clean -fd
 } else {
-  git pull origin $Branch 2>&1 | ForEach-Object { Write-Host $_ }
+  $env:GIT_EDITOR = "true"
+  git -c core.editor=true pull origin $Branch --no-edit 2>&1 | ForEach-Object { Write-Host $_ }
   if ($LASTEXITCODE -ne 0) {
     Write-Host ""
     Write-Host "PULL BASARISIZ — zorla esitle:" -ForegroundColor Yellow

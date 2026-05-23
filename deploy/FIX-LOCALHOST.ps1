@@ -1,9 +1,11 @@
 #Requires -RunAsAdministrator
 <#
-  localhost 403.14 / 404 duzeltme (PC + sunucu ayni)
+  localhost 403 / 404 duzeltme
 
-  cd C:\inetpub\wwwroot\mollayazilim\deploy
-  .\FIX-LOCALHOST.ps1
+  NOTEPAD ACILIYORSA .ps1 calistirma — su dosyayi cift tikla:
+    deploy\FIX-LOCALHOST.cmd
+  veya:
+    deploy\SUNUCU-BASLAT.cmd
 #>
 $ErrorActionPreference = "Stop"
 
