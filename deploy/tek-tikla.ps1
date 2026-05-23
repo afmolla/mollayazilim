@@ -15,14 +15,8 @@ New-Item -ItemType Directory -Path (Join-Path $AppRoot "logs") -Force | Out-Null
 function Ensure-Arr {
   $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
   if (-not (Test-Path $arrDll)) {
-    Write-Host "[1/5] ARR kuruluyor (winget)..." -ForegroundColor Yellow
-    $winget = Get-Command winget -ErrorAction SilentlyContinue
-    if (-not $winget) { throw "winget yok. Kur: winget install Microsoft.IIS.ApplicationRequestRouting" }
-    winget install Microsoft.IIS.ApplicationRequestRouting `
-      --accept-package-agreements --accept-source-agreements
-  }
-  if (-not (Test-Path $arrDll)) {
-    throw "ARR kurulamadi. Yonetici CMD: winget install Microsoft.IIS.ApplicationRequestRouting"
+    Write-Host "[1/5] ARR kuruluyor (MSI, winget gerekmez)..." -ForegroundColor Yellow
+    & "$PSScriptRoot\Install-ARR-MSI.ps1"
   }
   Import-Module WebAdministration -ErrorAction Stop
   Set-WebConfigurationProperty -pspath "MACHINE/WEBROOT/APPHOST" `
