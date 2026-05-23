@@ -118,5 +118,33 @@ cd C:\inetpub\wwwroot\mollayazilim\iis\mollayazilim.com
 .\Kontrol-IIS.ps1
 ```
 
+### VPS’te localhost:3000 çalışmıyorsa
+
+**Semptom:** Tarayıcıda `http://localhost:3000` açılmıyor; domain/IIS 502.
+
+**Sebep:** Next.js process ayakta değil (PM2 kurulmamış veya build yapılmamış). IIS sadece proxy; asıl uygulama `127.0.0.1:3000`.
+
+**Tek komut (VPS’te PowerShell):**
+
+```powershell
+cd C:\inetpub\wwwroot\mollayazilim\deploy
+.\VPS-BASLAT.ps1
+```
+
+İlk kez (klasör yoksa):
+
+```powershell
+.\VPS-BASLAT.ps1 -IlkKurulum
+```
+
+Sonra `.env.production.local` içinde `PANEL_PASSWORD`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL=https://mollayazilim.com` doldur.
+
+| Hata | Çözüm |
+|------|--------|
+| Port 3000 dolu (Vampir API) | `VPS-BASLAT.ps1` portu temizler; API `3100` kullanmalı |
+| `npm run build` hata | Node 20+, `npm ci` tekrar |
+| PM2 yok | `npm install -g pm2` |
+| IIS 502, localhost OK | `Install-Mollayazilim-NextIIS.ps1` + ARR proxy açık |
+
 IIS 502 → Node/PM2 çalışmıyor.  
 IIS statik “Yakında” → `Install-Mollayazilim-NextIIS.ps1` henüz çalıştırılmamış.
