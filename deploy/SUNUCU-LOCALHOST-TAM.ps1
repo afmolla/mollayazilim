@@ -88,15 +88,12 @@ foreach ($domain in $extraHosts) {
   }
 }
 
-# Default site port 80 carpismasi (bos sayfa / baska site)
-$defaultSite = Get-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
-if ($defaultSite -and $defaultSite.State -eq "Started") {
-  $defLocal = Get-WebBinding -Name "Default Web Site" | Where-Object {
-    $_.bindingInformation -match ":80:localhost" -or $_.bindingInformation -eq "*:80:"
-  }
-  if ($defLocal) {
-    Write-Host "Uyari: Default Web Site port 80 kullaniyor; durduruluyor..." -ForegroundColor Yellow
-    Stop-Website -Name "Default Web Site" -ErrorAction SilentlyContinue
+# Default Web Site -> C:\inetpub\wwwroot (403.14 directory listing)
+if (Get-Website -Name "Default Web Site" -ErrorAction SilentlyContinue) {
+  $def = Get-Website -Name "Default Web Site"
+  if ($def.State -eq "Started") {
+    Stop-Website -Name "Default Web Site"
+    Write-Host "Default Web Site durduruldu (localhost wwwroot'a dusmesin)" -ForegroundColor Yellow
   }
 }
 
