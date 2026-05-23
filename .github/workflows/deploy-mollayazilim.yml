@@ -1,18 +1,20 @@
-# Git push (main) → Windows sunucuda git pull + build + PM2 restart
-# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (ör. C:/inetpub/wwwroot/mollayazilim)
+# VPS otomatik deploy — SADECE elle veya Secrets doluysa
+# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (C:/inetpub/wwwroot/mollyazilim)
 
 name: Deploy mollayazilim.com
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Secrets yoksa job atlanir (kirmizi X olmaz)
+    if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.SSH_KEY != '' && secrets.DEPLOY_PATH != '' }}
     steps:
-      - name: SSH deploy
+      - name: SSH deploy (Windows VPS)
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -20,4 +22,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
           script: |
-            powershell -ExecutionPolicy Bypass -File "${{ secrets.DEPLOY_PATH }}/deploy/sunucu-guncelle.ps1"
+            powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${{ secrets.DEPLOY_PATH }}/deploy/sunucu-guncelle.ps1"

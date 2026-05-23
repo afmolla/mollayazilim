@@ -46,7 +46,9 @@ export function PanelIlanlar() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- panel verisi API'den yuklenir
     void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wb]);
 
   async function toggleYayin(x: IlanKayit) {

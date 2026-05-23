@@ -20,9 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (subdir !== "emlak") return {};
   const row = await ilanById(id);
   if (!row?.yayinda) return { title: "İlan" };
-  const title = `${row.baslik} · ${fmtIlanPrice(row)}`;
   return {
-    title: row.baslik,
+    title: `${row.baslik} · ${fmtIlanPrice(row)}`,
     description: row.ozet.slice(0, 160),
     openGraph: { title: row.baslik, description: row.ozet },
   };
