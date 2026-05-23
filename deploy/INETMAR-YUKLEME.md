@@ -31,7 +31,7 @@ npm run start
 
 Port **3000** (veya verilen) dinlenir; önünde **IIS ters vekil** veya **Nginx** ile 80/443 yönlendirmesi.
 
-Şu an geliştirdiğiniz kopya zaten **Windows + IIS** (`C:\inetpub\wwwroot\kuafor`) üzerinde bu mantıkla çalışmaya uygun. Inetmar’ın “hosting”i paylaşımlı ve Node yoksa, **aynı dosyaları oraya atarak** panel sitesini açamazsınız.
+Şu an geliştirdiğiniz kopya zaten **Windows + IIS** (`C:\inetpub\wwwroot\mollayazilim`) üzerinde bu mantıkla çalışmaya uygun. Inetmar’ın “hosting”i paylaşımlı ve Node yoksa, **aynı dosyaları oraya atarak** panel sitesini açamazsınız.
 
 ---
 

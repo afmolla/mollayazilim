@@ -1,4 +1,4 @@
-## Kuafor (Next.js) — IIS Kurulum Kontrol Listesi
+## Mollayazilim (Next.js) — IIS Kurulum Kontrol Listesi
 
 Bu proje IIS üzerinde **ARR (Application Request Routing) + URL Rewrite** ile, çalışan bir Next.js sunucusuna **reverse proxy** şeklinde yayınlanır.
 
@@ -12,8 +12,8 @@ Bu proje IIS üzerinde **ARR (Application Request Routing) + URL Rewrite** ile, 
 
 ### 2) Site ayarları
 
-- **Site Physical Path**: `C:\inetpub\wwwroot\kuafor`
-- **Binding**: `kuafor.com` (http/https)
+- **Site Physical Path**: `C:\inetpub\wwwroot\mollayazilim`
+- **Binding**: `mollayazilim.com` (http/https)
 - **Application Pool**:
   - **.NET CLR version**: **No Managed Code**
   - Identity: varsayılan `ApplicationPoolIdentity` olabilir
@@ -25,7 +25,7 @@ IIS sadece proxy yapar; asıl uygulama `127.0.0.1:3000` üzerinde çalışıyor 
 Projede:
 
 ```powershell
-cd C:\inetpub\wwwroot\kuafor
+cd C:\inetpub\wwwroot\mollayazilim
 npm ci
 npm run build
 $env:NODE_ENV="production"

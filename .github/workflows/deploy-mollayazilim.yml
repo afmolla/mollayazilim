@@ -1,0 +1,23 @@
+# Git push (main) → Windows sunucuda git pull + build + PM2 restart
+# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (ör. C:/inetpub/wwwroot/mollayazilim)
+
+name: Deploy mollayazilim.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            powershell -ExecutionPolicy Bypass -File "${{ secrets.DEPLOY_PATH }}/deploy/sunucu-guncelle.ps1"

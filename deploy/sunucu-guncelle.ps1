@@ -1,0 +1,55 @@
+#Requires -Version 5.1
+<#
+  GitHub'dan çek → build → PM2 yeniden başlat (mollayazilim.com).
+
+  İlk kurulum (bir kez):
+    cd C:\inetpub\wwwroot
+    git clone https://github.com/afmolla/mollyazilim.git mollayazilim
+    cd mollayazilim
+    copy .env.example .env.production.local
+    notepad .env.production.local
+    npm ci
+    npm run build
+    npm install -g pm2
+    pm2 start npm --name mollayazilim -- start
+    pm2 save
+
+  Her güncelleme (PC'de push sonrası sunucuda):
+    powershell -ExecutionPolicy Bypass -File C:\inetpub\wwwroot\mollayazilim\deploy\sunucu-guncelle.ps1
+
+  Otomatik: Görev Zamanlayıcı (5 dk) veya GitHub Actions (deploy-mollayazilim.yml)
+#>
+
+$ErrorActionPreference = "Stop"
+$AppRoot = if ($env:MOLLAYAZILIM_ROOT) { $env:MOLLAYAZILIM_ROOT } else { Split-Path $PSScriptRoot -Parent }
+$Pm2Name = if ($env:PM2_APP_NAME) { $env:PM2_APP_NAME } else { "mollayazilim" }
+
+Set-Location $AppRoot
+Write-Host "==> $AppRoot"
+
+if (Test-Path (Join-Path $AppRoot ".git")) {
+  git fetch origin
+  git pull origin main
+} else {
+  Write-Warning ".git yok — atlanıyor (ZIP ile kopyalandıysa elle güncelleyin)"
+}
+
+$env:NODE_ENV = "production"
+npm ci
+npm run build
+
+$pm2 = Get-Command pm2 -ErrorAction SilentlyContinue
+if ($pm2) {
+  pm2 describe $Pm2Name 2>$null | Out-Null
+  if ($LASTEXITCODE -eq 0) {
+    pm2 restart $Pm2Name
+  } else {
+    pm2 start npm --name $Pm2Name -- start
+    pm2 save
+  }
+  Write-Host "PM2: $Pm2Name yenilendi"
+} else {
+  Write-Host "PM2 yok — elle: cd $AppRoot && npm run start"
+}
+
+Write-Host "Tamam. Test: curl http://127.0.0.1:3000/ (IIS: https://mollayazilim.com)"

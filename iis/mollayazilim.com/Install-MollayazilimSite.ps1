@@ -1,10 +1,13 @@
 #Requires -RunAsAdministrator
 <#
+  ESKİ: Statik "Yakında" sayfası (index.html).
+  TAM SİTE (Next.js): C:\inetpub\wwwroot\mollayazilim\deploy\Install-Mollayazilim-NextIIS.ps1
+
   IIS'te mollayazilim.com için site oluşturur (HTTP :80).
   Klasör: bu script ile aynı dizin (index.html + web.config).
 
   Kullanım (PowerShell Yönetici):
-    cd C:\inetpub\wwwroot\kuafor\iis\mollayazilim.com
+    cd C:\inetpub\wwwroot\mollayazilim\iis\mollayazilim.com
     .\Install-MollayazilimSite.ps1
 
   HTTPS: IIS → Siteler → mollayazilim.com → Bağlamalar → Site bağlaması ekle → https, sertifika seçin.

@@ -13,4 +13,4 @@ Sadece bu dosyayı yeter; başka dosya gerekmez (Apache / PHP host için).
 IIS (Windows) kullanıyorsanız aynı index.html yeter; gerekirse .NET hostunda varsayılan belge "index.html" olsun.
 
 Hazırlanma yeri (bilgisayarınızda):
-  c:\inetpub\wwwroot\kuafor\site-yapim-asamasi-upload\
+  c:\inetpub\wwwroot\mollayazilim\site-yapim-asamasi-upload\
