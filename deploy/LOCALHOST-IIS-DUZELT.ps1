@@ -55,5 +55,7 @@ Write-Host "  .\LOCAL-BASLAT.ps1"
 Write-Host ""
 Write-Host "Tarayici: http://localhost/  ( :3000 yazma )"
 Write-Host ""
+& "$PSScriptRoot\Add-ComTr-Bindings.ps1" -ErrorAction SilentlyContinue
+
 Write-Host "ARR yoksa kur: https://www.iis.net/downloads/microsoft/application-request-routing"
 Write-Host "veya Web Platform Installer -> URL Rewrite + Application Request Routing"

@@ -64,6 +64,18 @@ if (-not $hasLocal) {
   }
 }
 
+foreach ($extra in @("mollayazilim.com.tr", "www.mollayazilim.com.tr")) {
+  $has = Get-WebBinding -Name $siteName | Where-Object { $_.bindingInformation -like "*:$extra" }
+  if (-not $has) {
+    try {
+      New-WebBinding -Name $siteName -Protocol http -Port 80 -HostHeader $extra
+      Write-Host "Baglama: http://$extra/"
+    } catch {
+      Write-Host "$extra baglamasi atlandi:" $_
+    }
+  }
+}
+
 Write-Host ""
 Write-Host "Sonraki adimlar:"
 Write-Host "  1) .env.production.local (NEXT_PUBLIC_SITE_URL=https://mollayazilim.com)"
