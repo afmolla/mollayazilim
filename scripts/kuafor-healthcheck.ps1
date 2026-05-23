@@ -1,5 +1,5 @@
 param(
-  [string]$Url = "http://127.0.0.1:3000/",
+  [string]$Url = "http://localhost/",
   [int]$TimeoutSec = 5
 )
 

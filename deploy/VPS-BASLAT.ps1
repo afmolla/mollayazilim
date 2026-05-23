@@ -170,4 +170,4 @@ if (Get-Module WebAdministration -ListAvailable) {
 }
 
 Write-Host ""
-Write-Host "Test: http://127.0.0.1:3000/"
+Write-Host "Test: http://localhost/  (IIS)"

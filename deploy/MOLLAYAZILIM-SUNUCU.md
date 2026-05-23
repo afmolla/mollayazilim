@@ -5,13 +5,24 @@ Uygulama klasörü: **`C:\inetpub\wwwroot\mollayazilim`**
 
 ---
 
-## Yerelde test (şimdi)
+## Yerelde test (IIS — port 80)
 
-Tarayıcı: **http://localhost:3000**
+Tarayıcı: **http://localhost/** (adres cubugunda **:3000 yok**)
 
-`MOLLAYAZILIM-LOCALHOST.cmd` veya `SITEYI-BURADAN-AC.cmd` — her zaman port **3000**.
+```powershell
+# Bir kez (Yonetici):
+cd C:\inetpub\wwwroot\mollayazilim\deploy
+.\Install-Mollayazilim-NextIIS.ps1
 
-> Vampir oyun API aynı makinede **3100** kullanır (`vampir-koylu\server`, `API_PORT=3100`). 3000 yalnızca mollayazilim Next içindir.
+# Her acilis:
+.\LOCAL-BASLAT.ps1
+```
+
+veya `MOLLAYAZILIM-LOCALHOST.cmd`
+
+**Nasil calisir:** IIS (80/443) -> arka planda Node `127.0.0.1:3000` (PM2). Vercel yok.
+
+> Vampir oyun API ayni makinede **3100** kullanir. 3000 sadece IIS ic proxy.
 
 ---
 
@@ -113,16 +124,16 @@ powershell -ExecutionPolicy Bypass -File C:\inetpub\wwwroot\mollayazilim\deploy\
 ## Kontrol
 
 ```powershell
-curl http://127.0.0.1:3000/
+curl http://localhost/
 cd C:\inetpub\wwwroot\mollayazilim\iis\mollayazilim.com
 .\Kontrol-IIS.ps1
 ```
 
-### VPS’te localhost:3000 çalışmıyorsa
+### Site / localhost acilmiyor veya IIS 502
 
-**Semptom:** Tarayıcıda `http://localhost:3000` açılmıyor; domain/IIS 502.
+**Semptom:** `http://localhost/` veya domain acilmiyor; IIS 502.
 
-**Sebep:** Next.js process ayakta değil (PM2 kurulmamış veya build yapılmamış). IIS sadece proxy; asıl uygulama `127.0.0.1:3000`.
+**Sebep:** Node (PM2) arka planda ayakta degil. IIS sadece proxy; Node `127.0.0.1:3000` (disariya acilmaz).
 
 **Tek komut (VPS’te PowerShell):**
 

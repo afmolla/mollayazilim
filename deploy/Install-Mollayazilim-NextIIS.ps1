@@ -47,16 +47,28 @@ $hasWww = Get-WebBinding -Name $siteName | Where-Object { $_.bindingInformation 
 if (-not $hasWww) {
   try {
     New-WebBinding -Name $siteName -Protocol http -Port 80 -HostHeader $www
-    Write-Host "Bağlama eklendi: http://$www/"
+    Write-Host "Baglama: http://$www/"
   } catch {
-    Write-Host "www bağlaması atlandı:" $_
+    Write-Host "www baglamasi atlandi:" $_
+  }
+}
+
+$localhost = "localhost"
+$hasLocal = Get-WebBinding -Name $siteName | Where-Object { $_.bindingInformation -like "*:${localhost}*" }
+if (-not $hasLocal) {
+  try {
+    New-WebBinding -Name $siteName -Protocol http -Port 80 -HostHeader $localhost
+    Write-Host "Baglama: http://localhost/  (port 80, :3000 yok)"
+  } catch {
+    Write-Host "localhost baglamasi atlandi:" $_
   }
 }
 
 Write-Host ""
-Write-Host "Sonraki adımlar:"
+Write-Host "Sonraki adimlar:"
 Write-Host "  1) .env.production.local (NEXT_PUBLIC_SITE_URL=https://mollayazilim.com)"
-Write-Host "  2) npm ci && npm run build"
-Write-Host "  3) pm2 start npm --name mollayazilim -- start   (port 3000)"
-Write-Host "  4) HTTPS binding + sertifika (IIS veya win-acme)"
-Write-Host "Test (Next ayaktayken): http://$hostHeader/"
+Write-Host "  2) deploy\LOCAL-BASLAT.ps1  (Node arka plan + test)"
+Write-Host "  3) HTTPS binding + sertifika (IIS veya win-acme)"
+Write-Host ""
+Write-Host "Tarayici: http://localhost/  veya  http://$hostHeader/"
+Write-Host "Not: Node 127.0.0.1:3000 sadece IIS icin; disariya acmayin."

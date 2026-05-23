@@ -52,4 +52,4 @@ if ($pm2 -and (Test-Path $eco)) {
   Write-Host "PM2 yok — elle: cd $AppRoot && npm run start"
 }
 
-Write-Host "Tamam. Test: curl http://127.0.0.1:3000/ (IIS: https://mollayazilim.com)"
+Write-Host "Tamam. Test: http://localhost/  veya  https://mollayazilim.com"

@@ -15,7 +15,7 @@ type DemoFlags = {
 const ROWS = [
   {
     label: "Ana vitrin (kurumsal)",
-    desc: "http://localhost:3000/",
+    desc: "http://localhost/",
     site: "/",
     panel: "/panel",
     flagKey: null as null | keyof DemoFlags,

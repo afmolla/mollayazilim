@@ -2,9 +2,6 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 echo.
-echo  Tarayicida su adresi ac:  http://localhost:3000
+echo  Site: http://localhost/  (IIS — port 80)
 echo.
-echo  Sunucu baslatiliyor... (durdurmak: Ctrl+C)
-echo.
-npm run dev
-pause
+powershell -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"

@@ -21,8 +21,11 @@ export function normalizePublicSiteUrl(raw: string | undefined): string {
 export function originFromRequestHeaders(h: Headers): string | null {
   const hostRaw = h.get("x-forwarded-host") ?? h.get("host") ?? "";
   const host = hostRaw.split(",")[0]?.trim() ?? "";
-  if (host && !host.startsWith("localhost") && !host.startsWith("127.")) {
-    const proto = (h.get("x-forwarded-proto") ?? "https").split(",")[0]?.trim() || "https";
+  if (host) {
+    const protoHeader = h.get("x-forwarded-proto")?.split(",")[0]?.trim();
+    const proto =
+      protoHeader ||
+      (host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https");
     return `${proto}://${host}`;
   }
   const vu = process.env.VERCEL_URL?.trim();
@@ -88,7 +91,7 @@ export async function siteOrigin(): Promise<string> {
   } catch {
     /* build / özel ortam */
   }
-  return "http://localhost:3000";
+  return "http://localhost";
 }
 
 export async function siteUrl(): Promise<string> {
@@ -113,7 +116,7 @@ export async function siteUrl(): Promise<string> {
   } catch {
     /* build / özel ortam */
   }
-  return `http://localhost:3000${prefix || ""}`.replace(/\/$/, "") || "http://localhost:3000";
+  return `http://localhost${prefix || ""}`.replace(/\/$/, "") || "http://localhost";
 }
 
 export async function salonAd(): Promise<string> {
