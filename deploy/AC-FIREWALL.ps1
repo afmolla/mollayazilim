@@ -19,9 +19,10 @@ function Ensure-FirewallRule {
   )
   $existing = Get-NetFirewallRule -DisplayName $DisplayName -ErrorAction SilentlyContinue
   if ($existing) {
-    Enable-NetFirewallRule -DisplayName $DisplayName -ErrorAction SilentlyContinue | Out-Null
-    Set-NetFirewallRule -DisplayName $DisplayName -Enabled True -Action Allow -Direction Inbound | Out-Null
-    Write-Host "  [var] $DisplayName -> TCP $Port" -ForegroundColor DarkGray
+    Set-NetFirewallRule -DisplayName $DisplayName `
+      -Enabled True -Action Allow -Direction Inbound `
+      -Profile Any -ErrorAction SilentlyContinue | Out-Null
+    Write-Host "  [var] $DisplayName -> TCP $Port (tum profiller)" -ForegroundColor DarkGray
   } else {
     New-NetFirewallRule -DisplayName $DisplayName `
       -Description $Description `
@@ -29,10 +30,12 @@ function Ensure-FirewallRule {
       -Protocol TCP `
       -LocalPort $Port `
       -Action Allow `
-      -Enabled True | Out-Null
+      -Enabled True `
+      -Profile Any | Out-Null
     Write-Host "  [yeni] $DisplayName -> TCP $Port" -ForegroundColor Green
   }
-  netsh advfirewall firewall add rule name="$DisplayName" dir=in action=allow protocol=TCP localport=$Port 2>$null | Out-Null
+  netsh advfirewall firewall delete rule name="$DisplayName" 2>$null | Out-Null
+  netsh advfirewall firewall add rule name="$DisplayName" dir=in action=allow protocol=TCP localport=$Port profile=any | Out-Null
 }
 
 Write-Host "=== Guvenlik duvari portlari ===" -ForegroundColor Cyan

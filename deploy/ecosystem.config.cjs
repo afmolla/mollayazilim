@@ -15,6 +15,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         PORT: "80",
+        HOSTNAME: "0.0.0.0",
       },
       autorestart: true,
       max_restarts: 10,
