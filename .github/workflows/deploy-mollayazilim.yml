@@ -1,5 +1,5 @@
 # VPS otomatik deploy — SADECE elle veya Secrets doluysa
-# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (C:/inetpub/wwwroot/mollyazilim)
+# Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH (C:/inetpub/wwwroot/mollayazilim)
 
 name: Deploy mollayazilim.com
 

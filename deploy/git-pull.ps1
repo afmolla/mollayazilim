@@ -6,16 +6,16 @@
   .\git-pull.ps1
 
   Klasor farkli ise:
-  $env:MOLLAYAZILIM_ROOT = "C:\inetpub\wwwroot\mollyazilim"
+  $env:MOLLAYAZILIM_ROOT = "C:\inetpub\wwwroot\mollayazilim"
   .\git-pull.ps1
 #>
 $ErrorActionPreference = "Stop"
-$RepoUrl = "https://github.com/afmolla/mollyazilim.git"
+$RepoUrl = "https://github.com/afmolla/mollayazilim.git"
 $Branch = "main"
 
 $candidates = @(
   $env:MOLLAYAZILIM_ROOT,
-  "C:\inetpub\wwwroot\mollyazilim",
+  "C:\inetpub\wwwroot\mollayazilim",
   "C:\inetpub\wwwroot\mollayazilim",
   (Resolve-Path (Join-Path $PSScriptRoot "..") -ErrorAction SilentlyContinue).Path
 ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique
@@ -27,7 +27,7 @@ foreach ($c in $candidates) {
 }
 
 if (-not $AppRoot) {
-  $AppRoot = "C:\inetpub\wwwroot\mollyazilim"
+  $AppRoot = "C:\inetpub\wwwroot\mollayazilim"
   Write-Host "Git klasoru yok, klonlaniyor: $AppRoot"
   New-Item -ItemType Directory -Path (Split-Path $AppRoot -Parent) -Force | Out-Null
   git clone $RepoUrl $AppRoot
@@ -42,8 +42,8 @@ Write-Host "Klasor: $AppRoot"
 if (-not (Test-Path ".git")) {
   Write-Host "HATA: .git yok. ZIP ile kopyalandiysa once klonlayin:" -ForegroundColor Red
   Write-Host "  cd C:\inetpub\wwwroot"
-  Write-Host "  ren mollyazilim mollyazilim_eski"
-  Write-Host "  git clone $RepoUrl mollyazilim"
+  Write-Host "  ren mollayazilim mollayazilim_eski"
+  Write-Host "  git clone $RepoUrl mollayazilim"
   exit 1
 }
 
@@ -65,7 +65,7 @@ if ($LASTEXITCODE -ne 0) {
   Write-Host "fetch basarisiz. Olasiliklar:" -ForegroundColor Red
   Write-Host "  - Internet / firewall"
   Write-Host "  - Private repo: Personal Access Token gerekir"
-  Write-Host "    git pull https://TOKEN@github.com/afmolla/mollyazilim.git main"
+  Write-Host "    git pull https://TOKEN@github.com/afmolla/mollayazilim.git main"
   exit 1
 }
 

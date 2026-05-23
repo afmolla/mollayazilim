@@ -4,7 +4,7 @@
 
   İlk kurulum (bir kez):
     cd C:\inetpub\wwwroot
-    git clone https://github.com/afmolla/mollyazilim.git mollayazilim
+    git clone https://github.com/afmolla/mollayazilim.git mollayazilim
     cd mollayazilim
     copy .env.example .env.production.local
     notepad .env.production.local

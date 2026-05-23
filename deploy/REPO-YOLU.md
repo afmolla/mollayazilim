@@ -3,11 +3,11 @@
 | | Değer |
 |---|--------|
 | **Disk (sunucu / yerel)** | `C:\inetpub\wwwroot\mollayazilim` |
-| **GitHub** | https://github.com/afmolla/mollyazilim |
+| **GitHub** | https://github.com/afmolla/mollayazilim |
 
 ```powershell
 cd C:\inetpub\wwwroot
-git clone https://github.com/afmolla/mollyazilim.git mollayazilim
+git clone https://github.com/afmolla/mollayazilim.git mollayazilim
 cd mollayazilim
 ```
 

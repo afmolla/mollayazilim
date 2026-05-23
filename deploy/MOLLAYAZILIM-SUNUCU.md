@@ -1,6 +1,6 @@
 # mollayazilim.com — sunucu kurulum (GitHub → IIS)
 
-Repo: **https://github.com/afmolla/mollyazilim.git**  
+Repo: **https://github.com/afmolla/mollayazilim.git**  
 Uygulama klasörü: **`C:\inetpub\wwwroot\mollayazilim`**
 
 ---
@@ -38,7 +38,7 @@ veya `MOLLAYAZILIM-LOCALHOST.cmd`
 
 ```powershell
 cd C:\inetpub\wwwroot
-git clone https://github.com/afmolla/mollyazilim.git mollayazilim
+git clone https://github.com/afmolla/mollayazilim.git mollayazilim
 cd mollayazilim
 copy .env.example .env.production.local
 notepad .env.production.local

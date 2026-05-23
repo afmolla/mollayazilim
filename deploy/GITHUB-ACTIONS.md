@@ -13,7 +13,7 @@ Hicbir sey yapma. `deploy-mollayazilim.yml` artik Secrets yoksa **job'u atlar** 
 Guncelleme VPS'te elle:
 
 ```powershell
-cd C:\inetpub\wwwroot\mollyazilim\deploy
+cd C:\inetpub\wwwroot\mollayazilim\deploy
 .\git-pull.ps1
 .\sunucu-guncelle.ps1
 ```
@@ -29,7 +29,7 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 | `SSH_HOST` | `85.95.251.204` |
 | `SSH_USER` | `Administrator` |
 | `SSH_KEY` | OpenSSH private key (PEM, tam metin) |
-| `DEPLOY_PATH` | `C:/inetpub/wwwroot/mollyazilim` |
+| `DEPLOY_PATH` | `C:/inetpub/wwwroot/mollayazilim` |
 
 VPS'te **OpenSSH Server** acik olmali; firewall **22** acik.
 

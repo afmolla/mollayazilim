@@ -35,7 +35,7 @@ if (-not (Test-Path $AppRoot)) {
     New-Item -ItemType Directory -Path $www -Force | Out-Null
     Set-Location $www
     $folderName = Split-Path $AppRoot -Leaf
-    git clone https://github.com/afmolla/mollyazilim.git $folderName
+    git clone https://github.com/afmolla/mollayazilim.git $folderName
     $AppRoot = Join-Path $www $folderName
   }
   else {
