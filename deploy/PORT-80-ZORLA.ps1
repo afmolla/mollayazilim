@@ -35,13 +35,20 @@ if (-not $found) { $lines += "NEXT_PUBLIC_SITE_URL=$siteUrl" }
 $lines | Set-Content $envFile -Encoding UTF8
 Write-Host "[OK] .env.production.local guncellendi"
 
-# IIS kapat
-$w3 = Get-Service W3SVC -ErrorAction SilentlyContinue
-if ($w3 -and $w3.Status -eq "Running") {
-  Stop-Service W3SVC -Force
-  Set-Service W3SVC -StartupType Manual
+# IIS kapat (W3SVC yeter — Get-Website RPC hatasi verir)
+try {
+  $w3 = Get-Service W3SVC -ErrorAction SilentlyContinue
+  if ($w3 -and $w3.Status -eq "Running") {
+    Stop-Service W3SVC -Force -ErrorAction Stop
+    Write-Host "[OK] IIS (W3SVC) durduruldu" -ForegroundColor Yellow
+  } else {
+    Write-Host "[OK] IIS zaten kapali" -ForegroundColor DarkGray
+  }
+  Set-Service W3SVC -StartupType Manual -ErrorAction SilentlyContinue
+} catch {
+  Write-Host "IIS durdurma atlandi: $($_.Exception.Message)" -ForegroundColor DarkGray
+  net stop w3svc 2>$null | Out-Null
 }
-Get-Website -ErrorAction SilentlyContinue | ForEach-Object { Stop-Website -Name $_.Name -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 2
 
 # 3000 ve 80 dinleyen her seyi oldur
@@ -70,7 +77,11 @@ pm2 start (Join-Path $AppRoot "deploy\ecosystem.config.cjs") --update-env
 pm2 save 2>$null | Out-Null
 Start-Sleep -Seconds 15
 
-& "$PSScriptRoot\AC-FIREWALL.ps1"
+try {
+  & "$PSScriptRoot\AC-FIREWALL.ps1"
+} catch {
+  Write-Host "Firewall atlandi: $($_.Exception.Message)" -ForegroundColor Yellow
+}
 
 # Kontrol
 if (Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue) {
