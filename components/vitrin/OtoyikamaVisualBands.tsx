@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import Link from "next/link";
 import { OTOYIKAMA_GALLERY, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
 import { publicHref } from "@/lib/base-path";
@@ -18,7 +18,7 @@ export function OtoyikamaVisualBands({ pathname }: Props) {
     <>
       {/* Parallax-style tam genişlik hero band */}
       <section className="relative h-[min(52vh,420px)] w-full overflow-hidden bg-[#040608]">
-        <Image
+        <VitrinImage
           src={OTOYIKAMA_IMAGES.wide1}
           alt="Crystal Auto Spa — premium detailing"
           fill
@@ -46,7 +46,7 @@ export function OtoyikamaVisualBands({ pathname }: Props) {
       {/* İkili tam genişlik — mobilde stack */}
       <section className="grid grid-cols-1 md:grid-cols-2">
         <div className="group relative min-h-[280px] overflow-hidden md:min-h-[360px]">
-          <Image
+          <VitrinImage
             src={OTOYIKAMA_IMAGES.ceramic}
             alt="Seramik kaplama uygulaması"
             fill
@@ -60,7 +60,7 @@ export function OtoyikamaVisualBands({ pathname }: Props) {
           </div>
         </div>
         <div className="group relative min-h-[280px] overflow-hidden md:min-h-[360px]">
-          <Image
+          <VitrinImage
             src={OTOYIKAMA_IMAGES.interior}
             alt="İç mekan detailing"
             fill
@@ -83,7 +83,7 @@ export function OtoyikamaVisualBands({ pathname }: Props) {
               key={`${img.src}-${i}`}
               className="relative h-36 w-56 shrink-0 overflow-hidden rounded-xl border border-white/10 md:h-44 md:w-72"
             >
-              <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="288px" />
+              <VitrinImage src={img.src} alt={img.alt} fill className="object-cover" sizes="288px" />
             </div>
           ))}
         </div>

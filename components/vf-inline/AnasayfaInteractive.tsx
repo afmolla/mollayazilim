@@ -18,7 +18,8 @@ import { AvukatFullscreenHero } from "@/components/vitrin/AvukatFullscreenHero";
 import { OtoyikamaFullscreenHero } from "@/components/vitrin/OtoyikamaFullscreenHero";
 import { OtoyikamaVisualBands } from "@/components/vitrin/OtoyikamaVisualBands";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
-import Image from "next/image";
+import { VitrinImage } from "@/components/vitrin/VitrinImage";
+import { normalizeOtoImageSrc, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
@@ -931,8 +932,8 @@ export function AnasayfaInteractive(props: {
             >
               {isOtoyikama && x.imageSrc ? (
                 <div className="relative mb-4 h-40 w-full shrink-0 overflow-hidden rounded-xl border border-cyan-500/10">
-                  <Image
-                    src={x.imageSrc}
+                  <VitrinImage
+                    src={normalizeOtoImageSrc(x.imageSrc, OTOYIKAMA_IMAGES.wash)}
                     alt={x.baslik}
                     fill
                     className="object-cover transition duration-500 group-hover:scale-105"

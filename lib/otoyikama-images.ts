@@ -37,3 +37,11 @@ export const OTOYIKAMA_HERO_SIDES = [
   { src: OTOYIKAMA_IMAGES.polish, alt: "Profesyonel detailing — kaput parlatma", className: "min-h-[120px]" },
   { src: OTOYIKAMA_IMAGES.ceramic, alt: "Seramik kaplama — mikrofiber son kat", className: "min-h-[120px]" },
 ] as const;
+
+/** Bozuk Unsplash / harici URL → yerel dosya */
+export function normalizeOtoImageSrc(src: string | undefined, fallback: string = OTOYIKAMA_IMAGES.hero): string {
+  const s = (src ?? "").trim();
+  if (!s) return fallback;
+  if (s.startsWith("/vitrin/")) return s;
+  return fallback;
+}

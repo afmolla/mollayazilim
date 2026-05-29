@@ -1,7 +1,9 @@
 "use client";
 import { useWithBase } from "@/components/SitePrefixProvider";
 
-import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { VitrinImage } from "@/components/vitrin/VitrinImage";
+import { normalizeOtoImageSrc, OTOYIKAMA_GALLERY } from "@/lib/otoyikama-images";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import type { SiteIcerik } from "@/lib/content-store";
@@ -19,6 +21,8 @@ function newGalImage(src: string, alt: string): G["images"][number] {
 
 export function GaleriInteractive(props: { initial: G }) {
   const wb = useWithBase();
+  const pathname = usePathname();
+  const isOtoyikama = pathname.includes("/otoyikama");
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [g, setG] = useState<G>(() => ({
@@ -392,13 +396,17 @@ export function GaleriInteractive(props: { initial: G }) {
             style={{ aspectRatio: "4/3" }}
             onContextMenu={(e) => openCtx(e, imageMenuItems(i))}
           >
-            <Image
+            <VitrinImage
               key={im.src}
-              src={im.src}
+              src={
+                isOtoyikama
+                  ? normalizeOtoImageSrc(im.src, OTOYIKAMA_GALLERY[i % OTOYIKAMA_GALLERY.length]?.src)
+                  : im.src
+              }
               alt={im.alt}
               width={800}
               height={600}
-              className="h-auto w-full object-cover"
+              className="h-full w-full object-cover"
               sizes="(max-width: 640px) 100vw, 50vw"
             />
             {inline ? (

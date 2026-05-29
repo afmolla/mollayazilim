@@ -82,6 +82,7 @@ if errorlevel 1 (
 set NODE_ENV=production
 call npm run build
 if errorlevel 1 goto :hata
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\fetch-otoyikama-images.ps1"
 call "%~f0" duzelt
 goto :son
 

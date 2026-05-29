@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import { publicHref } from "@/lib/base-path";
-import { OTOYIKAMA_HERO_SIDES, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
+import { OTOYIKAMA_HERO_SIDES, OTOYIKAMA_IMAGES, normalizeOtoImageSrc } from "@/lib/otoyikama-images";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
@@ -16,7 +16,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
   const { home, inline, salonAdLive, setSalonAdLive, patchSalonAd, updateHome, pathname, openCtx, heroAltBlokMenuItems } =
     props;
 
-  const heroSrc = home.heroImageSrc?.startsWith("http") ? OTOYIKAMA_IMAGES.hero : home.heroImageSrc || OTOYIKAMA_IMAGES.hero;
+  const heroSrc = normalizeOtoImageSrc(home.heroImageSrc, OTOYIKAMA_IMAGES.hero);
 
   return (
     <div className="relative min-h-[100dvh] w-full overflow-hidden bg-[#040608]">
@@ -46,16 +46,16 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
           ])
         }
       >
-        <Image
+        <VitrinImage
           key={heroSrc}
           src={heroSrc}
           alt={home.heroImageAlt}
           fill
-          className="object-cover opacity-50"
+          className="object-cover opacity-80"
           sizes="100vw"
           priority
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#040608] via-[#071018]/92 to-[#040608]" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#040608]/75 via-[#071018]/55 to-[#040608]/80" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,211,238,0.2),transparent_50%)] otoyikama-glow-pulse" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(251,191,36,0.1),transparent_45%)]" />
         <div className="otoyikama-shimmer pointer-events-none absolute inset-0 opacity-25" aria-hidden />
@@ -180,7 +180,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
                 key={img.src}
                 className={`relative overflow-hidden rounded-xl border border-white/10 ${img.className}`}
               >
-                <Image src={img.src} alt={img.alt} fill className="object-cover transition duration-500 hover:scale-105" sizes="(max-width:768px) 50vw, 400px" />
+                <VitrinImage src={img.src} alt={img.alt} fill className="object-cover transition duration-500 hover:scale-105" sizes="(max-width:768px) 50vw, 400px" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               </div>
             ))}
@@ -191,7 +191,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
         <div className="flex gap-3 overflow-x-auto pb-2 md:hidden snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {OTOYIKAMA_HERO_SIDES.map((img) => (
             <div key={img.src} className="relative h-44 w-64 shrink-0 snap-center overflow-hidden rounded-xl border border-white/10">
-              <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="256px" />
+              <VitrinImage src={img.src} alt={img.alt} fill className="object-cover" sizes="256px" />
             </div>
           ))}
         </div>
@@ -225,9 +225,9 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
                   />
                 ) : (
                   <div className="w-full overflow-hidden rounded-xl border border-white/15 bg-black/30">
-                    <Image
+                    <VitrinImage
                       key={bl.src}
-                      src={bl.src}
+                      src={bl.src.startsWith("http") ? OTOYIKAMA_IMAGES.wash : bl.src}
                       alt={bl.alt}
                       width={800}
                       height={450}
