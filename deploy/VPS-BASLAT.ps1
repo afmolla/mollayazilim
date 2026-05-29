@@ -61,8 +61,10 @@ if (Test-PortListen $Port) {
     $pid3000 = $conn.OwningProcess
     $proc = Get-CimInstance Win32_Process -Filter "ProcessId=$pid3000" -ErrorAction SilentlyContinue
     $cmd = if ($proc) { $proc.CommandLine } else { "" }
-    if (($cmd -match "vampir") -or (($cmd -match "src\\index\.js") -and ($cmd -notmatch "next"))) {
+    $isMolla = ($cmd -match "next") -or ($cmd -match "start-next\.cjs")
+    if (-not $isMolla) {
       Write-Host "Port $Port baska servis (PID $pid3000). Durduruluyor..." -ForegroundColor Yellow
+      Write-Host "  $cmd"
       Stop-Process -Id $pid3000 -Force -ErrorAction SilentlyContinue
       Start-Sleep -Seconds 2
     }
@@ -99,9 +101,10 @@ if (-not (Test-Path $buildId)) {
 
 $env:NODE_ENV = "production"
 
-$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
+# IIS :80 -> Node :3000 (web.config). Port 80 DEGIL — ecosystem.config.cjs IIS ile cakisir.
+$eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 if (-not (Test-Path $eco)) {
-  Write-Host "HATA: ecosystem.config.cjs yok: $eco" -ForegroundColor Red
+  Write-Host "HATA: ecosystem-iis.config.cjs yok: $eco" -ForegroundColor Red
   exit 1
 }
 

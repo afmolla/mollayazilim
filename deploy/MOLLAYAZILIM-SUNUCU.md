@@ -66,7 +66,7 @@ cd C:\inetpub\wwwroot\mollayazilim
 npm ci
 npm run build
 npm install -g pm2
-pm2 start deploy\ecosystem.config.cjs
+pm2 start deploy\ecosystem-iis.config.cjs
 pm2 save
 pm2 startup
 ```
@@ -148,7 +148,13 @@ cd C:\inetpub\wwwroot\mollayazilim\iis\mollayazilim.com
 
 **Sebep:** Node (PM2) arka planda ayakta degil. IIS sadece proxy; Node `127.0.0.1:3000` (disariya acilmaz).
 
-**Tek komut (VPS’te PowerShell):**
+**Tek komut (VPS’te — Yönetici, çift tık):**
+
+```text
+C:\inetpub\wwwroot\mollayazilim\deploy\VPS-DUZELT.cmd
+```
+
+veya PowerShell:
 
 ```powershell
 cd C:\inetpub\wwwroot\mollayazilim\deploy
@@ -161,11 +167,14 @@ cd C:\inetpub\wwwroot\mollayazilim\deploy
 .\VPS-BASLAT.ps1 -IlkKurulum
 ```
 
+> **Sık hata:** `VPS-BASLAT` / `sunucu-guncelle` eskiden `ecosystem.config.cjs` (port **80**) kullanıyordu — IIS ile çakışır, Node birkaç kez açılıp kapanır, localhost 502 olur. Doğrusu: `ecosystem-iis.config.cjs` → Node **3000**, IIS **80** proxy.
+
 Sonra `.env.production.local` içinde `PANEL_PASSWORD`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL=https://mollayazilim.com` doldur.
 
 | Hata | Çözüm |
 |------|--------|
-| Port 3000 dolu (Vampir API) | `VPS-BASLAT.ps1` portu temizler; API `3100` kullanmalı |
+| Port 3000 dolu (Vampir API) | Vampir API `3002` kullanmalı (`oyun1\deploy\repo-paths.cmd`); `VPS-DUZELT.cmd` veya `VPS-BASLAT.ps1` portu temizler |
+| Node birkaç kez açılıp kapanıyor | Yanlış PM2 config (port 80). `pm2 delete mollayazilim` sonra `VPS-DUZELT.cmd` |
 | `npm run build` hata | Node 20+, `npm ci` tekrar |
 | PM2 yok | `npm install -g pm2` |
 | IIS 502, localhost OK | `Install-Mollayazilim-NextIIS.ps1` + ARR proxy açık |

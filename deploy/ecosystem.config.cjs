@@ -1,6 +1,7 @@
 const path = require("path");
 
-/** PM2: site dogrudan port 80 (tarayicida :3000 yok) */
+/** UYARI: IIS kullaniyorsan ecosystem-iis.config.cjs (port 3000) kullan.
+ *  Bu dosya port 80 — IIS ile CAKISIR, VPS'te localhost bozulur. */
 const root = path.join(__dirname, "..");
 const launcher = path.join(__dirname, "start-next.cjs");
 

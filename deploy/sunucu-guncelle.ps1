@@ -11,7 +11,7 @@
     npm ci
     npm run build
     npm install -g pm2
-    pm2 start deploy\ecosystem.config.cjs
+    pm2 start deploy\ecosystem-iis.config.cjs
     pm2 save
 
   Her güncelleme (PC'de push sonrası sunucuda):
@@ -39,12 +39,23 @@ npm ci
 npm run build
 
 $pm2 = Get-Command pm2 -ErrorAction SilentlyContinue
-$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
+$eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 if ($pm2 -and (Test-Path $eco)) {
+  # Port 3000 baska servis tutuyorsa temizle (Vampir API vb.)
+  Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
+    $pid3000 = $_.OwningProcess
+    $proc = Get-CimInstance Win32_Process -Filter "ProcessId=$pid3000" -ErrorAction SilentlyContinue
+    $cmd = if ($proc) { $proc.CommandLine } else { "" }
+    if ($cmd -notmatch "next") {
+      Write-Host "Port 3000 temizleniyor (PID $pid3000)..." -ForegroundColor Yellow
+      Stop-Process -Id $pid3000 -Force -ErrorAction SilentlyContinue
+    }
+  }
+  Start-Sleep -Seconds 2
   pm2 delete $Pm2Name 2>$null | Out-Null
   pm2 start $eco
   pm2 save
-  Write-Host "PM2: $Pm2Name (ecosystem.config.cjs)"
+  Write-Host "PM2: $Pm2Name (ecosystem-iis.config.cjs, port 3000)"
 } elseif ($pm2) {
   pm2 restart $Pm2Name
   Write-Host "PM2: $Pm2Name restart"
