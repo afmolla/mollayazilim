@@ -109,11 +109,15 @@ if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   if ($LASTEXITCODE -ne 0) { throw "npm run build basarisiz" }
 }
 
-$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
-if (Get-Command pm2 -ErrorAction SilentlyContinue) {
-  pm2 delete mollayazilim 2>$null | Out-Null
-  pm2 start $eco
-  pm2 save 2>$null | Out-Null
+$eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
+if (Get-Command pm2.cmd -ErrorAction SilentlyContinue) {
+  $has = cmd /c "pm2.cmd jlist 2>nul" | Select-String -Pattern "mollayazilim" -Quiet
+  if ($has) {
+    cmd /c "pm2.cmd restart mollayazilim --update-env"
+  } else {
+    cmd /c "pm2.cmd start `"$eco`" --update-env"
+  }
+  cmd /c "pm2.cmd save 2>nul"
   Start-Sleep -Seconds 8
 } else {
   Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | ForEach-Object {

@@ -14,7 +14,7 @@ $AppRoot = if ($env:MOLLAYAZILIM_ROOT) { $env:MOLLAYAZILIM_ROOT } else {
 }
 
 Set-Location $AppRoot
-$eco = Join-Path $AppRoot "deploy\ecosystem.config.cjs"
+$eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 $Pm2Name = "mollayazilim"
 
 if (-not (Get-Command pm2 -ErrorAction SilentlyContinue)) {
@@ -24,18 +24,19 @@ if (-not (Get-Command pm2 -ErrorAction SilentlyContinue)) {
 
 Write-Host "=== PM2 duzelt ($AppRoot) ===" -ForegroundColor Cyan
 
-# pm2.ps1 stderr uyarisi olmasin diye cmd uzerinden (No process found = normal)
-cmd /c "pm2.cmd delete $Pm2Name 2>nul"
-cmd /c "pm2.cmd save --force 2>nul"
-
 if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   Write-Host "Build eksik, calistiriliyor..."
   $env:NODE_ENV = "production"
   npm run build
 }
 
-cmd /c "pm2.cmd start `"$eco`" --update-env"
-cmd /c "pm2.cmd save"
+$has = cmd /c "pm2.cmd jlist 2>nul" | Select-String -Pattern "mollayazilim" -Quiet
+if ($has) {
+  cmd /c "pm2.cmd restart mollayazilim --update-env"
+} else {
+  cmd /c "pm2.cmd start `"$eco`" --update-env"
+}
+cmd /c "pm2.cmd save 2>nul"
 Start-Sleep -Seconds 6
 cmd /c "pm2.cmd list"
 

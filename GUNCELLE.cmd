@@ -37,7 +37,9 @@ if errorlevel 1 (
 
 :baslat
 echo.
-call "%~dp0BASLAT.cmd"
+echo IIS + PM2 duzeltme (Yonetici gerekir)...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%~dp0DUZELT.cmd' -Verb RunAs -Wait"
 echo.
 echo GUNCELLEME TAMAM.
+echo Tarayici: http://localhost/  (http — https degil)
 pause
