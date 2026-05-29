@@ -10,6 +10,8 @@ export type HomeFeature = {
   id?: string;
   baslik: string;
   aciklama: string;
+  /** Kart üstü görsel (oto yıkama vb.) */
+  imageSrc?: string;
   /** Izgara hücresinde yatay hizalama */
   hiza?: VfHiza;
   /** md:grid-cols-3 içinde kapladığı sütun (1–3) */

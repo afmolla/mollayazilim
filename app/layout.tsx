@@ -6,7 +6,7 @@ import { themeBootstrapInlineScript } from "@/lib/theme-constants";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { VfAnalyticsTracker } from "@/components/VfAnalyticsTracker";
 import { CookieConsentProvider } from "@/components/CookieConsent";
-import { normalizePublicSiteUrl } from "@/lib/site";
+import { normalizePublicSiteUrl, isUsablePublicHost } from "@/lib/site";
 
 const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
@@ -28,7 +28,19 @@ const emlakDisplay = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const SITE_URL = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) || "https://mollayazilim.com";
+function metadataSiteUrl(): string {
+  const raw = normalizePublicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  if (raw) {
+    try {
+      if (isUsablePublicHost(new URL(raw).host)) return raw;
+    } catch {
+      /* ignore */
+    }
+  }
+  return "https://mollayazilim.com";
+}
+
+const SITE_URL = metadataSiteUrl();
 const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 const YANDEX_VERIFICATION = process.env.NEXT_PUBLIC_YANDEX_VERIFICATION?.trim();
 

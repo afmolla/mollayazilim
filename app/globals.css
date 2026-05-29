@@ -360,3 +360,53 @@ html[data-theme="luxe"] {
     flex: 0 0 auto;
   }
 }
+
+/* Oto yıkama vitrin — hafif animasyonlar (GPU-friendly) */
+@keyframes otoyikama-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes otoyikama-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@keyframes otoyikama-glow {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.otoyikama-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(34, 211, 238, 0.14) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: otoyikama-shimmer 8s ease-in-out infinite;
+}
+.otoyikama-marquee {
+  animation: otoyikama-marquee 45s linear infinite;
+}
+.otoyikama-glow-pulse {
+  animation: otoyikama-glow 6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .otoyikama-shimmer,
+  .otoyikama-marquee,
+  .otoyikama-glow-pulse {
+    animation: none;
+  }
+}

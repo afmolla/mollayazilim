@@ -16,7 +16,9 @@ import { RestaurantFullscreenHero } from "@/components/vitrin/RestaurantFullscre
 import { EmlakFullscreenHero } from "@/components/vitrin/EmlakFullscreenHero";
 import { AvukatFullscreenHero } from "@/components/vitrin/AvukatFullscreenHero";
 import { OtoyikamaFullscreenHero } from "@/components/vitrin/OtoyikamaFullscreenHero";
+import { OtoyikamaVisualBands } from "@/components/vitrin/OtoyikamaVisualBands";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
+import Image from "next/image";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
@@ -809,6 +811,8 @@ export function AnasayfaInteractive(props: {
         )}
       </section>
 
+      {isOtoyikama ? <OtoyikamaVisualBands pathname={pathname} /> : null}
+
       <section
         className={
           isRestaurant
@@ -925,6 +929,18 @@ export function AnasayfaInteractive(props: {
                 .join(" ")}
               onContextMenu={(e) => openCtx(e, featureMenuItems(i))}
             >
+              {isOtoyikama && x.imageSrc ? (
+                <div className="relative mb-4 h-40 w-full shrink-0 overflow-hidden rounded-xl border border-cyan-500/10">
+                  <Image
+                    src={x.imageSrc}
+                    alt={x.baslik}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 100vw, 280px"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+              ) : null}
               <EditableText
                 active={inline}
                 tag="h3"

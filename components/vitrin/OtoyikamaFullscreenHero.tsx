@@ -2,29 +2,12 @@
 
 import Image from "next/image";
 import { publicHref } from "@/lib/base-path";
+import { OTOYIKAMA_HERO_SIDES, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
 import { vfHizaFlexClass } from "@/components/vf-inline/vf-layout";
 import type { KuaforHeroProps } from "@/components/kuafor-vitrin/kuafor-hero-types";
-
-const HERO_SIDE_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1520340356584-faafa93834ab?w=900&q=85",
-    alt: "Parlak siyah araç yüzeyi — pasta cila sonrası yansıma",
-    className: "col-span-2 row-span-2 min-h-[220px]",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1619642751034-765df6897c10?w=600&q=85",
-    alt: "Profesyonel detailing — el ile kaput parlatma",
-    className: "min-h-[120px]",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=85",
-    alt: "Seramik kaplama uygulaması — mikrofiber ile son kat",
-    className: "min-h-[120px]",
-  },
-] as const;
 
 const SERVICE_PILLS = ["Oto yıkama", "Pasta cila", "Seramik kaplama", "İç+dış paket"] as const;
 
@@ -32,6 +15,8 @@ const SERVICE_PILLS = ["Oto yıkama", "Pasta cila", "Seramik kaplama", "İç+dı
 export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
   const { home, inline, salonAdLive, setSalonAdLive, patchSalonAd, updateHome, pathname, openCtx, heroAltBlokMenuItems } =
     props;
+
+  const heroSrc = home.heroImageSrc?.startsWith("http") ? OTOYIKAMA_IMAGES.hero : home.heroImageSrc || OTOYIKAMA_IMAGES.hero;
 
   return (
     <div className="relative min-h-[100dvh] w-full overflow-hidden bg-[#040608]">
@@ -62,17 +47,18 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
         }
       >
         <Image
-          key={home.heroImageSrc}
-          src={home.heroImageSrc}
+          key={heroSrc}
+          src={heroSrc}
           alt={home.heroImageAlt}
           fill
-          className="object-cover opacity-45"
+          className="object-cover opacity-50"
           sizes="100vw"
           priority
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#040608] via-[#071018]/92 to-[#040608]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,211,238,0.18),transparent_50%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(251,191,36,0.08),transparent_45%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(34,211,238,0.2),transparent_50%)] otoyikama-glow-pulse" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(251,191,36,0.1),transparent_45%)]" />
+        <div className="otoyikama-shimmer pointer-events-none absolute inset-0 opacity-25" aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#040608] to-transparent" />
       </div>
 
@@ -121,7 +107,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
             {SERVICE_PILLS.map((label) => (
               <li
                 key={label}
-                className="rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-cyan-200/90"
+                className="rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-cyan-200/90 transition hover:border-cyan-400/50 hover:bg-cyan-500/20"
               >
                 {label}
               </li>
@@ -147,7 +133,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
                   },
                 ])
               }
-              className="rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 px-8 py-3.5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/25 ring-1 ring-white/20"
+              className="rounded-xl bg-gradient-to-r from-cyan-400 to-sky-500 px-8 py-3.5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-500/25 ring-1 ring-white/20 transition hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
             />
             <CtaBlock
               inline={inline}
@@ -167,7 +153,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
                   },
                 ])
               }
-              className="rounded-xl border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-semibold text-slate-100 backdrop-blur-sm hover:bg-white/10"
+              className="rounded-xl border border-white/20 bg-white/5 px-8 py-3.5 text-sm font-semibold text-slate-100 backdrop-blur-sm transition hover:bg-white/10"
             />
           </div>
 
@@ -185,19 +171,29 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
           </dl>
         </div>
 
+        {/* Masaüstü görsel kolaj */}
         <div className="relative hidden md:block">
-          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-transparent to-amber-400/10 blur-2xl" />
+          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-transparent to-amber-400/10 blur-2xl otoyikama-glow-pulse" />
           <div className="relative grid grid-cols-2 gap-3 rounded-2xl border border-white/10 bg-black/40 p-3 backdrop-blur-md">
-            {HERO_SIDE_IMAGES.map((img) => (
+            {OTOYIKAMA_HERO_SIDES.map((img) => (
               <div
                 key={img.src}
                 className={`relative overflow-hidden rounded-xl border border-white/10 ${img.className}`}
               >
-                <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="(max-width:768px) 50vw, 400px" />
+                <Image src={img.src} alt={img.alt} fill className="object-cover transition duration-500 hover:scale-105" sizes="(max-width:768px) 50vw, 400px" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Mobil yatay görsel şerit */}
+        <div className="flex gap-3 overflow-x-auto pb-2 md:hidden snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {OTOYIKAMA_HERO_SIDES.map((img) => (
+            <div key={img.src} className="relative h-44 w-64 shrink-0 snap-center overflow-hidden rounded-xl border border-white/10">
+              <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="256px" />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -264,10 +260,7 @@ export function OtoyikamaFullscreenHero(props: KuaforHeroProps) {
                       id: "tail-img",
                       label: "Buraya görsel ekle",
                       run: () => {
-                        const src = window.prompt(
-                          "Görsel URL (https://…)",
-                          "https://images.unsplash.com/photo-1601362840469-51e4dcdae556?w=800&q=80",
-                        );
+                        const src = window.prompt("Görsel URL veya /vitrin/… yolu", OTOYIKAMA_IMAGES.wash);
                         if (src == null || !src.trim()) return;
                         const alt = window.prompt("Alt metin", "Görsel") ?? "";
                         updateHome((h) => ({

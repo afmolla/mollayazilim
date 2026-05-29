@@ -67,7 +67,7 @@ if errorlevel 1 goto :hata
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"
 if errorlevel 1 goto :hata
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\AC-FIREWALL.ps1"
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$a=Invoke-WebRequest 'http://127.0.0.1:3000/' -UseBasicParsing -TimeoutSec 20;$b=Invoke-WebRequest 'http://localhost/' -UseBasicParsing -TimeoutSec 20;Write-Host '(OK) Node' $a.StatusCode 'IIS' $b.StatusCode -ForegroundColor Green;try{$ip=(Invoke-WebRequest 'https://api.ipify.org' -UseBasicParsing -TimeoutSec 8).Content.Trim();Write-Host 'Dis test:' ('http://'+$ip+'/') -ForegroundColor Cyan}catch{}}catch{Write-Host '(HATA)' $_.Exception.Message -ForegroundColor Red;exit 1}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$a=Invoke-WebRequest 'http://127.0.0.1:3000/' -UseBasicParsing -TimeoutSec 20;$b=Invoke-WebRequest 'http://localhost/' -UseBasicParsing -TimeoutSec 20;Write-Host '(OK) Node' $a.StatusCode 'IIS' $b.StatusCode -ForegroundColor Green}catch{Write-Host '(HATA)' $_.Exception.Message -ForegroundColor Red;exit 1}"
 goto :son
 
 :guncelle

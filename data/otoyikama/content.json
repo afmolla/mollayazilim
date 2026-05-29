@@ -8,7 +8,7 @@
       "ctaPrimaryHref": "/randevu",
       "ctaSecondaryLabel": "Paket & fiyatlar",
       "ctaSecondaryHref": "/hizmetler",
-      "heroImageSrc": "https://images.unsplash.com/photo-1601362840469-51e4dcdae556?w=1600&q=85",
+      "heroImageSrc": "/vitrin/otoyikama/hero.jpg",
       "heroImageAlt": "Köpüklü oto yıkama — profesyonel el yıkama istasyonu",
       "heroAltBloklar": [
         {
@@ -25,25 +25,29 @@
           "id": "wash",
           "baslik": "El yıkama & köpük",
           "aciklama": "pH nötr şampuan, iki kova yöntemi ve basınçlı su ile boya dostu dış yıkama.",
-          "kolon": 1
+          "kolon": 1,
+          "imageSrc": "/vitrin/otoyikama/wash-1.jpg"
         },
         {
           "id": "polish",
           "baslik": "Pasta cila",
           "aciklama": "Çizik giderme, hare giderici ve çok aşamalı parlatma — cam gibi yansıma.",
-          "kolon": 1
+          "kolon": 1,
+          "imageSrc": "/vitrin/otoyikama/polish-1.jpg"
         },
         {
           "id": "ceramic",
           "baslik": "Seramik kaplama",
           "aciklama": "9H sertlik, hidrofobik yüzey ve 24 ay koruma — uygulama sonrası teslim raporu.",
-          "kolon": 1
+          "kolon": 1,
+          "imageSrc": "/vitrin/otoyikama/ceramic-1.jpg"
         },
         {
           "id": "interior",
           "baslik": "İç mekan detailing",
           "aciklama": "Buharlı temizlik, deri bakımı, ozon dezenfeksiyon ve koltuk koruma.",
-          "kolon": 1
+          "kolon": 1,
+          "imageSrc": "/vitrin/otoyikama/interior-1.jpg"
         }
       ]
     },
@@ -61,48 +65,20 @@
       ]
     },
     "galeri": {
-      "sayfaAciklama": "Yıkama, parlatma ve seramik uygulama anları — tamamı yüksek çözünürlüklü demo görselleri; kendi çekimlerinizle panelden değiştirin.",
+      "sayfaAciklama": "Yıkama, parlatma ve seramik uygulama anları — yüksek çözünürlüklü vitrin görselleri; kendi çekimlerinizle panelden değiştirin.",
       "images": [
-        {
-          "src": "https://images.unsplash.com/photo-1601362840469-51e4dcdae556?w=1200&q=85",
-          "alt": "Köpüklü el yıkama — kaput üzerinde yoğun köpük"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1520340356584-faafa93834ab?w=1200&q=85",
-          "alt": "Parlak siyah araç — pasta cila sonrası yansıma"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1619642751034-765df6897c10?w=1200&q=85",
-          "alt": "Detailing uzmanı — kaput parlatma"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85",
-          "alt": "Seramik kaplama — mikrofiber ile son kat"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=85",
-          "alt": "Su damlaları — hidrofobik seramik yüzey"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1492144534655-ae79c9649d7?w=1200&q=85",
-          "alt": "Far parlatma — kristal berraklığı"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=85",
-          "alt": "Spor araç — showroom parlaklığı"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1625047509168-a7023f36d0f3?w=1200&q=85",
-          "alt": "Oto yıkama alanı — profesyonel istasyon"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1200&q=85",
-          "alt": "İç mekan detailing — deri koltuk bakımı"
-        },
-        {
-          "src": "https://images.unsplash.com/photo-1542362567-b07e54358753?w=1200&q=85",
-          "alt": "Lüks araç ön cephe — seramik koruma"
-        }
+        { "src": "/vitrin/otoyikama/hero.jpg", "alt": "Köpüklü el yıkama — kaput üzerinde yoğun köpük" },
+        { "src": "/vitrin/otoyikama/wash-1.jpg", "alt": "El yıkama — pH nötr köpük" },
+        { "src": "/vitrin/otoyikama/polish-1.jpg", "alt": "Parlak yüzey — pasta cila sonrası yansıma" },
+        { "src": "/vitrin/otoyikama/ceramic-1.jpg", "alt": "Seramik kaplama — mikrofiber ile son kat" },
+        { "src": "/vitrin/otoyikama/luxury-1.jpg", "alt": "Lüks araç — seramik koruma sonrası" },
+        { "src": "/vitrin/otoyikama/interior-1.jpg", "alt": "İç mekan detailing — deri koltuk bakımı" },
+        { "src": "/vitrin/otoyikama/shine-1.jpg", "alt": "Su damlaları — hidrofobik seramik yüzey" },
+        { "src": "/vitrin/otoyikama/detail-1.jpg", "alt": "Detaylı kaput parlatma" },
+        { "src": "/vitrin/otoyikama/foam-1.jpg", "alt": "Köpüklü dış yıkama istasyonu" },
+        { "src": "/vitrin/otoyikama/garage-1.jpg", "alt": "Profesyonel detailing alanı" },
+        { "src": "/vitrin/otoyikama/wide-1.jpg", "alt": "Showroom parlaklığı — genel görünüm" },
+        { "src": "/vitrin/otoyikama/wide-2.jpg", "alt": "Seramik sonrası derin parlaklık" }
       ]
     },
     "iletisim": {

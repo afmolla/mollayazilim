@@ -14,8 +14,8 @@ Write-Host "========== PORT 80 ZORLA (:3000 KAPAT) ==========" -ForegroundColor 
 # Dis IP
 try {
   $ip = (Invoke-WebRequest -Uri "https://api.ipify.org" -UseBasicParsing -TimeoutSec 10).Content.Trim()
-} catch { $ip = "85.95.251.204" }
-$siteUrl = "http://$ip"
+} catch { $ip = "" }
+$siteUrl = if ($ip -and $ip -notmatch '^\d') { "http://$ip" } else { "https://mollayazilim.com" }
 Write-Host "Site URL (port yok): $siteUrl"
 
 # .env.production.local
