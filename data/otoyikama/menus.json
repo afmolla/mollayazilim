@@ -1,0 +1,20 @@
+{
+  "header": [
+    { "label": "Ana Sayfa", "href": "/anasayfa", "newTab": false },
+    { "label": "Hizmetler", "href": "/hizmetler", "newTab": false },
+    { "label": "Galeri", "href": "/galeri", "newTab": false },
+    { "label": "Seramik kaplama", "href": "/p/seramik-kaplama", "newTab": false },
+    { "label": "Hakkımızda", "href": "/p/hakkimizda", "newTab": false },
+    { "label": "Randevular", "href": "/randevular", "newTab": false },
+    { "label": "Randevu Al", "href": "/randevu", "newTab": false },
+    { "label": "İletişim", "href": "/iletisim", "newTab": false }
+  ],
+  "footer": [
+    { "href": "/p/seramik-kaplama", "label": "Seramik kaplama" },
+    { "href": "/p/pasta-cila", "label": "Pasta cila rehberi" },
+    { "href": "/randevu", "label": "Online randevu" },
+    { "href": "/randevular", "label": "Onaylı randevular" },
+    { "href": "/iletisim", "label": "İletişim" },
+    { "href": "/panel", "label": "Yönetim paneli" }
+  ]
+}

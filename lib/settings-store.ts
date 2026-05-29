@@ -56,6 +56,7 @@ export type SiteAyarlar = {
   demoRestaurantGoster?: boolean;
   demoEmlakGoster?: boolean;
   demoAvukatGoster?: boolean;
+  demoOtoyikamaGoster?: boolean;
 };
 
 type Db = { ayarlar: SiteAyarlar };
@@ -146,6 +147,10 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     typeof patch.demoAvukatGoster === "boolean"
       ? patch.demoAvukatGoster
       : (cur.demoAvukatGoster ?? true);
+  const demoOtoyikamaGoster =
+    typeof patch.demoOtoyikamaGoster === "boolean"
+      ? patch.demoOtoyikamaGoster
+      : (cur.demoOtoyikamaGoster ?? true);
   const seoIndex = typeof patch.seoIndex === "boolean" ? patch.seoIndex : (cur.seoIndex ?? true);
   const next: SiteAyarlar = {
     ...cur,
@@ -185,6 +190,7 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     demoRestaurantGoster,
     demoEmlakGoster,
     demoAvukatGoster,
+    demoOtoyikamaGoster,
   };
 
   await fs.mkdir(path.dirname(FILE), { recursive: true });

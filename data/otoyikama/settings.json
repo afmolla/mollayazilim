@@ -1,0 +1,18 @@
+{
+  "ayarlar": {
+    "salonAd": "Crystal Auto Spa",
+    "whatsapp": "905551234567",
+    "adresKisa": "Kapaklı OSB · Tekirdağ",
+    "adresDetay": "Organize Sanayi Bölgesi 3. Cad. No:8, Kapaklı / Tekirdağ",
+    "calismaSaatleri": "Her gün 08:00 — 22:00",
+    "sehir": "Tekirdağ",
+    "menuDavranis": "hover",
+    "footerSosyalGoster": true,
+    "seoTitle": "Crystal Auto Spa | Oto Yıkama, Pasta Cila & Seramik Kaplama — Kapaklı",
+    "seoDescription": "Tekirdağ Kapaklı oto yıkama, pasta cila, seramik kaplama ve iç+dış detailing. Online randevu, şeffaf paket fiyatları ve profesyonel ekip — demo vitrin.",
+    "seoKeywords": "oto yıkama Kapaklı, pasta cila Tekirdağ, seramik kaplama, detailing, araç yıkama, iç dış yıkama, motor yıkama",
+    "seoOgImage": "https://images.unsplash.com/photo-1601362840469-51e4dcdae556?w=1200&q=85",
+    "seoIndex": true,
+    "googleMaps": "https://maps.google.com/?q=Kapakl%C4%B1+Tekirda%C4%9F"
+  }
+}

@@ -10,6 +10,7 @@ type DemoFlags = {
   demoRestaurantGoster: boolean;
   demoEmlakGoster: boolean;
   demoAvukatGoster: boolean;
+  demoOtoyikamaGoster: boolean;
 };
 
 const ROWS = [
@@ -55,6 +56,13 @@ const ROWS = [
     panel: "/avukat/panel",
     flagKey: "demoAvukatGoster" as const,
   },
+  {
+    label: "Oto yıkama vitrin",
+    desc: "/otoyikama — yıkama, pasta cila, seramik",
+    site: "/otoyikama",
+    panel: "/otoyikama/panel",
+    flagKey: "demoOtoyikamaGoster" as const,
+  },
 ];
 
 export function PanelPortfoyHub() {
@@ -65,6 +73,7 @@ export function PanelPortfoyHub() {
     demoRestaurantGoster: true,
     demoEmlakGoster: true,
     demoAvukatGoster: true,
+    demoOtoyikamaGoster: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -88,6 +97,7 @@ export function PanelPortfoyHub() {
         demoRestaurantGoster: a.demoRestaurantGoster !== false,
         demoEmlakGoster: a.demoEmlakGoster !== false,
         demoAvukatGoster: a.demoAvukatGoster !== false,
+        demoOtoyikamaGoster: a.demoOtoyikamaGoster !== false,
       });
       setLoading(false);
     })();

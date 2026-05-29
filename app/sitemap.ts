@@ -29,7 +29,7 @@ async function pushMollaLandingAndDemos(out: MetadataRoute.Sitemap) {
       changeFrequency: "weekly",
       priority: 1,
     });
-    for (const path of ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat"]) {
+    for (const path of ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat", "/otoyikama", "/cerez-politikasi"]) {
       out.push({
         url: `${root}${path}`,
         lastModified: new Date(),

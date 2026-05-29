@@ -18,6 +18,7 @@ export function SiteHeaderClient(props: {
   const isRestaurant = pathname.includes("/restaurant");
   const isEmlak = pathname.includes("/emlak");
   const isAvukat = pathname.includes("/avukat");
+  const isOtoyikama = pathname.includes("/otoyikama");
   const isKuaforKadin = pathname.includes("/kuafor-kadin");
   const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
   /** Beyaz şerit navbar yerine cam koyu vitrinler */
@@ -25,6 +26,7 @@ export function SiteHeaderClient(props: {
     isRestaurant ||
     isEmlak ||
     isAvukat ||
+    isOtoyikama ||
     isKuaforErkek ||
     isKuaforKadin;
   return (
@@ -38,7 +40,9 @@ export function SiteHeaderClient(props: {
               ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-sky-500/15 bg-[#0a1628]/92 backdrop-blur-xl"
               : isAvukat
                 ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-amber-500/20 bg-[#0c1525]/94 backdrop-blur-xl"
-                : isKuaforKadin
+                : isOtoyikama
+                  ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-cyan-400/25 bg-[#040608]/92 backdrop-blur-xl"
+                  : isKuaforKadin
                   ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-rose-500/20 bg-[#140810]/92 backdrop-blur-xl"
                   : isKuaforErkek
                     ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-orange-500/20 bg-[#09090b]/92 backdrop-blur-xl"

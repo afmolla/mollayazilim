@@ -119,7 +119,7 @@ const FEATURES = [
   { title: "Ölçülebilir", desc: "Form/WhatsApp lead takibi ve net dönüşüm akışı." },
 ];
 
-type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat";
+type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat" | "otoyikama";
 
 function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
   /** Yerelde panelden kapatılmış olsa bile demoları göster (proxy + vitrin testi için).
@@ -140,6 +140,8 @@ function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
       return ayar.demoEmlakGoster !== false;
     case "avukat":
       return ayar.demoAvukatGoster !== false;
+    case "otoyikama":
+      return ayar.demoOtoyikamaGoster !== false;
   }
 }
 
@@ -168,10 +170,11 @@ const DEMO_GROUPS: readonly {
   {
     id: "diger",
     title: "Diğer sektör demoları",
-    desc: "Restoran QR menü / rezervasyon ve emlak ilan vitrinleri.",
+    desc: "Restoran QR menü, emlak ilan vitrinleri ve oto yıkama / detailing.",
     items: [
       { key: "restaurant", title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
       { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
+      { key: "otoyikama", title: "Oto Yıkama Demo", href: "/otoyikama", meta: "Yıkama · pasta cila · seramik" },
     ],
   },
 ];
@@ -198,7 +201,7 @@ const PACKAGES = [
   {
     title: "Sektörel",
     badge: "Hazır sistem",
-    desc: "Kuaför, restoran, emlak, hukuk gibi hazır demoları işletmenize göre uyarlayalım.",
+    desc: "Kuaför, restoran, emlak, oto yıkama, hukuk gibi hazır demoları işletmenize göre uyarlayalım.",
     items: ["Hazır demo altyapısı", "Hızlı özelleştirme", "İhtiyaca göre modül", "Yedekleme & bakım opsiyonu"],
     cta: "Demoları incele",
     href: "#demolar",

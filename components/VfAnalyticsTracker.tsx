@@ -3,13 +3,16 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useWithBase } from "@/components/SitePrefixProvider";
+import { useCookieConsent, hasAnalyticsConsent } from "@/components/CookieConsent";
 
-/** Her sayfa görüntülemede sunucuya basit hit kaydı atar (admin istatistiği için). */
+/** Her sayfa görüntülemede hit kaydı — analitik onayı gerekir. */
 export function VfAnalyticsTracker() {
   const pathname = usePathname() ?? "/";
   const wb = useWithBase();
+  const { consent, ready } = useCookieConsent();
 
   useEffect(() => {
+    if (!ready || !hasAnalyticsConsent(consent)) return;
     const p =
       typeof window !== "undefined"
         ? `${window.location.pathname}${window.location.search}`
@@ -28,7 +31,7 @@ export function VfAnalyticsTracker() {
     } catch {
       // ignore
     }
-  }, [pathname, wb]);
+  }, [pathname, wb, consent, ready]);
 
   return null;
 }

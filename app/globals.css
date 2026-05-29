@@ -249,6 +249,42 @@
   color: var(--brand);
 }
 
+/* Oto yıkama & detailing — koyu zemin, cyan su + altın premium vurgu */
+[data-vitrin="otoyikama"] {
+  color-scheme: dark;
+  --brand: #22d3ee;
+  --on-brand: #042f2e;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --surface: #040608;
+  --surface-2: #0a1018;
+  --surface-3: #111827;
+  --border: rgba(34, 211, 238, 0.18);
+}
+
+[data-vitrin="otoyikama"] header[data-fixed-header] {
+  border-color: rgba(34, 211, 238, 0.22);
+  background: rgba(4, 6, 8, 0.92) !important;
+  backdrop-filter: blur(14px);
+}
+
+[data-vitrin="otoyikama"] footer {
+  border-color: rgba(34, 211, 238, 0.12);
+  background: linear-gradient(180deg, #060a10 0%, #020304 100%) !important;
+}
+
+[data-vitrin="otoyikama"] .site-header-nav a {
+  color: rgba(248, 250, 252, 0.78);
+}
+
+[data-vitrin="otoyikama"] .site-header-nav a:hover {
+  color: var(--brand);
+}
+
+[data-vitrin="otoyikama"] .site-header-nav a[aria-current="page"] {
+  color: var(--brand);
+}
+
 /* Avukat vitrin panel — hukuk bürosu hissi */
 [data-panel-vitrin="avukat"] {
   --brand: #c9a227;

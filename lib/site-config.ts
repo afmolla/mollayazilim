@@ -24,6 +24,7 @@ const DEFAULT_PORTFOLIO_PREFIXES = [
   "/restaurant",
   "/emlak",
   "/avukat",
+  "/otoyikama",
 ] as const;
 
 export function portfolioPrefixes(): string[] {

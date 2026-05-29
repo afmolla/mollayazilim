@@ -1,5 +1,6 @@
 import { normalizeExternalUrl, parseGoogleMapsInput } from "@/lib/footer-social-map";
 import { whatsappLink } from "@/lib/whatsapp";
+import { CookieFooterBar } from "@/components/CookieFooterBar";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { menuGetir } from "@/lib/menu-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
@@ -166,6 +167,7 @@ export async function SiteFooter() {
       ) : null}
 
       <div className="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]">
+        <CookieFooterBar className="mb-2" />
         © {new Date().getFullYear()} {ayar.salonAd} — SEO uyumlu vitrin + panel demosu
       </div>
     </footer>

@@ -24,6 +24,17 @@ export function defaultRandevuOptionsForSubdir(subdir: string): string[] {
         "KVKK / uyum",
         "Diğer",
       ];
+    case "otoyikama":
+      return [
+        "Standart dış yıkama",
+        "İç + dış komple paket",
+        "Motor yıkama",
+        "Tek aşama pasta cila",
+        "Çift aşama parlatma",
+        "Seramik kaplama (9H)",
+        "Seramik ön muayene",
+        "Cam filmi / PPF bilgi",
+      ];
     case "kuafor-kadin":
       return [
         "Kesim & şekillendirme",

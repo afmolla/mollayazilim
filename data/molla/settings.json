@@ -7,7 +7,7 @@
     "iletisimEposta": "info@mollayazilim.com",
     "seoTitle": "Molla Yazılım | Tekirdağ Kapaklı Web Sitesi, Admin Panel & Özel Yazılım",
     "seoDescription": "Tekirdağ Kapaklı ve Türkiye geneli: kuaför, güzellik salonu, restoran, restaurant, avukat bürosu ve emlak için web sitesi, yönetim paneli, QR menü ve randevu sistemleri. Mobil uyumlu, SEO uyumlu teslim; ücretsiz keşif ile 24 saat içinde demo planı.",
-    "seoKeywords": "Tekirdağ web tasarım, Kapaklı web sitesi, kuaför web sitesi, güzellik salonu web sitesi, restoran web sitesi, restaurant qr menü, avukat bürosu web sitesi, emlak ilan sitesi, yönetim paneli, admin panel, randevu sistemi, özel yazılım Tekirdağ, yazılım ajansı Kapaklı, seo uyumlu site, kurumsal web sitesi",
+    "seoKeywords": "Tekirdağ web tasarım, Kapaklı web sitesi, kuaför web sitesi, güzellik salonu web sitesi, restoran web sitesi, restaurant qr menü, oto yıkama web sitesi, seramik kaplama, avukat bürosu web sitesi, emlak ilan sitesi, yönetim paneli, admin panel, randevu sistemi, özel yazılım Tekirdağ, yazılım ajansı Kapaklı, seo uyumlu site, kurumsal web sitesi",
     "seoIndex": true,
     "adresKisa": "Kapaklı · Tekirdağ",
     "adresDetay": "Kapaklı, Tekirdağ, Türkiye",
@@ -21,6 +21,7 @@
     "demoKuaforKadinGoster": true,
     "demoRestaurantGoster": true,
     "demoEmlakGoster": true,
-    "demoAvukatGoster": true
+    "demoAvukatGoster": true,
+    "demoOtoyikamaGoster": true
   }
 }

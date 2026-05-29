@@ -15,6 +15,7 @@ import { VfHeroImageStack } from "@/components/vf-inline/VfHeroImageStack";
 import { RestaurantFullscreenHero } from "@/components/vitrin/RestaurantFullscreenHero";
 import { EmlakFullscreenHero } from "@/components/vitrin/EmlakFullscreenHero";
 import { AvukatFullscreenHero } from "@/components/vitrin/AvukatFullscreenHero";
+import { OtoyikamaFullscreenHero } from "@/components/vitrin/OtoyikamaFullscreenHero";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
@@ -59,6 +60,7 @@ export function AnasayfaInteractive(props: {
   const isKuaforKadin = pathname.includes("/kuafor-kadin");
   const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
   const isAvukat = pathname.includes("/avukat");
+  const isOtoyikama = pathname.includes("/otoyikama");
   const searchParams = useSearchParams();
   const router = useRouter();
   const vfEdit = searchParams.get("vf_edit") === "1";
@@ -606,7 +608,9 @@ export function AnasayfaInteractive(props: {
               ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
               : isAvukat
                 ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[#0a1628]"
-                : isKuaforKadin || isKuaforErkek
+                : isOtoyikama
+                  ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[#040608]"
+                  : isKuaforKadin || isKuaforErkek
                   ? "relative min-h-[100dvh] overflow-hidden border-0 bg-[var(--surface)]"
                   : "border-b border-[var(--border)] bg-[var(--surface)]"
         }
@@ -690,6 +694,18 @@ export function AnasayfaInteractive(props: {
           />
         ) : isAvukat ? (
           <AvukatFullscreenHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : isOtoyikama ? (
+          <OtoyikamaFullscreenHero
             home={home}
             inline={inline}
             salonAdLive={salonAdLive}
@@ -801,7 +817,9 @@ export function AnasayfaInteractive(props: {
               ? "relative mx-auto max-w-6xl border-t border-emerald-900/25 bg-[var(--surface-2)] px-4 py-20 md:px-6"
               : isAvukat
                 ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[#0c1829] px-4 py-20 md:px-6"
-                : isKuaforErkek
+                : isOtoyikama
+                  ? "relative mx-auto max-w-6xl border-t border-cyan-500/10 bg-[#060a10] px-4 py-20 md:px-6"
+                  : isKuaforErkek
                   ? "relative mx-auto max-w-6xl border-t border-[var(--border)] bg-[var(--surface-2)] px-4 py-20 md:px-6"
                   : isKuaforKadin
                     ? "relative mx-auto max-w-6xl border-t border-[var(--border)] bg-[var(--surface)] px-4 py-20 md:px-6"
@@ -828,7 +846,9 @@ export function AnasayfaInteractive(props: {
                 ? "block text-center text-3xl font-bold tracking-tight text-[var(--text)] md:text-4xl"
                 : isAvukat
                   ? "block text-center text-3xl font-semibold tracking-tight text-[#e8eef8] md:text-4xl"
-                  : isKuaforErkek
+                  : isOtoyikama
+                    ? "block text-center text-3xl font-extrabold tracking-tight text-white md:text-4xl"
+                    : isKuaforErkek
                     ? "block text-center text-3xl font-extrabold uppercase tracking-tight text-[var(--text)] md:text-4xl"
                     : isKuaforKadin
                       ? "font-[family-name:var(--font-restaurant)] block text-center text-3xl font-semibold tracking-tight text-[var(--text)] md:text-[2.65rem]"
@@ -847,7 +867,9 @@ export function AnasayfaInteractive(props: {
                 ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-[var(--muted)] md:text-base"
                 : isAvukat
                   ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-slate-400 md:text-base"
-                  : isKuaforErkek
+                  : isOtoyikama
+                    ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-slate-400 md:text-base"
+                    : isKuaforErkek
                     ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-[var(--muted)] md:text-base"
                     : "mx-auto mt-2 block max-w-2xl text-center text-[var(--muted)]"
           }
@@ -859,7 +881,7 @@ export function AnasayfaInteractive(props: {
           className={
             isRestaurant
               ? "mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:items-stretch"
-              : isEmlak || isAvukat
+              : isEmlak || isAvukat || isOtoyikama
                 ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
                 : isKuaforErkek || isKuaforKadin
                   ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
@@ -890,6 +912,8 @@ export function AnasayfaInteractive(props: {
                   "!rounded-2xl !border-emerald-900/30 !bg-[var(--surface)] !shadow-sm transition hover:border-emerald-600/35",
                 isAvukat &&
                   "!rounded-2xl !border-white/[0.08] !bg-white/[0.04] !shadow-none backdrop-blur-md transition hover:border-amber-400/25",
+                isOtoyikama &&
+                  "!rounded-2xl !border-cyan-500/15 !bg-cyan-950/20 !shadow-none backdrop-blur-md transition hover:border-cyan-400/35",
                 isKuaforErkek &&
                   "!rounded-xl !border-zinc-600/55 !bg-zinc-950/45 !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/40",
                 isKuaforKadin &&
@@ -911,7 +935,9 @@ export function AnasayfaInteractive(props: {
                       ? "w-full text-lg font-semibold text-[var(--text)]"
                       : isAvukat
                         ? "w-full text-lg font-semibold text-[#e8eef8]"
-                        : isKuaforErkek
+                        : isOtoyikama
+                          ? "w-full text-lg font-bold text-cyan-50"
+                          : isKuaforErkek
                           ? "w-full text-lg font-bold text-[var(--text)]"
                           : isKuaforKadin
                             ? "font-[family-name:var(--font-restaurant)] w-full text-xl font-semibold text-[var(--text)]"
@@ -934,7 +960,9 @@ export function AnasayfaInteractive(props: {
                     ? "mt-2 w-full text-sm text-[#a89f94]"
                     : isAvukat
                       ? "mt-2 w-full text-sm text-slate-400"
-                      : "mt-2 w-full text-sm text-[var(--muted)]"
+                      : isOtoyikama
+                        ? "mt-2 w-full text-sm text-slate-400"
+                        : "mt-2 w-full text-sm text-[var(--muted)]"
                 }
                 multiline
                 value={x.aciklama}

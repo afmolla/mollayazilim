@@ -1,12 +1,12 @@
 # Molla Yazılım
 
-> Tekirdağ Kapaklı ve Türkiye geneli: kuaför, güzellik salonu, restoran, avukat bürosu ve emlak için web sitesi, yönetim paneli, QR menü ve randevu sistemleri.
+> Tekirdağ Kapaklı ve Türkiye geneli: kuaför, güzellik salonu, restoran, oto yıkama, avukat bürosu ve emlak için web sitesi, yönetim paneli, QR menü ve randevu sistemleri.
 
 ## Hizmetler
 
 - Kurumsal web sitesi ve mobil uyumlu vitrin
 - Admin / yönetim paneli (içerik, menü, medya, SEO, lead)
-- Kuaför, güzellik salonu, restoran, emlak ilan, avukat bürosu demoları
+- Kuaför, güzellik salonu, restoran, oto yıkama / detailing, emlak ilan, avukat bürosu demoları
 - SEO temel kurulum: meta, canonical, sitemap, yapılandırılmış veri
 
 ## Önemli sayfalar
@@ -16,6 +16,7 @@
 - Restoran demo: https://mollayazilim.com/restaurant
 - Emlak demo: https://mollayazilim.com/emlak
 - Avukat demo: https://mollayazilim.com/avukat
+- Oto yıkama demo: https://mollayazilim.com/otoyikama
 - İletişim: https://mollayazilim.com/#iletisim
 
 ## İletişim

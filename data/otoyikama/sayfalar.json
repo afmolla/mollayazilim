@@ -1,0 +1,31 @@
+{
+  "sayfalar": [
+    {
+      "slug": "hakkimizda",
+      "baslik": "Hakkımızda",
+      "aciklama": "Crystal Auto Spa — Kapaklı’da premium oto yıkama ve detailing.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Crystal Auto Spa, Tekirdağ Kapaklı’da <strong class=\"text-[var(--text)]\">oto yıkama, pasta cila ve seramik kaplama</strong> hizmetleri sunan bir demo vitrindir. Amacımız: müşterinin gelmeden önce paketleri, süreleri ve randevu akışını net görmesi.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Ekibimiz boya koruma, iç mekan hijyeni ve seramik uygulamada sertifikalı ürünler kullanır. Tüm metinler ve görseller panelden düzenlenebilir — bu sayfa örnek kurumsal içeriktir.</p>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1625047509168-a7023f36d0f3?w=1200&q=85\" alt=\"Crystal Auto Spa yıkama alanı\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n  <figcaption class=\"mt-2 text-sm text-[var(--muted)]\">Profesyonel yıkama istasyonu — demo görsel</figcaption>\n</figure>\n<h2 class=\"mt-10 text-xl font-semibold text-[var(--text)]\">Çalışma biçimimiz</h2>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li>Randevu öncelikli; walk-in müşteriler müsaitliğe göre.</li>\n  <li>Seramik işlemlerde teslim öncesi kalınlık ve su itici test raporu.</li>\n  <li>Kurumsal filo paketleri için WhatsApp hattı.</li>\n</ul>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-23T12:00:00.000Z"
+    },
+    {
+      "slug": "seramik-kaplama",
+      "baslik": "Seramik kaplama (9H)",
+      "aciklama": "Uzun ömürlü boya koruması — uygulama adımları ve bakım (demo).",
+      "icerikHtml": "<p class=\"rounded-2xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 text-sm text-[var(--text)]\"><strong>9H seramik kaplama</strong> boya yüzeyine nano katman oluşturur; UV, kimyasal leke ve hafif çiziklere karşı koruma sağlar. Demo içeriktir — gerçek garanti süreleri ürün markasına göre değişir.</p>\n<h2 class=\"mt-8 text-xl font-semibold text-[var(--text)]\">Uygulama süreci</h2>\n<ol class=\"mt-4 list-decimal space-y-3 pl-5 text-[var(--muted)]\">\n  <li><strong class=\"text-[var(--text)]\">Ön yıkama & kil bar</strong> — yüzeydeki metal partiküller giderilir.</li>\n  <li><strong class=\"text-[var(--text)]\">Tek aşama pasta</strong> — hafif hareler ve matlık giderilir.</li>\n <li><strong class=\"text-[var(--text)]\">IPA silme</strong> — yağ kalıntısı bırakmadan yüzey hazırlanır.</li>\n  <li><strong class=\"text-[var(--text)]\">Seramik uygulama</strong> — panel panel, çapraz ışıkta kontrol.</li>\n  <li><strong class=\"text-[var(--text)]\">Kürleme</strong> — 24 saat yağmur / yıkamadan kaçının.</li>\n</ol>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=85\" alt=\"Seramik kaplama uygulaması\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>\n<p class=\"mt-6\"><a href=\"/randevu\" class=\"inline-flex rounded-xl bg-[var(--brand)] px-5 py-3 font-semibold text-[var(--on-brand)] no-underline\">Seramik için randevu al</a></p>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-23T12:00:00.000Z"
+    },
+    {
+      "slug": "pasta-cila",
+      "baslik": "Pasta cila rehberi",
+      "aciklama": "Ne zaman pasta cila gerekir? (demo bilgilendirme)",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">Pasta cila, boya yüzeyindeki <strong class=\"text-[var(--text)]\">çizik, hare ve oksidasyon</strong> tabakasını kontrollü aşındırarak giderir. Her araç için aynı aşındırma seviyesi uygulanmaz — ön muayene şarttır.</p>\n<h2 class=\"mt-8 text-xl font-semibold text-[var(--text)]\">Tek vs çift aşama</h2>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li><strong class=\"text-[var(--text)]\">Tek aşama:</strong> Hafif matlık, yıkama izleri — 3–4 saat.</li>\n  <li><strong class=\"text-[var(--text)]\">Çift aşama:</strong> Belirgin hareler, showroom parlaklığı — tam gün.</li>\n</ul>\n<figure class=\"mt-8\">\n  <img src=\"https://images.unsplash.com/photo-1520340356584-faafa93834ab?w=1200&q=85\" alt=\"Parlatılmış araç yüzeyi\" class=\"w-full rounded-2xl border border-[var(--border)]\" />\n</figure>\n<p class=\"mt-6 text-sm text-[var(--muted)]\">Pasta sonrası koruma için wax veya seramik önerilir — panelden kampanya sayfası ekleyebilirsiniz.</p>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-05-23T12:00:00.000Z"
+    }
+  ]
+}

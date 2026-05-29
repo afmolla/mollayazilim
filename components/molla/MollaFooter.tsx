@@ -1,6 +1,7 @@
 import { ayarlarGetir } from "@/lib/settings-store";
 import { normalizeExternalUrl } from "@/lib/footer-social-map";
 import { whatsappLink } from "@/lib/whatsapp";
+import { CookieFooterBar } from "@/components/CookieFooterBar";
 
 function SocialButton(props: { href: string; label: string }) {
   return (
@@ -88,6 +89,7 @@ export async function MollaFooter() {
       </div>
 
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
+        <CookieFooterBar className="mb-2 text-white/45" />
         © {new Date().getFullYear()} Molla Yazılım — Özel yazılım & panel çözümleri
       </div>
     </footer>

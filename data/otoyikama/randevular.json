@@ -1,0 +1,36 @@
+{
+  "randevular": [
+    {
+      "id": "oy-demo-1",
+      "ad": "Serkan A.",
+      "telefon": "905551112233",
+      "hizmet": "İç + dış komple paket",
+      "tarih": "2026-05-24",
+      "saat": "09:30",
+      "durum": "onaylandi",
+      "notlar": "SUV — bagaj dahil",
+      "olusturulma": "2026-05-22T10:00:00.000Z"
+    },
+    {
+      "id": "oy-demo-2",
+      "ad": "Deniz K.",
+      "telefon": "905559998877",
+      "hizmet": "Seramik kaplama (9H)",
+      "tarih": "2026-05-25",
+      "saat": "08:00",
+      "durum": "onaylandi",
+      "notlar": "Ön muayene tamamlandı — sedan",
+      "olusturulma": "2026-05-21T14:00:00.000Z"
+    },
+    {
+      "id": "oy-demo-3",
+      "ad": "Burak T.",
+      "telefon": "905554445566",
+      "hizmet": "Tek aşama pasta cila",
+      "tarih": "2026-05-26",
+      "saat": "10:00",
+      "durum": "onaylandi",
+      "olusturulma": "2026-05-22T09:00:00.000Z"
+    }
+  ]
+}
