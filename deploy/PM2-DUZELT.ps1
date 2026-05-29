@@ -24,8 +24,9 @@ if (-not (Get-Command pm2 -ErrorAction SilentlyContinue)) {
 
 Write-Host "=== PM2 duzelt ($AppRoot) ===" -ForegroundColor Cyan
 
-pm2 delete $Pm2Name 2>$null | Out-Null
-pm2 save --force 2>$null | Out-Null
+# pm2.ps1 stderr uyarisi olmasin diye cmd uzerinden (No process found = normal)
+cmd /c "pm2.cmd delete $Pm2Name 2>nul"
+cmd /c "pm2.cmd save --force 2>nul"
 
 if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   Write-Host "Build eksik, calistiriliyor..."
@@ -33,17 +34,17 @@ if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   npm run build
 }
 
-pm2 start $eco
-pm2 save
+cmd /c "pm2.cmd start `"$eco`" --update-env"
+cmd /c "pm2.cmd save"
 Start-Sleep -Seconds 6
-pm2 list
+cmd /c "pm2.cmd list"
 
 try {
   $r = Invoke-WebRequest "http://127.0.0.1:3000/" -UseBasicParsing -TimeoutSec 20
   Write-Host "Node OK: HTTP $($r.StatusCode)" -ForegroundColor Green
 } catch {
   Write-Host "Node hata: $($_.Exception.Message)" -ForegroundColor Red
-  pm2 logs $Pm2Name --lines 15 --nostream
+  cmd /c "pm2.cmd logs $Pm2Name --lines 15 --nostream"
   exit 1
 }
 
