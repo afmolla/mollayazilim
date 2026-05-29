@@ -1,66 +1,78 @@
 #Requires -Version 5.1
 <#
-  http://localhost/ icin:
-  1) Node arka planda 127.0.0.1:3000 (disariya acik degil)
-  2) IIS :80 proxy (ARR gerekli — INSTALL-ARR.ps1)
-
-  Tarayici: http://localhost/  — :3000 YAZMA
+  http://localhost/ — site ac (BASLAT.cmd cagirir)
+  PM2 + Node :3000 + IIS test + tarayici
 #>
 $ErrorActionPreference = "Continue"
 $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$Eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
+$Pm2Name = "mollayazilim"
+$Port = 3000
+
 Set-Location $AppRoot
+Write-Host "=== Siteyi ac ===" -ForegroundColor Cyan
+Write-Host "http://localhost/  (IIS :80 -> Node :3000)`n"
 
-Write-Host "=== localhost (IIS :80) ===" -ForegroundColor Cyan
-
-# PM2 veya npm start arka planda
-$eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
-if (Get-Command pm2.cmd -ErrorAction SilentlyContinue) {
-  $has = cmd /c "pm2.cmd jlist 2>nul" | Select-String -Pattern "mollayazilim" -Quiet
-  if ($has) {
-    cmd /c "pm2.cmd restart mollayazilim --update-env"
-  } else {
-    cmd /c "pm2.cmd start `"$eco`" --update-env"
-  }
-  cmd /c "pm2.cmd save 2>nul"
-} else {
-  # Eski dev kapat
-  Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
-    Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue
-  }
-  Start-Sleep 2
-  if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
-    $env:NODE_ENV = "production"
-    npm run build
-  }
-  $arg = "/c cd /d `"$AppRoot`" && set NODE_ENV=production && npm run start"
-  Start-Process cmd.exe -ArgumentList $arg -WindowStyle Minimized
-  Write-Host "Node baslatildi (minimize pencere). PM2 onerilir: npm i -g pm2"
+if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
+  Write-Host "Build eksik - npm run build..." -ForegroundColor Yellow
+  $env:NODE_ENV = "production"
+  npm run build
+  if ($LASTEXITCODE -ne 0) { exit 1 }
 }
 
-Start-Sleep -Seconds 6
+Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
+  $procId = $_.OwningProcess
+  $proc = Get-CimInstance Win32_Process -Filter "ProcessId=$procId" -ErrorAction SilentlyContinue
+  $cmd = if ($proc) { $proc.CommandLine } else { "" }
+  if ($cmd -notmatch "next" -and $cmd -notmatch "start-next") {
+    Write-Host "Port $Port temizleniyor (PID $procId)..." -ForegroundColor Yellow
+    Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue
+  }
+}
+Start-Sleep -Seconds 1
 
-# Node ic test
-try {
-  $n = Invoke-WebRequest "http://127.0.0.1:3000/" -UseBasicParsing -TimeoutSec 30
-  Write-Host "Node OK (ic): $($n.StatusCode)" -ForegroundColor Green
-} catch {
-  Write-Host "Node ayakta degil: $($_.Exception.Message)" -ForegroundColor Red
+if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
+  Write-Host "PM2 yok: npm install -g pm2" -ForegroundColor Red
   exit 1
 }
 
-# IIS test
+$has = cmd /c "pm2.cmd jlist" 2>$null | Select-String -Pattern $Pm2Name -Quiet
+if ($has) {
+  cmd /c "pm2.cmd restart $Pm2Name --update-env"
+} else {
+  cmd /c "pm2.cmd start `"$Eco`" --update-env"
+}
+cmd /c "pm2.cmd save" 2>$null
+Start-Sleep -Seconds 6
+
+$nodeOk = $false
+$iisOk = $false
 try {
-  $w = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 30
-  Write-Host "IIS OK: http://localhost/ -> $($w.StatusCode)" -ForegroundColor Green
+  $n = Invoke-WebRequest "http://127.0.0.1:$Port/" -UseBasicParsing -TimeoutSec 30
+  Write-Host "(OK) Node port $Port status $($n.StatusCode)" -ForegroundColor Green
+  $nodeOk = $true
 } catch {
-  Write-Host "IIS localhost calismiyor: $($_.Exception.Message)" -ForegroundColor Red
-  Write-Host ""
-  Write-Host "Muhtemel cozum (Yonetici):"
-  Write-Host "  .\INSTALL-ARR.ps1"
-  Write-Host "  .\LOCALHOST-IIS-DUZELT.ps1"
-  Write-Host ""
-  Write-Host "Gecici: tarayicida http://127.0.0.1:3000 acilir (ARR olmadan)"
+  Write-Host "(HATA) Node port $Port - $($_.Exception.Message)" -ForegroundColor Red
+  cmd /c "pm2.cmd logs $Pm2Name --lines 15 --nostream" 2>$null
 }
 
-Write-Host ""
-Write-Host "Adres: http://localhost/"
+try {
+  $w = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 30
+  Write-Host "(OK) localhost status $($w.StatusCode)" -ForegroundColor Green
+  $iisOk = $true
+} catch {
+  Write-Host "(HATA) localhost - $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host ""
+  Write-Host "Cozum: BASLAT.cmd duzelt  (Yonetici)" -ForegroundColor Yellow
+}
+
+if (-not $nodeOk) { exit 1 }
+
+if ($iisOk) {
+  Write-Host ""
+  Write-Host "Tarayici: http://localhost/" -ForegroundColor Green
+  Start-Process "http://localhost/"
+  exit 0
+}
+
+exit 1

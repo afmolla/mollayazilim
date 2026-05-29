@@ -1,22 +1,20 @@
-PORT 80 — :3000 YOK
-==================
+Molla Yazilim — TEK KOMUT
+========================
 
-PORT-80.cmd veya CALISTIR.cmd  ->  Yonetici olarak calistir
-(:3000 calisiyorsa PORT-80.cmd kullan)
+  BASLAT.cmd          Siteyi ac (cift tik — PM2 + tarayici)
+  BASLAT.cmd menu     Menu (1-5)
+  BASLAT.cmd duzelt   IIS + Node duzelt (Yonetici)
+  BASLAT.cmd guncelle GitHub'dan cek + build
+  BASLAT.cmd kur      Ilk kurulum (Yonetici)
+  BASLAT.cmd test     Dis erisim testi
 
-Site dogrudan port 80'de acilir:
-  http://localhost/
-  http://mollayazilim.com/
+Tarayici: http://localhost/   (:3000 yazma — sadece IIS ic proxy)
 
-:3000 KULLANMA.
+Eski kisayollar (hepsi BASLAT'a yonlenir):
+  SITE-AC.cmd, SITEYI-BURADAN-AC.cmd, DUZELT.cmd, GUNCELLE.cmd
 
-IIS bu modda kapali (port cakismasi olmasin diye).
-PM2 siteyi 80'de tutar.
+VPS sunucu:
+  deploy\VPS-DUZELT.cmd   (git + IIS + Node, Yonetici)
 
-Guncelleme (git yok):
-  GitHub ZIP -> klasore kopyala -> CALISTIR.cmd
-
-Guvenlik duvari (elle):
-  deploy\AC-FIREWALL.ps1  (Yonetici)
-  Acilir: TCP 80 (site), 3100 (vampir API), 22 (SSH)
-  3000 DISARI KAPALI — site 80'de
+HTTPS (ayri):
+  KUR-HTTPS.cmd
