@@ -37,6 +37,12 @@ yarn-error.log*
 /data/*/analytics.json
 /data/*/analytics.hits.jsonl
 
+# Let's Encrypt challenge files (runtime)
+/.well-known/
+
+# simple-acme downloaded by deploy/KUR-HTTPS.ps1
+/deploy/simple-acme/
+
 # vercel
 .vercel
 
