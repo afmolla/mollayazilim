@@ -5,7 +5,6 @@ setlocal EnableExtensions
 title Molla Yazilim - Siteyi ac
 cd /d "%~dp0.."
 set "APPROOT=%CD%"
-set "ECO=%APPROOT%\deploy\ecosystem-iis.config.cjs"
 set "START_SCRIPT=%APPROOT%\deploy\start-next.cjs"
 set "PM2_NAME=mollayazilim"
 set "PORT=3000"
@@ -27,30 +26,18 @@ if errorlevel 1 (
   exit /b 1
 )
 
-call pm2.cmd describe "%PM2_NAME%" >nul 2>nul
-if errorlevel 1 goto :pm2_start
-call pm2.cmd restart "%PM2_NAME%" --update-env
-if errorlevel 1 goto :pm2_start
-goto :pm2_save
-
-:pm2_start
-if exist "%ECO%" (
-  echo PM2 ecosystem bulundu: %ECO%
-  call pm2.cmd start "%ECO%" --update-env
-) else (
-  echo UYARI: %ECO% bulunamadi. Direkt start-next.cjs ile baslatiliyor...
-  if not exist "%START_SCRIPT%" (
-    echo HATA: %START_SCRIPT% bulunamadi. git pull origin main tekrar calistir.
-    exit /b 1
-  )
-  set "NODE_ENV=production"
-  set "PORT=%PORT%"
-  set "HOSTNAME=0.0.0.0"
-  call pm2.cmd start "%START_SCRIPT%" --name "%PM2_NAME%" --interpreter node --update-env
+if not exist "%START_SCRIPT%" (
+  echo HATA: %START_SCRIPT% bulunamadi. git pull origin main tekrar calistir.
+  exit /b 1
 )
-if errorlevel 1 exit /b 1
 
-:pm2_save
+echo PM2 direkt baslatiliyor: %START_SCRIPT%
+call pm2.cmd delete "%PM2_NAME%" >nul 2>nul
+set "NODE_ENV=production"
+set "PORT=%PORT%"
+set "HOSTNAME=0.0.0.0"
+call pm2.cmd start "%START_SCRIPT%" --name "%PM2_NAME%" --interpreter node --update-env
+if errorlevel 1 exit /b 1
 call pm2.cmd save 2>nul
 
 timeout /t 6 /nobreak >nul
