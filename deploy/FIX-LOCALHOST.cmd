@@ -16,11 +16,12 @@ echo Klasor: %APPROOT%
 echo.
 
 net session >nul 2>&1
-if not "%errorlevel%"=="0" (
-  echo Yonetici olarak aciliyor...
-  powershell -NoProfile -Command "$p=Start-Process -FilePath 'cmd.exe' -ArgumentList '/c','""%~f0""' -Verb RunAs -Wait -PassThru; exit $p.ExitCode"
-  exit /b %errorlevel%
-)
+if "%errorlevel%"=="0" goto :admin_ok
+echo HATA: Bu duzeltme Yonetici CMD gerektirir.
+echo Cozum: BASLAT.cmd duzelt
+exit /b 2
+
+:admin_ok
 
 if not exist "%APPCMD%" (
   echo IIS appcmd bulunamadi. IIS ozellikleri aciliyor...

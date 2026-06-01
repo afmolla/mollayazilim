@@ -120,13 +120,11 @@ goto :son
 
 :admin
 net session >nul 2>&1
-if not %errorlevel%==0 (
-  echo Yonetici olarak aciliyor...
-  powershell -NoProfile -Command "$p=Start-Process -FilePath '%~f0' -ArgumentList '%MODE%' -Verb RunAs -Wait -PassThru; exit $p.ExitCode"
-  if errorlevel 1 exit /b %errorlevel%
-  exit /b 100
-)
-exit /b 0
+if "%errorlevel%"=="0" exit /b 0
+echo Yonetici olarak aciliyor...
+powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -ArgumentList '%MODE%' -Verb RunAs -Wait"
+if errorlevel 1 exit /b %errorlevel%
+exit /b 100
 
 :hata
 echo.
