@@ -61,10 +61,10 @@ export function PanelLogin(props: PanelLoginProps = {}) {
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--brand)]">Yönetim</p>
           <h1 className="mt-1 text-2xl font-bold text-[var(--text)]">Panel girişi</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Şifre sunucuda <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 text-xs">PANEL_PASSWORD</code> ile
-            tanımlanır (tanımlı değilse geliştirme ortamında varsayılan{" "}
+            Varsayılan panel şifresi{" "}
             <code className="rounded bg-[var(--surface-2)] px-1 py-0.5 text-xs">demo123</code>
-            ). Kuaför / restoran / emlak panellerinde oturum{" "}
+            . Giriş yaptıktan sonra <strong className="text-[var(--text)]">Ayarlar → Panel şifresi</strong> alanından
+            değiştirebilirsiniz. Kuaför / restoran / emlak panellerinde oturum{" "}
             <strong className="text-[var(--text)]">10 dk</strong> hareketsiz kalınca kapanır.
           </p>
         </div>

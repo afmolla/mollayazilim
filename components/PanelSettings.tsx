@@ -40,6 +40,14 @@ export function PanelSettings() {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [okMsg, setOkMsg] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordErr, setPasswordErr] = useState("");
+  const [passwordOk, setPasswordOk] = useState("");
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [form, setForm] = useState<SiteAyarlar>({
     salonAd: "",
     whatsapp: "",
@@ -137,6 +145,40 @@ export function PanelSettings() {
     }
   }
 
+  async function changePassword() {
+    setPasswordSaving(true);
+    setPasswordErr("");
+    setPasswordOk("");
+    try {
+      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+        setPasswordErr("Yeni şifre tekrarı eşleşmiyor");
+        return;
+      }
+      const res = await fetch(wb("/api/panel/password"), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        }),
+      });
+      if (res.status === 401) {
+        router.refresh();
+        return;
+      }
+      if (!res.ok) {
+        const j = (await res.json()) as { error?: string };
+        setPasswordErr(j.error ?? "Şifre değiştirilemedi");
+        return;
+      }
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setPasswordOk("Şifre güncellendi. Sonraki girişte yeni şifre geçerli olacak.");
+    } finally {
+      setPasswordSaving(false);
+    }
+  }
+
   if (loading) return <p className="text-center text-[var(--muted)]">Yükleniyor…</p>;
 
   return (
@@ -215,6 +257,51 @@ export function PanelSettings() {
               onChange={(v) => setForm((s) => ({ ...s, calismaSaatleri: v }))}
             />
           </div>
+        </div>
+
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
+          <h2 className="font-semibold text-[var(--text)]">Panel şifresi</h2>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            Mevcut şifre doğruysa yeni şifre kaydedilir. Varsayılan şifre: <code className="rounded bg-[var(--surface-2)] px-1">demo123</code>.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <PasswordField
+              label="Mevcut şifre"
+              value={passwordForm.currentPassword}
+              autoComplete="current-password"
+              onChange={(v) => setPasswordForm((s) => ({ ...s, currentPassword: v }))}
+            />
+            <PasswordField
+              label="Yeni şifre"
+              value={passwordForm.newPassword}
+              autoComplete="new-password"
+              onChange={(v) => setPasswordForm((s) => ({ ...s, newPassword: v }))}
+            />
+            <PasswordField
+              label="Yeni şifre tekrar"
+              value={passwordForm.confirmPassword}
+              autoComplete="new-password"
+              onChange={(v) => setPasswordForm((s) => ({ ...s, confirmPassword: v }))}
+            />
+          </div>
+          {passwordErr ? (
+            <p className="mt-4 rounded-lg bg-red-500/10 px-4 py-2 text-sm text-red-700 dark:text-red-300">
+              {passwordErr}
+            </p>
+          ) : null}
+          {passwordOk ? (
+            <p className="mt-4 rounded-lg bg-emerald-500/10 px-4 py-2 text-sm text-emerald-800 dark:text-emerald-300">
+              {passwordOk}
+            </p>
+          ) : null}
+          <button
+            type="button"
+            disabled={passwordSaving}
+            onClick={() => void changePassword()}
+            className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-5 py-2 text-sm font-semibold text-[var(--text)] disabled:opacity-60"
+          >
+            {passwordSaving ? "Şifre kaydediliyor…" : "Şifreyi değiştir"}
+          </button>
         </div>
 
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
@@ -409,3 +496,22 @@ function Field(props: { label: string; value: string; onChange: (v: string) => v
   );
 }
 
+function PasswordField(props: {
+  label: string;
+  value: string;
+  autoComplete: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-[var(--text)]">{props.label}</label>
+      <input
+        type="password"
+        value={props.value}
+        autoComplete={props.autoComplete}
+        onChange={(e) => props.onChange(e.target.value)}
+        className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-sm outline-none ring-[var(--brand)] focus:ring-2"
+      />
+    </div>
+  );
+}

@@ -1,0 +1,5 @@
+{
+  "algorithm": "scrypt",
+  "salt": "f6197e000eade33ce0caf29065675274",
+  "hash": "2ca9dcd772aaab1a7bc3a760e5e236ea299108768a132c960265e0cb593fafaf1a81ca4970dcc689e9f65b5de6aa1301f3a88451879ba2e1500183386acc5ae8"
+}
