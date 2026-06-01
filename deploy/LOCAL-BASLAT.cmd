@@ -60,13 +60,27 @@ echo.
 echo IIS localhost hatasi algilandi: HTTP %IIS_STATUS%
 echo CMD onarimi baslatiliyor...
 call "%~dp0FIX-LOCALHOST.cmd"
-if errorlevel 1 exit /b 2
+if errorlevel 1 goto :direct_port80
 
 timeout /t 3 /nobreak >nul
 call :http_status "http://localhost/" IIS_STATUS
 call :is_success "%IIS_STATUS%"
 if errorlevel 1 (
   echo ^(HATA^) onarim sonrasi localhost status %IIS_STATUS%
+  goto :direct_port80
+)
+
+goto :open_site
+
+:direct_port80
+call :start_direct_port80
+if errorlevel 1 exit /b 2
+timeout /t 6 /nobreak >nul
+call :http_status "http://localhost/" IIS_STATUS
+call :is_success "%IIS_STATUS%"
+if errorlevel 1 (
+  echo ^(HATA^) direkt port 80 sonrasi localhost status %IIS_STATUS%
+  call pm2.cmd logs "%PM2_NAME%" --lines 20 --nostream 2>nul
   exit /b 2
 )
 
@@ -75,6 +89,33 @@ echo ^(OK^) localhost status %IIS_STATUS%
 echo.
 echo Tarayici: http://localhost/
 start "" "http://localhost/"
+exit /b 0
+
+:start_direct_port80
+echo.
+echo IIS/ARR yerine Node direkt port 80 fallback baslatiliyor...
+net session >nul 2>&1
+if not "%errorlevel%"=="0" (
+  echo HATA: Direkt port 80 icin Yonetici CMD gerekiyor.
+  echo Cozum: BASLAT.cmd duzelt
+  exit /b 1
+)
+if not exist "%START_SCRIPT%" (
+  echo HATA: %START_SCRIPT% bulunamadi. git pull origin main tekrar calistir.
+  exit /b 1
+)
+
+echo IIS durduruluyor ^(W3SVC^) ...
+net stop W3SVC /y >nul 2>nul
+sc config W3SVC start= demand >nul 2>nul
+
+call pm2.cmd delete "%PM2_NAME%" >nul 2>nul
+set "NODE_ENV=production"
+set "PORT=80"
+set "HOSTNAME=0.0.0.0"
+call pm2.cmd start "%START_SCRIPT%" --name "%PM2_NAME%" --interpreter node --update-env
+if errorlevel 1 exit /b 1
+call pm2.cmd save 2>nul
 exit /b 0
 
 :http_status
