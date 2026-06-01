@@ -27,15 +27,16 @@ if errorlevel 1 (
   exit /b 1
 )
 
-cmd /c "pm2.cmd jlist" 2>nul | findstr /i "\"name\":\"%PM2_NAME%\"" >nul
+call pm2.cmd describe "%PM2_NAME%" >nul 2>nul
 if errorlevel 1 goto :pm2_start
-cmd /c "pm2.cmd restart %PM2_NAME% --update-env"
+call pm2.cmd restart "%PM2_NAME%" --update-env
 if errorlevel 1 goto :pm2_start
 goto :pm2_save
 
 :pm2_start
 if exist "%ECO%" (
-  cmd /c "pm2.cmd start \"%ECO%\" --update-env"
+  echo PM2 ecosystem bulundu: %ECO%
+  call pm2.cmd start "%ECO%" --update-env
 ) else (
   echo UYARI: %ECO% bulunamadi. Direkt start-next.cjs ile baslatiliyor...
   if not exist "%START_SCRIPT%" (
@@ -45,12 +46,12 @@ if exist "%ECO%" (
   set "NODE_ENV=production"
   set "PORT=%PORT%"
   set "HOSTNAME=0.0.0.0"
-  cmd /c "pm2.cmd start \"%START_SCRIPT%\" --name %PM2_NAME% --interpreter node --update-env"
+  call pm2.cmd start "%START_SCRIPT%" --name "%PM2_NAME%" --interpreter node --update-env
 )
 if errorlevel 1 exit /b 1
 
 :pm2_save
-cmd /c "pm2.cmd save" 2>nul
+call pm2.cmd save 2>nul
 
 timeout /t 6 /nobreak >nul
 
@@ -58,7 +59,7 @@ call :http_status "http://127.0.0.1:%PORT%/" NODE_STATUS
 call :is_success "%NODE_STATUS%"
 if errorlevel 1 (
   echo ^(HATA^) Node port %PORT% status %NODE_STATUS%
-  cmd /c "pm2.cmd logs %PM2_NAME% --lines 15 --nostream" 2>nul
+  call pm2.cmd logs "%PM2_NAME%" --lines 15 --nostream 2>nul
   exit /b 1
 )
 echo ^(OK^) Node port %PORT% status %NODE_STATUS%
