@@ -56,10 +56,18 @@ exit /b 1
 
 :ac
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"
+if errorlevel 2 (
+  echo.
+  echo IIS localhost hatasi algilandi. Otomatik duzeltme baslatiliyor...
+  set "MODE=duzelt"
+  goto :duzelt
+)
 goto :son
 
 :duzelt
 call :admin
+if "%errorlevel%"=="100" exit /b 0
+if errorlevel 1 goto :hata
 echo.
 echo === DUZELT — IIS + Node + Firewall ===
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\FIX-LOCALHOST.ps1"
@@ -88,6 +96,8 @@ goto :son
 
 :kur
 call :admin
+if "%errorlevel%"=="100" exit /b 0
+if errorlevel 1 goto :hata
 echo.
 echo === ILK KURULUM ===
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\Install-Mollayazilim-NextIIS.ps1"
@@ -103,6 +113,8 @@ goto :son
 
 :test
 call :admin
+if "%errorlevel%"=="100" exit /b 0
+if errorlevel 1 goto :hata
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\DIS-ERISIM-TEST.ps1"
 goto :son
 
@@ -110,8 +122,9 @@ goto :son
 net session >nul 2>&1
 if not %errorlevel%==0 (
   echo Yonetici olarak aciliyor...
-  powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -ArgumentList '%MODE%' -Verb RunAs -Wait"
-  exit /b %errorlevel%
+  powershell -NoProfile -Command "$p=Start-Process -FilePath '%~f0' -ArgumentList '%MODE%' -Verb RunAs -Wait -PassThru; exit $p.ExitCode"
+  if errorlevel 1 exit /b %errorlevel%
+  exit /b 100
 )
 exit /b 0
 

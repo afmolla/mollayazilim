@@ -9,6 +9,16 @@ $Eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 $Pm2Name = "mollayazilim"
 $Port = 3000
 
+function Get-HttpStatusCodeFromError {
+  param($ErrorRecord)
+  try {
+    if ($ErrorRecord.Exception.Response -and $ErrorRecord.Exception.Response.StatusCode) {
+      return [int]$ErrorRecord.Exception.Response.StatusCode
+    }
+  } catch { }
+  return $null
+}
+
 Set-Location $AppRoot
 Write-Host "=== Siteyi ac ===" -ForegroundColor Cyan
 Write-Host "http://localhost/  (IIS :80 -> Node :3000)`n"
@@ -61,9 +71,14 @@ try {
   Write-Host "(OK) localhost status $($w.StatusCode)" -ForegroundColor Green
   $iisOk = $true
 } catch {
-  Write-Host "(HATA) localhost - $($_.Exception.Message)" -ForegroundColor Red
+  $statusCode = Get-HttpStatusCodeFromError $_
+  if ($statusCode) {
+    Write-Host "(HATA) localhost status $statusCode - $($_.Exception.Message)" -ForegroundColor Red
+  } else {
+    Write-Host "(HATA) localhost - $($_.Exception.Message)" -ForegroundColor Red
+  }
   Write-Host ""
-  Write-Host "Cozum: BASLAT.cmd duzelt  (Yonetici)" -ForegroundColor Yellow
+  Write-Host "Cozum: BASLAT.cmd duzelt otomatik baslatilacak (Yonetici)" -ForegroundColor Yellow
 }
 
 if (-not $nodeOk) { exit 1 }
@@ -75,4 +90,4 @@ if ($iisOk) {
   exit 0
 }
 
-exit 1
+exit 2

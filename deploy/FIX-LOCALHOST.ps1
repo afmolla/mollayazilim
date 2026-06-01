@@ -22,6 +22,21 @@ function Test-Http {
 function Ensure-Binding {
   param([string]$Site, [string]$HostHeader)
   $info = if ($HostHeader) { "*:80:$HostHeader" } else { "*:80:" }
+
+  Get-Website | Where-Object { $_.Name -ne $Site } | ForEach-Object {
+    $otherSite = $_.Name
+    Get-WebBinding -Name $otherSite -Protocol http -ErrorAction SilentlyContinue |
+      Where-Object { $_.bindingInformation -eq $info } |
+      ForEach-Object {
+        if ($HostHeader) {
+          Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader $HostHeader -ErrorAction SilentlyContinue
+        } else {
+          Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader "" -ErrorAction SilentlyContinue
+        }
+        Write-Host "  - binding $info kaldirildi: $otherSite" -ForegroundColor Yellow
+      }
+  }
+
   $has = Get-WebBinding -Name $Site | Where-Object { $_.bindingInformation -eq $info }
   if (-not $has) {
     if ($HostHeader) {
