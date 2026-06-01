@@ -55,7 +55,7 @@ pause
 exit /b 1
 
 :ac
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"
+call "%~dp0deploy\LOCAL-BASLAT.cmd"
 if errorlevel 2 (
   echo.
   echo IIS localhost hatasi algilandi. Otomatik duzeltme baslatiliyor...
@@ -70,9 +70,9 @@ if "%errorlevel%"=="100" exit /b 0
 if errorlevel 1 goto :hata
 echo.
 echo === DUZELT — IIS + Node + Firewall ===
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\FIX-LOCALHOST.ps1"
+call "%~dp0deploy\FIX-LOCALHOST.cmd"
 if errorlevel 1 goto :hata
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"
+call "%~dp0deploy\LOCAL-BASLAT.cmd"
 if errorlevel 1 goto :hata
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\AC-FIREWALL.ps1"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$a=Invoke-WebRequest 'http://127.0.0.1:3000/' -UseBasicParsing -TimeoutSec 20;$b=Invoke-WebRequest 'http://localhost/' -UseBasicParsing -TimeoutSec 20;Write-Host '(OK) Node' $a.StatusCode 'IIS' $b.StatusCode -ForegroundColor Green}catch{Write-Host '(HATA)' $_.Exception.Message -ForegroundColor Red;exit 1}"

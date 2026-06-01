@@ -59,14 +59,10 @@ Write-Host "Klasor: $AppRoot`n"
 $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
 if (-not (Test-Path $arrDll)) {
   Write-Host "ARR kuruluyor..." -ForegroundColor Yellow
-  $winget = Get-Command winget -ErrorAction SilentlyContinue
-  if ($winget) {
-    winget install Microsoft.IIS.ApplicationRequestRouting `
-      --accept-package-agreements --accept-source-agreements
-  }
+  & "$PSScriptRoot\Install-ARR-MSI.ps1"
 }
 if (-not (Test-Path $arrDll)) {
-  throw "ARR yok. Yonetici: winget install Microsoft.IIS.ApplicationRequestRouting"
+  throw "ARR kurulamadi. deploy\FIX-LOCALHOST.cmd dosyasini Yonetici olarak calistirin."
 }
 
 Import-Module WebAdministration -ErrorAction Stop
