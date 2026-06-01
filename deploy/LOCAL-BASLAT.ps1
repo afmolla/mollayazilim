@@ -9,6 +9,44 @@ $Eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 $Pm2Name = "mollayazilim"
 $Port = 3000
 
+function Invoke-LocalhostRepair {
+  param([string]$Reason)
+
+  $fixScript = Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1"
+  if (-not (Test-Path $fixScript)) {
+    Write-Host "(HATA) Duzeltme scripti bulunamadi: $fixScript" -ForegroundColor Red
+    return $false
+  }
+
+  Write-Host ""
+  Write-Host "IIS localhost hatasi algilandi: $Reason" -ForegroundColor Yellow
+  Write-Host "Yonetici onarimi aciliyor..." -ForegroundColor Yellow
+
+  try {
+    $p = Start-Process -FilePath "powershell.exe" `
+      -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", $fixScript) `
+      -Verb RunAs -Wait -PassThru
+    if ($p.ExitCode -ne 0) {
+      Write-Host "(HATA) IIS duzeltme cikis kodu: $($p.ExitCode)" -ForegroundColor Red
+      return $false
+    }
+    return $true
+  } catch {
+    Write-Host "(HATA) Yonetici onarimi baslatilamadi: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
+}
+
+function Test-Localhost {
+  try {
+    $r = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 30
+    return @{ Ok = $true; Code = $r.StatusCode }
+  } catch {
+    $statusCode = Get-HttpStatusCodeFromError $_
+    return @{ Ok = $false; Code = $statusCode; Error = $_.Exception.Message }
+  }
+}
+
 function Get-HttpStatusCodeFromError {
   param($ErrorRecord)
   try {
@@ -66,19 +104,16 @@ try {
   cmd /c "pm2.cmd logs $Pm2Name --lines 15 --nostream" 2>$null
 }
 
-try {
-  $w = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 30
-  Write-Host "(OK) localhost status $($w.StatusCode)" -ForegroundColor Green
+$localhost = Test-Localhost
+if ($localhost.Ok) {
+  Write-Host "(OK) localhost status $($localhost.Code)" -ForegroundColor Green
   $iisOk = $true
-} catch {
-  $statusCode = Get-HttpStatusCodeFromError $_
-  if ($statusCode) {
-    Write-Host "(HATA) localhost status $statusCode - $($_.Exception.Message)" -ForegroundColor Red
+} else {
+  if ($localhost.Code) {
+    Write-Host "(HATA) localhost status $($localhost.Code) - $($localhost.Error)" -ForegroundColor Red
   } else {
-    Write-Host "(HATA) localhost - $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "(HATA) localhost - $($localhost.Error)" -ForegroundColor Red
   }
-  Write-Host ""
-  Write-Host "Cozum: BASLAT.cmd duzelt otomatik baslatilacak (Yonetici)" -ForegroundColor Yellow
 }
 
 if (-not $nodeOk) { exit 1 }
@@ -90,4 +125,25 @@ if ($iisOk) {
   exit 0
 }
 
+$repairReason = if ($localhost.Code) { "HTTP $($localhost.Code)" } else { $localhost.Error }
+if (Invoke-LocalhostRepair -Reason $repairReason) {
+  Start-Sleep -Seconds 3
+  $localhostAfterRepair = Test-Localhost
+  if ($localhostAfterRepair.Ok) {
+    Write-Host "(OK) localhost status $($localhostAfterRepair.Code)" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Tarayici: http://localhost/" -ForegroundColor Green
+    Start-Process "http://localhost/"
+    exit 0
+  }
+
+  if ($localhostAfterRepair.Code) {
+    Write-Host "(HATA) onarim sonrasi localhost status $($localhostAfterRepair.Code) - $($localhostAfterRepair.Error)" -ForegroundColor Red
+  } else {
+    Write-Host "(HATA) onarim sonrasi localhost - $($localhostAfterRepair.Error)" -ForegroundColor Red
+  }
+}
+
+Write-Host ""
+Write-Host "Cozum: BASLAT.cmd duzelt  (Yonetici)" -ForegroundColor Yellow
 exit 2
