@@ -23,6 +23,23 @@ type Stats = {
   totalLogged: number;
 };
 
+type VisitorReport = {
+  last7Days: { day: string; hits: number; uniques: number }[];
+  topPages: { path: string; hits: number; uniques: number }[];
+  topReferrers: { label: string; hits: number }[];
+  devices: { device: string; count: number }[];
+  browsers: { browser: string; count: number }[];
+};
+
+function dayLabel(ymd: string) {
+  const d = new Date(`${ymd}T12:00:00`);
+  return d.toLocaleDateString("tr-TR", { weekday: "short", day: "numeric", month: "short" });
+}
+
+function maxInDays(days: VisitorReport["last7Days"], key: "hits" | "uniques") {
+  return Math.max(1, ...days.map((d) => d[key]));
+}
+
 function tsLabel(iso: string) {
   const d = new Date(iso);
   return d.toLocaleString("tr-TR", { dateStyle: "short", timeStyle: "medium" });
@@ -36,6 +53,7 @@ export function PanelVisitors() {
   const wb = useWithBase();
   const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
+  const [report, setReport] = useState<VisitorReport | null>(null);
   const [hits, setHits] = useState<VisitorHit[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -68,10 +86,12 @@ export function PanelVisitors() {
         }
         const j = (await res.json()) as {
           stats?: Stats;
+          report?: VisitorReport;
           hits?: VisitorHit[];
           total?: number;
         };
         setStats(j.stats ?? null);
+        setReport(j.report ?? null);
         setHits(Array.isArray(j.hits) ? j.hits : []);
         setTotal(typeof j.total === "number" ? j.total : 0);
         setErr("");
@@ -133,6 +153,116 @@ export function PanelVisitors() {
           ))}
         </div>
       ) : null}
+
+      {report && report.last7Days.some((d) => d.hits > 0) ? (
+        <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+          <div>
+            <h2 className="text-base font-semibold text-[var(--text)]">Son 7 gün</h2>
+            <p className="mt-0.5 text-xs text-[var(--muted)]">Günlük sayfa görüntüleme ve benzersiz ziyaretçi</p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-7">
+            {report.last7Days.map((d) => {
+              const hitPct = Math.round((d.hits / maxInDays(report.last7Days, "hits")) * 100);
+              const uniqPct = Math.round((d.uniques / maxInDays(report.last7Days, "uniques")) * 100);
+              return (
+                <div key={d.day} className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-2 py-3 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">{dayLabel(d.day)}</p>
+                  <div className="mt-2 flex h-16 items-end justify-center gap-1">
+                    <div
+                      className="w-3 rounded-t bg-[var(--brand)]/80"
+                      style={{ height: `${Math.max(8, hitPct)}%` }}
+                      title={`${d.hits} görüntüleme`}
+                    />
+                    <div
+                      className="w-3 rounded-t bg-emerald-500/70"
+                      style={{ height: `${Math.max(8, uniqPct)}%` }}
+                      title={`${d.uniques} benzersiz`}
+                    />
+                  </div>
+                  <p className="mt-2 text-xs tabular-nums text-[var(--text)]">
+                    {d.hits} <span className="text-[var(--muted)]">/ {d.uniques}</span>
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[11px] text-[var(--muted)]">
+            <span className="inline-block h-2 w-2 rounded-sm bg-[var(--brand)]/80 align-middle" /> görüntüleme ·{" "}
+            <span className="inline-block h-2 w-2 rounded-sm bg-emerald-500/70 align-middle" /> benzersiz
+          </p>
+        </div>
+      ) : null}
+
+      {report && (report.topPages.length > 0 || report.topReferrers.length > 0) ? (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {report.topPages.length > 0 ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+              <h2 className="text-sm font-semibold text-[var(--text)]">En çok görüntülenen sayfalar</h2>
+              <ul className="mt-3 space-y-2">
+                {report.topPages.map((p) => (
+                  <li key={p.path} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="min-w-0 truncate font-mono text-xs text-[var(--text)]" title={p.path}>
+                      {p.path}
+                    </span>
+                    <span className="shrink-0 tabular-nums text-[var(--muted)]">
+                      {p.hits} <span className="text-[10px]">({p.uniques} tekil)</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {report.topReferrers.length > 0 ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+              <h2 className="text-sm font-semibold text-[var(--text)]">Trafik kaynakları</h2>
+              <ul className="mt-3 space-y-2">
+                {report.topReferrers.map((r) => (
+                  <li key={r.label} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="min-w-0 truncate text-[var(--text)]">{r.label}</span>
+                    <span className="shrink-0 tabular-nums text-[var(--muted)]">{r.hits}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {report && (report.devices.length > 0 || report.browsers.length > 0) ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {report.devices.length > 0 ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+              <h2 className="text-sm font-semibold text-[var(--text)]">Cihaz dağılımı</h2>
+              <ul className="mt-3 space-y-1.5 text-sm">
+                {report.devices.map((d) => (
+                  <li key={d.device} className="flex justify-between text-[var(--text)]">
+                    <span>{d.device}</span>
+                    <span className="tabular-nums text-[var(--muted)]">{d.count}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          {report.browsers.length > 0 ? (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
+              <h2 className="text-sm font-semibold text-[var(--text)]">Tarayıcı dağılımı</h2>
+              <ul className="mt-3 space-y-1.5 text-sm">
+                {report.browsers.map((b) => (
+                  <li key={b.browser} className="flex justify-between text-[var(--text)]">
+                    <span>{b.browser}</span>
+                    <span className="tabular-nums text-[var(--muted)]">{b.count}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div>
+        <h2 className="text-base font-semibold text-[var(--text)]">Ziyaret günlüğü</h2>
+        <p className="mt-0.5 text-xs text-[var(--muted)]">Son kayıtlar (IP, sayfa, tarayıcı)</p>
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <input

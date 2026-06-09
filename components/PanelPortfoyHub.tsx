@@ -79,6 +79,37 @@ export function PanelPortfoyHub() {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
+  const [visitStats, setVisitStats] = useState<{
+    onlineNow: number;
+    todayUniques: number;
+    todayHits: number;
+  } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await fetch(wb("/api/panel/analytics"), { credentials: "same-origin", cache: "no-store" });
+        if (!res.ok || cancelled) return;
+        const j = (await res.json()) as {
+          onlineNow?: number;
+          todayUniques?: number;
+          todayHits?: number;
+        };
+        if (cancelled) return;
+        setVisitStats({
+          onlineNow: j.onlineNow ?? 0,
+          todayUniques: j.todayUniques ?? 0,
+          todayHits: j.todayHits ?? 0,
+        });
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [wb]);
 
   useEffect(() => {
     let cancelled = false;
@@ -138,6 +169,37 @@ export function PanelPortfoyHub() {
           anahtarlarla göster veya gizle.
         </p>
       </div>
+
+      {visitStats ? (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4">
+          <div>
+            <p className="text-sm font-semibold text-[var(--text)]">Ana site ziyaretçi özeti</p>
+            <p className="mt-1 text-xs text-[var(--muted)]">
+              Çerez onayı veren ziyaretçiler kaydedilir (KVKK uyumlu).
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            <span>
+              <span className="text-[var(--muted)]">Online </span>
+              <strong className="tabular-nums text-[var(--brand)]">{visitStats.onlineNow}</strong>
+            </span>
+            <span>
+              <span className="text-[var(--muted)]">Bugün tekil </span>
+              <strong className="tabular-nums text-[var(--brand)]">{visitStats.todayUniques}</strong>
+            </span>
+            <span>
+              <span className="text-[var(--muted)]">Görüntüleme </span>
+              <strong className="tabular-nums text-[var(--brand)]">{visitStats.todayHits}</strong>
+            </span>
+            <Link
+              href={wb("/panel?vf_tab=ziyaretciler")}
+              className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--on-brand)] hover:opacity-95"
+            >
+              Detaylı rapor
+            </Link>
+          </div>
+        </div>
+      ) : null}
 
       {loading ? (
         <p className="text-sm text-[var(--muted)]">Yükleniyor…</p>

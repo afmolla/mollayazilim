@@ -28,6 +28,7 @@ if /i "%MODE%"=="duzelt" goto :duzelt
 if /i "%MODE%"=="guncelle" goto :guncelle
 if /i "%MODE%"=="kur" goto :kur
 if /i "%MODE%"=="test" goto :test
+if /i "%MODE%"=="https" goto :https
 echo Bilinmeyen mod: %MODE%
 goto :menu
 
@@ -42,6 +43,7 @@ echo    [2] Duzelt         (Yonetici)
 echo    [3] Guncelle       (git + build)
 echo    [4] Ilk kurulum    (Yonetici)
 echo    [5] Dis erisim testi
+echo    [6] HTTPS kur       (Yonetici, Let's Encrypt)
 echo.
 set /p SEC="  Secim [1]: "
 if "%SEC%"=="" set "SEC=1"
@@ -50,6 +52,7 @@ if "%SEC%"=="2" goto :duzelt
 if "%SEC%"=="3" goto :guncelle
 if "%SEC%"=="4" goto :kur
 if "%SEC%"=="5" goto :test
+if "%SEC%"=="6" goto :https
 echo Gecersiz.
 pause
 exit /b 1
@@ -116,6 +119,13 @@ call :admin
 if "%errorlevel%"=="100" exit /b 0
 if errorlevel 1 goto :hata
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\DIS-ERISIM-TEST.ps1"
+goto :son
+
+:https
+call :admin
+if "%errorlevel%"=="100" exit /b 0
+if errorlevel 1 goto :hata
+call "%~dp0KUR-HTTPS.cmd"
 goto :son
 
 :admin

@@ -195,6 +195,95 @@ export async function listVisitorHits(opts: {
   return { total, hits };
 }
 
+export type VisitorReportDay = {
+  day: string;
+  hits: number;
+  uniques: number;
+};
+
+export type VisitorReport = {
+  last7Days: VisitorReportDay[];
+  topPages: { path: string; hits: number; uniques: number }[];
+  topReferrers: { label: string; hits: number }[];
+  devices: { device: string; count: number }[];
+  browsers: { browser: string; count: number }[];
+};
+
+function refererLabel(raw?: string): string {
+  if (!raw?.trim()) return "Doğrudan";
+  try {
+    return new URL(raw).hostname || raw.slice(0, 80);
+  } catch {
+    return raw.slice(0, 80);
+  }
+}
+
+export async function getVisitorReport(): Promise<VisitorReport> {
+  const hits = await readAllHits();
+  const now = new Date();
+  const dayKeys: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setUTCDate(d.getUTCDate() - i);
+    dayKeys.push(dayKey(d));
+  }
+
+  const byDay = new Map<string, { hits: number; vids: Set<string> }>();
+  for (const k of dayKeys) byDay.set(k, { hits: 0, vids: new Set() });
+
+  const byPath = new Map<string, { hits: number; vids: Set<string> }>();
+  const byReferer = new Map<string, number>();
+  const byDevice = new Map<string, number>();
+  const byBrowser = new Map<string, number>();
+
+  for (const h of hits) {
+    const d = h.ts.slice(0, 10);
+    const dayBucket = byDay.get(d);
+    if (dayBucket) {
+      dayBucket.hits += 1;
+      dayBucket.vids.add(h.vid);
+    }
+
+    const pathKey = h.path || "/";
+    const pathBucket = byPath.get(pathKey) ?? { hits: 0, vids: new Set<string>() };
+    pathBucket.hits += 1;
+    pathBucket.vids.add(h.vid);
+    byPath.set(pathKey, pathBucket);
+
+    const ref = refererLabel(h.referer);
+    byReferer.set(ref, (byReferer.get(ref) ?? 0) + 1);
+
+    const { browser, device } = parseUserAgent(h.ua);
+    byDevice.set(device, (byDevice.get(device) ?? 0) + 1);
+    byBrowser.set(browser, (byBrowser.get(browser) ?? 0) + 1);
+  }
+
+  const last7Days = dayKeys.map((day) => {
+    const b = byDay.get(day)!;
+    return { day, hits: b.hits, uniques: b.vids.size };
+  });
+
+  const topPages = [...byPath.entries()]
+    .map(([path, b]) => ({ path, hits: b.hits, uniques: b.vids.size }))
+    .sort((a, b) => b.hits - a.hits)
+    .slice(0, 10);
+
+  const topReferrers = [...byReferer.entries()]
+    .map(([label, count]) => ({ label, hits: count }))
+    .sort((a, b) => b.hits - a.hits)
+    .slice(0, 8);
+
+  const devices = [...byDevice.entries()]
+    .map(([device, count]) => ({ device, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const browsers = [...byBrowser.entries()]
+    .map(([browser, count]) => ({ browser, count }))
+    .sort((a, b) => b.count - a.count);
+
+  return { last7Days, topPages, topReferrers, devices, browsers };
+}
+
 export async function getStats(): Promise<{
   day: string;
   onlineNow: number;
