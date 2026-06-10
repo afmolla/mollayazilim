@@ -168,18 +168,27 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host ""
 Write-Host "443 baglamalari:" -ForegroundColor Cyan
-Get-WebBinding -Name $siteName | Where-Object { $_.protocol -eq "https" } |
-  Format-Table protocol, bindingInformation -AutoSize
-
-Add-HttpsRedirectRule -ConfigPath (Join-Path $AppRoot "web.config")
+$httpsBindings = @(Get-WebBinding -Name $siteName | Where-Object { $_.protocol -eq "https" })
+$httpsBindings | Format-Table protocol, bindingInformation -AutoSize
+if ($httpsBindings.Count -eq 0) {
+  Write-Host "(HATA) HTTPS binding yok - sertifika IIS'e baglanmamis" -ForegroundColor Red
+  exit 1
+}
 
 Start-Sleep -Seconds 3
+$httpsOk = $false
 try {
   $https = Invoke-WebRequest -Uri "https://mollayazilim.com/" -UseBasicParsing -TimeoutSec 30
   Write-Host "[OK] https://mollayazilim.com/ -> $($https.StatusCode)" -ForegroundColor Green
+  $httpsOk = $true
 } catch {
-  Write-Host "(UYARI) HTTPS test: $($_.Exception.Message)" -ForegroundColor Yellow
-  Write-Host "  Bir kac dakika bekleyip tekrar deneyin." -ForegroundColor Yellow
+  Write-Host "(HATA) HTTPS test: $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host "  HTTP->HTTPS yonlendirme EKLENMEDI (site kirilmasin diye)" -ForegroundColor Yellow
+  exit 1
+}
+
+if ($httpsOk) {
+  Add-HttpsRedirectRule -ConfigPath (Join-Path $AppRoot "web.config")
 }
 
 Write-Host ""
