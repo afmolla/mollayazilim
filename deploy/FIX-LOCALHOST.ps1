@@ -20,6 +20,75 @@ function Test-Http {
   }
 }
 
+function Wait-PortListen {
+  param(
+    [int]$Port,
+    [int]$MaxAttempts = 20,
+    [int]$DelaySec = 3
+  )
+  for ($i = 1; $i -le $MaxAttempts; $i++) {
+    if (Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue) {
+      return $true
+    }
+    Write-Host "  Port $Port bekleniyor [$i/$MaxAttempts]..." -ForegroundColor DarkYellow
+    Start-Sleep -Seconds $DelaySec
+  }
+  return $false
+}
+
+function Ensure-IisRunning {
+  param([string]$Site, [string]$Pool)
+
+  $w3 = Get-Service W3SVC -ErrorAction SilentlyContinue
+  if ($w3 -and $w3.Status -ne "Running") {
+    Write-Host "W3SVC baslatiliyor..." -ForegroundColor Yellow
+    Start-Service W3SVC -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 3
+  }
+
+  $appcmd = "$env:windir\system32\inetsrv\appcmd.exe"
+  if (Test-Path $appcmd) {
+    & $appcmd start apppool "/apppool.name:$Pool" 2>$null | Out-Null
+    & $appcmd start site "/site.name:$Site" 2>$null | Out-Null
+  }
+}
+
+function Test-IisUrls {
+  param(
+    [string[]]$Urls,
+    [int]$MaxAttempts = 15,
+    [int]$DelaySec = 4
+  )
+
+  $allOk = $true
+  foreach ($url in $Urls) {
+    $ok = $false
+    for ($i = 1; $i -le $MaxAttempts; $i++) {
+      $t = Test-Http $url
+      if ($t.Ok) {
+        Write-Host "[OK] $url -> $($t.Code)" -ForegroundColor Green
+        $ok = $true
+        break
+      }
+      if ($t.Code) {
+        Write-Host "  [$i/$MaxAttempts] $url -> HTTP $($t.Code)" -ForegroundColor DarkYellow
+      } else {
+        Write-Host "  [$i/$MaxAttempts] $url -> $($t.Err)" -ForegroundColor DarkYellow
+      }
+      Start-Sleep -Seconds $DelaySec
+    }
+    if (-not $ok) {
+      if ($t.Code) {
+        Write-Host "[HATA] $url -> HTTP $($t.Code) $($t.Err)" -ForegroundColor Red
+      } else {
+        Write-Host "[HATA] $url -> $($t.Err)" -ForegroundColor Red
+      }
+      $allOk = $false
+    }
+  }
+  return $allOk
+}
+
 function Ensure-Binding {
   param([string]$Site, [string]$HostHeader)
   $info = if ($HostHeader) { "*:80:$HostHeader" } else { "*:80:" }
@@ -69,6 +138,7 @@ Write-Host "Klasor: $AppRoot`n"
 # 1) ARR + URL Rewrite (IIS proxy icin zorunlu)
 $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
 $arrScript = Join-Path $PSScriptRoot "Install-ARR-MSI.ps1"
+$modulesJustInstalled = $false
 if (-not (Test-Path $arrDll)) {
   Write-Host "IIS modulleri (URL Rewrite + ARR) kuruluyor..." -ForegroundColor Yellow
   if (-not (Test-Path $arrScript)) {
@@ -82,10 +152,17 @@ if (-not (Test-Path $arrDll)) {
     Write-Host "  Elle: winget install -e --id Microsoft.IIS.ApplicationRequestRouting" -ForegroundColor Yellow
     exit 1
   }
+  $modulesJustInstalled = $true
 }
 if (-not (Test-Path $arrDll)) {
   Write-Host "(HATA) ARR hala yuklu degil." -ForegroundColor Red
   exit 1
+}
+
+if ($modulesJustInstalled) {
+  Write-Host "IIS yeniden baslatiliyor (yeni moduller)..." -ForegroundColor Yellow
+  & $env:windir\system32\iisreset.exe /restart | Out-Null
+  Start-Sleep -Seconds 8
 }
 
 Import-Module WebAdministration -ErrorAction Stop
@@ -155,39 +232,21 @@ if (-not $nodeOk) {
   exit 1
 }
 
-# 5) IIS ayarlarini uygula
-Write-Host "IIS yeniden baslatiliyor (proxy ayarlari)..." -ForegroundColor Yellow
-& $env:windir\system32\iisreset.exe /restart | Out-Null
-Start-Sleep -Seconds 5
+# 5) IIS site + port 80 hazir mi
+Ensure-IisRunning -Site $siteName -Pool $poolName
+Restart-WebAppPool -Name $poolName -ErrorAction SilentlyContinue
+Start-Website -Name $siteName -ErrorAction SilentlyContinue
+
+Write-Host "IIS port 80 bekleniyor..." -ForegroundColor Yellow
+if (-not (Wait-PortListen -Port 80 -MaxAttempts 20 -DelaySec 3)) {
+  Write-Host "(HATA) Port 80 dinlemiyor - W3SVC / site kontrol edin" -ForegroundColor Red
+  exit 1
+}
+Write-Host "[OK] Port 80 dinleniyor" -ForegroundColor Green
 
 # 6) IIS test
 Write-Host ""
-$allOk = $true
-foreach ($url in @("http://localhost/", "http://127.0.0.1/")) {
-  $ok = $false
-  for ($i = 1; $i -le 5; $i++) {
-    $t = Test-Http $url
-    if ($t.Ok) {
-      Write-Host "[OK] $url -> $($t.Code)" -ForegroundColor Green
-      $ok = $true
-      break
-    }
-    if ($t.Code) {
-      Write-Host "  [$i/5] $url -> HTTP $($t.Code)" -ForegroundColor DarkYellow
-    } else {
-      Write-Host "  [$i/5] $url -> $($t.Err)" -ForegroundColor DarkYellow
-    }
-    Start-Sleep -Seconds 3
-  }
-  if (-not $ok) {
-    if ($t.Code) {
-      Write-Host "[HATA] $url -> HTTP $($t.Code) $($t.Err)" -ForegroundColor Red
-    } else {
-      Write-Host "[HATA] $url -> $($t.Err)" -ForegroundColor Red
-    }
-    $allOk = $false
-  }
-}
+$allOk = Test-IisUrls -Urls @("http://localhost/", "http://127.0.0.1/") -MaxAttempts 12 -DelaySec 4
 
 if (-not $allOk) {
   Write-Host ""
