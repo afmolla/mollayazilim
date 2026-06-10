@@ -57,6 +57,8 @@ export type SiteAyarlar = {
   demoEmlakGoster?: boolean;
   demoAvukatGoster?: boolean;
   demoOtoyikamaGoster?: boolean;
+  /** Ana vitrinde Molla CRM kartı (crm.mollayazilim.com) */
+  demoCrmGoster?: boolean;
 };
 
 type Db = { ayarlar: SiteAyarlar };
@@ -90,6 +92,7 @@ function varsayilan(): SiteAyarlar {
     demoRestaurantGoster: true,
     demoEmlakGoster: true,
     demoAvukatGoster: true,
+    demoCrmGoster: true,
   };
 }
 
@@ -151,6 +154,8 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     typeof patch.demoOtoyikamaGoster === "boolean"
       ? patch.demoOtoyikamaGoster
       : (cur.demoOtoyikamaGoster ?? true);
+  const demoCrmGoster =
+    typeof patch.demoCrmGoster === "boolean" ? patch.demoCrmGoster : (cur.demoCrmGoster ?? true);
   const seoIndex = typeof patch.seoIndex === "boolean" ? patch.seoIndex : (cur.seoIndex ?? true);
   const next: SiteAyarlar = {
     ...cur,
@@ -191,6 +196,7 @@ export async function ayarlarKaydet(patch: Partial<SiteAyarlar>): Promise<SiteAy
     demoEmlakGoster,
     demoAvukatGoster,
     demoOtoyikamaGoster,
+    demoCrmGoster,
   };
 
   await fs.mkdir(path.dirname(FILE), { recursive: true });

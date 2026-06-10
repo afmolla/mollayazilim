@@ -12,7 +12,7 @@ $Port = 3000
 function Invoke-LocalhostRepair {
   param([string]$Reason)
 
-  $fixScript = Join-Path $PSScriptRoot "FIX-LOCALHOST.cmd"
+  $fixScript = Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1"
   if (-not (Test-Path $fixScript)) {
     Write-Host "(HATA) Duzeltme scripti bulunamadi: $fixScript" -ForegroundColor Red
     return $false
@@ -23,8 +23,8 @@ function Invoke-LocalhostRepair {
   Write-Host "Yonetici onarimi aciliyor..." -ForegroundColor Yellow
 
   try {
-    $p = Start-Process -FilePath "cmd.exe" `
-      -ArgumentList @("/c", "`"$fixScript`"") `
+    $p = Start-Process -FilePath "powershell.exe" `
+      -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$fixScript`"") `
       -Verb RunAs -Wait -PassThru
     if ($p.ExitCode -ne 0) {
       Write-Host "(HATA) IIS duzeltme cikis kodu: $($p.ExitCode)" -ForegroundColor Red
@@ -145,5 +145,5 @@ if (Invoke-LocalhostRepair -Reason $repairReason) {
 }
 
 Write-Host ""
-Write-Host "Cozum: BASLAT.cmd duzelt  (Yonetici)" -ForegroundColor Yellow
+Write-Host "Cozum: KUR.cmd calistirin  (Yonetici)" -ForegroundColor Yellow
 exit 2

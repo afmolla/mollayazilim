@@ -7,6 +7,7 @@
 - Kurumsal web sitesi ve mobil uyumlu vitrin
 - Admin / yönetim paneli (içerik, menü, medya, SEO, lead)
 - Kuaför, güzellik salonu, restoran, oto yıkama / detailing, emlak ilan, avukat bürosu demoları
+- Molla CRM — mobil-first satış CRM (müşteri, fırsat, pipeline)
 - SEO temel kurulum: meta, canonical, sitemap, yapılandırılmış veri
 
 ## Önemli sayfalar

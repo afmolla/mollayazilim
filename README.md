@@ -22,10 +22,17 @@ npm run start
 
 Randevular `data/randevular.json` dosyasında tutulur (demo). Üretimde IIS uygulama havuzu kullanıcısına bu dosya ve klasör için **yazma** izni verin.
 
+## Sunucu — 2 CMD
+
+| Dosya | Ne yapar |
+|-------|----------|
+| **`KUR.cmd`** | İlk kurulum (IIS, npm, build, firewall) — sonunda siteyi açar |
+| **`BASLAT.cmd`** | Günlük: siteyi aç (`http://localhost/`) |
+
 ## IIS + mollayazilim.com
 
 1. Proje kökü: `C:\inetpub\wwwroot\mollayazilim` (IIS physical path = bu klasör).
-2. **URL Rewrite** ve **ARR** kurulu olsun; ARR’da proxy açık olsun (README’deki `web.config` yorumu).
+2. **URL Rewrite** ve **ARR** kurulu olsun; ARR’da proxy açık olsun (`web.config`).
 3. `web.config` site kökünde kalsın.
-4. Ortam değişkenleri: `NODE_ENV=production`, `.env.local` veya sistem ortamında `NEXT_PUBLIC_*`, `PANEL_PASSWORD`, `SESSION_SECRET`.
-5. Next sürecini sürekli çalıştırın (ör. [NSSM](https://nssm.cc/), PM2, Windows Görev Zamanlayıcı).
+4. Ortam: `NODE_ENV=production`, `.env.local` içinde `NEXT_PUBLIC_*`, `PANEL_PASSWORD`, `SESSION_SECRET`.
+5. Node süreci PM2 ile `BASLAT.cmd` otomatik başlatır (`deploy\LOCAL-BASLAT.cmd`).

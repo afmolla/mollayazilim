@@ -119,7 +119,19 @@ const FEATURES = [
   { title: "Ölçülebilir", desc: "Form/WhatsApp lead takibi ve net dönüşüm akışı." },
 ];
 
-type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat" | "otoyikama";
+type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat" | "otoyikama" | "crm";
+
+type ShowcaseItem = {
+  key: DemoKey;
+  title: string;
+  href: string;
+  meta: string;
+  external?: boolean;
+  badge?: "Demo" | "Uygulama";
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  primaryLabel?: string;
+};
 
 function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
   /** Yerelde panelden kapatılmış olsa bile demoları göster (proxy + vitrin testi için).
@@ -142,6 +154,8 @@ function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
       return ayar.demoAvukatGoster !== false;
     case "otoyikama":
       return ayar.demoOtoyikamaGoster !== false;
+    case "crm":
+      return ayar.demoCrmGoster !== false;
   }
 }
 
@@ -150,8 +164,26 @@ const DEMO_GROUPS: readonly {
   id: string;
   title: string;
   desc: string;
-  items: readonly { key: DemoKey; title: string; href: string; meta: string }[];
+  items: readonly ShowcaseItem[];
 }[] = [
+  {
+    id: "yazilim",
+    title: "Yazılım ürünleri",
+    desc: "Kendi geliştirdiğimiz iş uygulamaları — canlı ortamda inceleyebilir, giriş yaparak deneyebilirsiniz.",
+    items: [
+      {
+        key: "crm",
+        title: "Molla CRM",
+        href: "https://crm.mollayazilim.com",
+        meta: "Mobil-first satış CRM — müşteri, fırsat, pipeline, görev ve ekip yönetimi",
+        external: true,
+        badge: "Uygulama",
+        primaryLabel: "CRM'i incele",
+        secondaryHref: "https://crm.mollayazilim.com/login",
+        secondaryLabel: "Giriş yap",
+      },
+    ],
+  },
   {
     id: "kuaför",
     title: "Kuaför demoları",
@@ -366,8 +398,8 @@ export default async function MollaHome() {
           <SectionTitle
             anchorId="demolar"
             overline="Demo / Projeler"
-            title="Canlı demoları inceleyin"
-            desc="Kuaför (erkek / kadın), avukatlık, restoran ve emlak — örnek vitrinlerdir; gerçek bir işletmeyi temsil etmezler. Her deMerkez vitrin + panel akışını görebilirsiniz."
+            title="Demolar ve yazılım ürünleri"
+            desc="Sektörel vitrin demoları ve Molla CRM — örnek siteler gerçek bir işletmeyi temsil etmez; her kartta vitrin + panel (veya uygulama girişi) akışını görebilirsiniz."
           />
           <div className="mt-8 space-y-12">
             {gorunurDemoSayisi === 0 ? (
@@ -385,45 +417,67 @@ export default async function MollaHome() {
                     <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-white/65">{group.desc}</p>
                     <div
                       className={
-                        group.id === "avukat"
+                        group.id === "avukat" || group.id === "yazilim"
                           ? "mt-5 grid max-w-md gap-4 sm:grid-cols-1"
                           : "mt-5 grid gap-4 sm:grid-cols-2"
                       }
                     >
-                      {kartlar.map((p) => (
-                        <div
-                          key={p.key}
-                          className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
-                        >
-                          <div className="flex flex-wrap items-start justify-between gap-3">
-                            <p className="min-w-0 flex-1 text-base font-semibold text-white">{p.title}</p>
-                            <span className="shrink-0 rounded-full border border-amber-400/35 bg-amber-500/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-100">
-                              Demo
-                            </span>
+                      {kartlar.map((p) => {
+                        const badge = p.badge ?? "Demo";
+                        const badgeClass =
+                          badge === "Uygulama"
+                            ? "border-indigo-300/35 bg-indigo-500/15 text-indigo-100"
+                            : "border-amber-400/35 bg-amber-500/15 text-amber-100";
+                        const primaryLabel = p.primaryLabel ?? "Siteyi aç";
+                        const secondaryHref = p.secondaryHref ?? `${p.href}/panel`;
+                        const secondaryLabel = p.secondaryLabel ?? "Paneli aç";
+                        const displayUrl = p.external ? p.href : `${origin}${p.href}`;
+                        const primaryClass =
+                          "inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95";
+                        const secondaryClass =
+                          "inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10";
+                        return (
+                          <div
+                            key={p.key}
+                            className="group rounded-3xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-0.5 hover:bg-white/7 hover:shadow-xl"
+                          >
+                            <div className="flex flex-wrap items-start justify-between gap-3">
+                              <p className="min-w-0 flex-1 text-base font-semibold text-white">{p.title}</p>
+                              <span
+                                className={`shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${badgeClass}`}
+                              >
+                                {badge}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-sm text-white/70">{p.meta}</p>
+                            <div className="mt-5 flex flex-wrap gap-2">
+                              {p.external ? (
+                                <a href={p.href} className={primaryClass}>
+                                  {primaryLabel}{" "}
+                                  <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
+                                </a>
+                              ) : (
+                                <Link href={p.href} prefetch={false} className={primaryClass}>
+                                  {primaryLabel}{" "}
+                                  <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
+                                </Link>
+                              )}
+                              {p.external ? (
+                                <a href={secondaryHref} className={secondaryClass}>
+                                  {secondaryLabel}
+                                </a>
+                              ) : (
+                                <Link href={secondaryHref} prefetch={false} className={secondaryClass}>
+                                  {secondaryLabel}
+                                </Link>
+                              )}
+                            </div>
+                            <p className="mt-4 break-all font-mono text-[11px] leading-snug text-white/45" title="Tam adres">
+                              {displayUrl}
+                            </p>
                           </div>
-                          <p className="mt-2 text-sm text-white/70">{p.meta}</p>
-                          <div className="mt-5 flex flex-wrap gap-2">
-                            <Link
-                              href={p.href}
-                              prefetch={false}
-                              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
-                            >
-                              Siteyi aç{" "}
-                              <span className="ml-1 inline-block transition group-hover:translate-x-0.5">→</span>
-                            </Link>
-                            <Link
-                              href={`${p.href}/panel`}
-                              prefetch={false}
-                              className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
-                            >
-                              Paneli aç
-                            </Link>
-                          </div>
-                          <p className="mt-4 break-all font-mono text-[11px] leading-snug text-white/45" title="Tam vitrin adresi">
-                            {`${origin}${p.href}`}
-                          </p>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 );

@@ -2,10 +2,7 @@
 <#
   localhost 403 / 404 duzeltme
 
-  NOTEPAD ACILIYORSA .ps1 calistirma — su dosyayi cift tikla:
-    deploy\FIX-LOCALHOST.cmd
-  veya:
-    deploy\SUNUCU-BASLAT.cmd
+  KUR.cmd (ilk kurulum) veya BASLAT.cmd tarafindan cagrilir.
 #>
 $ErrorActionPreference = "Stop"
 
