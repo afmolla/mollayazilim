@@ -13,6 +13,7 @@
 ## Önemli sayfalar
 
 - Ana sayfa: https://mollayazilim.com/
+- Molla CRM: https://crm.mollayazilim.com
 - Kuaför demo: https://mollayazilim.com/kuafor
 - Restoran demo: https://mollayazilim.com/restaurant
 - Emlak demo: https://mollayazilim.com/emlak
