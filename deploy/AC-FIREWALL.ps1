@@ -55,6 +55,19 @@ Get-NetFirewallRule -ErrorAction SilentlyContinue | Where-Object {
 }
 netsh advfirewall firewall delete rule name="Mollayazilim HTTP 80" protocol=TCP localport=3000 2>$null | Out-Null
 
+# Port 3000 disariya kapali (Node sadece 127.0.0.1 — IIS :80 uzerinden giris)
+$block3000 = Get-NetFirewallRule -DisplayName "Mollayazilim Block 3000" -ErrorAction SilentlyContinue
+if (-not $block3000) {
+  New-NetFirewallRule -DisplayName "Mollayazilim Block 3000" `
+    -Description "Node ic port — site :80 uzerinden acilir" `
+    -Direction Inbound -Protocol TCP -LocalPort 3000 `
+    -Action Block -Enabled True -Profile Any | Out-Null
+  Write-Host "  [yeni] Port 3000 dis erisim -> BLOK" -ForegroundColor Green
+} else {
+  Set-NetFirewallRule -DisplayName "Mollayazilim Block 3000" -Enabled True -Action Block | Out-Null
+  Write-Host "  [var] Port 3000 dis erisim -> BLOK" -ForegroundColor DarkGray
+}
+
 Ensure-FirewallRule -DisplayName "Mollayazilim HTTP 80" -Port 80 `
   -Description "mollayazilim.com web sitesi"
 

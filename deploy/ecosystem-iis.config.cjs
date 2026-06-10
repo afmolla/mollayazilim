@@ -1,6 +1,6 @@
 const path = require("path");
 
-/** IIS :80 -> Node :3000 (web.config ARR proxy) */
+/** IIS :80 -> Node 127.0.0.1:3000 (sadece ic ag, disariya acik degil) */
 const root = path.join(__dirname, "..");
 const launcher = path.join(__dirname, "start-next.cjs");
 
@@ -15,7 +15,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         PORT: "3000",
-        HOSTNAME: "0.0.0.0",
+        BIND_HOST: "127.0.0.1",
       },
       autorestart: true,
       max_restarts: 10,

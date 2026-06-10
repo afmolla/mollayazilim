@@ -1,10 +1,10 @@
 #Requires -RunAsAdministrator
 <#
-  localhost 403 / 404 duzeltme
+  localhost 403 / 404 / 500 / 502 duzeltme
 
   KUR.cmd (ilk kurulum) veya BASLAT.cmd tarafindan cagrilir.
 #>
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 function Test-Http {
   param([string]$Url)
@@ -12,7 +12,11 @@ function Test-Http {
     $r = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec 20
     return @{ Ok = $true; Code = $r.StatusCode; Len = $r.Content.Length }
   } catch {
-    return @{ Ok = $false; Err = $_.Exception.Message }
+    $code = $null
+    try {
+      if ($_.Exception.Response) { $code = [int]$_.Exception.Response.StatusCode }
+    } catch { }
+    return @{ Ok = $false; Code = $code; Err = $_.Exception.Message }
   }
 }
 
@@ -22,26 +26,34 @@ function Ensure-Binding {
 
   Get-Website | Where-Object { $_.Name -ne $Site } | ForEach-Object {
     $otherSite = $_.Name
-    Get-WebBinding -Name $otherSite -Protocol http -ErrorAction SilentlyContinue |
-      Where-Object { $_.bindingInformation -eq $info } |
-      ForEach-Object {
-        if ($HostHeader) {
-          Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader $HostHeader -ErrorAction SilentlyContinue
-        } else {
-          Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader "" -ErrorAction SilentlyContinue
+    try {
+      Get-WebBinding -Name $otherSite -Protocol http -ErrorAction SilentlyContinue |
+        Where-Object { $_.bindingInformation -eq $info } |
+        ForEach-Object {
+          if ($HostHeader) {
+            Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader $HostHeader -ErrorAction SilentlyContinue
+          } else {
+            Remove-WebBinding -Name $otherSite -Protocol http -Port 80 -HostHeader "" -ErrorAction SilentlyContinue
+          }
+          Write-Host "  - binding $info kaldirildi: $otherSite" -ForegroundColor Yellow
         }
-        Write-Host "  - binding $info kaldirildi: $otherSite" -ForegroundColor Yellow
-      }
+    } catch {
+      Write-Host "  ! binding temizleme atlandi ($otherSite): $($_.Exception.Message)" -ForegroundColor DarkYellow
+    }
   }
 
-  $has = Get-WebBinding -Name $Site | Where-Object { $_.bindingInformation -eq $info }
+  $has = Get-WebBinding -Name $Site -ErrorAction SilentlyContinue | Where-Object { $_.bindingInformation -eq $info }
   if (-not $has) {
-    if ($HostHeader) {
-      New-WebBinding -Name $Site -Protocol http -Port 80 -HostHeader $HostHeader | Out-Null
-    } else {
-      New-WebBinding -Name $Site -Protocol http -Port 80 | Out-Null
+    try {
+      if ($HostHeader) {
+        New-WebBinding -Name $Site -Protocol http -Port 80 -HostHeader $HostHeader | Out-Null
+      } else {
+        New-WebBinding -Name $Site -Protocol http -Port 80 | Out-Null
+      }
+      Write-Host "  + binding $info" -ForegroundColor Green
+    } catch {
+      Write-Host "  ! binding eklenemedi ($info): $($_.Exception.Message)" -ForegroundColor Red
     }
-    Write-Host "  + binding $info" -ForegroundColor Green
   }
 }
 
@@ -49,17 +61,25 @@ $siteName = "mollayazilim.com"
 $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $poolName = "MollayazilimPool"
 
-Write-Host "=== FIX localhost (403 / 404) ===" -ForegroundColor Cyan
+Write-Host "=== FIX localhost (403 / 404 / 500 / 502) ===" -ForegroundColor Cyan
 Write-Host "Klasor: $AppRoot`n"
 
-# 1) ARR
+& "$PSScriptRoot\ENSURE-HOSTS.ps1"
+
+# 1) ARR + URL Rewrite
 $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
+$rewriteKey = "HKLM:\SOFTWARE\Microsoft\IIS Extensions\URL Rewrite"
+if (-not (Test-Path $rewriteKey)) {
+  Write-Host "URL Rewrite kuruluyor..." -ForegroundColor Yellow
+  & "$PSScriptRoot\Install-ARR-MSI.ps1"
+}
 if (-not (Test-Path $arrDll)) {
   Write-Host "ARR kuruluyor..." -ForegroundColor Yellow
   & "$PSScriptRoot\Install-ARR-MSI.ps1"
 }
 if (-not (Test-Path $arrDll)) {
-  throw "ARR kurulamadi. deploy\FIX-LOCALHOST.cmd dosyasini Yonetici olarak calistirin."
+  Write-Host "(HATA) ARR kurulamadi. KUR.cmd calistirin." -ForegroundColor Red
+  exit 1
 }
 
 Import-Module WebAdministration -ErrorAction Stop
@@ -88,7 +108,7 @@ if (-not (Get-IISAppPool -Name $poolName -ErrorAction SilentlyContinue)) {
   New-WebAppPool -Name $poolName
   Set-ItemProperty "IIS:\AppPools\$poolName" -Name managedRuntimeVersion -Value ""
 }
-Start-WebAppPool -Name $poolName
+Restart-WebAppPool -Name $poolName
 
 Write-Host "Bindings:"
 Ensure-Binding -Site $siteName -HostHeader "localhost"
@@ -97,7 +117,7 @@ Ensure-Binding -Site $siteName -HostHeader "mollayazilim.com"
 Ensure-Binding -Site $siteName -HostHeader "www.mollayazilim.com"
 Ensure-Binding -Site $siteName -HostHeader "mollayazilim.com.tr"
 Ensure-Binding -Site $siteName -HostHeader "www.mollayazilim.com.tr"
-Ensure-Binding -Site $siteName -HostHeader ""   # IP ile giris (*:80:)
+Ensure-Binding -Site $siteName -HostHeader ""
 
 Start-Website -Name $siteName
 
@@ -106,40 +126,72 @@ Set-Location $AppRoot
 if (-not (Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue)) {
   Write-Host "Node baslatiliyor (PM2)..." -ForegroundColor Yellow
   if (-not (Get-Command pm2 -ErrorAction SilentlyContinue)) {
-    throw "PM2 yok: npm install -g pm2  sonra .\PM2-DUZELT.ps1"
+    Write-Host "(HATA) PM2 yok: npm install -g pm2" -ForegroundColor Red
+    exit 1
   }
   & "$PSScriptRoot\PM2-DUZELT.ps1"
+  Start-Sleep -Seconds 5
+}
+
+$nodeOk = $false
+for ($i = 1; $i -le 8; $i++) {
+  $n = Test-Http "http://127.0.0.1:3000/"
+  if ($n.Ok) {
+    Write-Host "[OK] Node :3000 -> $($n.Code) ($($n.Len) byte)" -ForegroundColor Green
+    $nodeOk = $true
+    break
+  }
+  Write-Host "  Node bekleniyor [$i/8]..." -ForegroundColor DarkYellow
   Start-Sleep -Seconds 3
 }
-
-$n = Test-Http "http://127.0.0.1:3000/"
-if ($n.Ok) {
-  Write-Host "[OK] Node :3000 -> $($n.Code) ($($n.Len) byte)" -ForegroundColor Green
-} else {
-  throw "Node calismiyor: $($n.Err)  ->  pm2 logs mollayazilim --lines 30 --nostream"
+if (-not $nodeOk) {
+  Write-Host "(HATA) Node calismiyor -> pm2 logs mollayazilim --lines 30 --nostream" -ForegroundColor Red
+  exit 1
 }
 
-# 5) IIS test
+# 5) IIS ayarlarini uygula
+Write-Host "IIS yeniden baslatiliyor (proxy ayarlari)..." -ForegroundColor Yellow
+& $env:windir\system32\iisreset.exe /restart | Out-Null
+Start-Sleep -Seconds 5
+
+# 6) IIS test
 Write-Host ""
 $allOk = $true
 foreach ($url in @("http://localhost/", "http://127.0.0.1/")) {
-  $t = Test-Http $url
-  if ($t.Ok) {
-    Write-Host "[OK] $url -> $($t.Code)" -ForegroundColor Green
-  } else {
-    Write-Host "[HATA] $url -> $($t.Err)" -ForegroundColor Red
+  $ok = $false
+  for ($i = 1; $i -le 5; $i++) {
+    $t = Test-Http $url
+    if ($t.Ok) {
+      Write-Host "[OK] $url -> $($t.Code)" -ForegroundColor Green
+      $ok = $true
+      break
+    }
+    if ($t.Code) {
+      Write-Host "  [$i/5] $url -> HTTP $($t.Code)" -ForegroundColor DarkYellow
+    } else {
+      Write-Host "  [$i/5] $url -> $($t.Err)" -ForegroundColor DarkYellow
+    }
+    Start-Sleep -Seconds 3
+  }
+  if (-not $ok) {
+    if ($t.Code) {
+      Write-Host "[HATA] $url -> HTTP $($t.Code) $($t.Err)" -ForegroundColor Red
+    } else {
+      Write-Host "[HATA] $url -> $($t.Err)" -ForegroundColor Red
+    }
     $allOk = $false
   }
 }
 
 if (-not $allOk) {
   Write-Host ""
-  Write-Host "Hala 404 ise:" -ForegroundColor Yellow
-  Write-Host "  1) iisreset  sonra tekrar bu script"
+  Write-Host "Hala hata varsa:" -ForegroundColor Yellow
+  Write-Host "  1) KUR.cmd calistirin (Yonetici)"
   Write-Host "  2) pm2 logs mollayazilim --lines 30 --nostream"
-  Write-Host "  3) Tarayici: http://localhost/  (http://127.0.0.1/ degil deneyebilirsin)"
+  Write-Host "  3) Tarayici: http://localhost/"
   exit 1
 }
 
 Write-Host ""
 Write-Host "Tamam. Ac: http://localhost/" -ForegroundColor Green
+exit 0

@@ -9,42 +9,10 @@ $Eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 $Pm2Name = "mollayazilim"
 $Port = 3000
 
-function Invoke-LocalhostRepair {
-  param([string]$Reason)
-
-  $fixScript = Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1"
-  if (-not (Test-Path $fixScript)) {
-    Write-Host "(HATA) Duzeltme scripti bulunamadi: $fixScript" -ForegroundColor Red
-    return $false
-  }
-
-  Write-Host ""
-  Write-Host "IIS localhost hatasi algilandi: $Reason" -ForegroundColor Yellow
-  Write-Host "Yonetici onarimi aciliyor..." -ForegroundColor Yellow
-
-  try {
-    $p = Start-Process -FilePath "powershell.exe" `
-      -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$fixScript`"") `
-      -Verb RunAs -Wait -PassThru
-    if ($p.ExitCode -ne 0) {
-      Write-Host "(HATA) IIS duzeltme cikis kodu: $($p.ExitCode)" -ForegroundColor Red
-      return $false
-    }
-    return $true
-  } catch {
-    Write-Host "(HATA) Yonetici onarimi baslatilamadi: $($_.Exception.Message)" -ForegroundColor Red
-    return $false
-  }
-}
-
-function Test-Localhost {
-  try {
-    $r = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 30
-    return @{ Ok = $true; Code = $r.StatusCode }
-  } catch {
-    $statusCode = Get-HttpStatusCodeFromError $_
-    return @{ Ok = $false; Code = $statusCode; Error = $_.Exception.Message }
-  }
+function Test-IsAdministrator {
+  $id = [Security.Principal.WindowsIdentity]::GetCurrent()
+  $p = New-Object Security.Principal.WindowsPrincipal($id)
+  return $p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 function Get-HttpStatusCodeFromError {
@@ -57,9 +25,105 @@ function Get-HttpStatusCodeFromError {
   return $null
 }
 
+function Test-HttpUrl {
+  param(
+    [string]$Url,
+    [int]$TimeoutSec = 20
+  )
+  try {
+    $r = Invoke-WebRequest $Url -UseBasicParsing -TimeoutSec $TimeoutSec
+    return @{ Ok = $true; Code = $r.StatusCode }
+  } catch {
+    return @{
+      Ok = $false
+      Code = (Get-HttpStatusCodeFromError $_)
+      Error = $_.Exception.Message
+    }
+  }
+}
+
+function Wait-HttpOk {
+  param(
+    [string]$Url,
+    [string]$Label,
+    [int]$MaxAttempts = 10,
+    [int]$DelaySec = 3
+  )
+
+  for ($i = 1; $i -le $MaxAttempts; $i++) {
+    $t = Test-HttpUrl -Url $Url
+    if ($t.Ok) {
+      Write-Host "(OK) $Label status $($t.Code)" -ForegroundColor Green
+      return $true
+    }
+    if ($t.Code) {
+      Write-Host "  [$i/$MaxAttempts] $Label status $($t.Code)..." -ForegroundColor DarkYellow
+    } else {
+      Write-Host "  [$i/$MaxAttempts] $Label - $($t.Error)" -ForegroundColor DarkYellow
+    }
+    if ($i -lt $MaxAttempts) { Start-Sleep -Seconds $DelaySec }
+  }
+
+  if ($t.Code) {
+    Write-Host "(HATA) $Label status $($t.Code) - $($t.Error)" -ForegroundColor Red
+  } else {
+    Write-Host "(HATA) $Label - $($t.Error)" -ForegroundColor Red
+  }
+  return $false
+}
+
+function Invoke-LocalhostRepair {
+  param([string]$Reason)
+
+  $fixScript = Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1"
+  if (-not (Test-Path $fixScript)) {
+    Write-Host "(HATA) Duzeltme scripti bulunamadi: $fixScript" -ForegroundColor Red
+    return $false
+  }
+
+  Write-Host ""
+  Write-Host "IIS localhost hatasi algilandi: $Reason" -ForegroundColor Yellow
+  Write-Host "IIS onarimi calistiriliyor..." -ForegroundColor Yellow
+
+  try {
+    if (Test-IsAdministrator) {
+      & $fixScript
+      $code = $LASTEXITCODE
+      if ($null -eq $code -or $code -eq 0) { return $true }
+      Write-Host "(HATA) IIS duzeltme cikis kodu: $code" -ForegroundColor Red
+      return $false
+    }
+
+    $p = Start-Process -FilePath "powershell.exe" `
+      -ArgumentList @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$fixScript`"") `
+      -Verb RunAs -Wait -PassThru
+    if ($p.ExitCode -ne 0) {
+      Write-Host "(HATA) IIS duzeltme cikis kodu: $($p.ExitCode)" -ForegroundColor Red
+      return $false
+    }
+    return $true
+  } catch {
+    Write-Host "(HATA) IIS onarimi baslatilamadi: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
+}
+
+function Test-NodeHealthy {
+  param([int]$PortNum = $Port)
+  $t = Test-HttpUrl -Url "http://127.0.0.1:$PortNum/" -TimeoutSec 5
+  return $t.Ok
+}
+
+$SiteUrl = "http://mollayazilim.com/"
+
 Set-Location $AppRoot
 Write-Host "=== Siteyi ac ===" -ForegroundColor Cyan
-Write-Host "http://localhost/  (IIS :80 -> Node :3000)`n"
+Write-Host "$SiteUrl  (port yok, :3000 kullanma)" -ForegroundColor Cyan
+Write-Host "http://localhost/`n"
+
+if (Test-IsAdministrator) {
+  & (Join-Path $PSScriptRoot "ENSURE-HOSTS.ps1")
+}
 
 if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   Write-Host "Build eksik - npm run build..." -ForegroundColor Yellow
@@ -85,62 +149,64 @@ if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
 }
 
 $has = cmd /c "pm2.cmd jlist" 2>$null | Select-String -Pattern $Pm2Name -Quiet
-if ($has) {
-  cmd /c "pm2.cmd restart $Pm2Name --update-env"
-} else {
-  cmd /c "pm2.cmd start `"$Eco`" --update-env"
-}
-cmd /c "pm2.cmd save" 2>$null
-Start-Sleep -Seconds 6
-
-$nodeOk = $false
-$iisOk = $false
-try {
-  $n = Invoke-WebRequest "http://127.0.0.1:$Port/" -UseBasicParsing -TimeoutSec 30
-  Write-Host "(OK) Node port $Port status $($n.StatusCode)" -ForegroundColor Green
-  $nodeOk = $true
-} catch {
-  Write-Host "(HATA) Node port $Port - $($_.Exception.Message)" -ForegroundColor Red
-  cmd /c "pm2.cmd logs $Pm2Name --lines 15 --nostream" 2>$null
-}
-
-$localhost = Test-Localhost
-if ($localhost.Ok) {
-  Write-Host "(OK) localhost status $($localhost.Code)" -ForegroundColor Green
-  $iisOk = $true
-} else {
-  if ($localhost.Code) {
-    Write-Host "(HATA) localhost status $($localhost.Code) - $($localhost.Error)" -ForegroundColor Red
-  } else {
-    Write-Host "(HATA) localhost - $($localhost.Error)" -ForegroundColor Red
+$nodeAlreadyOk = Test-NodeHealthy
+$nodeExposed = $false
+Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
+  if ($_.LocalAddress -eq "0.0.0.0" -or $_.LocalAddress -eq "::") {
+    $nodeExposed = $true
   }
 }
 
-if (-not $nodeOk) { exit 1 }
+if ($has -and $nodeAlreadyOk -and -not $nodeExposed) {
+  Write-Host "(OK) Node arka planda calisiyor (sadece 127.0.0.1)" -ForegroundColor Green
+} elseif ($has) {
+  Write-Host "PM2 yeniden baslatiliyor (BIND_HOST=127.0.0.1)..." -ForegroundColor Yellow
+  cmd /c "pm2.cmd delete $Pm2Name" 2>$null
+  cmd /c "pm2.cmd start `"$Eco`" --update-env"
+  cmd /c "pm2.cmd save" 2>$null
+  Start-Sleep -Seconds 8
+} else {
+  Write-Host "PM2 ilk baslatma..." -ForegroundColor Yellow
+  cmd /c "pm2.cmd start `"$Eco`" --update-env"
+  cmd /c "pm2.cmd save" 2>$null
+  Start-Sleep -Seconds 8
+}
 
-if ($iisOk) {
+$nodeOk = Wait-HttpOk -Url "http://127.0.0.1:$Port/" -Label "Node (ic)" -MaxAttempts 12 -DelaySec 3
+if (-not $nodeOk) {
+  cmd /c "pm2.cmd logs $Pm2Name --lines 15 --nostream" 2>$null
+  exit 1
+}
+
+$openUrl = $null
+if (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 8 -DelaySec 3) {
+  $openUrl = $SiteUrl
+} elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 3) {
+  $openUrl = "http://localhost/"
+}
+if ($openUrl) {
   Write-Host ""
-  Write-Host "Tarayici: http://localhost/" -ForegroundColor Green
-  Start-Process "http://localhost/"
+  Write-Host "Tarayici: $openUrl" -ForegroundColor Green
+  Start-Process $openUrl
   exit 0
 }
 
-$repairReason = if ($localhost.Code) { "HTTP $($localhost.Code)" } else { $localhost.Error }
+$last = Test-HttpUrl -Url $SiteUrl
+if (-not $last.Ok) { $last = Test-HttpUrl -Url "http://localhost/" }
+$repairReason = if ($last.Code) { "HTTP $($last.Code)" } else { $last.Error }
 if (Invoke-LocalhostRepair -Reason $repairReason) {
-  Start-Sleep -Seconds 3
-  $localhostAfterRepair = Test-Localhost
-  if ($localhostAfterRepair.Ok) {
-    Write-Host "(OK) localhost status $($localhostAfterRepair.Code)" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "Tarayici: http://localhost/" -ForegroundColor Green
-    Start-Process "http://localhost/"
-    exit 0
+  Start-Sleep -Seconds 5
+  $openUrl = $null
+  if (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 6 -DelaySec 3) {
+    $openUrl = $SiteUrl
+  } elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 3) {
+    $openUrl = "http://localhost/"
   }
-
-  if ($localhostAfterRepair.Code) {
-    Write-Host "(HATA) onarim sonrasi localhost status $($localhostAfterRepair.Code) - $($localhostAfterRepair.Error)" -ForegroundColor Red
-  } else {
-    Write-Host "(HATA) onarim sonrasi localhost - $($localhostAfterRepair.Error)" -ForegroundColor Red
+  if ($openUrl) {
+    Write-Host ""
+    Write-Host "Tarayici: $openUrl" -ForegroundColor Green
+    Start-Process $openUrl
+    exit 0
   }
 }
 

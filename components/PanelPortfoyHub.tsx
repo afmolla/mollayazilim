@@ -11,15 +11,31 @@ type DemoFlags = {
   demoEmlakGoster: boolean;
   demoAvukatGoster: boolean;
   demoOtoyikamaGoster: boolean;
+  demoCrmGoster: boolean;
 };
 
-const ROWS = [
+const ROWS: {
+  label: string;
+  desc: string;
+  site: string;
+  panel: string;
+  external?: boolean;
+  flagKey: null | keyof DemoFlags;
+}[] = [
   {
     label: "Ana vitrin (kurumsal)",
     desc: "http://localhost/",
     site: "/",
     panel: "/panel",
-    flagKey: null as null | keyof DemoFlags,
+    flagKey: null,
+  },
+  {
+    label: "Molla CRM",
+    desc: "crm.mollayazilim.com — satış CRM uygulaması",
+    site: "https://crm.mollayazilim.com",
+    panel: "https://crm.mollayazilim.com/login",
+    external: true,
+    flagKey: "demoCrmGoster",
   },
   {
     label: "Erkek kuaförü vitrin",
@@ -74,6 +90,7 @@ export function PanelPortfoyHub() {
     demoEmlakGoster: true,
     demoAvukatGoster: true,
     demoOtoyikamaGoster: true,
+    demoCrmGoster: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -129,6 +146,7 @@ export function PanelPortfoyHub() {
         demoEmlakGoster: a.demoEmlakGoster !== false,
         demoAvukatGoster: a.demoAvukatGoster !== false,
         demoOtoyikamaGoster: a.demoOtoyikamaGoster !== false,
+        demoCrmGoster: a.demoCrmGoster !== false,
       });
       setLoading(false);
     })();
@@ -223,18 +241,36 @@ export function PanelPortfoyHub() {
                     </td>
                     <td className="px-4 py-4 align-top">
                       <div className="flex flex-wrap gap-2">
-                        <Link
-                          href={row.site}
-                          className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--surface-3)]"
-                        >
-                          Site
-                        </Link>
-                        <Link
-                          href={row.panel}
-                          className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--on-brand)] hover:opacity-95"
-                        >
-                          Panel
-                        </Link>
+                        {row.external ? (
+                          <a
+                            href={row.site}
+                            className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--surface-3)]"
+                          >
+                            Uygulama
+                          </a>
+                        ) : (
+                          <Link
+                            href={row.site}
+                            className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium hover:bg-[var(--surface-3)]"
+                          >
+                            Site
+                          </Link>
+                        )}
+                        {row.external ? (
+                          <a
+                            href={row.panel}
+                            className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--on-brand)] hover:opacity-95"
+                          >
+                            Giriş
+                          </a>
+                        ) : (
+                          <Link
+                            href={row.panel}
+                            className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--on-brand)] hover:opacity-95"
+                          >
+                            Panel
+                          </Link>
+                        )}
                       </div>
                     </td>
                     <td className="hidden align-middle px-4 py-4 sm:table-cell">
