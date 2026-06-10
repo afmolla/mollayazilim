@@ -65,7 +65,7 @@ async function jsonLdBody() {
 
   if (isMolla) {
     const orgDescription =
-      "Kurumsal web sitesi, özel yazılım ve yönetim paneli. QR menü, randevu ve sektörel hazır demolar — SEO uyumlu teslim.";
+      "Tekirdağ Kapaklı merkezli yazılım firması. Molla CRM: Türkçe müşteri takip ve satış yönetimi. Kurumsal web sitesi ve admin panel.";
     const sameAs = sameAsFromAyar(ayar);
     const contactPoint =
       ayar.iletisimTelefon?.trim() || ayar.iletisimEposta?.trim()
@@ -136,25 +136,45 @@ async function jsonLdBody() {
           image: logoUrl,
           description:
             ayar.seoDescription?.trim() ||
-            "Web sitesi geliştirme, admin panel, QR menü ve randevu sistemleri; kuaför, güzellik salonu, restoran, avukat bürosu ve emlak vitrin demoları.",
+            "CRM programı, müşteri takip yazılımı, satış pipeline ve teklif yönetimi. Tekirdağ Kapaklı KOBİ'ler için Türkçe CRM; kurumsal web sitesi ve admin panel.",
           provider: { "@id": `${baseNorm}/#organization` },
-          areaServed: "TR",
+          areaServed: [
+            { "@type": "City", name: "Kapaklı" },
+            { "@type": "AdministrativeArea", name: "Tekirdağ" },
+            { "@type": "Country", name: "Turkey" },
+          ],
           knowsAbout: [
-            "web geliştirme",
-            "admin panel",
-            "QR menü",
-            "randevu sistemi",
+            "CRM programı",
+            "müşteri takip programı",
+            "satış takip yazılımı",
+            "müşteri ilişkileri yönetimi",
+            "pipeline yönetimi",
+            "teklif takip",
+            "KOBİ CRM",
             "kurumsal web sitesi",
-            "kuaför web sitesi",
-            "güzellik salonu",
-            "restoran web sitesi",
-            "restaurant",
-            "avukat bürosu",
-            "emlak ilan sitesi",
+            "admin panel",
             "SEO",
             "Tekirdağ",
             "Kapaklı",
+            "Çerkezköy",
+            "Çorlu",
           ],
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": `${baseNorm}/#crm`,
+          name: "Molla CRM",
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          url: "https://crm.mollayazilim.com",
+          description: "Türkçe müşteri takip ve satış yönetimi CRM yazılımı. Pipeline, teklif, görev ve ekip yönetimi.",
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "TRY",
+            description: "Ücretsiz demo hesabı",
+          },
+          provider: { "@id": `${baseNorm}/#organization` },
         },
         {
           "@type": "FAQPage",

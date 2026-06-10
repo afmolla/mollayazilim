@@ -16,10 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const canonical = base.endsWith("/") ? base : `${base}/`;
   const title =
     ayar.seoTitle?.trim() ||
-    "Molla Yazılım | Tekirdağ Kapaklı Web Sitesi, QR Menü & Admin Panel";
+    "Molla CRM | Tekirdağ Kapaklı Müşteri Takip & Satış Yönetimi Yazılımı";
   const description =
     ayar.seoDescription?.trim() ||
-    "Molla Yazılım; kurumsal web sitesi ve yönetim paneli geliştirir. Hazır sektörel vitrin demolarıyla hızlı başlangıç, ücretsiz keşif ve SEO uyumlu yayın.";
+    "Tekirdağ ve Kapaklı için Türkçe CRM programı: müşteri takibi, satış pipeline, teklif yönetimi. Ücretsiz demo — kurumsal web sitesi ve admin panel hizmetleri.";
   const keywords = ayar.seoKeywords
     ?.split(",")
     .map((x) => x.trim())
@@ -113,10 +113,19 @@ function SectionTitle(props: {
 }
 
 const FEATURES = [
-  { title: "Hızlı demo", desc: "Hazır altyapı + özelleştirme ile 24 saat içinde demo." },
-  { title: "Mobil + SEO", desc: "Hızlı açılan, Google uyumlu modern sayfalar." },
-  { title: "Panel dahil", desc: "İçerik, medya, menüler, ayarlar — tek panel." },
-  { title: "Ölçülebilir", desc: "Form/WhatsApp lead takibi ve net dönüşüm akışı." },
+  { title: "Pipeline takibi", desc: "Fırsat aşamaları, teklif ve satış hunisi tek ekranda." },
+  { title: "Müşteri 360°", desc: "Firma, kontak, not ve geçmiş etkileşimler bir arada." },
+  { title: "Mobil CRM", desc: "Saha ekibi telefondan müşteri ve görev yönetir." },
+  { title: "Türkçe & KVKK", desc: "Türkiye iş süreçlerine uygun, yerel destek." },
+];
+
+const CRM_FEATURES = [
+  { title: "Müşteri & firma kaydı", desc: "Tüm kontaklar, notlar ve geçmiş görüşmeler tek profilde." },
+  { title: "Satış pipeline", desc: "Adaydan kapanışa her aşamayı görsel huni ile takip edin." },
+  { title: "Teklif & fırsat", desc: "Teklif hazırlama, revizyon ve onay sürecini kayıt altına alın." },
+  { title: "Görev & hatırlatıcı", desc: "Ekip görevleri, arama hatırlatmaları ve takvim entegrasyonu." },
+  { title: "Raporlar", desc: "Satış performansı, dönüşüm oranı ve ekip verimliliği." },
+  { title: "Mobil uyum", desc: "Telefon ve tabletten saha satış — her an erişim." },
 ];
 
 type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat" | "otoyikama" | "crm";
@@ -213,30 +222,30 @@ const DEMO_GROUPS: readonly {
 
 const PACKAGES = [
   {
-    title: "Başlangıç",
-    badge: "Kurumsal",
-    desc: "Tek sayfa veya çoklu sayfa kurumsal web sitesi. Hızlı yayına çıkın.",
-    items: ["Modern tasarım", "Mobil uyum", "SEO temel kurulum", "İletişim/WhatsApp CTA"],
-    cta: "Teklif al",
+    title: "Molla CRM",
+    badge: "Öncelikli ürün",
+    desc: "Müşteri takibi, satış pipeline, teklif ve ekip yönetimi. Tekirdağ ve çevresindeki KOBİ'ler için Türkçe CRM.",
+    items: ["Canlı demo hesabı", "Pipeline & teklif", "Mobil uyum", "Yerel destek Kapaklı"],
+    cta: "CRM demo iste",
+    href: "#crm",
+    featured: true,
+  },
+  {
+    title: "Kurumsal Web",
+    badge: "Web sitesi",
+    desc: "Markanızı Google'da görünür kılın. Kurumsal web sitesi + SEO temel kurulum.",
+    items: ["Modern tasarım", "Mobil uyum", "Tekirdağ yerel SEO", "WhatsApp / form CTA"],
+    cta: "Web teklifi al",
     href: "#iletisim",
     featured: false,
   },
   {
-    title: "Pro",
-    badge: "Vitrin + Panel",
-    desc: "İçerik yönetimi paneli ile siteyi kendiniz yönetin. Lead’ler panelde toplansın.",
-    items: ["Admin paneli", "Menü & sayfa yönetimi", "Medya yöneticisi", "Lead formu + takip"],
-    cta: "Demo + teklif iste",
+    title: "CRM + Web",
+    badge: "Tam paket",
+    desc: "Satış takibi CRM ile, marka görünürlüğü web sitesi ile — en yüksek dönüşüm paketi.",
+    items: ["CRM + kurumsal site", "Admin panel", "Lead takibi", "Tek sözleşme, tek ekip"],
+    cta: "Paket teklifi",
     href: "#iletisim",
-    featured: true,
-  },
-  {
-    title: "Sektörel",
-    badge: "Hazır sistem",
-    desc: "Kuaför, restoran, emlak, oto yıkama, hukuk gibi hazır demoları işletmenize göre uyarlayalım.",
-    items: ["Hazır demo altyapısı", "Hızlı özelleştirme", "İhtiyaca göre modül", "Yedekleme & bakım opsiyonu"],
-    cta: "Demoları incele",
-    href: "#demolar",
     featured: false,
   },
 ] as const;
@@ -250,7 +259,7 @@ export default async function MollaHome() {
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
   const waDigits = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
   const waHref = waDigits
-    ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Merhaba, web sitesi / panel teklifi almak istiyorum.")}`
+    ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Merhaba, Molla CRM hakkında bilgi ve demo almak istiyorum.")}`
     : "#";
   const gorunurDemoSayisi = DEMO_GROUPS.flatMap((g) => g.items).filter((it) =>
     demoGosterilir(it.key, ayar),
@@ -266,38 +275,38 @@ export default async function MollaHome() {
         <section className="mx-auto max-w-6xl px-4 pb-7 pt-0 md:px-6 md:pb-10">
           <div className="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2">
             <div>
-              <Pill>Web sitesi · Admin panel · Sektörel demo</Pill>
+              <Pill>CRM programı · Müşteri takip · Satış yönetimi</Pill>
               <h1 className="mt-2.5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:mt-3 md:text-5xl">
-                İşletmeniz İçin{" "}
+                Tekirdağ & Kapaklı İçin{" "}
                 <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-200 to-cyan-200 bg-clip-text text-transparent">
-                  Satış Odaklı Web Sitesi
+                  Türkçe CRM Yazılımı
                 </span>
               </h1>
               <p className="mt-3 max-w-prose text-base text-white/75 md:text-lg">
-                Molla Yazılım; işletmenize özel <strong className="text-white">web sitesi</strong> ve{" "}
-                <strong className="text-white">yönetim paneli</strong> geliştirir. Amacımız: ziyaretçi geldiğinde 3 saniyede
-                “ne satıyorsunuz?” net olsun ve dönüşüm (WhatsApp / form / randevu) aksın.
+                <strong className="text-white">Molla CRM</strong> ile müşterilerinizi, tekliflerinizi ve satış sürecinizi tek
+                panelden yönetin. Excel ve WhatsApp karmaşasına son — pipeline, görev ve ekip koordinasyonu bir arada.
+                İkinci adım: kurumsal <strong className="text-white">web sitesi</strong> ile Google&apos;da görünür olun.
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
-                  href="#demolar"
+                  href="https://crm.mollayazilim.com/login"
                   className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-black hover:opacity-95"
                 >
-                  Demo gör
+                  CRM&apos;i dene
                 </a>
                 <a
                   href="#iletisim"
                   className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                 >
-                  Teklif al
+                  Ücretsiz keşif
                 </a>
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-                <Stat label="Ücretsiz keşif" value="15 dk görüşme" />
-                <Stat label="Demo süresi" value="24 saat" />
-                <Stat label="Yayına çıkış" value="3–10 gün" />
-                <Stat label="Dönüş takibi" value="Panel + lead" />
+                <Stat label="Hedef bölge" value="Tekirdağ · Kapaklı" />
+                <Stat label="CRM demo" value="Aynı gün" />
+                <Stat label="Kurulum" value="Hızlı başlangıç" />
+                <Stat label="Destek" value="Türkçe & yerel" />
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-white/70 md:grid-cols-4">
@@ -314,21 +323,21 @@ export default async function MollaHome() {
               <div className="absolute -inset-6 -z-10 rounded-[32px] bg-gradient-to-br from-indigo-500/20 via-fuchsia-500/10 to-cyan-400/10 blur-2xl" />
               <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black/30 shadow-2xl">
                 <div className="border-b border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70">
-                  Panel önizleme (demo)
+                  Molla CRM önizleme
                 </div>
                 <div className="grid gap-0 md:grid-cols-2">
                   <div className="p-4">
-                    <p className="text-sm font-semibold text-white">İçerik & menü yönetimi</p>
+                    <p className="text-sm font-semibold text-white">Satış pipeline</p>
                     <p className="mt-1 text-sm text-white/70">
-                      Sayfaları ve menüleri panelden yönetin, anında yayına yansısın.
+                      Fırsatlar, teklifler ve müşteri notları — tek ekranda.
                     </p>
                     <div className="mt-4 grid gap-2">
                       {[
-                        "Randevular / rezervasyon",
-                        "İlanlar · hukuk vitrinleri",
-                        "Medya yöneticisi",
-                        "QR menü",
-                        "Yedekleme",
+                        "Müşteri & firma kaydı",
+                        "Teklif takibi",
+                        "Görev & hatırlatıcı",
+                        "Ekip yönetimi",
+                        "Satış raporları",
                       ].map((x) => (
                         <div
                           key={x}
@@ -350,9 +359,9 @@ export default async function MollaHome() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-sm font-semibold text-white">Satış odaklı vitrin</p>
+                      <p className="text-sm font-semibold text-white">Müşteri takip programı</p>
                       <p className="mt-1 text-xs text-white/70">
-                        Premium görünüm, hızlı geçişler, SEO uyumlu sayfalar.
+                        KOBİ&apos;ler için Türkçe CRM — mobil uyumlu, hızlı kurulum.
                       </p>
                     </div>
                   </div>
@@ -362,12 +371,46 @@ export default async function MollaHome() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+          <SectionTitle
+            anchorId="crm"
+            overline="Molla CRM"
+            title="Müşteri takip programı — satış sürecinizi kaybetmeyin"
+            desc="Tekirdağ, Kapaklı, Çerkezköy, Çorlu ve çevresindeki üretici, ticaret ve hizmet firmaları için Türkçe CRM. Excel ve WhatsApp yerine tek panel."
+          />
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {CRM_FEATURES.map((x) => (
+              <div key={x.title} className="rounded-3xl border border-indigo-300/20 bg-indigo-500/[0.08] p-6">
+                <p className="text-base font-semibold text-white">{x.title}</p>
+                <p className="mt-2 text-sm text-white/70">{x.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="https://crm.mollayazilim.com/login"
+              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-black hover:opacity-95"
+            >
+              Canlı CRM&apos;yi dene →
+            </a>
+            <a
+              href="#iletisim"
+              className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+            >
+              CRM demo talebi
+            </a>
+          </div>
+          <p className="mt-4 text-center text-xs text-white/50">
+            Demo giriş: demo@crm.local / Demo1234!
+          </p>
+        </section>
+
         <section className="mx-auto max-w-6xl px-4 py-12 md:px-6">
           <SectionTitle
             anchorId="hizmetler"
-            overline="Hizmetler"
-            title="Sektöre özel hazır sistemler + özel geliştirme"
-            desc="İhtiyaca göre hazır demoları özelleştiriyor veya sıfırdan özel yazılım geliştiriyoruz."
+            overline="Web Sitesi"
+            title="Kurumsal web sitesi & sektörel vitrin demoları"
+            desc="CRM kurduktan sonra veya paralelde: Google'da görünür kurumsal site, admin panel ve hazır sektör demoları."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -615,11 +658,11 @@ export default async function MollaHome() {
               />
               <p className="text-xs font-semibold tracking-wide text-white/70">İletişim</p>
               <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
-                Projeni 15 dakikada netleştirelim
+                CRM veya web — 15 dakikada netleştirelim
               </h2>
               <p className="mt-2.5 text-sm text-white/70 md:text-base">
-                Hangi sektörde olursanız olun (kuaför, restoran, emlak…), mevcut demoları işletmene göre uyarlayıp hızlıca
-                yayına alabiliriz.
+                Tekirdağ ve Kapaklı&apos;da müşteri takibi mi, kurumsal web sitesi mi, ikisi birden mi? Ücretsiz keşifte
+                ihtiyacınızı dinleyip aynı gün demo planı paylaşıyoruz.
               </p>
               <p className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.12] px-4 py-3 text-sm text-white/90">
                 Projeyi başlatmak veya satın alma sürecine geçmek için formu doldurun ya da WhatsApp üzerinden yazın —
@@ -658,7 +701,11 @@ export default async function MollaHome() {
               ) : null}
             </div>
 
-            <MollaLeadForm sourcePath="/" whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp} />
+            <MollaLeadForm
+              sourcePath="/"
+              whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp}
+              defaultMessage="Molla CRM demo ve fiyat bilgisi almak istiyorum. İşletmem Tekirdağ/Kapaklı bölgesinde."
+            />
           </div>
         </section>
       </main>
@@ -677,7 +724,7 @@ export default async function MollaHome() {
             href="#iletisim"
             className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 text-sm font-semibold text-black"
           >
-            Teklif al
+            Ücretsiz keşif
           </a>
         </div>
       </div>

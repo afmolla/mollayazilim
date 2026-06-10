@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Molla Yazılım — Web sitesi, admin panel ve özel yazılım";
+export const alt = "Molla CRM — Tekirdağ Kapaklı müşteri takip ve satış yönetimi yazılımı";
 
 export const size = { width: 1200, height: 630 };
 
@@ -44,7 +44,7 @@ export default function TwitterImage() {
             lineHeight: 1.25,
           }}
         >
-          Kurumsal web sitesi · Yönetim paneli · QR menü · Randevu ve sektörel demolar
+          CRM programı · Müşteri takip · Satış pipeline · Tekirdağ Kapaklı
         </div>
         <div style={{ marginTop: 36, fontSize: 22, color: "rgba(255,255,255,0.65)" }}>
           Ücretsiz keşif · Hızlı demo · SEO uyumlu teslim

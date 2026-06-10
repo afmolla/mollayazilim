@@ -3,7 +3,8 @@
 import Link from "next/link";
 
 const NAV = [
-  { label: "Hizmetler", href: "#hizmetler" },
+  { label: "CRM", href: "#crm" },
+  { label: "Web Sitesi", href: "#hizmetler" },
   { label: "Demolar", href: "#demolar" },
   { label: "İletişim", href: "#iletisim" },
 ];
@@ -16,7 +17,7 @@ function waMeLink(phone: string, text: string) {
 
 export function MollaNavbar() {
   const waNum = process.env.NEXT_PUBLIC_MOLLA_WHATSAPP ?? "905551234567";
-  const waHref = waMeLink(waNum, "Merhaba, web sitesi / panel teklifi almak istiyorum.");
+  const waHref = waMeLink(waNum, "Merhaba, Molla CRM hakkında bilgi ve demo almak istiyorum.");
   return (
     <header
       data-fixed-header
@@ -50,20 +51,19 @@ export function MollaNavbar() {
             WhatsApp
           </a>
           <a
-            href="#demolar"
+            href="https://crm.mollayazilim.com/login"
             className="hidden rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 md:inline-flex"
           >
-            Demo gör
+            CRM Demo
           </a>
           <a
             href="#iletisim"
             className="inline-flex rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-2 text-sm font-semibold text-black hover:opacity-95"
           >
-            İletişime geç
+            Ücretsiz keşif
           </a>
         </div>
       </div>
     </header>
   );
 }
-

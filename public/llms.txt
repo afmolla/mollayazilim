@@ -1,24 +1,29 @@
 # Molla Yazılım
 
-> Tekirdağ Kapaklı ve Türkiye geneli: kuaför, güzellik salonu, restoran, oto yıkama, avukat bürosu ve emlak için web sitesi, yönetim paneli, QR menü ve randevu sistemleri.
+> Tekirdağ Kapaklı merkezli yazılım firması. Birincil ürün: Molla CRM — Türkçe müşteri takip ve satış yönetimi yazılımı. İkincil hizmet: kurumsal web sitesi, admin panel ve sektörel vitrin demoları.
 
-## Hizmetler
+## Birincil ürün — Molla CRM
+
+- Müşteri ve firma kayıtları, satış pipeline, teklif takibi
+- Görev, hatırlatıcı, ekip yönetimi ve raporlar
+- Mobil uyumlu, KOBİ odaklı Türkçe arayüz
+- Hedef bölge: Tekirdağ, Kapaklı, Çerkezköy, Çorlu, Saray ve çevresi
+- Canlı demo: https://crm.mollayazilim.com/login
+
+## İkincil hizmetler — Web & Panel
 
 - Kurumsal web sitesi ve mobil uyumlu vitrin
 - Admin / yönetim paneli (içerik, menü, medya, SEO, lead)
-- Kuaför, güzellik salonu, restoran, oto yıkama / detailing, emlak ilan, avukat bürosu demoları
-- Molla CRM — mobil-first satış CRM (müşteri, fırsat, pipeline)
-- SEO temel kurulum: meta, canonical, sitemap, yapılandırılmış veri
+- Kuaför, restoran, emlak, avukat bürosu, oto yıkama demoları
+- SEO: meta, canonical, sitemap, yapılandırılmış veri, yerel anahtar kelimeler
 
 ## Önemli sayfalar
 
-- Ana sayfa: https://mollayazilim.com/
+- Ana sayfa (CRM + web): https://mollayazilim.com/
 - Molla CRM: https://crm.mollayazilim.com
+- CRM giriş: https://crm.mollayazilim.com/login
 - Kuaför demo: https://mollayazilim.com/kuafor
 - Restoran demo: https://mollayazilim.com/restaurant
-- Emlak demo: https://mollayazilim.com/emlak
-- Avukat demo: https://mollayazilim.com/avukat
-- Oto yıkama demo: https://mollayazilim.com/otoyikama
 - İletişim: https://mollayazilim.com/#iletisim
 
 ## İletişim
