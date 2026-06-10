@@ -12,32 +12,36 @@ if not %errorlevel%==0 (
 
 echo ========================================
 echo   CANLI SUNUCU DUZELT
-echo   mollayazilim.com (85.95.251.204)
+echo   mollayazilim.com
 echo ========================================
 echo.
 
-echo [1/4] Git guncelle...
+echo [1/5] Git guncelle...
 git pull
-if errorlevel 1 (
-  echo UYARI: git pull basarisiz, devam ediliyor...
-)
+if errorlevel 1 echo UYARI: git pull basarisiz
 
 echo.
-echo [2/4] Bozuk HTTPS yonlendirmesini kaldir...
+echo [2/5] Bozuk HTTPS yonlendirmesini kaldir...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\KALDIR-HTTPS-YONLENDIRME.ps1"
 
 echo.
-echo [3/4] Siteyi baslat...
-call "%~dp0BASLAT.cmd"
+echo [3/5] Siteyi baslat (PM2 + IIS)...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\LOCAL-BASLAT.ps1"
 if errorlevel 1 goto fail
 
 echo.
-echo [4/4] Dis erisim testi...
+echo [4/5] Dis erisim testi...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\DIS-ERISIM-TEST.ps1"
 
 echo.
+echo [5/5] Canli kontrol...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\CANLI-KONTROL.ps1"
+
+echo.
 echo ========================================
-echo   HTTP calisiyorsa: KUR-HTTPS.cmd
+echo   HTTP OK ise: KUR-HTTPS.cmd
+echo   Tarayici: http://mollayazilim.com/
+echo   (https:// DEGIL - henuz SSL yok)
 echo ========================================
 pause
 exit /b 0
@@ -45,5 +49,6 @@ exit /b 0
 :fail
 echo.
 echo HATA — sunucu duzeltilemedi.
+echo CANLI-KONTROL.cmd ciktisini gonder.
 pause
 exit /b 1
