@@ -40,38 +40,51 @@ function Test-SiteHttp {
   }
 }
 
+function Get-AcmeWebroot {
+  param([string]$Root)
+  return Join-Path $Root "public"
+}
+
 function Test-AcmeChallengePath {
   param([string]$Root, [string]$PublicHost = "mollayazilim.com")
 
-  $dir = Join-Path $Root ".well-known\acme-challenge"
-  New-Item -ItemType Directory -Force -Path $dir | Out-Null
   $token = "kur-https-ping"
-  $file = Join-Path $dir $token
-  "ok" | Set-Content $file -Encoding ASCII -NoNewline
+  $dirs = @(
+    (Join-Path $Root ".well-known\acme-challenge"),
+    (Join-Path $Root "public\.well-known\acme-challenge")
+  )
+  foreach ($dir in $dirs) {
+    New-Item -ItemType Directory -Force -Path $dir | Out-Null
+    "ok" | Set-Content (Join-Path $dir $token) -Encoding ASCII -NoNewline
+  }
 
-  $urls = @(
-    "http://127.0.0.1/.well-known/acme-challenge/$token",
-    "http://localhost/.well-known/acme-challenge/$token",
-    "http://$PublicHost/.well-known/acme-challenge/$token"
+  $tests = @(
+    @{ Url = "http://127.0.0.1/.well-known/acme-challenge/$token"; Host = "127.0.0.1" },
+    @{ Url = "http://127.0.0.1/.well-known/acme-challenge/$token"; Host = $PublicHost },
+    @{ Url = "http://localhost/.well-known/acme-challenge/$token"; Host = "localhost" },
+    @{ Url = "http://$PublicHost/.well-known/acme-challenge/$token"; Host = $PublicHost }
   )
 
   $ok = $false
-  foreach ($url in $urls) {
+  foreach ($t in $tests) {
     try {
-      $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 15 -Headers @{ Host = $PublicHost }
+      $r = Invoke-WebRequest -Uri $t.Url -UseBasicParsing -TimeoutSec 15 -Headers @{ Host = $t.Host }
       if ($r.Content.Trim() -eq "ok") {
-        Write-Host "[OK] ACME yolu: $url" -ForegroundColor Green
+        Write-Host "[OK] ACME yolu: $($t.Url) (Host: $($t.Host))" -ForegroundColor Green
         $ok = $true
         break
       }
+      Write-Host "  ACME test: $($t.Url) -> beklenen 'ok', gelen '$($r.Content.Trim())'" -ForegroundColor DarkYellow
     } catch {
-      Write-Host "  ACME test: $url -> $($_.Exception.Message)" -ForegroundColor DarkYellow
+      Write-Host "  ACME test: $($t.Url) (Host: $($t.Host)) -> $($_.Exception.Message)" -ForegroundColor DarkYellow
     }
   }
 
-  Remove-Item $file -Force -ErrorAction SilentlyContinue
+  foreach ($dir in $dirs) {
+    Remove-Item (Join-Path $dir $token) -Force -ErrorAction SilentlyContinue
+  }
   if (-not $ok) {
-    throw "ACME dogrulama yolu calismiyor. Once BASLAT.cmd veya KUR.cmd calistirin."
+    throw "ACME dogrulama yolu calismiyor. web.config guncel mi? pm2 restart mollayazilim"
   }
 }
 
@@ -131,11 +144,15 @@ Write-Host ""
 Write-Host "Sertifika aliniyor: $hosts" -ForegroundColor Cyan
 Write-Host "(Let's Encrypt http-01 dogrulama - 1-2 dk surebilir)`n"
 
+$acmeWebroot = Get-AcmeWebroot -Root $AppRoot
+New-Item -ItemType Directory -Force -Path (Join-Path $acmeWebroot ".well-known\acme-challenge") | Out-Null
+Write-Host "[OK] ACME webroot: $acmeWebroot" -ForegroundColor Green
+
 & $wacsExe `
   --source manual `
   --host $hosts `
   --validation filesystem `
-  --webroot $AppRoot `
+  --webroot $acmeWebroot `
   --installation iis `
   --installationsiteid $siteId `
   --accepttos `
