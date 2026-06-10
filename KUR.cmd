@@ -46,8 +46,11 @@ if errorlevel 1 goto fail
 echo.
 echo [4/4] IIS + hosts + firewall...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\ENSURE-HOSTS.ps1"
+if errorlevel 1 goto fail
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\FIX-LOCALHOST.ps1"
+if errorlevel 1 goto fail
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\AC-FIREWALL.ps1"
+if errorlevel 1 goto fail
 
 echo.
 echo ========================================

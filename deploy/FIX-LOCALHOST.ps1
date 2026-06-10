@@ -66,19 +66,25 @@ Write-Host "Klasor: $AppRoot`n"
 
 & "$PSScriptRoot\ENSURE-HOSTS.ps1"
 
-# 1) ARR + URL Rewrite
+# 1) ARR + URL Rewrite (IIS proxy icin zorunlu)
 $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
-$rewriteKey = "HKLM:\SOFTWARE\Microsoft\IIS Extensions\URL Rewrite"
-if (-not (Test-Path $rewriteKey)) {
-  Write-Host "URL Rewrite kuruluyor..." -ForegroundColor Yellow
-  & "$PSScriptRoot\Install-ARR-MSI.ps1"
+$arrScript = Join-Path $PSScriptRoot "Install-ARR-MSI.ps1"
+if (-not (Test-Path $arrDll)) {
+  Write-Host "IIS modulleri (URL Rewrite + ARR) kuruluyor..." -ForegroundColor Yellow
+  if (-not (Test-Path $arrScript)) {
+    Write-Host "(HATA) Script bulunamadi: $arrScript" -ForegroundColor Red
+    exit 1
+  }
+  & $arrScript
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "(HATA) URL Rewrite veya ARR kurulamadi - IIS proxy calismaz." -ForegroundColor Red
+    Write-Host "  Elle: winget install -e --id Microsoft.IIS.URLRewrite" -ForegroundColor Yellow
+    Write-Host "  Elle: winget install -e --id Microsoft.IIS.ApplicationRequestRouting" -ForegroundColor Yellow
+    exit 1
+  }
 }
 if (-not (Test-Path $arrDll)) {
-  Write-Host "ARR kuruluyor..." -ForegroundColor Yellow
-  & "$PSScriptRoot\Install-ARR-MSI.ps1"
-}
-if (-not (Test-Path $arrDll)) {
-  Write-Host "(HATA) ARR kurulamadi. KUR.cmd calistirin." -ForegroundColor Red
+  Write-Host "(HATA) ARR hala yuklu degil." -ForegroundColor Red
   exit 1
 }
 
