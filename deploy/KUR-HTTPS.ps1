@@ -88,6 +88,75 @@ function Test-AcmeChallengePath {
   }
 }
 
+function Get-MollaCertificate {
+  $stores = @("Cert:\LocalMachine\WebHosting", "Cert:\LocalMachine\My")
+  foreach ($store in $stores) {
+    $cert = Get-ChildItem -Path $store -ErrorAction SilentlyContinue |
+      Where-Object {
+        $_.HasPrivateKey -and (
+          $_.FriendlyName -eq "mollayazilim.com" -or
+          $_.Subject -match "mollayazilim\.com"
+        )
+      } |
+      Sort-Object NotAfter -Descending |
+      Select-Object -First 1
+    if ($cert) { return $cert }
+  }
+  return $null
+}
+
+function Install-IisHttpsBindings {
+  param(
+    [string]$SiteName,
+    [string[]]$HostHeaders,
+    [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
+  )
+
+  Import-Module WebAdministration -ErrorAction Stop
+  $thumb = $Cert.Thumbprint
+  $iisAppId = "{4dc3e181-e14b-4a21-b982-7cc71b20b5a4}"
+
+  $storeName = "WebHosting"
+  if (-not (Get-ChildItem "Cert:\LocalMachine\WebHosting\$thumb" -ErrorAction SilentlyContinue)) {
+    $storeName = "My"
+  }
+
+  Write-Host "IIS HTTPS binding kuruluyor (store: $storeName)..." -ForegroundColor Cyan
+
+  foreach ($hh in $HostHeaders) {
+    $info = "*:443:$hh"
+    $has = Get-WebBinding -Name $SiteName -ErrorAction SilentlyContinue |
+      Where-Object { $_.protocol -eq "https" -and $_.bindingInformation -eq $info }
+
+    if (-not $has) {
+      New-WebBinding -Name $SiteName -Protocol https -Port 443 -HostHeader $hh | Out-Null
+      Write-Host "  + binding $info" -ForegroundColor Green
+    }
+
+    $bound = $false
+    try {
+      $binding = Get-WebBinding -Name $SiteName -Protocol https -HostHeader $hh -ErrorAction Stop
+      $binding.AddSslCertificate($thumb, $storeName)
+      $bound = $true
+      Write-Host "  [OK] SSL: $hh" -ForegroundColor Green
+    } catch {
+      Write-Host "  AddSslCertificate atlandi ($hh): $($_.Exception.Message)" -ForegroundColor DarkYellow
+    }
+
+    if (-not $bound) {
+      $hp = "0.0.0.0:443:$hh"
+      & netsh http delete sslcert hostnameport=$hp 2>$null | Out-Null
+      $out = & netsh http add sslcert hostnameport=$hp certhash=$thumb appid=$iisAppId certstorename=$storeName 2>&1
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host "  (HATA) netsh $hh : $out" -ForegroundColor Red
+        return $false
+      }
+      Write-Host "  [OK] netsh SSL: $hh" -ForegroundColor Green
+    }
+  }
+  return $true
+}
+
 function Add-HttpsRedirectRule {
   param([string]$ConfigPath)
 
@@ -148,11 +217,15 @@ $acmeWebroot = Get-AcmeWebroot -Root $AppRoot
 New-Item -ItemType Directory -Force -Path (Join-Path $acmeWebroot ".well-known\acme-challenge") | Out-Null
 Write-Host "[OK] ACME webroot: $acmeWebroot" -ForegroundColor Green
 
+$hostList = $hosts -split "," | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
 & $wacsExe `
   --source manual `
   --host $hosts `
   --validation filesystem `
   --webroot $acmeWebroot `
+  --store certificatestore `
+  --storename WebHosting `
   --installation iis `
   --installationsiteid $siteId `
   --accepttos `
@@ -161,19 +234,35 @@ Write-Host "[OK] ACME webroot: $acmeWebroot" -ForegroundColor Green
 
 if ($LASTEXITCODE -ne 0) {
   Write-Host "(HATA) Sertifika alinamadi (wacs cikis: $LASTEXITCODE)" -ForegroundColor Red
-  Write-Host "  DNS mollayazilim.com bu sunucuya mi bakiyor?" -ForegroundColor Yellow
-  Write-Host "  Port 80 disaridan acik mi?" -ForegroundColor Yellow
   exit 1
+}
+
+$cert = Get-MollaCertificate
+if (-not $cert) {
+  Write-Host "(HATA) Sertifika store'da bulunamadi" -ForegroundColor Red
+  exit 1
+}
+Write-Host "[OK] Sertifika: $($cert.Subject)" -ForegroundColor Green
+Write-Host "     Thumbprint: $($cert.Thumbprint)" -ForegroundColor DarkGray
+
+$httpsBindings = @(Get-WebBinding -Name $siteName -ErrorAction SilentlyContinue | Where-Object { $_.protocol -eq "https" })
+if ($httpsBindings.Count -eq 0) {
+  Write-Host "wacs IIS binding atlandi - elle baglaniyor..." -ForegroundColor Yellow
+  & $wacsExe --install --installation iis --installationsiteid $siteId 2>&1 | Out-Host
+  $httpsBindings = @(Get-WebBinding -Name $siteName -ErrorAction SilentlyContinue | Where-Object { $_.protocol -eq "https" })
+}
+
+if ($httpsBindings.Count -eq 0) {
+  if (-not (Install-IisHttpsBindings -SiteName $siteName -HostHeaders $hostList -Cert $cert)) {
+    Write-Host "(HATA) IIS HTTPS binding kurulamadi" -ForegroundColor Red
+    exit 1
+  }
 }
 
 Write-Host ""
 Write-Host "443 baglamalari:" -ForegroundColor Cyan
-$httpsBindings = @(Get-WebBinding -Name $siteName | Where-Object { $_.protocol -eq "https" })
-$httpsBindings | Format-Table protocol, bindingInformation -AutoSize
-if ($httpsBindings.Count -eq 0) {
-  Write-Host "(HATA) HTTPS binding yok - sertifika IIS'e baglanmamis" -ForegroundColor Red
-  exit 1
-}
+Get-WebBinding -Name $siteName | Where-Object { $_.protocol -eq "https" } |
+  Format-Table protocol, bindingInformation -AutoSize
 
 Start-Sleep -Seconds 3
 $httpsOk = $false
