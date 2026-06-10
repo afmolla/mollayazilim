@@ -4,11 +4,6 @@
   Sertifika zaten varsa (KUR-HTTPS yarisinda kaldiysa) bunu calistir.
 #>
 $ErrorActionPreference = "Stop"
-. (Join-Path $PSScriptRoot "KUR-HTTPS.ps1") 2>$null
-
-# Dot-sourcing loads all functions - re-define minimal set to avoid running main script
-# Use direct call instead
-
 $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $siteName = "mollayazilim.com"
 $hostList = @(
