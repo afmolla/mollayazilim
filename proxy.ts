@@ -24,6 +24,7 @@ export function proxy(req: NextRequest) {
   }
 
   if (
+    pathname.startsWith("/.well-known/acme-challenge/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/__nextjs") ||
     pathname === "/favicon.ico" ||

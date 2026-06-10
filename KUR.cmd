@@ -57,7 +57,11 @@ echo ========================================
 echo   Kurulum tamam — site baslatiliyor
 echo ========================================
 call "%~dp0BASLAT.cmd"
-exit /b %ERRORLEVEL%
+if errorlevel 1 goto fail
+
+echo.
+echo HTTPS icin (canli sunucu): KUR-HTTPS.cmd
+exit /b 0
 
 :fail
 echo.
