@@ -32,7 +32,7 @@ export function MollaLeadForm(props: Props) {
     const c = company.trim();
     const m = message.trim();
     const parts = [
-      "Merhaba, web sitesi / panel teklifi almak istiyorum.",
+      "Merhaba, Molla CRM hakkında bilgi ve demo almak istiyorum.",
       c ? `İşletme: ${c}` : "",
       name.trim() ? `İsim: ${name.trim()}` : "",
       phone.trim() ? `Telefon: ${phone.trim()}` : "",

@@ -90,7 +90,7 @@ export async function MollaFooter() {
 
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
         <CookieFooterBar className="mb-2 text-white/45" />
-        © {new Date().getFullYear()} Molla Yazılım — Özel yazılım & panel çözümleri
+        © {new Date().getFullYear()} Molla Yazılım — CRM & web sitesi · Tekirdağ Kapaklı
       </div>
     </footer>
   );
