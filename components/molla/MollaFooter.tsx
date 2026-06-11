@@ -48,8 +48,8 @@ export async function MollaFooter() {
         <div>
           <p className="text-sm font-semibold text-white">Molla Yazılım</p>
           <p className="mt-2 max-w-prose text-sm text-white/70">
-            Özel yazılım çözümleri, admin panelleri ve sektöre özel sistemler. Demo’ları inceleyin; ihtiyacınıza göre
-            hızlıca özelleştirelim.
+            Tekirdağ Kapaklı merkezli yazılım firması. Molla CRM ile müşteri takibi; kurumsal web sitesi ve admin panel
+            ile Google&apos;da görünürlük.
           </p>
         </div>
         <div className="md:text-right">
