@@ -1,5 +1,5 @@
 import type { PanelContentTab } from "@/components/PanelContent";
-import { stripSitePrefix, withBase } from "@/lib/base-path";
+import { inferPrefixFromPathname, stripSitePrefix, withBase } from "@/lib/base-path";
 
 /** Panel «İçerik» sekmesinde açılacak hedef (URL vf_* parametrelerinden) */
 export type VfIcerikSnapshot = { sablon?: PanelContentTab; slug?: string };
@@ -16,6 +16,14 @@ export function panelEditUrlFromPathname(pathname: string): {
   label: string;
 } {
   const p = stripSitePrefix(pathname).replace(/\/+$/, "") || "/";
+  const vitrinPrefix = inferPrefixFromPathname(pathname);
+
+  if (!vitrinPrefix && (p === "/" || p === "/anasayfa")) {
+    return {
+      href: withBase("/panel?vf_tab=seo", pathname),
+      label: "Kurumsal SEO",
+    };
+  }
 
   if (p === "/" || p === "/anasayfa") {
     return {

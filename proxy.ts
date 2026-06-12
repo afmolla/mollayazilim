@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
+import { dataSubdirForPrefix, isPortfolioInternalRoute, isPortfolioPath } from "@/lib/site-config";
 import { detectSiteFromRequestParts } from "@/lib/detect-request-site";
 import { MOLLA_SITE_PREFIX_SENTINEL, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
@@ -54,6 +54,11 @@ export function proxy(req: NextRequest) {
 
   const matched = isPortfolioPath(pathname);
   if (!matched) {
+    if (isPortfolioInternalRoute(pathname)) {
+      const u = req.nextUrl.clone();
+      u.pathname = "/";
+      return NextResponse.redirect(u, 308);
+    }
     const reqHeaders = requestHeadersWithSite(req, MOLLA_SITE_PREFIX_SENTINEL, "molla");
     return NextResponse.next({ request: { headers: reqHeaders } });
   }

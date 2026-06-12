@@ -53,3 +53,23 @@ export function isPortfolioPath(pathname: string): string | null {
   }
   return null;
 }
+
+/** Portföy vitrininin iç rotaları — yalnız `/kuafor/...` altında erişilebilir; kök `/anasayfa` kurumsal site değildir. */
+const PORTFOLIO_INTERNAL_ROUTES = [
+  "/anasayfa",
+  "/hizmetler",
+  "/galeri",
+  "/iletisim",
+  "/randevu",
+  "/randevular",
+  "/qr-menu",
+  "/ilanlar",
+] as const;
+
+export function isPortfolioInternalRoute(pathname: string): boolean {
+  const p = (pathname.split("?")[0] || "/").replace(/\/+$/, "") || "/";
+  if ((PORTFOLIO_INTERNAL_ROUTES as readonly string[]).includes(p)) return true;
+  if (p.startsWith("/p/")) return true;
+  if (p.startsWith("/ilan/")) return true;
+  return false;
+}

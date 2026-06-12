@@ -5,6 +5,7 @@ import { GradientBg } from "@/components/molla/GradientBg";
 import { MollaNavbar } from "@/components/molla/MollaNavbar";
 import { MollaFooter } from "@/components/molla/MollaFooter";
 import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
+import { MollaPageShell } from "@/components/molla/MollaPageShell";
 import { ayarlarGetir, type SiteAyarlar } from "@/lib/settings-store";
 import { parseGoogleMapsInput } from "@/lib/footer-social-map";
 import { siteOrigin, siteUrl } from "@/lib/site";
@@ -265,6 +266,7 @@ export default async function MollaHome() {
     demoGosterilir(it.key, ayar),
   ).length;
   return (
+    <MollaPageShell>
     <>
       <JsonLdLocalBusiness />
       <GradientBg>
@@ -733,6 +735,7 @@ export default async function MollaHome() {
       </div>
     </GradientBg>
     </>
+    </MollaPageShell>
   );
 }
 
