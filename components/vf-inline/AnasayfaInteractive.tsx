@@ -6,7 +6,7 @@ import type { HomeFeature, HomeHeroAltBlok, SiteIcerik } from "@/lib/content-sto
 import type { SiteAyarlar } from "@/lib/settings-store";
 import type { VfHiza } from "@/lib/vf-hiza";
 import { publicHref } from "@/lib/base-path";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { newVfId } from "@/components/vf-inline/newVfId";
 import { VfContextMenu, type VfMenuItem } from "@/components/vf-inline/VfContextMenu";
@@ -57,6 +57,7 @@ export function AnasayfaInteractive(props: {
   emlakPreview?: EmlakPreviewIlan[];
 }) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const pathname = usePathname() ?? "/";
   const isRestaurant = pathname.includes("/restaurant");
   const isEmlak = pathname.includes("/emlak");
@@ -92,13 +93,13 @@ export function AnasayfaInteractive(props: {
     queueMicrotask(() => setSessionOk(null));
     void (async () => {
       try {
-        const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+        const res = await panelFetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
         const j = (await res.json()) as { ok?: boolean };
         if (!cancelled) setSessionOk(!!j.ok);
         if (!j.ok || cancelled) return;
         const [cr, sr] = await Promise.all([
-          fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
-          fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
+          panelFetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
+          panelFetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
         ]);
         if (cr.ok) {
           const cj = (await cr.json()) as { icerik: SiteIcerik };
@@ -124,7 +125,7 @@ export function AnasayfaInteractive(props: {
       setSaveMsg("saving");
       setSaveErrText("");
       try {
-        const res = await fetch(wb("/api/panel/settings"), {
+        const res = await panelFetch(wb("/api/panel/settings"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
@@ -162,7 +163,7 @@ export function AnasayfaInteractive(props: {
     setSaveMsg("saving");
     setSaveErrText("");
     try {
-      const res = await fetch(wb("/api/panel/content"), {
+      const res = await panelFetch(wb("/api/panel/content"), {
         method: "PATCH",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },

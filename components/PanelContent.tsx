@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import type { GaleriGorsel, HizmetSatir, SiteIcerik } from "@/lib/content-store";
 import { useEffect, useMemo, useState } from "react";
@@ -26,6 +26,7 @@ export type PanelContentProps = {
 
 export function PanelContent(props: PanelContentProps = {}) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const layout = props.layout ?? "standalone";
   const hideTabBar = props.hideTabBar === true;
   const visualZones = props.visualZones === true;
@@ -47,7 +48,7 @@ export function PanelContent(props: PanelContentProps = {}) {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/content"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/content"), { cache: "no-store" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -89,7 +90,7 @@ export function PanelContent(props: PanelContentProps = {}) {
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(wb("/api/panel/content"), {
+      const res = await panelFetch(wb("/api/panel/content"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

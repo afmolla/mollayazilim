@@ -1,6 +1,6 @@
 "use client";
 
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import { useEffect, useState } from "react";
 import type { IlanKayit, IlanTip } from "@/lib/ilan-store";
 
@@ -11,6 +11,7 @@ function fmtPrice(tip: IlanTip, n: number) {
 
 export function PanelIlanlar() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const [list, setList] = useState<IlanKayit[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -33,7 +34,7 @@ export function PanelIlanlar() {
   async function load() {
     setErr("");
     try {
-      const res = await fetch(wb("/api/panel/ilanlar"), { credentials: "same-origin", cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/ilanlar"), { credentials: "same-origin", cache: "no-store" });
       if (res.status === 401) return;
       if (!res.ok) throw new Error("Liste alınamadı");
       const j = (await res.json()) as { ilanlar: IlanKayit[] };
@@ -55,7 +56,7 @@ export function PanelIlanlar() {
     setSaving(true);
     setErr("");
     try {
-      const res = await fetch(wb(`/api/panel/ilanlar/${encodeURIComponent(x.id)}`), {
+      const res = await panelFetch(wb(`/api/panel/ilanlar/${encodeURIComponent(x.id)}`), {
         method: "PATCH",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -74,7 +75,7 @@ export function PanelIlanlar() {
     if (!window.confirm("İlan silinsin mi?")) return;
     setSaving(true);
     try {
-      const res = await fetch(wb(`/api/panel/ilanlar/${encodeURIComponent(id)}`), {
+      const res = await panelFetch(wb(`/api/panel/ilanlar/${encodeURIComponent(id)}`), {
         method: "DELETE",
         credentials: "same-origin",
       });
@@ -94,7 +95,7 @@ export function PanelIlanlar() {
     try {
       const fiyat = Number(form.fiyat.replace(/\./g, "").replace(",", "."));
       const metrekare = Number(form.metrekare);
-      const res = await fetch(wb("/api/panel/ilanlar"), {
+      const res = await panelFetch(wb("/api/panel/ilanlar"), {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },

@@ -1,11 +1,13 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function PanelBackup() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
+  const sitePrefix = useSitePrefix();
   const router = useRouter();
   const [err, setErr] = useState("");
   const [okMsg, setOkMsg] = useState("");
@@ -16,7 +18,7 @@ export function PanelBackup() {
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(wb("/api/panel/backup"), { cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/backup"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -31,7 +33,8 @@ export function PanelBackup() {
       const a = document.createElement("a");
       const ts = new Date().toISOString().replace(/[:.]/g, "-");
       a.href = url;
-      a.download = `kuafor-backup-${ts}.json`;
+      const slug = sitePrefix.replace(/^\//, "") || "molla";
+      a.download = `${slug}-backup-${ts}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -50,7 +53,7 @@ export function PanelBackup() {
     setOkMsg("");
     try {
       const text = await file.text();
-      const res = await fetch(wb("/api/panel/backup"), {
+      const res = await panelFetch(wb("/api/panel/backup"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: text,

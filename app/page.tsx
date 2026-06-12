@@ -7,6 +7,7 @@ import { MollaFooter } from "@/components/molla/MollaFooter";
 import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
 import { MollaPageShell } from "@/components/molla/MollaPageShell";
 import { ayarlarGetir, type SiteAyarlar } from "@/lib/settings-store";
+import { landingGetir } from "@/lib/molla-landing-store";
 import { parseGoogleMapsInput } from "@/lib/footer-social-map";
 import { siteOrigin, siteUrl } from "@/lib/site";
 import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
@@ -118,8 +119,9 @@ const FEATURES = [
   { title: "Müşteri 360°", desc: "Firma, kontak, not ve geçmiş etkileşimler bir arada." },
   { title: "Mobil CRM", desc: "Saha ekibi telefondan müşteri ve görev yönetir." },
   { title: "Türkçe & KVKK", desc: "Türkiye iş süreçlerine uygun, yerel destek." },
-];
+] as const;
 
+/** @deprecated landing.json kullanılır */
 const CRM_FEATURES = [
   { title: "Müşteri & firma kaydı", desc: "Tüm kontaklar, notlar ve geçmiş görüşmeler tek profilde." },
   { title: "Satış pipeline", desc: "Adaydan kapanışa her aşamayı görsel huni ile takip edin." },
@@ -255,7 +257,9 @@ const PACKAGES = [
 export const revalidate = 60;
 
 export default async function MollaHome() {
-  const ayar = await ayarlarGetir();
+  const [ayar, landing] = await Promise.all([ayarlarGetir(), landingGetir()]);
+  const h = landing.hero;
+  const crm = landing.crmBolum;
   const origin = (await siteOrigin()).replace(/\/$/, "");
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
   const waDigits = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
@@ -277,42 +281,37 @@ export default async function MollaHome() {
         <section className="mx-auto max-w-6xl px-4 pb-7 pt-0 md:px-6 md:pb-10">
           <div className="mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2">
             <div>
-              <Pill>CRM programı · Müşteri takip · Satış yönetimi</Pill>
+              <Pill>{h.pill}</Pill>
               <h1 className="mt-2.5 text-4xl font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.35)] md:mt-3 md:text-5xl">
-                Tekirdağ & Kapaklı İçin{" "}
+                {h.baslik}{" "}
                 <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-200 to-cyan-200 bg-clip-text text-transparent">
-                  Türkçe CRM Yazılımı
+                  {h.baslikVurgu}
                 </span>
               </h1>
-              <p className="mt-3 max-w-prose text-base text-white/75 md:text-lg">
-                <strong className="text-white">Molla CRM</strong> ile müşterilerinizi, tekliflerinizi ve satış sürecinizi tek
-                panelden yönetin. Excel ve WhatsApp karmaşasına son — pipeline, görev ve ekip koordinasyonu bir arada.
-                İkinci adım: kurumsal <strong className="text-white">web sitesi</strong> ile Google&apos;da görünür olun.
-              </p>
+              <p className="mt-3 max-w-prose text-base text-white/75 md:text-lg">{h.aciklama}</p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <a
-                  href="https://crm.mollayazilim.com/login"
+                  href={h.ctaPrimaryHref}
                   className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-black hover:opacity-95"
                 >
-                  CRM&apos;i dene
+                  {h.ctaPrimaryLabel}
                 </a>
                 <a
-                  href="#iletisim"
+                  href={h.ctaSecondaryHref}
                   className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                 >
-                  Ücretsiz keşif
+                  {h.ctaSecondaryLabel}
                 </a>
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-                <Stat label="Hedef bölge" value="Tekirdağ · Kapaklı" />
-                <Stat label="CRM demo" value="Aynı gün" />
-                <Stat label="Kurulum" value="Hızlı başlangıç" />
-                <Stat label="Destek" value="Türkçe & yerel" />
+                {h.stats.map((s) => (
+                  <Stat key={s.label} label={s.label} value={s.value} />
+                ))}
               </div>
 
               <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-white/70 md:grid-cols-4">
-                {FEATURES.map((f) => (
+                {h.features.map((f) => (
                   <div key={f.title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
                     <p className="font-semibold text-white">{f.title}</p>
                     <p className="mt-1 leading-snug">{f.desc}</p>
@@ -325,22 +324,16 @@ export default async function MollaHome() {
               <div className="absolute -inset-6 -z-10 rounded-[32px] bg-gradient-to-br from-indigo-500/20 via-fuchsia-500/10 to-cyan-400/10 blur-2xl" />
               <div className="overflow-hidden rounded-[28px] border border-white/10 bg-black/30 shadow-2xl">
                 <div className="border-b border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70">
-                  Molla CRM önizleme
+                  {h.previewBaslik}
                 </div>
                 <div className="grid gap-0 md:grid-cols-2">
                   <div className="p-4">
-                    <p className="text-sm font-semibold text-white">Satış pipeline</p>
+                    <p className="text-sm font-semibold text-white">{h.previewAltBaslik}</p>
                     <p className="mt-1 text-sm text-white/70">
                       Fırsatlar, teklifler ve müşteri notları — tek ekranda.
                     </p>
                     <div className="mt-4 grid gap-2">
-                      {[
-                        "Müşteri & firma kaydı",
-                        "Teklif takibi",
-                        "Görev & hatırlatıcı",
-                        "Ekip yönetimi",
-                        "Satış raporları",
-                      ].map((x) => (
+                      {h.previewItems.map((x) => (
                         <div
                           key={x}
                           className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-white/80"
@@ -353,18 +346,16 @@ export default async function MollaHome() {
                   <div className="relative min-h-[240px] border-t border-white/10 md:border-l md:border-t-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
-                      alt="Dashboard görseli"
+                      src={h.previewGorselUrl}
+                      alt={h.previewGorselAlt}
                       className="absolute inset-0 h-full w-full object-cover opacity-80"
                       loading="lazy"
                       decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-sm font-semibold text-white">Müşteri takip programı</p>
-                      <p className="mt-1 text-xs text-white/70">
-                        KOBİ&apos;ler için Türkçe CRM — mobil uyumlu, hızlı kurulum.
-                      </p>
+                      <p className="text-sm font-semibold text-white">{h.previewGorselCaption}</p>
+                      <p className="mt-1 text-xs text-white/70">{h.previewGorselAltBaslik}</p>
                     </div>
                   </div>
                 </div>
@@ -376,12 +367,12 @@ export default async function MollaHome() {
         <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
           <SectionTitle
             anchorId="crm"
-            overline="Molla CRM"
-            title="Müşteri takip programı — satış sürecinizi kaybetmeyin"
-            desc="Tekirdağ, Kapaklı, Çerkezköy, Çorlu ve çevresindeki üretici, ticaret ve hizmet firmaları için Türkçe CRM. Excel ve WhatsApp yerine tek panel."
+            overline={crm.overline}
+            title={crm.baslik}
+            desc={crm.aciklama}
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {CRM_FEATURES.map((x) => (
+            {crm.ozellikler.map((x) => (
               <div key={x.title} className="rounded-3xl border border-indigo-300/20 bg-indigo-500/[0.08] p-6">
                 <p className="text-base font-semibold text-white">{x.title}</p>
                 <p className="mt-2 text-sm text-white/70">{x.desc}</p>

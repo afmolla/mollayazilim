@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import Image from "next/image";
 
 import { usePathname, useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ type CtxItem = { id: string; label: string; run: () => void };
 
 export function HizmetlerInteractive(props: { initial: Hiz }) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const pathname = usePathname() ?? "";
   const isAvukat = pathname.includes("/avukat");
@@ -36,7 +37,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     if (!inline) return;
     let c = false;
     void (async () => {
-      const res = await fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
       if (!res.ok || c) return;
       const j = (await res.json()) as { icerik: SiteIcerik };
       if (!c) setH({ ...j.icerik.hizmetler, rows: j.icerik.hizmetler.rows.map((r) => ({ ...r })) });
@@ -50,7 +51,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     async (partial: Partial<Hiz>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(wb("/api/panel/content"), {
+        const res = await panelFetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

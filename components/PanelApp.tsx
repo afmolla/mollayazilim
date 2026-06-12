@@ -16,6 +16,7 @@ import { PanelBackup } from "@/components/PanelBackup";
 import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { PanelPortfoyHub } from "@/components/PanelPortfoyHub";
 import { PanelSiparisler } from "@/components/PanelSiparisler";
+import { PanelMollaLanding } from "@/components/PanelMollaLanding";
 import { PanelIlanlar } from "@/components/PanelIlanlar";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
@@ -58,7 +59,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams, isMaster: boolean): Ta
   return isMaster ? "portfoy" : "randevular";
 }
 
-const NAV_COLLAPSE_KEY = "kuafor-panel-nav-collapsed";
+const NAV_COLLAPSE_KEY_PREFIX = "panel-nav-collapsed";
 
 type PanelAppProps = {
   panelSolMenuSabitle?: boolean;
@@ -91,10 +92,10 @@ const NAV_MASTER_FIRST: { id: TabId; label: string; short: string } = {
   short: "Po",
 };
 
-function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
+function readCollapsedPref(baslangic: "acik" | "dar", storageKey: string): boolean {
   if (typeof window === "undefined") return baslangic === "dar";
   try {
-    const v = localStorage.getItem(NAV_COLLAPSE_KEY);
+    const v = localStorage.getItem(storageKey);
     if (v === "1") return true;
     if (v === "0") return false;
     return baslangic === "dar";
@@ -106,6 +107,7 @@ function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
 const NAV_MASTER_TABS = new Set<TabId>([
   "portfoy",
   "seo",
+  "icerik",
   "site_duzenle",
   "ayarlar",
   "leads",
@@ -119,6 +121,7 @@ export function PanelApp(props: PanelAppProps) {
   const sitePrefix = useSitePrefix();
   const pathname = usePathname() ?? "";
   const isMasterPanel = !sitePrefix.trim();
+  const navStorageKey = `${NAV_COLLAPSE_KEY_PREFIX}:${sitePrefix || "molla"}`;
   const navItems = useMemo(() => {
     const pfx = sitePrefix.replace(/\/+$/, "");
     let core = isMasterPanel
@@ -157,7 +160,7 @@ export function PanelApp(props: PanelAppProps) {
   }, [vfSablonRaw, vfSlugRaw]);
 
   const [tab, setTab] = useState<TabId>(() => tabFromSearchParams(searchParams, isMasterPanel));
-  const [collapsed, setCollapsed] = useState(() => readCollapsedPref(baslangic));
+  const [collapsed, setCollapsed] = useState(() => readCollapsedPref(baslangic, navStorageKey));
 
   useEffect(() => {
     if (!isMasterPanel && tab === "portfoy") queueMicrotask(() => setTab("randevular"));
@@ -204,27 +207,18 @@ export function PanelApp(props: PanelAppProps) {
     const wantsContent =
       Boolean(slug) || (Boolean(sablon) && isPanelContentTab(sablon ?? ""));
 
-    let dirty = false;
-    if (vfTab && allowed.has(vfTab as TabId)) dirty = true;
-    else if (wantsContent) dirty = true;
-
-    if (sablon && isPanelContentTab(sablon)) dirty = true;
-    if (slug) dirty = true;
-
-    const q = searchParams.toString();
     queueMicrotask(() => {
       if (vfTab === "portfoy" && !isMasterPanel) {
         setTab("randevular");
       } else if (vfTab && allowed.has(vfTab as TabId)) setTab(vfTab as TabId);
       else if (wantsContent) setTab("icerik");
-      if (dirty && q) router.replace(wb("/panel"), { scroll: false });
     });
-  }, [searchParams, router, wb, navItems, isMasterPanel]);
+  }, [searchParams, navItems, isMasterPanel]);
 
   const persistCollapsed = (next: boolean) => {
     setCollapsed(next);
     try {
-      localStorage.setItem(NAV_COLLAPSE_KEY, next ? "1" : "0");
+      localStorage.setItem(navStorageKey, next ? "1" : "0");
     } catch {
       /* ignore */
     }
@@ -313,7 +307,7 @@ export function PanelApp(props: PanelAppProps) {
         ) : tab === "seo" ? (
           <PanelSeo />
         ) : tab === "icerik" ? (
-          <PanelUnifiedIcerik vfSnapshot={vfIcerikSnapshot} />
+          isMasterPanel ? <PanelMollaLanding /> : <PanelUnifiedIcerik vfSnapshot={vfIcerikSnapshot} />
         ) : tab === "site_duzenle" ? (
           <PanelSiteVisualEdit />
         ) : tab === "medya" ? (

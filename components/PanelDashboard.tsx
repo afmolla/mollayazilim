@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import type { Randevu, RandevuDurum } from "@/lib/types";
 import { whatsappLink, whatsappRandevuMesaji } from "@/lib/whatsapp";
@@ -23,6 +23,7 @@ function normalize(s: string) {
 
 export function PanelDashboard() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const pathname = usePathname() ?? "";
   const isRestaurant = pathname.includes("/restaurant");
@@ -38,7 +39,7 @@ export function PanelDashboard() {
   const fetchList = useCallback(
     async (signal?: AbortSignal) => {
       try {
-        const res = await fetch(wb("/api/panel/randevular"), {
+        const res = await panelFetch(wb("/api/panel/randevular"), {
           cache: "no-store",
           credentials: "same-origin",
           signal,
@@ -77,7 +78,7 @@ export function PanelDashboard() {
   useEffect(() => {
     void (async () => {
       try {
-        const res = await fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
+        const res = await panelFetch(wb("/api/panel/settings"), { cache: "no-store" });
         if (!res.ok) return;
         const j = (await res.json()) as { ayarlar?: { salonAd?: string } };
         const n = j.ayarlar?.salonAd?.trim();
@@ -103,7 +104,7 @@ export function PanelDashboard() {
   async function durumDegistir(id: string, durum: RandevuDurum) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/randevular/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/randevular/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
@@ -125,14 +126,14 @@ export function PanelDashboard() {
   }
 
   async function cikis() {
-    await fetch(wb("/api/auth/logout"), { method: "POST" });
+    await panelFetch(wb("/api/auth/logout"), { method: "POST" });
     router.refresh();
   }
 
   async function notKaydet(id: string) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/randevular/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/randevular/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

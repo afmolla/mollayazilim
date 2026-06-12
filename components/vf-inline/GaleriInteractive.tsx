@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { usePathname } from "next/navigation";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
@@ -21,6 +21,7 @@ function newGalImage(src: string, alt: string): G["images"][number] {
 
 export function GaleriInteractive(props: { initial: G }) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const pathname = usePathname();
   const isOtoyikama = pathname.includes("/otoyikama");
   const router = useRouter();
@@ -43,7 +44,7 @@ export function GaleriInteractive(props: { initial: G }) {
     if (!inline) return;
     let c = false;
     void (async () => {
-      const res = await fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" });
       if (!res.ok || c) return;
       const j = (await res.json()) as { icerik: SiteIcerik };
       if (!c) setG({ ...j.icerik.galeri, images: j.icerik.galeri.images.map((x) => ({ ...x })) });
@@ -57,7 +58,7 @@ export function GaleriInteractive(props: { initial: G }) {
     async (partial: Partial<G>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(wb("/api/panel/content"), {
+        const res = await panelFetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

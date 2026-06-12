@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import { whatsappLink } from "@/lib/whatsapp";
 
 type LeadStatus = "yeni" | "aranacak" | "kapandi";
@@ -38,6 +38,7 @@ function leadWaMsg(l: Lead) {
 
 export function PanelLeads() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [list, setList] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ export function PanelLeads() {
   const fetchList = useCallback(
     async (signal?: AbortSignal) => {
       try {
-        const res = await fetch(wb("/api/panel/leads?limit=400"), {
+        const res = await panelFetch(wb("/api/panel/leads?limit=400"), {
           cache: "no-store",
           credentials: "same-origin",
           signal,
@@ -102,7 +103,7 @@ export function PanelLeads() {
   async function setLeadStatus(id: string, next: LeadStatus) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/leads/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/leads/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
@@ -125,7 +126,7 @@ export function PanelLeads() {
   async function saveNote(id: string) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/leads/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/leads/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

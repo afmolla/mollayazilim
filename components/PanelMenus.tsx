@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import type { MenuItem } from "@/lib/menu-store";
 import { useEffect, useMemo, useState } from "react";
@@ -83,6 +83,7 @@ function setList(tab: "header" | "footer", db: Db, nextList: MenuItem[]): Db {
 
 export function PanelMenus() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -97,7 +98,7 @@ export function PanelMenus() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/menus"), { cache: "no-store" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -119,7 +120,7 @@ export function PanelMenus() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/pages"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/pages"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -178,7 +179,7 @@ export function PanelMenus() {
         location: tab,
         items: tab === "header" ? db.header : db.footer,
       };
-      const res = await fetch(wb("/api/panel/menus"), {
+      const res = await panelFetch(wb("/api/panel/menus"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

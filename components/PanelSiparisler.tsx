@@ -1,6 +1,6 @@
 "use client";
 
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import type { Siparis, SiparisDurum } from "@/lib/types";
 import { whatsappLink } from "@/lib/whatsapp";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ const DURUM_LABEL: Record<SiparisDurum, string> = {
 
 export function PanelSiparisler() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [list, setList] = useState<Siparis[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export function PanelSiparisler() {
   const fetchList = useCallback(
     async (signal?: AbortSignal) => {
       try {
-        const res = await fetch(wb("/api/panel/siparisler"), {
+        const res = await panelFetch(wb("/api/panel/siparisler"), {
           cache: "no-store",
           credentials: "same-origin",
           signal,
@@ -76,7 +77,7 @@ export function PanelSiparisler() {
   async function durumDegistir(id: string, next: SiparisDurum) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/siparisler/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/siparisler/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
@@ -100,7 +101,7 @@ export function PanelSiparisler() {
   async function notKaydet(id: string) {
     setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const res = await fetch(wb(`/api/panel/siparisler/${id}`), {
+      const res = await panelFetch(wb(`/api/panel/siparisler/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

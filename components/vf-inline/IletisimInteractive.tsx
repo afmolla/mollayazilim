@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ export function IletisimInteractive(props: {
   ayar: Pick<SiteAyarlar, "whatsapp" | "adresDetay" | "calismaSaatleri">;
 }) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const { inline } = useVfInlineSession();
   const [ilet, setIlet] = useState<Ilet>(() => ({ ...props.initial }));
@@ -35,8 +36,8 @@ export function IletisimInteractive(props: {
     let c = false;
     void (async () => {
       const [cr, sr] = await Promise.all([
-        fetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
-        fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
+        panelFetch(wb("/api/panel/content"), { credentials: "same-origin", cache: "no-store" }),
+        panelFetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" }),
       ]);
       if (!c && cr.ok) {
         const j = (await cr.json()) as { icerik: SiteIcerik };
@@ -60,7 +61,7 @@ export function IletisimInteractive(props: {
     async (partial: Partial<Ilet>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(wb("/api/panel/content"), {
+        const res = await panelFetch(wb("/api/panel/content"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
@@ -90,7 +91,7 @@ export function IletisimInteractive(props: {
     async (partial: Partial<SiteAyarlar>) => {
       setSaveMsg("saving");
       try {
-        const res = await fetch(wb("/api/panel/settings"), {
+        const res = await panelFetch(wb("/api/panel/settings"), {
           method: "PATCH",
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ function normalize(s: string) {
 /** İçerik sekmesinde: üst menüyü buradan görebilir ve kaydedersiniz (ayrı «Menüler» sekmesi gerekmez). */
 export function PanelIcerikHeaderMenu() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -27,7 +28,7 @@ export function PanelIcerikHeaderMenu() {
 
   const reload = useCallback(async () => {
     setErr("");
-    const res = await fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" });
+    const res = await panelFetch(wb("/api/panel/menus"), { cache: "no-store" });
     if (res.status === 401) {
       router.refresh();
       return;
@@ -53,7 +54,7 @@ export function PanelIcerikHeaderMenu() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/pages"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/pages"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -120,7 +121,7 @@ export function PanelIcerikHeaderMenu() {
     setErr("");
     setOk("");
     try {
-      const res = await fetch(wb("/api/panel/menus"), {
+      const res = await panelFetch(wb("/api/panel/menus"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ location: "header", items: db.header }),

@@ -20,8 +20,8 @@ export function panelEditUrlFromPathname(pathname: string): {
 
   if (!vitrinPrefix && (p === "/" || p === "/anasayfa")) {
     return {
-      href: withBase("/panel?vf_tab=seo", pathname),
-      label: "Kurumsal SEO",
+      href: withBase("/panel?vf_tab=icerik", pathname),
+      label: "Kurumsal anasayfa",
     };
   }
 

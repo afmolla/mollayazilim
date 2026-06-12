@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ function newId() {
 
 export function PanelQrMenuTab() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const prefix = useSitePrefix();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export function PanelQrMenuTab() {
     void (async () => {
       setErr("");
       try {
-        const res = await fetch(wb("/api/panel/qr-menu"), { cache: "no-store", credentials: "same-origin" });
+        const res = await panelFetch(wb("/api/panel/qr-menu"), { cache: "no-store" });
         if (cancelled) return;
         if (res.status === 401) {
           router.refresh();
@@ -78,7 +79,7 @@ export function PanelQrMenuTab() {
     setErr("");
     setOk("");
     try {
-      const res = await fetch(wb("/api/panel/qr-menu"), {
+      const res = await panelFetch(wb("/api/panel/qr-menu"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",

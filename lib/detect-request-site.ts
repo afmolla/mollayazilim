@@ -18,22 +18,32 @@ function subdirToCookieName(subdir: string): string {
   return `panel_sess_${s}`;
 }
 
-/** Oturum çerezinden kiracı (Referer yoksa veya belirsizse). */
-export function detectSiteFromCookies(cookieHeader: string): DetectedSite | null {
+/** Oturum çerezinden kiracı — referer yolu ile eşleşen oturum tercih edilir. */
+export function detectSiteFromCookies(cookieHeader: string, hintPath?: string): DetectedSite | null {
   const c = cookieHeader ?? "";
   if (!c.trim()) return null;
 
-  for (const base of portfolioPrefixes()) {
-    const subdir = dataSubdirForPrefix(base);
+  const trySubdir = (subdir: string, prefix: string): DetectedSite | null => {
     const name = subdirToCookieName(subdir);
     if (new RegExp(`(?:^|;\\s*)${name}=`).test(c)) {
-      return { prefix: base, subdir };
+      return { prefix, subdir };
     }
+    return null;
+  };
+
+  if (hintPath) {
+    const fromHint = detectSiteFromPathname(hintPath);
+    const matched = trySubdir(fromHint.subdir, fromHint.prefix);
+    if (matched) return matched;
   }
 
-  const mollaName = subdirToCookieName("molla");
-  if (new RegExp(`(?:^|;\\s*)${mollaName}=`).test(c) || /(?:^|;\s*)kuafor_panel=/.test(c)) {
-    return { prefix: MOLLA_SITE_PREFIX_SENTINEL, subdir: "molla" };
+  const molla = trySubdir("molla", MOLLA_SITE_PREFIX_SENTINEL);
+  if (molla) return molla;
+
+  for (const base of portfolioPrefixes()) {
+    const subdir = dataSubdirForPrefix(base);
+    const matched = trySubdir(subdir, base);
+    if (matched) return matched;
   }
 
   return null;
@@ -68,7 +78,7 @@ export function detectSiteFromRequestParts(parts: {
     }
   }
 
-  const fromCookie = detectSiteFromCookies(parts.cookie ?? "");
+  const fromCookie = detectSiteFromCookies(parts.cookie ?? "", ref ? (() => { try { return new URL(ref).pathname; } catch { return undefined; } })() : parts.pathname ?? undefined);
   if (fromCookie) return fromCookie;
 
   return { prefix: MOLLA_SITE_PREFIX_SENTINEL, subdir: "molla" };

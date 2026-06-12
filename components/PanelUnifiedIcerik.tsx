@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -37,6 +37,7 @@ export type PanelUnifiedIcerikProps = {
 
 export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const vfSnap = props.vfSnapshot ?? null;
   const [secim, setSecim] = useState<Secim>(() => secimFromVfSnapshot(vfSnap));
@@ -48,7 +49,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
   const cmsYukle = useCallback(async () => {
     setYukleniyorListe(true);
     try {
-      const res = await fetch(wb("/api/panel/pages"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/pages"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -92,7 +93,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
 
   async function cmsSil(slug: string) {
     if (!confirm(`Bu ek sayfa silinsin mi?\n/p/${slug}`)) return;
-    const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
+    const res = await panelFetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
     if (res.status === 401) {
       router.refresh();
       return;

@@ -1,5 +1,5 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { stripSitePrefix } from "@/lib/base-path";
 import { bloklardanHtml, sayfaSlugify, type SayfaBlok } from "@/lib/cms-blok";
@@ -157,6 +157,7 @@ export type PanelPagesProps = {
 
 export function PanelPages(props: PanelPagesProps = {}) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const editorOnly = props.layout === "editorOnly";
   const router = useRouter();
   const [list, setList] = useState<Sayfa[]>([]);
@@ -243,7 +244,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   const fetchList = useCallback(async (signal?: AbortSignal) => {
     try {
-      const res = await fetch(wb("/api/panel/pages"), {
+      const res = await panelFetch(wb("/api/panel/pages"), {
         cache: "no-store",
         credentials: "same-origin",
         signal,
@@ -305,7 +306,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
           ? { bloklar: form.bloklar }
           : { icerikHtml: form.icerikHtml }),
       };
-      const res = await fetch(wb("/api/panel/pages"), {
+      const res = await panelFetch(wb("/api/panel/pages"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -331,7 +332,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   const loadToEdit = useCallback(
     async (slug: string) => {
-      const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { cache: "no-store" });
+      const res = await panelFetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -374,8 +375,8 @@ export function PanelPages(props: PanelPagesProps = {}) {
   const loadSiteChrome = useCallback(async () => {
     try {
       const [mRes, sRes] = await Promise.all([
-        fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" }),
-        fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" }),
+        panelFetch(wb("/api/panel/menus"), { cache: "no-store" }),
+        panelFetch(wb("/api/panel/settings"), { cache: "no-store" }),
       ]);
       if (mRes.status === 401 || sRes.status === 401) {
         router.refresh();
@@ -418,7 +419,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
           ? { bloklar: form.bloklar }
           : { icerikHtml: form.icerikHtml }),
       };
-      const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(form.slug)}`), {
+      const res = await panelFetch(wb(`/api/panel/pages/${encodeURIComponent(form.slug)}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -441,7 +442,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
 
   async function del(slug: string) {
     if (!confirm(`Silinsin mi?\n/${slug}`)) return;
-    const res = await fetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
+    const res = await panelFetch(wb(`/api/panel/pages/${encodeURIComponent(slug)}`), { method: "DELETE" });
     if (res.status === 401) {
       router.refresh();
       return;
@@ -535,7 +536,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
     }
     const href = `/p/${slug}`;
     try {
-      const res = await fetch(wb("/api/panel/menus"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/menus"), { cache: "no-store" });
       if (res.status === 401) {
         router.refresh();
         return;
@@ -552,7 +553,7 @@ export function PanelPages(props: PanelPagesProps = {}) {
         setErr("Bu adres zaten üst menüde.");
         return;
       }
-      const res2 = await fetch(wb("/api/panel/menus"), {
+      const res2 = await panelFetch(wb("/api/panel/menus"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

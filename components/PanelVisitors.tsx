@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 type VisitorHit = {
   ts: string;
@@ -51,6 +51,7 @@ function shortVid(vid: string) {
 
 export function PanelVisitors() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
   const [report, setReport] = useState<VisitorReport | null>(null);
@@ -70,7 +71,7 @@ export function PanelVisitors() {
           offset: String(offset),
         });
         if (q.trim()) params.set("q", q.trim());
-        const res = await fetch(wb(`/api/panel/visitors?${params}`), {
+        const res = await panelFetch(wb(`/api/panel/visitors?${params}`), {
           credentials: "same-origin",
           cache: "no-store",
           signal,
