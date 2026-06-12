@@ -1,5 +1,5 @@
 "use client";
-import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -34,6 +34,7 @@ type SiteAyarlar = {
 
 export function PanelSettings() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const sitePrefix = useSitePrefix();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -77,7 +78,7 @@ export function PanelSettings() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/settings"), { cache: "no-store" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -117,14 +118,14 @@ export function PanelSettings() {
       setErr("Ayarlar yüklenemedi");
       setLoading(false);
     });
-  }, [router, wb]);
+  }, [router, wb, panelFetch]);
 
   async function save() {
     setSaving(true);
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(wb("/api/panel/settings"), {
+      const res = await panelFetch(wb("/api/panel/settings"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -154,10 +155,9 @@ export function PanelSettings() {
         setPasswordErr("Yeni şifre tekrarı eşleşmiyor");
         return;
       }
-      const res = await fetch(wb("/api/panel/password"), {
+      const res = await panelFetch(wb("/api/panel/password"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,

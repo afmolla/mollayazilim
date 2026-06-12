@@ -1,5 +1,6 @@
 import { runWithSiteContext, type SiteRequestContext } from "@/lib/site-context";
 import { dataSubdirForPrefix, portfolioPrefixes } from "@/lib/site-config";
+import { detectSiteFromRequestParts } from "@/lib/detect-request-site";
 import { siteFromProxyHeaders, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
 /**
@@ -38,17 +39,14 @@ export async function withSiteFromRequest<T>(req: Request, fn: () => Promise<T>)
       return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
     }
   }
-  const ref = req.headers.get("referer") ?? "";
-  let refPath = "";
-  try {
-    refPath = new URL(ref).pathname;
-  } catch {
-    refPath = "";
+  const detected = detectSiteFromRequestParts({
+    referer: req.headers.get("referer"),
+    cookie: req.headers.get("cookie"),
+    pathname: urlPath,
+  });
+  const mollaCtx = siteFromProxyHeaders(detected.prefix, detected.subdir);
+  if (mollaCtx) {
+    return runWithSiteContext({ prefix: mollaCtx.prefix, subdir: mollaCtx.subdir }, fn);
   }
-  for (const base of portfolioPrefixes()) {
-    if (refPath === base || refPath === `${base}/` || refPath.startsWith(`${base}/`)) {
-      return runWithSiteContext({ prefix: base, subdir: dataSubdirForPrefix(base) }, fn);
-    }
-  }
-  return runWithSiteContext({ prefix: "", subdir: "molla" }, fn);
+  return runWithSiteContext({ prefix: detected.prefix, subdir: detected.subdir }, fn);
 }

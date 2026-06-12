@@ -1,5 +1,6 @@
 "use client";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
+import { mergePanelApiHeaders } from "@/lib/panel-api-headers";
 
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ type PanelLoginProps = {
 
 export function PanelLogin(props: PanelLoginProps = {}) {
   const wb = useWithBase();
+  const prefix = useSitePrefix();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,13 +24,15 @@ export function PanelLogin(props: PanelLoginProps = {}) {
     const timeoutMs = 20000;
     const timeoutId = window.setTimeout(() => ctrl.abort(), timeoutMs);
     try {
-      const res = await fetch(wb("/api/auth/login"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ password }),
-        signal: ctrl.signal,
-      });
+      const res = await fetch(
+        wb("/api/auth/login"),
+        mergePanelApiHeaders(prefix, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+          signal: ctrl.signal,
+        }),
+      );
       if (!res.ok) {
         let msg = "Giriş başarısız";
         try {

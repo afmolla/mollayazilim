@@ -1,6 +1,6 @@
 "use client";
 
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +14,7 @@ type SiteAyarlar = {
 
 export function PanelSeo() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -29,7 +30,7 @@ export function PanelSeo() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(wb("/api/panel/settings"), { cache: "no-store", credentials: "same-origin" });
+      const res = await panelFetch(wb("/api/panel/settings"), { cache: "no-store" });
       if (res.status === 401) {
         setLoading(false);
         router.refresh();
@@ -54,17 +55,16 @@ export function PanelSeo() {
       setErr("SEO ayarları yüklenemedi");
       setLoading(false);
     });
-  }, [router, wb]);
+  }, [router, wb, panelFetch]);
 
   async function save() {
     setSaving(true);
     setErr("");
     setOkMsg("");
     try {
-      const res = await fetch(wb("/api/panel/settings"), {
+      const res = await panelFetch(wb("/api/panel/settings"), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
         body: JSON.stringify(form),
       });
       if (res.status === 401) {

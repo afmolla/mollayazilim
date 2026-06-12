@@ -21,21 +21,28 @@ export default async function PanelLayout({
   const siteBackHref = siteHomeUrl || (prefix ? vitrinPublicHomeHref(prefix) : "/");
   const siteHomeClass =
     "text-sm font-medium text-[var(--muted)] hover:text-[var(--brand)]";
+  const panelSiteLabel =
+    subdir === "molla" ? "mollayazilim.com (kurumsal)" : `${prefix || subdir} vitrini`;
 
   return (
     <SitePrefixProvider prefix={prefix}>
       <div data-panel-vitrin={subdir} className="flex min-h-screen flex-col bg-[var(--surface-2)]">
         <header className="panel-top-bar shrink-0 border-b border-[var(--border)] bg-[var(--surface)]">
           <div className="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-            {siteHomeUrl ? (
-              <a href={siteHomeUrl} className={siteHomeClass}>
-                ← Siteye dön
-              </a>
-            ) : (
-              <Link href={siteBackHref} className={siteHomeClass}>
-                ← Siteye dön
-              </Link>
-            )}
+            <div className="flex min-w-0 flex-col gap-0.5">
+              {siteHomeUrl ? (
+                <a href={siteHomeUrl} className={siteHomeClass}>
+                  ← Siteye dön
+                </a>
+              ) : (
+                <Link href={siteBackHref} className={siteHomeClass}>
+                  ← Siteye dön
+                </Link>
+              )}
+              <span className="truncate text-[11px] font-medium text-[var(--muted)]">
+                Panel: {panelSiteLabel}
+              </span>
+            </div>
             <ThemeSwitcher compact />
           </div>
         </header>

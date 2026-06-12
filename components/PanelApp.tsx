@@ -1,5 +1,5 @@
 "use client";
-import { useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
+import { useSitePrefix, usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReadonlyURLSearchParams } from "next/navigation";
@@ -34,7 +34,7 @@ type TabId =
   | "ayarlar"
   | "yedek";
 
-function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
+function tabFromSearchParams(sp: ReadonlyURLSearchParams, isMaster: boolean): TabId {
   const vfTab = sp.get("vf_tab");
   const sablon = sp.get("vf_sablon");
   const slug = sp.get("vf_slug")?.trim();
@@ -55,7 +55,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams): TabId {
   ]);
   if (vfTab && allowed.has(vfTab as TabId)) return vfTab as TabId;
   if (Boolean(slug) || (Boolean(sablon) && isPanelContentTab(sablon ?? ""))) return "icerik";
-  return "randevular";
+  return isMaster ? "portfoy" : "randevular";
 }
 
 const NAV_COLLAPSE_KEY = "kuafor-panel-nav-collapsed";
@@ -103,14 +103,27 @@ function readCollapsedPref(baslangic: "acik" | "dar"): boolean {
   }
 }
 
+const NAV_MASTER_TABS = new Set<TabId>([
+  "portfoy",
+  "seo",
+  "site_duzenle",
+  "ayarlar",
+  "leads",
+  "ziyaretciler",
+  "yedek",
+]);
+
 export function PanelApp(props: PanelAppProps) {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const sitePrefix = useSitePrefix();
   const pathname = usePathname() ?? "";
   const isMasterPanel = !sitePrefix.trim();
   const navItems = useMemo(() => {
     const pfx = sitePrefix.replace(/\/+$/, "");
-    let core = isMasterPanel ? [NAV_MASTER_FIRST, ...NAV_BASE] : NAV_BASE;
+    let core = isMasterPanel
+      ? [NAV_MASTER_FIRST, ...NAV_BASE.filter((x) => NAV_MASTER_TABS.has(x.id))]
+      : NAV_BASE;
     if (pfx !== "/restaurant") {
       core = core.filter((x) => x.id !== "siparisler");
     }
@@ -143,7 +156,7 @@ export function PanelApp(props: PanelAppProps) {
     return Object.keys(out).length ? out : null;
   }, [vfSablonRaw, vfSlugRaw]);
 
-  const [tab, setTab] = useState<TabId>(() => tabFromSearchParams(searchParams));
+  const [tab, setTab] = useState<TabId>(() => tabFromSearchParams(searchParams, isMasterPanel));
   const [collapsed, setCollapsed] = useState(() => readCollapsedPref(baslangic));
 
   useEffect(() => {
@@ -164,7 +177,7 @@ export function PanelApp(props: PanelAppProps) {
     async function touchSession() {
       if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
       try {
-        const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+        const res = await panelFetch(wb("/api/panel/session"), { cache: "no-store" });
         const j = (await res.json()) as { ok?: boolean };
         if (!j.ok) router.refresh();
       } catch {
@@ -181,7 +194,7 @@ export function PanelApp(props: PanelAppProps) {
       clearInterval(id);
       document.removeEventListener("visibilitychange", onVis);
     };
-  }, [wb, router]);
+  }, [wb, router, panelFetch]);
 
   useEffect(() => {
     const vfTab = searchParams.get("vf_tab");

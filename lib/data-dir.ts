@@ -6,7 +6,7 @@ import { slugFromPrefix } from "@/lib/site-config";
 /** Tek deploy’da varsayılan veri klasörü — `getRequestSite` dışı */
 function defaultDataSubdir(): string {
   const raw = process.env.NEXT_PUBLIC_BASE_PATH;
-  if (raw === undefined) return "kuafor";
+  if (raw === undefined) return "molla";
   const t = raw.trim();
   if (t === "" || t === "/") return "default";
   return slugFromPrefix(t.startsWith("/") ? t : `/${t}`);

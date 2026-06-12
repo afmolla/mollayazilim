@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { stripSitePrefix } from "@/lib/base-path";
 import { panelEditUrlFromPathname } from "@/lib/panel-deeplink";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 const EDIT_Q = "vf_edit";
 
@@ -15,19 +15,20 @@ const EDIT_Q = "vf_edit";
 export function SiteEditModeHost({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const searchParams = useSearchParams();
   const vfEdit = searchParams.get(EDIT_Q) === "1";
   const [sessionOk, setSessionOk] = useState<boolean | null>(null);
 
   const check = useCallback(async () => {
     try {
-      const res = await fetch(wb("/api/panel/session"), { credentials: "same-origin", cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/session"), { cache: "no-store" });
       const j = (await res.json()) as { ok?: boolean };
       setSessionOk(!!j.ok);
     } catch {
       setSessionOk(false);
     }
-  }, [wb]);
+  }, [wb, panelFetch]);
 
   useEffect(() => {
     if (!vfEdit) return;

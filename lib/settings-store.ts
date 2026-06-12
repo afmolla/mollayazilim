@@ -67,7 +67,7 @@ async function settingsFile(): Promise<string> {
   return path.join(await getDataDir(), "settings.json");
 }
 
-function varsayilan(): SiteAyarlar {
+function varsayilanKuafor(): SiteAyarlar {
   return {
     salonAd: process.env.NEXT_PUBLIC_SALON_AD ?? "Atlas Kuaför Studio",
     whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_SALON ?? "905551234567",
@@ -96,14 +96,51 @@ function varsayilan(): SiteAyarlar {
   };
 }
 
+function varsayilanMolla(): SiteAyarlar {
+  return {
+    salonAd: "Molla Yazılım",
+    whatsapp: process.env.NEXT_PUBLIC_MOLLA_WHATSAPP ?? "905551234567",
+    iletisimWhatsapp: process.env.NEXT_PUBLIC_MOLLA_WHATSAPP ?? "905551234567",
+    iletisimTelefon: process.env.NEXT_PUBLIC_MOLLA_PHONE ?? "+90 555 123 45 67",
+    iletisimEposta: process.env.NEXT_PUBLIC_MOLLA_EMAIL ?? "info@mollayazilim.com",
+    seoTitle: "Molla CRM | Tekirdağ Kapaklı Müşteri Takip & Satış Yönetimi Yazılımı",
+    seoDescription:
+      "Tekirdağ, Kapaklı ve çevresi için Türkçe CRM programı: müşteri takibi, satış pipeline, teklif yönetimi, görev ve ekip koordinasyonu.",
+    seoIndex: true,
+    adresKisa: "Kapaklı · Tekirdağ",
+    adresDetay: "Kapaklı, Tekirdağ, Türkiye",
+    calismaSaatleri: "Hafta içi 09:00 — 18:00",
+    sehir: "Tekirdağ",
+    menuDavranis: "hover",
+    panelSolMenuSabitle: true,
+    panelSolMenuBaslangic: "acik",
+    footerSosyalGoster: true,
+    demoKuaforGoster: true,
+    demoKuaforKadinGoster: true,
+    demoRestaurantGoster: true,
+    demoEmlakGoster: true,
+    demoAvukatGoster: true,
+    demoOtoyikamaGoster: true,
+    demoCrmGoster: true,
+  };
+}
+
+async function varsayilan(): Promise<SiteAyarlar> {
+  const dir = await getDataDir();
+  const subdir = path.basename(dir);
+  if (subdir === "molla") return varsayilanMolla();
+  return varsayilanKuafor();
+}
+
 export async function ayarlarGetir(): Promise<SiteAyarlar> {
   const FILE = await settingsFile();
+  const base = await varsayilan();
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
-    return { ...varsayilan(), ...(db.ayarlar ?? {}) };
+    return { ...base, ...(db.ayarlar ?? {}) };
   } catch {
-    return varsayilan();
+    return base;
   }
 }
 

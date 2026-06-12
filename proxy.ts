@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { dataSubdirForPrefix, isPortfolioPath } from "@/lib/site-config";
+import { detectSiteFromRequestParts } from "@/lib/detect-request-site";
 import { MOLLA_SITE_PREFIX_SENTINEL, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
 function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string): Headers {
@@ -18,9 +19,15 @@ function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string
 export function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  /** Route Handler /api/* — üst bilgi enjekte etme; 404/edge-case riski sıfır */
+  /** Kök `/api/*` — portföy `/kuafor/api/*` rewrite ile gelir; burada Referer/çerez ile kiracı bağlamı eklenir. */
   if (pathname.startsWith("/api")) {
-    return NextResponse.next();
+    const site = detectSiteFromRequestParts({
+      referer: req.headers.get("referer"),
+      cookie: req.headers.get("cookie"),
+      pathname,
+    });
+    const reqHeaders = requestHeadersWithSite(req, site.prefix, site.subdir);
+    return NextResponse.next({ request: { headers: reqHeaders } });
   }
 
   if (

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { withBaseFromPrefix } from "@/lib/base-path";
+import { mergePanelApiHeaders } from "@/lib/panel-api-headers";
 
 const Ctx = createContext<string>("");
 
@@ -33,6 +34,15 @@ export function usePrefixedPath(): (path: string) => string {
 /** fetch / Link için kısayol */
 export function useWithBase(): (path: string) => string {
   return usePrefixedPath();
+}
+
+/** Panel API — kiracı üst bilgileri ile fetch (site izolasyonu). */
+export function usePanelFetch(): (input: string, init?: RequestInit) => Promise<Response> {
+  const prefix = useSitePrefix();
+  return useCallback(
+    (input: string, init?: RequestInit) => fetch(input, mergePanelApiHeaders(prefix, init)),
+    [prefix],
+  );
 }
 
 /**

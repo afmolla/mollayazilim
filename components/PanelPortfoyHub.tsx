@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
 
 type DemoFlags = {
   demoKuaforGoster: boolean;
@@ -83,6 +83,7 @@ const ROWS: {
 
 export function PanelPortfoyHub() {
   const wb = useWithBase();
+  const panelFetch = usePanelFetch();
   const [flags, setFlags] = useState<DemoFlags>({
     demoKuaforGoster: true,
     demoKuaforKadinGoster: true,
@@ -106,7 +107,7 @@ export function PanelPortfoyHub() {
     let cancelled = false;
     void (async () => {
       try {
-        const res = await fetch(wb("/api/panel/analytics"), { credentials: "same-origin", cache: "no-store" });
+        const res = await panelFetch(wb("/api/panel/analytics"), { cache: "no-store" });
         if (!res.ok || cancelled) return;
         const j = (await res.json()) as {
           onlineNow?: number;
@@ -126,12 +127,12 @@ export function PanelPortfoyHub() {
     return () => {
       cancelled = true;
     };
-  }, [wb]);
+  }, [wb, panelFetch]);
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const res = await fetch(wb("/api/panel/settings"), { credentials: "same-origin", cache: "no-store" });
+      const res = await panelFetch(wb("/api/panel/settings"), { cache: "no-store" });
       if (!res.ok || cancelled) {
         if (!cancelled) setLoading(false);
         return;
@@ -153,7 +154,7 @@ export function PanelPortfoyHub() {
     return () => {
       cancelled = true;
     };
-  }, [wb]);
+  }, [wb, panelFetch]);
 
   async function patchFlags(patch: Partial<DemoFlags>) {
     const next = { ...flags, ...patch };
@@ -161,9 +162,8 @@ export function PanelPortfoyHub() {
     setErr("");
     setOk("");
     try {
-      const res = await fetch(wb("/api/panel/settings"), {
+      const res = await panelFetch(wb("/api/panel/settings"), {
         method: "PATCH",
-        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(patch),
       });
