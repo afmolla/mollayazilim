@@ -33,6 +33,13 @@ const emlakMeta: Metadata = {
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();
   if (site.subdir === "emlak") return emlakMeta;
+  if (site.subdir === "esnek-ambalaj") {
+    const [c, ayar] = await Promise.all([icerikGetir(), ayarlarGetir()]);
+    return {
+      title: c.home.baslik || ayar.seoTitle || "Ana Sayfa",
+      description: c.home.aciklama?.slice(0, 160) ?? ayar.seoDescription,
+    };
+  }
   return kuaförMeta;
 }
 

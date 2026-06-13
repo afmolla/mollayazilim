@@ -1,5 +1,5 @@
 "use client";
-import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,13 +22,31 @@ function secimFromVfSnapshot(s: VfIcerikSnapshot | null): Secim {
   return { tur: "sablon", sekme: "home" };
 }
 
-const SABLONLAR: { sekme: PanelContentTab; baslik: string; yol: string; kisa: string }[] = [
+const SABLONLAR_BASE: { sekme: PanelContentTab; baslik: string; yol: string; kisa: string }[] = [
   { sekme: "home", baslik: "Anasayfa", yol: "/anasayfa", kisa: "Hero + kartlar" },
   { sekme: "hizmetler", baslik: "Hizmetler", yol: "/hizmetler", kisa: "Liste + fiyat" },
   { sekme: "galeri", baslik: "Galeri", yol: "/galeri", kisa: "Görseller" },
   { sekme: "iletisim", baslik: "İletişim", yol: "/iletisim", kisa: "Metin + WhatsApp" },
   { sekme: "qr_menu", baslik: "QR menü", yol: "/qr-menu", kisa: "Kategori + ürün" },
+  { sekme: "randevu", baslik: "Randevu formu", yol: "/randevu", kisa: "Form metinleri" },
 ];
+
+function sablonlarForSite(isEsnek: boolean) {
+  const list = SABLONLAR_BASE.map((s) =>
+    s.sekme === "hizmetler" && isEsnek ? { ...s, baslik: "Ürünler", kisa: "Ürün listesi" } : s,
+  ).map((s) =>
+    s.sekme === "randevu" && isEsnek ? { ...s, baslik: "Teklif formu", yol: "/randevu", kisa: "Teklif & numune" } : s,
+  );
+  if (isEsnek) {
+    list.splice(4, 0, {
+      sekme: "fiyat_hesap",
+      baslik: "Fiyat hesaplama",
+      yol: "/fiyat-hesaplama",
+      kisa: "Hesaplayıcı metinleri",
+    });
+  }
+  return list;
+}
 
 export type PanelUnifiedIcerikProps = {
   /** URL’deki vf_sablon / vf_slug — sessionStorage yerine (Strict Mode uyumlu) */
@@ -37,6 +55,8 @@ export type PanelUnifiedIcerikProps = {
 
 export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
   const wb = useWithBase();
+  const sitePrefix = useSitePrefix();
+  const isEsnekAmbalaj = sitePrefix.includes("esnek-ambalaj");
   const panelFetch = usePanelFetch();
   const router = useRouter();
   const vfSnap = props.vfSnapshot ?? null;
@@ -106,6 +126,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
     await cmsYukle();
   }
 
+  const sablonlar = useMemo(() => sablonlarForSite(isEsnekAmbalaj), [isEsnekAmbalaj]);
   const cmsFocus =
     secim.tur === "ek" && secim.slug !== "yeni" ? secim.slug : null;
 
@@ -137,7 +158,7 @@ export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Site şablonları</p>
             <nav className="flex flex-col gap-1" aria-label="Şablon sayfalar">
-              {SABLONLAR.map((s) => (
+              {sablonlar.map((s) => (
                 <button
                   key={s.sekme}
                   type="button"

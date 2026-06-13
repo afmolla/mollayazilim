@@ -2,6 +2,7 @@ import { normalizeExternalUrl, parseGoogleMapsInput } from "@/lib/footer-social-
 import { whatsappLink } from "@/lib/whatsapp";
 import { CookieFooterBar } from "@/components/CookieFooterBar";
 import { ayarlarGetir } from "@/lib/settings-store";
+import { icerikGetir } from "@/lib/content-store";
 import { menuGetir } from "@/lib/menu-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
 import { FooterNavLinks } from "@/components/FooterNavLinks";
@@ -11,6 +12,7 @@ import { resolveDownloadHref } from "@/lib/download-href";
 export async function SiteFooter() {
   const origin = await siteOrigin();
   const ayar = await ayarlarGetir();
+  const icerik = await icerikGetir();
   const menu = await menuGetir();
   const qr = await qrMenuGetir();
   const footerItems = qr.yayin
@@ -18,7 +20,7 @@ export async function SiteFooter() {
     : menu.footer.filter(
         (n) => !n.href.includes("/qr-menu") && n.href !== "/qr-menu",
       );
-  const wa = whatsappLink(ayar.whatsapp, "Merhaba, randevu almak istiyorum.");
+  const wa = whatsappLink(ayar.whatsapp, icerik.iletisim.whatsappMesaj || "Merhaba, bilgi almak istiyorum.");
   const phone = ayar.iletisimTelefon?.trim();
   const email = ayar.iletisimEposta?.trim();
   const ig = ayar.instagram?.trim();
@@ -168,7 +170,8 @@ export async function SiteFooter() {
 
       <div className="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]">
         <CookieFooterBar className="mb-2" />
-        © {new Date().getFullYear()} {ayar.salonAd} — SEO uyumlu vitrin + panel demosu
+        © {new Date().getFullYear()} {ayar.salonAd}
+        {icerik.site?.footerEkMetin?.trim() ? ` — ${icerik.site.footerEkMetin.trim()}` : ""}
       </div>
     </footer>
   );

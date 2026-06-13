@@ -1,27 +1,36 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { EsnekAmbalajFiyatHesapClient } from "@/components/ambalaj/EsnekAmbalajFiyatHesapClient";
-import { aracilikGetir } from "@/lib/esnek-ambalaj-aracilik-store";
-import { ayarlarGetir } from "@/lib/settings-store";
-import { getRequestSite } from "@/lib/site-request";
-
-export const revalidate = 60;
-
-export const metadata: Metadata = {
-  title: "Fiyat Hesaplama",
-  description: "OPP, CPP, PET, LDPE torba ve rulo için online teklif tahmini — esnek ambalaj tedarik.",
-};
-
-export default async function FiyatHesaplamaPage() {
-  const { subdir } = await getRequestSite();
-  if (subdir !== "esnek-ambalaj") notFound();
-
-  const [ayar, aracilik] = await Promise.all([ayarlarGetir(), aracilikGetir()]);
-  return (
-    <EsnekAmbalajFiyatHesapClient
-      firmaAd={ayar.salonAd}
-      whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp}
-      aracilik={aracilik}
-    />
-  );
-}
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { EsnekAmbalajFiyatHesapClient } from "@/components/ambalaj/EsnekAmbalajFiyatHesapClient";
+import { aracilikGetir } from "@/lib/esnek-ambalaj-aracilik-store";
+import { icerikGetir } from "@/lib/content-store";
+import { mergeFiyatHesap, VARSAYILAN_FIYAT_HESAP } from "@/lib/fiyat-hesap-defaults";
+import { ayarlarGetir } from "@/lib/settings-store";
+import { getRequestSite } from "@/lib/site-request";
+
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { subdir } = await getRequestSite();
+  if (subdir !== "esnek-ambalaj") return {};
+  const [ayar, c] = await Promise.all([ayarlarGetir(), icerikGetir()]);
+  const fh = mergeFiyatHesap(VARSAYILAN_FIYAT_HESAP, c.fiyatHesap);
+  return {
+    title: fh.seoTitle ?? "Fiyat Hesaplama",
+    description: fh.seoDescription ?? ayar.seoDescription,
+  };
+}
+
+export default async function FiyatHesaplamaPage() {
+  const { subdir } = await getRequestSite();
+  if (subdir !== "esnek-ambalaj") notFound();
+
+  const [ayar, aracilik, c] = await Promise.all([ayarlarGetir(), aracilikGetir(), icerikGetir()]);
+  return (
+    <EsnekAmbalajFiyatHesapClient
+      firmaAd={ayar.salonAd}
+      whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp}
+      aracilik={aracilik}
+      fiyatHesap={c.fiyatHesap}
+    />
+  );
+}

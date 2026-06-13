@@ -64,10 +64,16 @@ export function panelEditUrlFromPathname(pathname: string): {
     };
   }
 
+  if (p === "/fiyat-hesaplama") {
+    return {
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=fiyat_hesap", pathname),
+      label: "Fiyat hesaplama",
+    };
+  }
   if (p === "/randevu" || p === "/randevular") {
     return {
-      href: withBase("/panel?vf_tab=randevular", pathname),
-      label: "Randevular",
+      href: withBase("/panel?vf_tab=icerik&vf_sablon=randevu", pathname),
+      label: p === "/randevular" ? "Teklif talepleri" : "Teklif formu",
     };
   }
 
@@ -78,5 +84,13 @@ export function panelEditUrlFromPathname(pathname: string): {
 }
 
 export function isPanelContentTab(s: string): s is PanelContentTab {
-  return s === "home" || s === "hizmetler" || s === "galeri" || s === "iletisim" || s === "qr_menu";
+  return (
+    s === "home" ||
+    s === "hizmetler" ||
+    s === "galeri" ||
+    s === "iletisim" ||
+    s === "qr_menu" ||
+    s === "randevu" ||
+    s === "fiyat_hesap"
+  );
 }

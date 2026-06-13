@@ -3,10 +3,13 @@ import { ayarlarGetir } from "@/lib/settings-store";
 import { icerikGetir } from "@/lib/content-store";
 import { IletisimInteractive } from "@/components/vf-inline/IletisimInteractive";
 
-export const metadata: Metadata = {
-  title: "İletişim",
-  description: "Adres, çalışma saatleri ve WhatsApp — demo iletişim bilgileri.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [c, ayar] = await Promise.all([icerikGetir(), ayarlarGetir()]);
+  return {
+    title: c.iletisim.sayfaBaslik ?? "İletişim",
+    description: c.iletisim.sayfaAciklama?.slice(0, 160) ?? ayar.seoDescription,
+  };
+}
 
 export const revalidate = 60;
 

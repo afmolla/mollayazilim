@@ -59,6 +59,7 @@ async function jsonLdBody() {
   const isRestaurant = subdir === "restaurant";
   const isEmlak = subdir === "emlak";
   const isAvukat = subdir === "avukat";
+  const isEsnekAmbalaj = subdir === "esnek-ambalaj";
   const base = await siteUrl();
   const baseNorm = base.replace(/\/$/, "");
   const logoUrl = `${baseNorm}/icon.svg`;
@@ -245,6 +246,31 @@ async function jsonLdBody() {
     };
     return (
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(emlakPayload) }} />
+    );
+  }
+
+  if (isEsnekAmbalaj) {
+    const ambalajPayload = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: ayar.salonAd,
+      url: base,
+      description: ayar.seoDescription?.trim() || "Esnek ambalaj üretimi ve tedarik.",
+      ...(ayar.adresDetay?.trim()
+        ? {
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: ayar.adresDetay,
+              addressLocality: ayar.sehir || "İstanbul",
+              addressCountry: "TR",
+            },
+          }
+        : {}),
+      ...(ayar.iletisimTelefon?.trim() ? { telephone: ayar.iletisimTelefon.trim() } : {}),
+      ...(ayar.iletisimEposta?.trim() ? { email: ayar.iletisimEposta.trim() } : {}),
+    };
+    return (
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ambalajPayload) }} />
     );
   }
 

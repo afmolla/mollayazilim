@@ -4,7 +4,7 @@ import { getDataDir } from "@/lib/data-dir";
 import type { AmbalajMalzeme } from "@/lib/esnek-ambalaj-pricing";
 
 export type EsnekAmbalajAracilik = {
-  /** Müşteriye yansıyan aracılık marjı (%) */
+  /** Müşteriye yansıyan satış marjı (%) */
   aracilikMarjYuzde: number;
   /** Bu kg altında küçük parti ek ücreti uygulanır */
   minSiparisKg: number;
@@ -13,10 +13,12 @@ export type EsnekAmbalajAracilik = {
   /** Tahmini teslim (iş günü) */
   teslimGunMin: number;
   teslimGunMax: number;
-  /** Tedarikçi kg maliyetleri — boşsa pricing varsayılanları kullanılır */
+  /** Malzeme kg maliyetleri — boşsa pricing varsayılanları kullanılır */
   tedarikciKgFiyat: Partial<Record<AmbalajMalzeme, number>>;
   /** Müşteri fiyat ekranında marj dökümü göster (genelde false) */
   marjDokumuGoster: boolean;
+  /** Hesaplayıcı alt notları — panelden düzenlenir */
+  musteriNotlari?: string[];
 };
 
 type Db = { aracilik: EsnekAmbalajAracilik };
@@ -29,6 +31,10 @@ const DEFAULT: EsnekAmbalajAracilik = {
   teslimGunMax: 12,
   tedarikciKgFiyat: {},
   marjDokumuGoster: false,
+  musteriNotlari: [
+    "Fiyatlar KDV hariç tahminidir; kesin teklif numune ve baskı onayı sonrası 48 saat içinde yazılır.",
+    "Laminasyon, kilitli torba ve özel barrier katmanları keşif sonrası netleşir.",
+  ],
 };
 
 async function aracilikFile(): Promise<string> {
@@ -60,6 +66,9 @@ export async function aracilikKaydet(patch: Partial<EsnekAmbalajAracilik>): Prom
     tedarikciKgFiyat: { ...cur.tedarikciKgFiyat, ...(patch.tedarikciKgFiyat ?? {}) },
     marjDokumuGoster:
       typeof patch.marjDokumuGoster === "boolean" ? patch.marjDokumuGoster : cur.marjDokumuGoster,
+    musteriNotlari: Array.isArray(patch.musteriNotlari)
+      ? patch.musteriNotlari
+      : cur.musteriNotlari ?? DEFAULT.musteriNotlari,
   };
   if (next.teslimGunMax < next.teslimGunMin) next.teslimGunMax = next.teslimGunMin;
 

@@ -14,6 +14,10 @@
       "opp_cpp_lamine": 114,
       "pet_pe_lamine": 128
     },
-    "marjDokumuGoster": false
+    "marjDokumuGoster": false,
+    "musteriNotlari": [
+      "Fiyatlar KDV hariç tahminidir; kesin teklif numune ve baskı onayı sonrası 48 saat içinde yazılır.",
+      "Laminasyon, kilitli torba ve özel barrier katmanları keşif sonrası netleşir."
+    ]
   }
 }

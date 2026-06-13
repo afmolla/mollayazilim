@@ -1,16 +1,24 @@
 "use client";
-import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
+import { usePanelFetch, useSitePrefix, useWithBase } from "@/components/SitePrefixProvider";
 
 import type { GaleriGorsel, HizmetSatir, SiteIcerik } from "@/lib/content-store";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PanelMedia } from "@/components/PanelMedia";
+import {
+  PanelFiyatHesapFields,
+  PanelHomeExtrasFields,
+  PanelHizmetlerMetaFields,
+  PanelRandevuFields,
+  PanelSayfaBaslikField,
+  PanelSiteFooterField,
+} from "@/components/PanelSiteExtras";
 
 function normalize(s: string) {
   return s.trim().toLocaleLowerCase("tr-TR");
 }
 
-export type PanelContentTab = "home" | "hizmetler" | "galeri" | "iletisim" | "qr_menu";
+export type PanelContentTab = "home" | "hizmetler" | "galeri" | "iletisim" | "qr_menu" | "randevu" | "fiyat_hesap";
 
 export type PanelContentProps = {
   /** Hub veya üst bileşen sekmeyi kontrol ederken */
@@ -26,6 +34,8 @@ export type PanelContentProps = {
 
 export function PanelContent(props: PanelContentProps = {}) {
   const wb = useWithBase();
+  const sitePrefix = useSitePrefix();
+  const isEsnekAmbalaj = sitePrefix.includes("esnek-ambalaj");
   const panelFetch = usePanelFetch();
   const layout = props.layout ?? "standalone";
   const hideTabBar = props.hideTabBar === true;
@@ -42,7 +52,7 @@ export function PanelContent(props: PanelContentProps = {}) {
     if (props.activeTab === undefined) setTabInternal(t);
   }
   const [q, setQ] = useState("");
-  const [pickMediaFor, setPickMediaFor] = useState<null | "homeHero" | "galeri">(null);
+  const [pickMediaFor, setPickMediaFor] = useState<null | "homeHero" | "homeKart" | "galeri">(null);
 
   const [form, setForm] = useState<SiteIcerik | null>(null);
 
@@ -153,9 +163,15 @@ export function PanelContent(props: PanelContentProps = {}) {
           {(
             [
               { id: "home", label: "Anasayfa" },
-              { id: "hizmetler", label: "Hizmetler" },
+              { id: "hizmetler", label: isEsnekAmbalaj ? "Ürünler" : "Hizmetler" },
               { id: "galeri", label: "Galeri" },
               { id: "iletisim", label: "İletişim" },
+              ...(isEsnekAmbalaj
+                ? ([
+                    { id: "fiyat_hesap" as const, label: "Fiyat hesaplama" },
+                  ] as const)
+                : []),
+              { id: "randevu", label: isEsnekAmbalaj ? "Teklif formu" : "Randevu formu" },
             ] as const
           ).map((t) => (
             <button
@@ -224,7 +240,9 @@ export function PanelContent(props: PanelContentProps = {}) {
                 </button>
               </div>
             </ContentZone>
-
+            {isEsnekAmbalaj ? (
+              <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+            ) : null}
             <ContentZone
               step={2}
               title="Öne çıkan kartlar"
@@ -337,6 +355,10 @@ export function PanelContent(props: PanelContentProps = {}) {
             </div>
           </Card>
 
+          {isEsnekAmbalaj ? (
+            <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+          ) : null}
+
           <Card title="Neden bu demo? (kartlar)">
             <Field
               label="Bölüm başlık"
@@ -401,8 +423,11 @@ export function PanelContent(props: PanelContentProps = {}) {
       ) : tab === "hizmetler" ? (
         visualZones ? (
           <div className="space-y-8">
+            <ContentZone step={1} title="Sayfa başlığı & tablo kolonları" hint="H1 ve tablo üst bilgileri.">
+              <PanelHizmetlerMetaFields form={form} setForm={setForm} />
+            </ContentZone>
             <ContentZone
-              step={1}
+              step={2}
               title="Üst giriş metni"
               hint="Sayfanın üst kısmında, liste başlamadan önce görünür."
               preview={
@@ -418,7 +443,7 @@ export function PanelContent(props: PanelContentProps = {}) {
               />
             </ContentZone>
             <ContentZone
-              step={2}
+              step={3}
               title="Hizmet ve fiyat tablosu"
               hint="Her satır sitede bir satır: hizmet adı, süre, fiyat."
               preview={<span className="text-[var(--muted)]">{form.hizmetler.rows.length} satır</span>}
@@ -485,6 +510,7 @@ export function PanelContent(props: PanelContentProps = {}) {
         ) : (
         <div className="space-y-4">
           <Card title="Hizmetler sayfası">
+            <PanelHizmetlerMetaFields form={form} setForm={setForm} />
             <Textarea
               label="Sayfa açıklama"
               value={form.hizmetler.sayfaAciklama}
@@ -561,6 +587,11 @@ export function PanelContent(props: PanelContentProps = {}) {
               hint="Galeri ızgarasının üstünde görünen metin."
               preview={<p className="line-clamp-4 text-[var(--muted)]">{form.galeri.sayfaAciklama || "…"}</p>}
             >
+              <PanelSayfaBaslikField
+                label="Sayfa başlığı (H1)"
+                value={form.galeri.sayfaBaslik ?? ""}
+                onChange={(v) => setForm((s) => ({ ...s!, galeri: { ...s!.galeri, sayfaBaslik: v } }))}
+              />
               <Textarea
                 label="Sayfa açıklaması"
                 value={form.galeri.sayfaAciklama}
@@ -658,6 +689,11 @@ export function PanelContent(props: PanelContentProps = {}) {
         ) : (
         <div className="space-y-4">
           <Card title="Galeri sayfası">
+            <PanelSayfaBaslikField
+              label="Sayfa başlığı (H1)"
+              value={form.galeri.sayfaBaslik ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s!, galeri: { ...s!.galeri, sayfaBaslik: v } }))}
+            />
             <Textarea
               label="Sayfa açıklama"
               value={form.galeri.sayfaAciklama}
@@ -762,6 +798,11 @@ export function PanelContent(props: PanelContentProps = {}) {
               </div>
             }
           >
+            <PanelSayfaBaslikField
+              label="Sayfa başlığı (H1)"
+              value={form.iletisim.sayfaBaslik ?? ""}
+              onChange={(v) => setForm((s) => ({ ...s!, iletisim: { ...s!.iletisim, sayfaBaslik: v } }))}
+            />
             <Textarea
               label="Sayfa açıklama"
               value={form.iletisim.sayfaAciklama}
@@ -772,10 +813,16 @@ export function PanelContent(props: PanelContentProps = {}) {
               value={form.iletisim.whatsappMesaj}
               onChange={(v) => setForm((s) => ({ ...s!, iletisim: { ...s!.iletisim, whatsappMesaj: v } }))}
             />
+            <PanelSiteFooterField form={form} setForm={setForm} />
             <p className="text-xs text-[var(--muted)]">Adres ve saatler “Ayarlar” bölümünden gelir.</p>
           </ContentZone>
         ) : (
         <Card title="İletişim sayfası">
+          <PanelSayfaBaslikField
+            label="Sayfa başlığı (H1)"
+            value={form.iletisim.sayfaBaslik ?? ""}
+            onChange={(v) => setForm((s) => ({ ...s!, iletisim: { ...s!.iletisim, sayfaBaslik: v } }))}
+          />
           <Textarea
             label="Sayfa açıklama"
             value={form.iletisim.sayfaAciklama}
@@ -786,11 +833,40 @@ export function PanelContent(props: PanelContentProps = {}) {
             value={form.iletisim.whatsappMesaj}
             onChange={(v) => setForm((s) => ({ ...s!, iletisim: { ...s!.iletisim, whatsappMesaj: v } }))}
           />
+          <PanelSiteFooterField form={form} setForm={setForm} />
           <p className="mt-2 text-xs text-[var(--muted)]">
             Adres ve saatler “Ayarlar” bölümünden gelir.
           </p>
         </Card>
         )
+      ) : tab === "randevu" ? (
+        <Card title={isEsnekAmbalaj ? "Teklif & numune formu" : "Randevu formu"}>
+          <PanelRandevuFields form={form} setForm={setForm} />
+        </Card>
+      ) : tab === "fiyat_hesap" && isEsnekAmbalaj ? (
+        <Card title="Fiyat hesaplama sayfası">
+          <PanelFiyatHesapFields form={form} setForm={setForm} />
+          <p className="text-xs text-[var(--muted)]">
+            Marj ve kg maliyetleri için sol menüden <strong className="text-[var(--text)]">Fiyatlandırma</strong> sekmesini kullanın.
+          </p>
+        </Card>
+      ) : null}
+
+      {pickMediaFor === "homeKart" ? (
+        <Card title="Medyadan yan kart görseli seç">
+          <PanelMedia
+            onPickUrl={(url) => {
+              setForm((s) => {
+                const kart = s!.home.heroKart ?? { imageSrc: "", imageAlt: "", baslik: "", aciklama: "" };
+                return { ...s!, home: { ...s!.home, heroKart: { ...kart, imageSrc: url } } };
+              });
+              setPickMediaFor(null);
+            }}
+          />
+          <button type="button" onClick={() => setPickMediaFor(null)} className="mt-3 rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium hover:bg-[var(--surface-2)]">
+            Kapat
+          </button>
+        </Card>
       ) : null}
 
       {pickMediaFor === "homeHero" ? (

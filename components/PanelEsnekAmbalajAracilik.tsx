@@ -37,7 +37,7 @@ export function PanelEsnekAmbalajAracilik() {
         return;
       }
       if (!res.ok) {
-        setErr("Aracılık ayarları yüklenemedi");
+        setErr("Fiyatlandırma ayarları yüklenemedi");
         setLoading(false);
         return;
       }
@@ -74,16 +74,15 @@ export function PanelEsnekAmbalajAracilik() {
   }
 
   if (loading || !form) {
-    return <p className="text-sm text-[var(--muted)]">Aracılık ayarları yükleniyor…</p>;
+    return <p className="text-sm text-[var(--muted)]">Fiyatlandırma ayarları yükleniyor…</p>;
   }
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-[var(--text)]">Aracılık & tedarik fiyatları</h1>
+        <h1 className="text-2xl font-bold text-[var(--text)]">Fiyatlandırma</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Tedarikçi kg maliyetlerin + marjın = müşteriye gösterilen tahmini teklif. Lead gelince tedarikçiden teyit al,
-          yazılı teklif gönder.
+          Malzeme kg maliyetleri, marj ve hesaplayıcı notları — müşteriye gösterilen teklif aralığı buna göre hesaplanır.
         </p>
       </header>
 
@@ -95,7 +94,7 @@ export function PanelEsnekAmbalajAracilik() {
           <h2 className="font-semibold text-[var(--text)]">Marj & teslim</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="font-medium">Aracılık marjı (%)</span>
+              <span className="font-medium">Satış marjı (%)</span>
               <input
                 type="number"
                 className={`mt-1 ${inputCls}`}
@@ -143,8 +142,8 @@ export function PanelEsnekAmbalajAracilik() {
         </div>
 
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-          <h2 className="font-semibold text-[var(--text)]">Tedarikçi kg maliyeti (TL/kg)</h2>
-          <p className="mt-1 text-xs text-[var(--muted)]">Üreticiden aldığın fiyat — marj üstüne eklenir.</p>
+          <h2 className="font-semibold text-[var(--text)]">Malzeme kg maliyeti (TL/kg)</h2>
+          <p className="mt-1 text-xs text-[var(--muted)]">Birim maliyet — marj üstüne eklenerek satış fiyatı oluşur.</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {MALZEMELER.map((m) => (
               <label key={m.key} className="block text-sm">
@@ -169,9 +168,20 @@ export function PanelEsnekAmbalajAracilik() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">
-        <strong className="text-[var(--text)]">Satış akışı:</strong> Hesaplayıcı lead → WhatsApp → tedarikçiden teyit →
-        yazılı teklif → sipariş. Lead’leri <strong className="text-[var(--text)]">Lead’ler</strong> sekmesinden takip et.
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+        <h2 className="font-semibold text-[var(--text)]">Hesaplayıcı alt notları</h2>
+        <p className="mt-1 text-xs text-[var(--muted)]">Her satır müşteriye bir not olarak gösterilir. Teslim süresi otomatik eklenir.</p>
+        <textarea
+          rows={4}
+          className={`mt-3 ${inputCls}`}
+          value={(form.musteriNotlari ?? []).join("\n")}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              musteriNotlari: e.target.value.split("\n").map((x) => x.trim()).filter(Boolean),
+            })
+          }
+        />
       </div>
 
       <button

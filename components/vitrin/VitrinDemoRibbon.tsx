@@ -28,10 +28,10 @@ function notifyRibbon() {
   listeners.forEach((fn) => fn());
 }
 
-/** Portföy vitrinlerinde demo şeridi — esnek ambalaj aracılık sitesinde gösterilmez */
+/** Portföy vitrinlerinde demo şeridi — esnek ambalaj sitesinde gösterilmez */
 export function VitrinDemoRibbon() {
   const prefix = useSitePrefix();
-  const isAracilik = prefix.includes("esnek-ambalaj");
+  const isEsnekAmbalaj = prefix.includes("esnek-ambalaj");
 
   const hidden = useSyncExternalStore(
     subscribe,
@@ -48,7 +48,7 @@ export function VitrinDemoRibbon() {
     }
   }, []);
 
-  if (isAracilik || hidden) return null;
+  if (isEsnekAmbalaj || hidden) return null;
 
   return (
     <div

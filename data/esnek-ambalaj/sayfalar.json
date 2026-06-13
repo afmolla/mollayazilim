@@ -3,29 +3,29 @@
     {
       "slug": "nasil-calisir",
       "baslik": "Nasıl çalışır?",
-      "aciklama": "Aracılık ve tedarik sürecimiz — 4 adım.",
-      "icerikHtml": "<ol class=\"list-decimal space-y-4 pl-5 text-[var(--muted)]\">\n  <li><strong class=\"text-[var(--text)]\">Talep:</strong> Online fiyat hesaplama veya teklif formu — ölçü, mikron, baskı bilgisi.</li>\n  <li><strong class=\"text-[var(--text)]\">Tedarikçi teyidi:</strong> Anlaşmalı üreticilerden fiyat ve teslim süresi alınır (genelde aynı gün).</li>\n  <li><strong class=\"text-[var(--text)]\">Yazılı teklif:</strong> 48 saat içinde KDV hariç teklif; numune gerekiyorsa koordine edilir.</li>\n  <li><strong class=\"text-[var(--text)]\">Üretim & sevkiyat:</strong> Onay sonrası üretici siparişi açar; sevkiyat takibi tarafımızdan yapılır.</li>\n</ol>\n<p class=\"mt-6 text-sm text-[var(--muted)]\">Üretim tesisimiz yoktur; tedarik aracılığı hizmeti sunuyoruz.</p>",
+      "aciklama": "Tekliften teslimata sürecimiz — 4 adım.",
+      "icerikHtml": "<ol class=\"list-decimal space-y-4 pl-5 text-[var(--muted)]\">\n  <li><strong class=\"text-[var(--text)]\">Talep:</strong> Online fiyat hesaplama veya teklif formu — ölçü, mikron, baskı bilgisi.</li>\n  <li><strong class=\"text-[var(--text)]\">Teklif:</strong> Spesifikasyonunuza göre fiyat ve teslim süresi hazırlanır (genelde aynı gün).</li>\n  <li><strong class=\"text-[var(--text)]\">Onay & numune:</strong> Yazılı teklif; numune gerekiyorsa koordine edilir.</li>\n  <li><strong class=\"text-[var(--text)]\">Üretim & sevkiyat:</strong> Onay sonrası üretim başlar; sevkiyat takibi tarafımızdan yapılır.</li>\n</ol>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-06-12T12:00:00.000Z"
+      "guncellenme": "2026-06-12T14:00:00.000Z"
     },
     {
       "slug": "opp-cpp-rulo",
-      "baslik": "OPP & CPP rulo tedarik",
-      "aciklama": "Baskılı, baskısız ve lamineli rulo tedariki.",
-      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">OPP ve CPP rulolar otomatik dolum, flow-pack ve manuel paketleme hatları için tedarik edilir. Mikron, en ve metraj spesifikasyonunu paylaşmanız yeterli.</p>\n<p class=\"mt-4\"><a href=\"/fiyat-hesaplama\" class=\"font-semibold text-[var(--brand)] hover:underline\">Online fiyat tahmini →</a></p>",
+      "baslik": "OPP & CPP rulo",
+      "aciklama": "Baskılı, baskısız ve lamineli rulo üretimi.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">OPP ve CPP rulolar otomatik dolum, flow-pack ve manuel paketleme hatları için üretilir. Mikron, en ve metraj spesifikasyonunu paylaşmanız yeterli.</p>\n<p class=\"mt-4\"><a href=\"/fiyat-hesaplama\" class=\"font-semibold text-[var(--brand)] hover:underline\">Online fiyat tahmini →</a></p>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-06-12T12:00:00.000Z"
+      "guncellenme": "2026-06-12T14:00:00.000Z"
     },
     {
       "slug": "hakkimizda",
       "baslik": "Hakkımızda",
-      "aciklama": "ProPack Ambalaj Tedarik — esnek ambalaj aracılığı.",
-      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\"><strong class=\"text-[var(--text)]\">ProPack Ambalaj Tedarik</strong> esnek ambalaj alanında aracılık ve tedarik hizmeti sunar. İstanbul ve Marmara bölgesindeki üreticilerle anlaşmalı çalışır; müşteriye tek muhatap olur.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Amacımız: doğru spesifikasyon, en uygun fiyat ve zamanında teslim. Panel ve fiyat hesaplayıcı ile dijital teklif süreci hızlandırılır.</p>",
+      "aciklama": "ProPack Ambalaj — esnek ambalaj üretimi.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\"><strong class=\"text-[var(--text)]\">ProPack Ambalaj</strong> esnek ambalaj alanında torba, rulo ve baskılı ambalaj üretimi sunar. İstanbul ve Marmara bölgesinde hızlı teslimat ve numune desteği sağlar.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Amacımız: doğru spesifikasyon, uygun fiyat ve zamanında teslim. Online fiyat hesaplayıcı ile teklif süreci hızlandırılır.</p>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-06-12T12:00:00.000Z"
+      "guncellenme": "2026-06-12T14:00:00.000Z"
     }
   ]
 }

@@ -176,9 +176,9 @@ const DEFAULT_DEMO_GROUPS: MollaDemoGroup[] = [
       { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
       {
         key: "esnekAmbalaj",
-        title: "Esnek Ambalaj Tedarik",
+        title: "Esnek Ambalaj",
         href: "/esnek-ambalaj",
-        meta: "Aracılık · OPP/CPP torba-rulo · fiyat hesaplama",
+        meta: "OPP · CPP · torba/rulo · fiyat hesaplama",
       },
       { key: "otoyikama", title: "Oto Yıkama Demo", href: "/otoyikama", meta: "Yıkama · pasta cila · seramik" },
     ],

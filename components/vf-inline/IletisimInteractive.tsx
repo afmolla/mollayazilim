@@ -161,7 +161,13 @@ export function IletisimInteractive(props: {
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 md:px-6">
       {float}
-      <h1 className="text-3xl font-bold text-[var(--text)]">İletişim</h1>
+      <EditableText
+        active={inline}
+        tag="h1"
+        className="text-3xl font-bold text-[var(--text)]"
+        value={ilet.sayfaBaslik ?? "İletişim"}
+        onCommit={(v) => setIlet((s) => ({ ...s, sayfaBaslik: v }))}
+      />
       <EditableText
         active={inline}
         tag="p"

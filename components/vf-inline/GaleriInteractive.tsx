@@ -353,7 +353,13 @@ export function GaleriInteractive(props: { initial: G }) {
         onClose={() => setCtx(null)}
       />
 
-      <h1 className="text-3xl font-bold text-[var(--text)]">Galeri</h1>
+      <EditableText
+        active={inline}
+        tag="h1"
+        className="text-3xl font-bold text-[var(--text)]"
+        value={g.sayfaBaslik ?? "Galeri"}
+        onCommit={(v) => update((cur) => ({ ...cur, sayfaBaslik: v }))}
+      />
       <EditableText
         active={inline}
         tag="p"

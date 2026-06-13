@@ -1,4 +1,4 @@
-/** Esnek ambalaj fiyat motoru — tedarikçi maliyeti + aracılık marjı */
+/** Esnek ambalaj fiyat motoru — maliyet + satış marjı */
 
 import type { EsnekAmbalajAracilik } from "@/lib/esnek-ambalaj-aracilik-store";
 
@@ -58,7 +58,7 @@ const MALZEME_ETIKET: Record<AmbalajMalzeme, string> = {
   pet_pe_lamine: "PET + PE Laminasyon",
 };
 
-/** Varsayılan tedarikçi kg maliyeti (TL/kg) — panelden güncellenir */
+/** Varsayılan kg maliyeti (TL/kg) — panelden güncellenir */
 export const VARSAYILAN_TEDARIK_KG: Record<AmbalajMalzeme, number> = {
   opp: 76,
   cpp: 82,
@@ -144,7 +144,7 @@ export function hesaplaAmbalajFiyat(
     const renk = clamp(g.baskiRenk, 1, 8);
     kalipBedeli = (2000 + renk * 700) * marjCarpan;
     baskiBedeli = satisMalzemeBedeli * (0.1 + renk * 0.03);
-    notlar.push("Baskılı siparişlerde klise hazırlığı ilk seferde uygulanır; tedarikçi teyidi sonrası netleşir.");
+    notlar.push("Baskılı siparişlerde klise hazırlığı ilk seferde uygulanır; baskı onayı sonrası netleşir.");
   }
 
   let ekOzellikBedeli = 0;
@@ -168,10 +168,15 @@ export function hesaplaAmbalajFiyat(
 
   const toplam = tedarikAraToplam + minSiparisFarki;
   notlar.push(
-    `Tahmini teslim: ${cfg.teslimGunMin}–${cfg.teslimGunMax} iş günü (tedarikçi stok ve baskı onayına bağlı).`,
+    `Tahmini teslim: ${cfg.teslimGunMin}–${cfg.teslimGunMax} iş günü (stok ve baskı onayına bağlı).`,
   );
-  notlar.push("Fiyatlar KDV hariç tahminidir; kesin teklif tedarikçi onayı + numune sonrası 48 saat içinde yazılır.");
-  notlar.push("Anlaşmalı üreticilerden en uygun teklif seçilir — tek tedarikçi garantisi verilmez, en iyi fiyat hedeflenir.");
+  const sabitNotlar = (cfg.musteriNotlari ?? []).filter(Boolean);
+  if (sabitNotlar.length > 0) {
+    notlar.push(...sabitNotlar);
+  } else {
+    notlar.push("Fiyatlar KDV hariç tahminidir; kesin teklif numune ve baskı onayı sonrası 48 saat içinde yazılır.");
+    notlar.push("Laminasyon, kilitli torba ve özel barrier katmanları keşif sonrası netleşir.");
+  }
 
   return {
     tahminiKg: Math.round(kg * 100) / 100,

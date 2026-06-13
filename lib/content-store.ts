@@ -3,7 +3,19 @@ import path from "path";
 import { getDataDir } from "@/lib/data-dir";
 import type { VfHiza } from "@/lib/vf-hiza";
 
+import type { FiyatHesapIcerik } from "@/lib/fiyat-hesap-defaults";
+import { mergeFiyatHesap, VARSAYILAN_FIYAT_HESAP } from "@/lib/fiyat-hesap-defaults";
+
 export type { VfHiza } from "@/lib/vf-hiza";
+export type { FiyatHesapIcerik } from "@/lib/fiyat-hesap-defaults";
+
+/** Hero sağ / alt kart (esnek ambalaj vb.) */
+export type HomeHeroKart = {
+  imageSrc: string;
+  imageAlt: string;
+  baslik: string;
+  aciklama: string;
+};
 
 export type HomeFeature = {
   /** Kararlı anahtar (yeni kartlarda otomatik) */
@@ -38,22 +50,38 @@ export type SiteIcerik = {
     heroImageAlt: string;
     /** Görselin altına eklenen metin / küçük görsel blokları */
     heroAltBloklar?: HomeHeroAltBlok[];
+    /** Hero altı etiket pill’leri (satır satır panelden) */
+    etiketler?: string[];
+    /** Hero sağ kart */
+    heroKart?: HomeHeroKart;
     bolumBaslik: string;
     bolumAciklama: string;
     features: HomeFeature[];
   };
   hizmetler: {
+    sayfaBaslik?: string;
+    kolonAd?: string;
+    kolonSure?: string;
+    kolonFiyat?: string;
     sayfaAciklama: string;
     rows: HizmetSatir[];
   };
   galeri: {
+    sayfaBaslik?: string;
     sayfaAciklama: string;
     images: GaleriGorsel[];
   };
   iletisim: {
+    sayfaBaslik?: string;
     sayfaAciklama: string;
     whatsappMesaj: string;
   };
+  /** Footer ek metni vb. */
+  site?: {
+    footerEkMetin?: string;
+  };
+  /** Esnek ambalaj fiyat hesaplama sayfası */
+  fiyatHesap?: FiyatHesapIcerik;
   /** Randevu / masa ayırt formu — vitrine göre seçenekler (kuaför ≠ restoran). */
   randevuForm?: {
     selectLabel: string;
@@ -192,6 +220,8 @@ function mergeHome(
     heroAltBloklar: Array.isArray(patch.heroAltBloklar)
       ? patch.heroAltBloklar
       : (base.heroAltBloklar ?? []),
+    etiketler: Array.isArray(patch.etiketler) ? patch.etiketler : (base.etiketler ?? []),
+    heroKart: patch.heroKart ? { ...(base.heroKart ?? { imageSrc: "", imageAlt: "", baslik: "", aciklama: "" }), ...patch.heroKart } : base.heroKart,
     bolumBaslik: patch.bolumBaslik ?? base.bolumBaslik,
     bolumAciklama: patch.bolumAciklama ?? base.bolumAciklama,
     features: Array.isArray(patch.features) ? patch.features : base.features,
@@ -204,6 +234,10 @@ function mergeHizmetler(
 ): SiteIcerik["hizmetler"] {
   if (!patch) return base;
   return {
+    sayfaBaslik: patch.sayfaBaslik ?? base.sayfaBaslik,
+    kolonAd: patch.kolonAd ?? base.kolonAd,
+    kolonSure: patch.kolonSure ?? base.kolonSure,
+    kolonFiyat: patch.kolonFiyat ?? base.kolonFiyat,
     sayfaAciklama: patch.sayfaAciklama ?? base.sayfaAciklama,
     rows: Array.isArray(patch.rows) ? patch.rows : base.rows,
   };
@@ -215,6 +249,7 @@ function mergeGaleri(
 ): SiteIcerik["galeri"] {
   if (!patch) return base;
   return {
+    sayfaBaslik: patch.sayfaBaslik ?? base.sayfaBaslik,
     sayfaAciklama: patch.sayfaAciklama ?? base.sayfaAciklama,
     images: Array.isArray(patch.images) ? patch.images : base.images,
   };
@@ -226,8 +261,19 @@ function mergeIletisim(
 ): SiteIcerik["iletisim"] {
   if (!patch) return base;
   return {
+    sayfaBaslik: patch.sayfaBaslik ?? base.sayfaBaslik,
     sayfaAciklama: patch.sayfaAciklama ?? base.sayfaAciklama,
     whatsappMesaj: patch.whatsappMesaj ?? base.whatsappMesaj,
+  };
+}
+
+function mergeSite(
+  base: SiteIcerik["site"],
+  patch?: SiteIcerik["site"],
+): SiteIcerik["site"] {
+  if (!patch) return base;
+  return {
+    footerEkMetin: patch.footerEkMetin ?? base?.footerEkMetin,
   };
 }
 
@@ -249,6 +295,10 @@ export async function icerikGetir(): Promise<SiteIcerik> {
       galeri: mergeGaleri(v.galeri, stored.galeri),
       iletisim: mergeIletisim(v.iletisim, stored.iletisim),
       ...(rf ? { randevuForm: rf } : {}),
+      ...(stored.site ? { site: mergeSite(undefined, stored.site) } : {}),
+      ...(stored.fiyatHesap
+        ? { fiyatHesap: mergeFiyatHesap(VARSAYILAN_FIYAT_HESAP, stored.fiyatHesap) }
+        : {}),
     };
   } catch {
     return v;
@@ -264,6 +314,17 @@ export async function icerikKaydet(patch: Partial<SiteIcerik>): Promise<SiteIcer
     galeri: mergeGaleri(cur.galeri, patch.galeri),
     iletisim: mergeIletisim(cur.iletisim, patch.iletisim),
     randevuForm: mergeRandevuForm(cur.randevuForm ?? varsayilan().randevuForm!, patch.randevuForm),
+    ...(patch.site !== undefined || cur.site
+      ? { site: mergeSite(cur.site, patch.site ?? cur.site) }
+      : {}),
+    ...(patch.fiyatHesap !== undefined || cur.fiyatHesap
+      ? {
+          fiyatHesap: mergeFiyatHesap(
+            cur.fiyatHesap ?? VARSAYILAN_FIYAT_HESAP,
+            patch.fiyatHesap ?? cur.fiyatHesap,
+          ),
+        }
+      : {}),
   };
   await fs.mkdir(path.dirname(FILE), { recursive: true });
   await fs.writeFile(FILE, JSON.stringify({ icerik: next } satisfies Db, null, 2), "utf8");

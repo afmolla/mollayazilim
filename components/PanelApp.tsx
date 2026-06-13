@@ -77,8 +77,8 @@ const NAV_ILAN: { id: TabId; label: string; short: string } = {
 
 const NAV_TEDARIK: { id: TabId; label: string; short: string } = {
   id: "tedarik",
-  label: "Aracılık",
-  short: "Td",
+  label: "Fiyatlandırma",
+  short: "Fy",
 };
 
 const NAV_BASE: { id: TabId; label: string; short: string }[] = [

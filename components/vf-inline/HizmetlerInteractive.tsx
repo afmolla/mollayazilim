@@ -185,14 +185,16 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
           ])
         }
       >
-        <h1
+        <EditableText
+          active={inline}
+          tag="h1"
           className={[
             "text-3xl font-bold tracking-tight md:text-4xl",
             isAvukat ? "text-slate-50" : "text-[var(--text)]",
           ].join(" ")}
-        >
-          Hizmetler
-        </h1>
+          value={h.sayfaBaslik ?? "Hizmetler"}
+          onCommit={(v) => update((cur) => ({ ...cur, sayfaBaslik: v }))}
+        />
         <EditableText
           active={inline}
           tag="p"
@@ -218,9 +220,9 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
               }
             >
               <tr>
-                <th className="px-4 py-3 font-medium">Hizmet</th>
-                <th className="px-4 py-3 font-medium">Süre</th>
-                <th className="px-4 py-3 font-medium">Başlangıç</th>
+                <th className="px-4 py-3 font-medium">{h.kolonAd ?? "Hizmet"}</th>
+                <th className="px-4 py-3 font-medium">{h.kolonSure ?? "Süre"}</th>
+                <th className="px-4 py-3 font-medium">{h.kolonFiyat ?? "Başlangıç"}</th>
               </tr>
             </thead>
             <tbody className={isAvukat ? "divide-y divide-white/[0.06]" : "divide-y divide-[var(--border)]"}>

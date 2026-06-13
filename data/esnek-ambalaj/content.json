@@ -1,90 +1,122 @@
 {
   "icerik": {
     "home": {
-      "badge": "Aracılık · Tedarik · OPP · CPP · PET · LDPE",
-      "baslik": "Esnek ambalajda doğru tedarikçi, doğru fiyat.",
-      "aciklama": "— Torba ve rulo siparişlerinizde anlaşmalı üreticilerden teklif topluyor, mikron ve baskı detayına göre en uygun tedariki sunuyoruz. Üretim bizde değil; tedarik gücümüz sizde.",
+      "badge": "OPP · CPP · PET · LDPE",
+      "baslik": "Esnek ambalajda kalite ve hızlı teslim.",
+      "aciklama": "Torba ve rulo siparişlerinizde mikron, baskı ve adet detayına göre uygun maliyetle üretim ve sevkiyat sunuyoruz.",
       "ctaPrimaryLabel": "Fiyat hesapla",
       "ctaPrimaryHref": "/fiyat-hesaplama",
       "ctaSecondaryLabel": "Teklif talebi",
       "ctaSecondaryHref": "/randevu",
-      "heroImageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80",
-      "heroImageAlt": "Esnek ambalaj tedarik — torba ve rulo",
+      "heroImageSrc": "https://images.unsplash.com/photo-1618005198919-d8d4b5b322ab?w=1920&q=80",
+      "heroImageAlt": "Soyut endüstriyel doku",
+      "etiketler": ["OPP · CPP", "PET · LDPE", "Torba & rulo", "Baskılı ambalaj"],
+      "heroKart": {
+        "imageSrc": "https://images.unsplash.com/photo-1579546929518-9e396f3cc770?w=1200&q=80",
+        "imageAlt": "Renk geçişli soyut doku",
+        "baslik": "Online fiyat tahmini",
+        "aciklama": "Mikron, en-boy, baskı ve adet — anında ön teklif aralığı."
+      },
       "heroAltBloklar": [
         {
           "id": "trust",
           "tur": "metin",
-          "metin": "Anlaşmalı üretici ağı · 48 saat yazılı teklif · Numune desteği · Marmara geneli sevkiyat",
+          "metin": "48 saat yazılı teklif · Numune desteği · Baskılı ambalaj · Marmara geneli sevkiyat",
           "hiza": "orta"
         }
       ],
-      "bolumBaslik": "Neden aracılık modeli?",
-      "bolumAciklama": "Tek üreticiye bağlı kalmazsınız — aynı spesifikasyonda birden fazla tedarikçiden fiyat alır, size en uygun teslim ve fiyatı seçeriz. Online hesaplayıcı ön tahmin; kesin teklif tedarikçi onayı ile.",
+      "bolumBaslik": "Neden ProPack?",
+      "bolumAciklama": "Geniş ürün yelpazesi, esnek minimum sipariş ve hızlı numune süreci. Online hesaplayıcı ile ön tahmin alın; kesin teklif numune ve baskı onayı sonrası netleşir.",
       "features": [
         {
           "id": "opp",
-          "baslik": "OPP & CPP tedarik",
+          "baslik": "OPP & CPP",
           "aciklama": "Gıda, ekmek, tekstil ve otomatik dolum hatları için torba ve rulo.",
           "kolon": 1,
-          "imageSrc": "https://images.unsplash.com/photo-1619642751034-765df691d327?w=800&q=80"
+          "imageSrc": "https://images.unsplash.com/photo-1557683316-973403b01281?w=800&q=80"
         },
         {
           "id": "pet",
           "baslik": "PET & laminasyon",
           "aciklama": "Barrier katmanlı gıda ambalajı — kahve, atıştırmalık, kuruyemiş.",
           "kolon": 1,
-          "imageSrc": "https://images.unsplash.com/photo-1604719312566-8912a922856c?w=800&q=80"
+          "imageSrc": "https://images.unsplash.com/photo-1620641788421-7cf1e369ad59?w=800&q=80"
         },
         {
           "id": "ldpe",
           "baslik": "LDPE & endüstriyel",
           "aciklama": "Market torbası, shrink, kolileme — yüksek hacim siparişler.",
           "kolon": 1,
-          "imageSrc": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+          "imageSrc": "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=800&q=80"
         },
         {
           "id": "baski",
           "baslik": "Baskılı ambalaj",
-          "aciklama": "Flexo baskı koordinasyonu, klise ve renk provası takibi.",
+          "aciklama": "Flexo baskı, klise hazırlığı ve renk provası.",
           "kolon": 1,
-          "imageSrc": "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c3?w=800&q=80"
+          "imageSrc": "https://images.unsplash.com/photo-1558591710-4bcf4ddd3c55?w=800&q=80"
         }
       ]
     },
     "hizmetler": {
-      "sayfaAciklama": "Aşağıdaki gruplar aracılık kapsamındadır. Fiyatlar tedarikçi, mikron ve adede göre değişir — online hesaplayıcı ile ön tahmin alın, kesin teklif için bize yazın.",
+      "sayfaBaslik": "Ürünler",
+      "kolonAd": "Ürün",
+      "kolonSure": "Min. sipariş",
+      "kolonFiyat": "Fiyat",
+      "sayfaAciklama": "Aşağıdaki ürün gruplarında torba ve rulo üretimi yapıyoruz. Fiyatlar malzeme, mikron ve adede göre değişir — online hesaplayıcı ile ön tahmin alın.",
       "rows": [
-        { "ad": "OPP / CPP torba tedarik", "sure": "Min. sipariş kg/adet", "fiyat": "Teklif" },
+        { "ad": "OPP / CPP torba", "sure": "Min. sipariş kg/adet", "fiyat": "Teklif" },
         { "ad": "OPP+CPP laminasyon rulo", "sure": "Bobin / kg", "fiyat": "Teklif" },
         { "ad": "PET+PE gıda laminasyonu", "sure": "Min. 250 kg", "fiyat": "Teklif" },
         { "ad": "LDPE market & endüstriyel", "sure": "Min. 500 kg", "fiyat": "Teklif" },
-        { "ad": "Baskılı ambalaj (flexo koordinasyon)", "sure": "Klise + kg", "fiyat": "Teklif" },
+        { "ad": "Baskılı ambalaj (flexo)", "sure": "Klise + kg", "fiyat": "Teklif" },
         { "ad": "Doypack / kilitli torba", "sure": "Min. 8.000 ad", "fiyat": "Teklif" },
         { "ad": "Acil stok rulo", "sure": "Stok durumuna göre", "fiyat": "WhatsApp" },
         { "ad": "Numune & renk provası", "sure": "3–5 iş günü", "fiyat": "Ücretsiz keşif*" }
       ]
     },
     "galeri": {
-      "sayfaAciklama": "Tedarik ettiğimiz ürün gruplarından örnek görseller — kendi referans fotoğraflarınızı panelden yükleyin.",
+      "sayfaBaslik": "Galeri",
+      "sayfaAciklama": "Referans görseller — panelden kendi fotoğraflarınızı yükleyebilirsiniz.",
       "images": [
-        { "src": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&q=80", "alt": "Ambalaj tedarik ve lojistik" },
-        { "src": "https://images.unsplash.com/photo-1619642751034-765df691d327?w=1000&q=80", "alt": "OPP CPP rulo bobin" },
-        { "src": "https://images.unsplash.com/photo-1604719312566-8912a922856c?w=1000&q=80", "alt": "Torba ambalaj örnekleri" },
-        { "src": "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c3?w=1000&q=80", "alt": "Baskılı ambalaj" },
-        { "src": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1000&q=80", "alt": "Endüstriyel paketleme" },
-        { "src": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&q=80", "alt": "Gıda perakende ambalaj" }
+        { "src": "https://images.unsplash.com/photo-1618005198919-d8d4b5b322ab?w=1000&q=80", "alt": "Soyut doku 1" },
+        { "src": "https://images.unsplash.com/photo-1579546929518-9e396f3cc770?w=1000&q=80", "alt": "Soyut doku 2" },
+        { "src": "https://images.unsplash.com/photo-1557683316-973403b01281?w=1000&q=80", "alt": "Soyut doku 3" },
+        { "src": "https://images.unsplash.com/photo-1620641788421-7cf1e369ad59?w=1000&q=80", "alt": "Soyut doku 4" },
+        { "src": "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=1000&q=80", "alt": "Soyut doku 5" },
+        { "src": "https://images.unsplash.com/photo-1558591710-4bcf4ddd3c55?w=1000&q=80", "alt": "Soyut doku 6" }
       ]
     },
     "iletisim": {
-      "sayfaAciklama": "Teklif, numune ve tedarikçi koordinasyonu için satış hattımız hafta içi 08:30–18:30 arası yanıt verir. Fiyat hesaplayıcı sonucunu WhatsApp ile göndermeniz yeterli.",
-      "whatsappMesaj": "Merhaba ProPack, esnek ambalaj tedarik teklifi almak istiyorum. Ürün: OPP/CPP torba veya rulo — ölçü, mikron ve adet bilgisi ekte."
+      "sayfaBaslik": "İletişim",
+      "sayfaAciklama": "Teklif ve numune talepleri için satış hattımız hafta içi 08:30–18:30 arası yanıt verir.",
+      "whatsappMesaj": "Merhaba ProPack, esnek ambalaj teklifi almak istiyorum."
+    },
+    "site": {
+      "footerEkMetin": ""
+    },
+    "fiyatHesap": {
+      "seoTitle": "Fiyat Hesaplama",
+      "seoDescription": "OPP, CPP, PET, LDPE torba ve rulo için online teklif tahmini.",
+      "rozet": "Online teklif",
+      "baslik": "Esnek ambalaj fiyat hesaplama",
+      "aciklama": "OPP, CPP, PET, LDPE torba ve rulo için tahmini teklif aralığı. Kesin fiyat numune ve baskı onayı sonrası 48 saat içinde yazılır.",
+      "sonucBaslik": "Tahmini teklif aralığı (KDV hariç)",
+      "waButon": "WhatsApp ile teklif iste",
+      "randevuButon": "Numune / keşif talebi",
+      "sonucAgirlik": "Tahmini ağırlık",
+      "sonucBirim": "Satış birim (kg)",
+      "sonucTeslim": "Tahmini teslim",
+      "sonucBaski": "Baskı işçilik",
+      "sonucKlise": "Klise / setup",
+      "sonucEk": "Ek özellikler"
     },
     "randevuForm": {
       "pageTitle": "Teklif & numune talebi",
-      "pageDescription": "Talebiniz satış paneline düşer; tedarikçi teyidi sonrası yazılı teklif gönderilir.",
-      "intro": "Ölçü tablosu, baskı PDF veya numune fotoğrafı paylaşabilirsiniz. İlk numune genelde 3–5 iş gününde koordine edilir.",
+      "pageDescription": "Talebiniz satış ekibimize iletilir; en kısa sürede yazılı teklif gönderilir.",
+      "intro": "Ölçü tablosu, baskı PDF veya numune fotoğrafı paylaşabilirsiniz.",
       "approvedListTitle": "Onaylı teklif talepleri",
-      "approvedListIntro": "Onaylanmış talepler — panel akışı.",
+      "approvedListIntro": "Onaylanmış talepler.",
       "selectLabel": "Ürün grubu",
       "submitButtonLabel": "Teklif talebi gönder",
       "options": [

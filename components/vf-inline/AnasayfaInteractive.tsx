@@ -21,6 +21,7 @@ import { OtoyikamaVisualBands } from "@/components/vitrin/OtoyikamaVisualBands";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import { normalizeOtoImageSrc, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
+import { ESNEK_AMBALAJ_IMAGES, normalizeAmbalajImageSrc } from "@/lib/esnek-ambalaj-images";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
@@ -901,7 +902,7 @@ export function AnasayfaInteractive(props: {
           className={
             isRestaurant
               ? "mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-4 md:items-stretch"
-              : isEmlak || isAvukat || isOtoyikama
+              : isEmlak || isAvukat || isOtoyikama || isEsnekAmbalaj
                 ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
                 : isKuaforErkek || isKuaforKadin
                   ? "mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:items-stretch"
@@ -934,6 +935,8 @@ export function AnasayfaInteractive(props: {
                   "!rounded-2xl !border-white/[0.08] !bg-white/[0.04] !shadow-none backdrop-blur-md transition hover:border-amber-400/25",
                 isOtoyikama &&
                   "!rounded-2xl !border-cyan-500/15 !bg-cyan-950/20 !shadow-none backdrop-blur-md transition hover:border-cyan-400/35",
+                isEsnekAmbalaj &&
+                  "!rounded-2xl !border-emerald-500/15 !bg-emerald-950/20 !shadow-none backdrop-blur-md transition hover:border-emerald-400/35",
                 isKuaforErkek &&
                   "!rounded-xl !border-zinc-600/55 !bg-zinc-950/45 !shadow-none backdrop-blur-md transition hover:border-[var(--brand)]/40",
                 isKuaforKadin &&
@@ -957,6 +960,18 @@ export function AnasayfaInteractive(props: {
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
               ) : null}
+              {isEsnekAmbalaj && x.imageSrc ? (
+                <div className="relative mb-4 h-40 w-full shrink-0 overflow-hidden rounded-xl border border-emerald-500/10">
+                  <VitrinImage
+                    src={normalizeAmbalajImageSrc(x.imageSrc, ESNEK_AMBALAJ_IMAGES.texture1)}
+                    alt={x.baslik}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 100vw, 280px"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                </div>
+              ) : null}
               <EditableText
                 active={inline}
                 tag="h3"
@@ -969,6 +984,8 @@ export function AnasayfaInteractive(props: {
                         ? "w-full text-lg font-semibold text-[#e8eef8]"
                         : isOtoyikama
                           ? "w-full text-lg font-bold text-cyan-50"
+                          : isEsnekAmbalaj
+                            ? "w-full text-lg font-bold text-emerald-50"
                           : isKuaforErkek
                           ? "w-full text-lg font-bold text-[var(--text)]"
                           : isKuaforKadin
