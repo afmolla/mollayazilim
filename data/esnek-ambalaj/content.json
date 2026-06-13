@@ -1,0 +1,102 @@
+{
+  "icerik": {
+    "home": {
+      "badge": "Torba · Rulo · Laminasyon · Baskı",
+      "baslik": "Esnek ambalajda hızlı üretim, net fiyat.",
+      "aciklama": "— OPP, CPP, PET ve LDPE torba ile rulo imalatı; gıda, tekstil ve endüstriyel paketleme için baskılı ve baskısız çözümler (demo vitrin).",
+      "ctaPrimaryLabel": "Fiyat hesapla",
+      "ctaPrimaryHref": "/fiyat-hesaplama",
+      "ctaSecondaryLabel": "Ürün grupları",
+      "ctaSecondaryHref": "/hizmetler",
+      "heroImageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=80",
+      "heroImageAlt": "Esnek ambalaj üretim hattı — rulo ve torba",
+      "heroAltBloklar": [
+        {
+          "id": "trust",
+          "tur": "metin",
+          "metin": "ISO 22000 uyumlu üretim · Flexo & rotogravür baskı · 48 saat numune · İstanbul & Tekirdağ sevkiyat",
+          "hiza": "orta"
+        }
+      ],
+      "bolumBaslik": "Neden FlexPack?",
+      "bolumAciklama": "Deka Plastik, Bereket Plastik ve Naysa gibi sektör vitrinlerinde olduğu gibi ürün grupları, mikron seçimi ve baskı opsiyonları net anlatılır — burada online fiyat motoru da demo olarak sunulur.",
+      "features": [
+        {
+          "id": "opp",
+          "baslik": "OPP & CPP",
+          "aciklama": "Şeffaf poşet, ekmek ambalajı, yapışkanlı torba ve otomatik dolum ruloları.",
+          "kolon": 1,
+          "imageSrc": "https://images.unsplash.com/photo-1619642751034-765df691d327?w=800&q=80"
+        },
+        {
+          "id": "pet",
+          "baslik": "PET & laminasyon",
+          "aciklama": "Barrier katmanlı gıda ambalajı, kahve ve atıştırmalık için yüksek bariyer.",
+          "kolon": 1,
+          "imageSrc": "https://images.unsplash.com/photo-1604719312566-8912a922856c?w=800&q=80"
+        },
+        {
+          "id": "ldpe",
+          "baslik": "LDPE & HDPE",
+          "aciklama": "Market torbası, çöp torbası, endüstriyel shrink ve kolileme filmleri.",
+          "kolon": 1,
+          "imageSrc": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+        },
+        {
+          "id": "baski",
+          "baslik": "Baskılı ambalaj",
+          "aciklama": "8 renge kadar flexo baskı; klise hazırlığı ve renk provası süreci şeffaf.",
+          "kolon": 1,
+          "imageSrc": "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c3?w=800&q=80"
+        }
+      ]
+    },
+    "hizmetler": {
+      "sayfaAciklama": "Aşağıdaki tablo demo referans fiyatlarıdır. Kesin teklif için fiyat hesaplayıcıyı kullanın veya numune gönderin — mikron, en-boy ve adet değişince birim maliyet güncellenir.",
+      "rows": [
+        { "ad": "OPP düz torba (40 µm) — 200×300 mm", "sure": "Min. 5.000 ad", "fiyat": "Teklif" },
+        { "ad": "CPP ekmek torbası — baskılı", "sure": "Min. 10.000 ad", "fiyat": "Teklif" },
+        { "ad": "OPP+CPP laminasyon rulo", "sure": "Min. 300 kg", "fiyat": "132 ₺/kg+" },
+        { "ad": "PET+PE gıda laminasyonu", "sure": "Min. 250 kg", "fiyat": "148 ₺/kg+" },
+        { "ad": "LDPE market torbası", "sure": "Min. 500 kg", "fiyat": "74 ₺/kg+" },
+        { "ad": "Doypack / kilitli torba", "sure": "Min. 8.000 ad", "fiyat": "Teklif" },
+        { "ad": "Otomatik dolum rulosu (CPP)", "sure": "Bobin bazlı", "fiyat": "Teklif" },
+        { "ad": "Klise / baskı setup", "sure": "İlk sipariş", "fiyat": "Renk başı" }
+      ]
+    },
+    "galeri": {
+      "sayfaAciklama": "Torba, rulo, baskı ve üretim hattı görselleri — panelden kendi fabrika fotoğraflarınızla değiştirin.",
+      "images": [
+        { "src": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&q=80", "alt": "Ambalaj üretim tesisi" },
+        { "src": "https://images.unsplash.com/photo-1619642751034-765df691d327?w=1000&q=80", "alt": "OPP CPP rulo bobin" },
+        { "src": "https://images.unsplash.com/photo-1604719312566-8912a922856c?w=1000&q=80", "alt": "Şeffaf ambalaj torbaları" },
+        { "src": "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c3?w=1000&q=80", "alt": "Flexo baskı hattı" },
+        { "src": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1000&q=80", "alt": "Endüstriyel paketleme" },
+        { "src": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&q=80", "alt": "Gıda perakende ambalaj" }
+      ]
+    },
+    "iletisim": {
+      "sayfaAciklama": "Teklif, numune ve kalite belgeleri için satış ekibimiz hafta içi 08:30–18:30 arası yanıt verir. Fiyat hesaplayıcı sonucunu WhatsApp ile gönderebilirsiniz.",
+      "whatsappMesaj": "Merhaba FlexPack, esnek ambalaj (torba/rulo) için fiyat teklifi almak istiyorum. Ürün: OPP/CPP, mikron ve adet bilgisi ekte."
+    },
+    "randevuForm": {
+      "pageTitle": "Teklif & numune talebi",
+      "pageDescription": "Talebiniz satış paneline düşer; teknik ekibimiz ölçü, mikron ve baskı dosyası için dönüş yapar.",
+      "intro": "CAD çizim, PDF baskı dosyası veya numune fotoğrafı paylaşabilirsiniz. İlk numune genelde 3–5 iş günü içinde hazırlanır (demo metin).",
+      "approvedListTitle": "Onaylı talepler",
+      "approvedListIntro": "Onaylanmış teklif takibi — demo panel akışı.",
+      "selectLabel": "Ürün grubu",
+      "submitButtonLabel": "Teklif talebi gönder",
+      "options": [
+        "OPP torba / poşet",
+        "CPP torba / ekmek",
+        "OPP & CPP rulo",
+        "PET laminasyon",
+        "LDPE torba",
+        "Doypack / kilitli",
+        "Baskılı ambalaj (flexo)",
+        "Diğer / özel proje"
+      ]
+    }
+  }
+}

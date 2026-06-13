@@ -45,6 +45,7 @@ type MollaPanelSettings = {
   demoAvukatGoster: boolean;
   demoOtoyikamaGoster: boolean;
   demoCrmGoster: boolean;
+  demoEsnekAmbalajGoster: boolean;
 };
 
 const DEMO_FLAG_ROWS: { key: MollaDemoKey; label: string; flag: keyof Pick<
@@ -56,6 +57,7 @@ const DEMO_FLAG_ROWS: { key: MollaDemoKey; label: string; flag: keyof Pick<
   | "demoEmlakGoster"
   | "demoAvukatGoster"
   | "demoOtoyikamaGoster"
+  | "demoEsnekAmbalajGoster"
 > }[] = [
   { key: "crm", label: "Molla CRM", flag: "demoCrmGoster" },
   { key: "kuafor", label: "Erkek kuaförü", flag: "demoKuaforGoster" },
@@ -64,6 +66,7 @@ const DEMO_FLAG_ROWS: { key: MollaDemoKey; label: string; flag: keyof Pick<
   { key: "emlak", label: "Emlak", flag: "demoEmlakGoster" },
   { key: "avukat", label: "Avukatlık", flag: "demoAvukatGoster" },
   { key: "otoyikama", label: "Oto yıkama", flag: "demoOtoyikamaGoster" },
+  { key: "esnekAmbalaj", label: "Esnek ambalaj", flag: "demoEsnekAmbalajGoster" },
 ];
 
 function settingsFromApi(a: Record<string, unknown>): MollaPanelSettings {
@@ -96,6 +99,7 @@ function settingsFromApi(a: Record<string, unknown>): MollaPanelSettings {
     demoAvukatGoster: a.demoAvukatGoster !== false,
     demoOtoyikamaGoster: a.demoOtoyikamaGoster !== false,
     demoCrmGoster: a.demoCrmGoster !== false,
+    demoEsnekAmbalajGoster: a.demoEsnekAmbalajGoster !== false,
   };
 }
 

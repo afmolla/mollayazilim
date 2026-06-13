@@ -1,0 +1,18 @@
+{
+  "header": [
+    { "label": "Ana Sayfa", "href": "/anasayfa", "newTab": false },
+    { "label": "Ürünler", "href": "/hizmetler", "newTab": false },
+    { "label": "Fiyat Hesapla", "href": "/fiyat-hesaplama", "newTab": false },
+    { "label": "Galeri", "href": "/galeri", "newTab": false },
+    { "label": "Teklif Al", "href": "/randevu", "newTab": false },
+    { "label": "İletişim", "href": "/iletisim", "newTab": false }
+  ],
+  "footer": [
+    { "href": "/fiyat-hesaplama", "label": "Fiyat hesaplama" },
+    { "href": "/hizmetler", "label": "Ürün grupları" },
+    { "href": "/p/opp-cpp-rulo", "label": "OPP & CPP rulo" },
+    { "href": "/randevu", "label": "Teklif talebi" },
+    { "href": "/iletisim", "label": "İletişim" },
+    { "href": "/panel", "label": "Yönetim paneli" }
+  ]
+}

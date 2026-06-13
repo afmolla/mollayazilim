@@ -60,6 +60,12 @@ const ROWS: {
     site: "/otoyikama",
     panel: "/otoyikama/panel",
   },
+  {
+    label: "Esnek ambalaj vitrin",
+    desc: "/esnek-ambalaj — OPP, CPP, torba/rulo + fiyat hesaplama",
+    site: "/esnek-ambalaj",
+    panel: "/esnek-ambalaj/panel",
+  },
 ];
 
 export function PanelPortfoyHub() {

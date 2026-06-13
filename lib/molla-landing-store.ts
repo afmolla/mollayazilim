@@ -14,6 +14,7 @@ export type MollaDemoKey =
   | "emlak"
   | "avukat"
   | "otoyikama"
+  | "esnekAmbalaj"
   | "crm";
 
 export type MollaDemoItem = {
@@ -169,10 +170,16 @@ const DEFAULT_DEMO_GROUPS: MollaDemoGroup[] = [
   {
     id: "diger",
     title: "Diğer sektör demoları",
-    desc: "Restoran QR menü, emlak ilan vitrinleri ve oto yıkama / detailing.",
+    desc: "Restoran QR menü, emlak ilan vitrinleri, esnek ambalaj ve oto yıkama.",
     items: [
       { key: "restaurant", title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
       { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
+      {
+        key: "esnekAmbalaj",
+        title: "Esnek Ambalaj Demo",
+        href: "/esnek-ambalaj",
+        meta: "OPP · CPP · torba/rulo + fiyat hesaplama",
+      },
       { key: "otoyikama", title: "Oto Yıkama Demo", href: "/otoyikama", meta: "Yıkama · pasta cila · seramik" },
     ],
   },

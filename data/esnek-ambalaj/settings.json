@@ -1,0 +1,22 @@
+{
+  "ayarlar": {
+    "salonAd": "FlexPack Plastik",
+    "whatsapp": "905551234567",
+    "iletisimWhatsapp": "905551234567",
+    "iletisimTelefon": "+90 212 555 12 34",
+    "iletisimEposta": "satis@flexpack-demo.com",
+    "adresKisa": "İkitelli OSB · İstanbul",
+    "adresDetay": "İkitelli Organize Sanayi Bölgesi, Esenyurt / İstanbul",
+    "calismaSaatleri": "Hafta içi 08:30 — 18:30",
+    "sehir": "İstanbul",
+    "menuDavranis": "hover",
+    "footerSosyalGoster": true,
+    "seoTitle": "FlexPack Plastik | OPP, CPP, PET, LDPE Torba & Rulo — Esnek Ambalaj",
+    "seoDescription": "OPP, CPP, PET, LDPE torba ve rulo imalatı. Baskılı ambalaj, laminasyon, doypack ve otomatik dolum ruloları. Online fiyat hesaplama — demo vitrin.",
+    "seoKeywords": "esnek ambalaj, OPP torba, CPP rulo, PET film, LDPE poşet, baskılı ambalaj, laminasyon, doypack, fiyat hesaplama",
+    "seoOgImage": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=80",
+    "seoIndex": true,
+    "googleMaps": "https://maps.google.com/?q=Ikitelli+OSB+Istanbul",
+    "linkedin": "https://linkedin.com"
+  }
+}

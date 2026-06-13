@@ -285,6 +285,41 @@
   color: var(--brand);
 }
 
+[data-vitrin="esnek-ambalaj"] {
+  color-scheme: dark;
+  --brand: #22c55e;
+  --on-brand: #052e16;
+  --text: #f0fdf4;
+  --muted: #86efac;
+  --surface: #061510;
+  --surface-2: #0a1f14;
+  --surface-3: #0f2a1a;
+  --border: rgba(34, 197, 94, 0.2);
+}
+
+[data-vitrin="esnek-ambalaj"] header[data-fixed-header] {
+  border-color: rgba(34, 197, 94, 0.22);
+  background: rgba(6, 21, 16, 0.92) !important;
+  backdrop-filter: blur(14px);
+}
+
+[data-vitrin="esnek-ambalaj"] footer {
+  border-color: rgba(34, 197, 94, 0.12);
+  background: linear-gradient(180deg, #081810 0%, #041008 100%) !important;
+}
+
+[data-vitrin="esnek-ambalaj"] .site-header-nav a {
+  color: rgba(240, 253, 244, 0.78);
+}
+
+[data-vitrin="esnek-ambalaj"] .site-header-nav a:hover {
+  color: var(--brand);
+}
+
+[data-vitrin="esnek-ambalaj"] .site-header-nav a[aria-current="page"] {
+  color: var(--brand);
+}
+
 /* Avukat vitrin panel — hukuk bürosu hissi */
 [data-panel-vitrin="avukat"] {
   --brand: #c9a227;

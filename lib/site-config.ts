@@ -25,6 +25,7 @@ const DEFAULT_PORTFOLIO_PREFIXES = [
   "/emlak",
   "/avukat",
   "/otoyikama",
+  "/esnek-ambalaj",
 ] as const;
 
 export function portfolioPrefixes(): string[] {
@@ -64,6 +65,7 @@ const PORTFOLIO_INTERNAL_ROUTES = [
   "/randevular",
   "/qr-menu",
   "/ilanlar",
+  "/fiyat-hesaplama",
 ] as const;
 
 export function isPortfolioInternalRoute(pathname: string): boolean {

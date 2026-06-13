@@ -35,6 +35,17 @@ export function defaultRandevuOptionsForSubdir(subdir: string): string[] {
         "Seramik ön muayene",
         "Cam filmi / PPF bilgi",
       ];
+    case "esnek-ambalaj":
+      return [
+        "OPP torba / poşet",
+        "CPP torba / ekmek",
+        "OPP & CPP rulo",
+        "PET laminasyon",
+        "LDPE torba",
+        "Doypack / kilitli",
+        "Baskılı ambalaj (flexo)",
+        "Diğer / özel proje",
+      ];
     case "kuafor-kadin":
       return [
         "Kesim & şekillendirme",

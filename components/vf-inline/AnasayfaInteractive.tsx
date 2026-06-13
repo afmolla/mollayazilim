@@ -16,6 +16,7 @@ import { RestaurantFullscreenHero } from "@/components/vitrin/RestaurantFullscre
 import { EmlakFullscreenHero } from "@/components/vitrin/EmlakFullscreenHero";
 import { AvukatFullscreenHero } from "@/components/vitrin/AvukatFullscreenHero";
 import { OtoyikamaFullscreenHero } from "@/components/vitrin/OtoyikamaFullscreenHero";
+import { EsnekAmbalajFullscreenHero } from "@/components/vitrin/EsnekAmbalajFullscreenHero";
 import { OtoyikamaVisualBands } from "@/components/vitrin/OtoyikamaVisualBands";
 import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
@@ -65,6 +66,7 @@ export function AnasayfaInteractive(props: {
   const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
   const isAvukat = pathname.includes("/avukat");
   const isOtoyikama = pathname.includes("/otoyikama");
+  const isEsnekAmbalaj = pathname.includes("/esnek-ambalaj");
   const searchParams = useSearchParams();
   const router = useRouter();
   const vfEdit = searchParams.get("vf_edit") === "1";
@@ -710,6 +712,18 @@ export function AnasayfaInteractive(props: {
           />
         ) : isOtoyikama ? (
           <OtoyikamaFullscreenHero
+            home={home}
+            inline={inline}
+            salonAdLive={salonAdLive}
+            setSalonAdLive={setSalonAdLive}
+            patchSalonAd={patchSalonAd}
+            updateHome={updateHome}
+            pathname={pathname}
+            openCtx={openCtx}
+            heroAltBlokMenuItems={heroAltBlokMenuItems}
+          />
+        ) : isEsnekAmbalaj ? (
+          <EsnekAmbalajFullscreenHero
             home={home}
             inline={inline}
             salonAdLive={salonAdLive}

@@ -134,6 +134,8 @@ function demoGosterilir(key: MollaDemoKey, ayar: SiteAyarlar): boolean {
       return ayar.demoAvukatGoster !== false;
     case "otoyikama":
       return ayar.demoOtoyikamaGoster !== false;
+    case "esnekAmbalaj":
+      return ayar.demoEsnekAmbalajGoster !== false;
     case "crm":
       return ayar.demoCrmGoster !== false;
   }
