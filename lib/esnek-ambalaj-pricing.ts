@@ -1,4 +1,6 @@
-/** Demo fiyat motoru — gerçek teklif yerine yönlendirme amaçlı tahmini aralık. */
+/** Esnek ambalaj fiyat motoru — tedarikçi maliyeti + aracılık marjı */
+
+import type { EsnekAmbalajAracilik } from "@/lib/esnek-ambalaj-aracilik-store";
 
 export type AmbalajUrunTipi = "torba" | "rulo";
 export type AmbalajMalzeme =
@@ -30,14 +32,19 @@ export type AmbalajFiyatGirdi = {
 
 export type AmbalajFiyatSonuc = {
   tahminiKg: number;
-  birimFiyatKg: number;
+  tedarikBirimKg: number;
+  satisBirimKg: number;
+  tedarikMalzemeBedeli: number;
+  aracilikBedeli: number;
   baskiBedeli: number;
   ekOzellikBedeli: number;
   kalipBedeli: number;
-  araToplam: number;
+  tedarikAraToplam: number;
   minSiparisFarki: number;
   toplamMin: number;
   toplamMax: number;
+  teslimGunMin: number;
+  teslimGunMax: number;
   notlar: string[];
 };
 
@@ -51,14 +58,15 @@ const MALZEME_ETIKET: Record<AmbalajMalzeme, string> = {
   pet_pe_lamine: "PET + PE Laminasyon",
 };
 
-const MALZEME_FIYAT_KG: Record<AmbalajMalzeme, number> = {
-  opp: 88,
-  cpp: 95,
-  pet: 118,
-  ldpe: 74,
-  bopp: 91,
-  opp_cpp_lamine: 132,
-  pet_pe_lamine: 148,
+/** Varsayılan tedarikçi kg maliyeti (TL/kg) — panelden güncellenir */
+export const VARSAYILAN_TEDARIK_KG: Record<AmbalajMalzeme, number> = {
+  opp: 76,
+  cpp: 82,
+  pet: 102,
+  ldpe: 64,
+  bopp: 78,
+  opp_cpp_lamine: 114,
+  pet_pe_lamine: 128,
 };
 
 const YOGUNLUK: Record<AmbalajMalzeme, number> = {
@@ -87,7 +95,10 @@ function clamp(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n));
 }
 
-/** kg tahmini — endüstriyel yaklaşık formül (demo). */
+function tedarikKgFiyat(m: AmbalajMalzeme, cfg: EsnekAmbalajAracilik): number {
+  return cfg.tedarikciKgFiyat[m] ?? VARSAYILAN_TEDARIK_KG[m];
+}
+
 export function tahminiKg(g: AmbalajFiyatGirdi): number {
   const mikron = clamp(g.mikron, 15, 200);
   const en = clamp(g.enMm, 40, 2000);
@@ -108,53 +119,75 @@ export function tahminiKg(g: AmbalajFiyatGirdi): number {
   return Math.max(kgBirim * adet, 0.05);
 }
 
-export function hesaplaAmbalajFiyat(g: AmbalajFiyatGirdi): AmbalajFiyatSonuc {
+export function hesaplaAmbalajFiyat(
+  g: AmbalajFiyatGirdi,
+  cfg: EsnekAmbalajAracilik,
+): AmbalajFiyatSonuc {
   const notlar: string[] = [];
   const kg = tahminiKg(g);
   const mikron = clamp(g.mikron, 15, 200);
   const mikronCarpan = mikron <= 30 ? 0.92 : mikron <= 50 ? 1 : mikron <= 80 ? 1.08 : 1.18;
 
-  let birimKg = MALZEME_FIYAT_KG[g.malzeme] * mikronCarpan;
-  if (g.urunTipi === "rulo" && g.form === "dolum_rulo") birimKg *= 1.06;
+  let tedarikBirimKg = tedarikKgFiyat(g.malzeme, cfg) * mikronCarpan;
+  if (g.urunTipi === "rulo" && g.form === "dolum_rulo") tedarikBirimKg *= 1.06;
 
-  const malzemeBedeli = kg * birimKg;
+  const marjCarpan = 1 + cfg.aracilikMarjYuzde / 100;
+  const satisBirimKg = tedarikBirimKg * marjCarpan;
+
+  const tedarikMalzemeBedeli = kg * tedarikBirimKg;
+  const satisMalzemeBedeli = kg * satisBirimKg;
+  const aracilikBedeli = satisMalzemeBedeli - tedarikMalzemeBedeli;
 
   let kalipBedeli = 0;
   let baskiBedeli = 0;
   if (g.baski) {
     const renk = clamp(g.baskiRenk, 1, 8);
-    kalipBedeli = 2200 + renk * 750;
-    baskiBedeli = malzemeBedeli * (0.12 + renk * 0.035);
-    notlar.push("Baskılı siparişlerde klise / klişe hazırlık bedeli ilk seferde uygulanır.");
+    kalipBedeli = (2000 + renk * 700) * marjCarpan;
+    baskiBedeli = satisMalzemeBedeli * (0.1 + renk * 0.03);
+    notlar.push("Baskılı siparişlerde klise hazırlığı ilk seferde uygulanır; tedarikçi teyidi sonrası netleşir.");
   }
 
   let ekOzellikBedeli = 0;
-  if (g.perfore) ekOzellikBedeli += kg * 4.5;
-  if (g.fermuar) ekOzellikBedeli += g.urunTipi === "torba" ? clamp(g.adet, 1, 5_000_000) * 0.35 : kg * 18;
-  if (g.pencere) ekOzellikBedeli += g.urunTipi === "torba" ? clamp(g.adet, 1, 5_000_000) * 0.28 : kg * 12;
-
-  const araToplam = malzemeBedeli + baskiBedeli + ekOzellikBedeli + kalipBedeli;
-
-  let minSiparisFarki = 0;
-  if (kg < 40) {
-    minSiparisFarki = araToplam * 0.14;
-    notlar.push("40 kg altı siparişlerde küçük parti farkı uygulanır.");
+  if (g.perfore) ekOzellikBedeli += kg * 4.5 * marjCarpan;
+  if (g.fermuar) {
+    ekOzellikBedeli +=
+      g.urunTipi === "torba" ? clamp(g.adet, 1, 5_000_000) * 0.32 * marjCarpan : kg * 16 * marjCarpan;
+  }
+  if (g.pencere) {
+    ekOzellikBedeli +=
+      g.urunTipi === "torba" ? clamp(g.adet, 1, 5_000_000) * 0.26 * marjCarpan : kg * 11 * marjCarpan;
   }
 
-  const toplam = araToplam + minSiparisFarki;
-  notlar.push("Fiyatlar KDV hariç tahminidir; kesin teklif için numune / baskı onayı gerekir.");
-  notlar.push("Laminasyon, kilitli torba ve özel barrier katmanları keşif sonrası netleşir.");
+  const tedarikAraToplam = satisMalzemeBedeli + baskiBedeli + ekOzellikBedeli + kalipBedeli;
+
+  let minSiparisFarki = 0;
+  if (kg < cfg.minSiparisKg) {
+    minSiparisFarki = tedarikAraToplam * (cfg.kucukPartiEkYuzde / 100);
+    notlar.push(`${cfg.minSiparisKg} kg altı siparişlerde küçük parti farkı uygulanır.`);
+  }
+
+  const toplam = tedarikAraToplam + minSiparisFarki;
+  notlar.push(
+    `Tahmini teslim: ${cfg.teslimGunMin}–${cfg.teslimGunMax} iş günü (tedarikçi stok ve baskı onayına bağlı).`,
+  );
+  notlar.push("Fiyatlar KDV hariç tahminidir; kesin teklif tedarikçi onayı + numune sonrası 48 saat içinde yazılır.");
+  notlar.push("Anlaşmalı üreticilerden en uygun teklif seçilir — tek tedarikçi garantisi verilmez, en iyi fiyat hedeflenir.");
 
   return {
     tahminiKg: Math.round(kg * 100) / 100,
-    birimFiyatKg: Math.round(birimKg * 100) / 100,
+    tedarikBirimKg: Math.round(tedarikBirimKg * 100) / 100,
+    satisBirimKg: Math.round(satisBirimKg * 100) / 100,
+    tedarikMalzemeBedeli: Math.round(tedarikMalzemeBedeli),
+    aracilikBedeli: Math.round(aracilikBedeli),
     baskiBedeli: Math.round(baskiBedeli),
     ekOzellikBedeli: Math.round(ekOzellikBedeli),
     kalipBedeli: Math.round(kalipBedeli),
-    araToplam: Math.round(araToplam),
+    tedarikAraToplam: Math.round(tedarikAraToplam),
     minSiparisFarki: Math.round(minSiparisFarki),
-    toplamMin: Math.round(toplam * 0.94),
-    toplamMax: Math.round(toplam * 1.08),
+    toplamMin: Math.round(toplam * 0.96),
+    toplamMax: Math.round(toplam * 1.06),
+    teslimGunMin: cfg.teslimGunMin,
+    teslimGunMax: cfg.teslimGunMax,
     notlar,
   };
 }

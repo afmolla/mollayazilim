@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useWithBase } from "@/components/SitePrefixProvider";
+import type { EsnekAmbalajAracilik } from "@/lib/esnek-ambalaj-aracilik-store";
 import {
   hesaplaAmbalajFiyat,
   malzemeEtiketi,
@@ -29,7 +30,11 @@ function fmt(n: number): string {
   return n.toLocaleString("tr-TR", { maximumFractionDigits: 0 });
 }
 
-export function EsnekAmbalajFiyatHesapClient(props: { whatsapp: string; firmaAd: string }) {
+export function EsnekAmbalajFiyatHesapClient(props: {
+  whatsapp: string;
+  firmaAd: string;
+  aracilik: EsnekAmbalajAracilik;
+}) {
   const wb = useWithBase();
   const [g, setG] = useState<AmbalajFiyatGirdi>({
     urunTipi: "torba",
@@ -47,7 +52,7 @@ export function EsnekAmbalajFiyatHesapClient(props: { whatsapp: string; firmaAd:
     pencere: false,
   });
 
-  const sonuc = useMemo(() => hesaplaAmbalajFiyat(g), [g]);
+  const sonuc = useMemo(() => hesaplaAmbalajFiyat(g, props.aracilik), [g, props.aracilik]);
 
   const waMesaj = encodeURIComponent(
     `Merhaba ${props.firmaAd}, fiyat hesaplayıcıdan talep:\n` +
@@ -71,8 +76,8 @@ export function EsnekAmbalajFiyatHesapClient(props: { whatsapp: string; firmaAd:
           Esnek ambalaj fiyat hesaplama
         </h1>
         <p className="mt-3 text-[var(--muted)]">
-          OPP, CPP, PET, LDPE torba ve rulo siparişleriniz için tahmini maliyet aralığı. Kesin fiyat numune, baskı
-          onayı ve miktar sonrası netleşir — sektördeki teklif usulüne uygun demo hesaplayıcı.
+          OPP, CPP, PET, LDPE torba ve rulo için tahmini teklif aralığı. {props.firmaAd} anlaşmalı üreticilerden en uygun
+          fiyatı seçerek tedarik eder — kesin fiyat numune ve tedarikçi onayı sonrası 48 saat içinde yazılır.
         </p>
       </div>
 
@@ -217,8 +222,14 @@ export function EsnekAmbalajFiyatHesapClient(props: { whatsapp: string; firmaAd:
                 <dd className="font-medium tabular-nums text-[var(--text)]">{sonuc.tahminiKg} kg</dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt className="text-[var(--muted)]">Malzeme birim</dt>
-                <dd className="font-medium tabular-nums text-[var(--text)]">{fmt(sonuc.birimFiyatKg)} ₺/kg</dd>
+                <dt className="text-[var(--muted)]">Satış birim (kg)</dt>
+                <dd className="font-medium tabular-nums text-[var(--text)]">{fmt(sonuc.satisBirimKg)} ₺/kg</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-[var(--muted)]">Tahmini teslim</dt>
+                <dd className="font-medium tabular-nums text-[var(--text)]">
+                  {sonuc.teslimGunMin}–{sonuc.teslimGunMax} iş günü
+                </dd>
               </div>
               {sonuc.baskiBedeli > 0 ? (
                 <div className="flex justify-between gap-4">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { useSitePrefix } from "@/components/SitePrefixProvider";
 
 const STORAGE_KEY = "molla-vitrin-demo-ribbon-dismissed";
 
@@ -27,8 +28,11 @@ function notifyRibbon() {
   listeners.forEach((fn) => fn());
 }
 
-/** Tüm portföy vitrinlerinde: demo olduğu bariz olsun */
+/** Portföy vitrinlerinde demo şeridi — esnek ambalaj aracılık sitesinde gösterilmez */
 export function VitrinDemoRibbon() {
+  const prefix = useSitePrefix();
+  const isAracilik = prefix.includes("esnek-ambalaj");
+
   const hidden = useSyncExternalStore(
     subscribe,
     readDismissed,
@@ -44,7 +48,7 @@ export function VitrinDemoRibbon() {
     }
   }, []);
 
-  if (hidden) return null;
+  if (isAracilik || hidden) return null;
 
   return (
     <div

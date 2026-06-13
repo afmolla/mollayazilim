@@ -1,0 +1,19 @@
+{
+  "aracilik": {
+    "aracilikMarjYuzde": 15,
+    "minSiparisKg": 40,
+    "kucukPartiEkYuzde": 12,
+    "teslimGunMin": 5,
+    "teslimGunMax": 12,
+    "tedarikciKgFiyat": {
+      "opp": 76,
+      "cpp": 82,
+      "pet": 102,
+      "ldpe": 64,
+      "bopp": 78,
+      "opp_cpp_lamine": 114,
+      "pet_pe_lamine": 128
+    },
+    "marjDokumuGoster": false
+  }
+}

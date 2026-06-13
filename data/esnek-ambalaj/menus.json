@@ -4,6 +4,7 @@
     { "label": "Ürünler", "href": "/hizmetler", "newTab": false },
     { "label": "Fiyat Hesapla", "href": "/fiyat-hesaplama", "newTab": false },
     { "label": "Galeri", "href": "/galeri", "newTab": false },
+    { "label": "Nasıl çalışır", "href": "/p/nasil-calisir", "newTab": false },
     { "label": "Teklif Al", "href": "/randevu", "newTab": false },
     { "label": "İletişim", "href": "/iletisim", "newTab": false }
   ],

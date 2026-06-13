@@ -17,6 +17,7 @@ import { PanelSiteVisualEdit } from "@/components/PanelSiteVisualEdit";
 import { PanelPortfoyHub } from "@/components/PanelPortfoyHub";
 import { PanelSiparisler } from "@/components/PanelSiparisler";
 import { PanelMollaLanding } from "@/components/PanelMollaLanding";
+import { PanelEsnekAmbalajAracilik } from "@/components/PanelEsnekAmbalajAracilik";
 import { PanelIlanlar } from "@/components/PanelIlanlar";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 
@@ -33,6 +34,7 @@ type TabId =
   | "medya"
   | "menuler"
   | "ayarlar"
+  | "tedarik"
   | "yedek";
 
 function tabFromSearchParams(sp: ReadonlyURLSearchParams, isMaster: boolean): TabId {
@@ -52,6 +54,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams, isMaster: boolean): Ta
     "medya",
     "menuler",
     "ayarlar",
+    "tedarik",
     "yedek",
   ]);
   if (vfTab && allowed.has(vfTab as TabId)) return vfTab as TabId;
@@ -70,6 +73,12 @@ const NAV_ILAN: { id: TabId; label: string; short: string } = {
   id: "ilanlar",
   label: "İlanlar",
   short: "İl",
+};
+
+const NAV_TEDARIK: { id: TabId; label: string; short: string } = {
+  id: "tedarik",
+  label: "Aracılık",
+  short: "Td",
 };
 
 const NAV_BASE: { id: TabId; label: string; short: string }[] = [
@@ -142,6 +151,15 @@ export function PanelApp(props: PanelAppProps) {
         x.id === "randevular" ? { ...x, label: "Rezervasyonlar", short: "Re" } : x,
       );
     }
+    if (pfx === "/esnek-ambalaj") {
+      core = core.map((x) =>
+        x.id === "randevular" ? { ...x, label: "Teklif talepleri", short: "Te" } : x,
+      );
+      const ayIdx = core.findIndex((x) => x.id === "ayarlar");
+      if (ayIdx >= 0) {
+        core = [...core.slice(0, ayIdx), NAV_TEDARIK, ...core.slice(ayIdx)];
+      }
+    }
     return core;
   }, [isMasterPanel, sitePrefix]);
   const sabitle = props.panelSolMenuSabitle ?? true;
@@ -173,6 +191,11 @@ export function PanelApp(props: PanelAppProps) {
   useEffect(() => {
     const onEmlak = pathname.includes("/emlak");
     if (!onEmlak && tab === "ilanlar") queueMicrotask(() => setTab("randevular"));
+  }, [pathname, tab]);
+
+  useEffect(() => {
+    const onAmbalaj = pathname.includes("/esnek-ambalaj");
+    if (!onAmbalaj && tab === "tedarik") queueMicrotask(() => setTab("randevular"));
   }, [pathname, tab]);
 
   useEffect(() => {
@@ -313,6 +336,8 @@ export function PanelApp(props: PanelAppProps) {
           <PanelMedia />
         ) : tab === "menuler" ? (
           <PanelMenus />
+        ) : tab === "tedarik" ? (
+          <PanelEsnekAmbalajAracilik />
         ) : tab === "ayarlar" ? (
           <PanelSettings />
         ) : (

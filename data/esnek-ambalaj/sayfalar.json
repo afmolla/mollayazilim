@@ -1,22 +1,31 @@
 {
   "sayfalar": [
     {
-      "slug": "opp-cpp-rulo",
-      "baslik": "OPP & CPP rulo çeşitleri",
-      "aciklama": "Baskılı, baskısız, lamineli ve otomatik dolum ruloları — demo ürün sayfası.",
-      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">OPP (oriented) ve CPP (cast) polipropilen filmler; <strong class=\"text-[var(--text)]\">gıda, tekstil ve otomatik paketleme</strong> hatlarında yaygın kullanılır. Mikron aralığı genelde 20–80 µm arasındadır.</p>\n<h2 class=\"mt-8 text-lg font-semibold text-[var(--text)]\">Ürün tipleri</h2>\n<ul class=\"mt-4 list-disc space-y-2 pl-5 text-[var(--muted)]\">\n  <li>Baskısız şeffaf rulo</li>\n  <li>Flexo baskılı rulo (1–8 renk)</li>\n  <li>OPP + CPP laminasyon</li>\n  <li>Perforeli kolileme filmi</li>\n  <li>Otomatik dikey / yatay dolum ruloları</li>\n</ul>\n<p class=\"mt-6 text-sm text-[var(--muted)]\"><a href=\"/fiyat-hesaplama\" class=\"font-semibold text-[var(--brand)] hover:underline\">Online fiyat hesaplama</a> ile tahmini kg ve maliyet aralığı alın.</p>",
+      "slug": "nasil-calisir",
+      "baslik": "Nasıl çalışır?",
+      "aciklama": "Aracılık ve tedarik sürecimiz — 4 adım.",
+      "icerikHtml": "<ol class=\"list-decimal space-y-4 pl-5 text-[var(--muted)]\">\n  <li><strong class=\"text-[var(--text)]\">Talep:</strong> Online fiyat hesaplama veya teklif formu — ölçü, mikron, baskı bilgisi.</li>\n  <li><strong class=\"text-[var(--text)]\">Tedarikçi teyidi:</strong> Anlaşmalı üreticilerden fiyat ve teslim süresi alınır (genelde aynı gün).</li>\n  <li><strong class=\"text-[var(--text)]\">Yazılı teklif:</strong> 48 saat içinde KDV hariç teklif; numune gerekiyorsa koordine edilir.</li>\n  <li><strong class=\"text-[var(--text)]\">Üretim & sevkiyat:</strong> Onay sonrası üretici siparişi açar; sevkiyat takibi tarafımızdan yapılır.</li>\n</ol>\n<p class=\"mt-6 text-sm text-[var(--muted)]\">Üretim tesisimiz yoktur; tedarik aracılığı hizmeti sunuyoruz.</p>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-06-12T10:00:00.000Z"
+      "guncellenme": "2026-06-12T12:00:00.000Z"
+    },
+    {
+      "slug": "opp-cpp-rulo",
+      "baslik": "OPP & CPP rulo tedarik",
+      "aciklama": "Baskılı, baskısız ve lamineli rulo tedariki.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\">OPP ve CPP rulolar otomatik dolum, flow-pack ve manuel paketleme hatları için tedarik edilir. Mikron, en ve metraj spesifikasyonunu paylaşmanız yeterli.</p>\n<p class=\"mt-4\"><a href=\"/fiyat-hesaplama\" class=\"font-semibold text-[var(--brand)] hover:underline\">Online fiyat tahmini →</a></p>",
+      "seoIndex": true,
+      "yayin": true,
+      "guncellenme": "2026-06-12T12:00:00.000Z"
     },
     {
       "slug": "hakkimizda",
       "baslik": "Hakkımızda",
-      "aciklama": "FlexPack Plastik — demo esnek ambalaj üreticisi vitrini.",
-      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\"><strong class=\"text-[var(--text)]\">FlexPack Plastik</strong> tamamen demo amaçlı bir vitrin şablonudur. Gerçek projede firma unvanı, üretim kapasitesi ve sertifikalar güncellenmelidir.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Esnek ambalaj sektöründe müşteriler genelde <em>ürün grubu, mikron, baskı durumu ve minimum sipariş miktarı</em> üzerinden teklif ister — bu site bu akışı dijitalleştirir.</p>",
+      "aciklama": "ProPack Ambalaj Tedarik — esnek ambalaj aracılığı.",
+      "icerikHtml": "<p class=\"text-[var(--muted)] leading-relaxed\"><strong class=\"text-[var(--text)]\">ProPack Ambalaj Tedarik</strong> esnek ambalaj alanında aracılık ve tedarik hizmeti sunar. İstanbul ve Marmara bölgesindeki üreticilerle anlaşmalı çalışır; müşteriye tek muhatap olur.</p>\n<p class=\"mt-4 text-[var(--muted)] leading-relaxed\">Amacımız: doğru spesifikasyon, en uygun fiyat ve zamanında teslim. Panel ve fiyat hesaplayıcı ile dijital teklif süreci hızlandırılır.</p>",
       "seoIndex": true,
       "yayin": true,
-      "guncellenme": "2026-06-12T10:00:00.000Z"
+      "guncellenme": "2026-06-12T12:00:00.000Z"
     }
   ]
 }

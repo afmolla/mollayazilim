@@ -52,7 +52,7 @@ export function EsnekAmbalajFullscreenHero(props: KuaforHeroProps) {
       <div className="relative z-10 mx-auto grid min-h-[100dvh] w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 pb-24 pt-28 md:grid-cols-2 md:gap-12 md:px-10 md:pb-28 md:pt-32">
         <div className="max-w-xl">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.42em] text-emerald-400/90">
-            Demo esnek ambalaj vitrini · gerçek üretici değildir
+            Esnek ambalaj tedarik & aracılık
           </p>
           <EditableText
             active={inline}
@@ -152,9 +152,9 @@ export function EsnekAmbalajFullscreenHero(props: KuaforHeroProps) {
               className="h-64 w-full object-cover"
             />
             <div className="border-t border-emerald-400/15 p-4">
-              <p className="text-sm font-semibold text-white">Online fiyat hesaplama</p>
+              <p className="text-sm font-semibold text-white">Online fiyat tahmini</p>
               <p className="mt-1 text-xs text-emerald-100/70">
-                Mikron, en-boy, baskı rengi ve adet girerek tahmini teklif alın — demo motor.
+                Mikron, en-boy, baskı ve adet — anlaşmalı üreticilerden ön teklif aralığı.
               </p>
             </div>
           </div>
