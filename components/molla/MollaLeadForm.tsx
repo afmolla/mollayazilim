@@ -7,6 +7,8 @@ type Props = {
   sourcePath?: string;
   defaultMessage?: string;
   whatsapp?: string;
+  formBaslik?: string;
+  formAciklama?: string;
 };
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -74,9 +76,9 @@ export function MollaLeadForm(props: Props) {
     <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-2xl md:p-7">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-base font-semibold text-white">Hızlı teklif al</p>
+          <p className="text-base font-semibold text-white">{props.formBaslik ?? "Hızlı teklif al"}</p>
           <p className="mt-1 text-sm text-white/70">
-            30 saniyede formu gönderin; aynı zamanda WhatsApp’tan direkt yazabilirsiniz.
+            {props.formAciklama ?? "30 saniyede formu gönderin; aynı zamanda WhatsApp'tan direkt yazabilirsiniz."}
           </p>
         </div>
         <a

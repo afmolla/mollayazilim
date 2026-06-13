@@ -1,4 +1,5 @@
 import { ayarlarGetir } from "@/lib/settings-store";
+import { landingGetir } from "@/lib/molla-landing-store";
 import { normalizeExternalUrl } from "@/lib/footer-social-map";
 import { whatsappLink } from "@/lib/whatsapp";
 import { CookieFooterBar } from "@/components/CookieFooterBar";
@@ -17,7 +18,8 @@ function SocialButton(props: { href: string; label: string }) {
 }
 
 export async function MollaFooter() {
-  const ayar = await ayarlarGetir();
+  const [ayar, landing] = await Promise.all([ayarlarGetir(), landingGetir()]);
+  const f = landing.footer;
   const phone =
     ayar.iletisimTelefon?.trim() || process.env.NEXT_PUBLIC_MOLLA_PHONE?.trim() || "+90 555 123 45 67";
   const email =
@@ -46,11 +48,8 @@ export async function MollaFooter() {
     <footer className="mt-auto border-t border-white/10 bg-black/40">
       <div className="mx-auto grid max-w-6xl gap-6 px-4 py-12 md:grid-cols-2 md:px-6">
         <div>
-          <p className="text-sm font-semibold text-white">Molla Yazılım</p>
-          <p className="mt-2 max-w-prose text-sm text-white/70">
-            Tekirdağ Kapaklı merkezli yazılım firması. Molla CRM ile müşteri takibi; kurumsal web sitesi ve admin panel
-            ile Google&apos;da görünürlük.
-          </p>
+          <p className="text-sm font-semibold text-white">{f.baslik}</p>
+          <p className="mt-2 max-w-prose text-sm text-white/70">{f.aciklama}</p>
         </div>
         <div className="md:text-right">
           <p className="text-sm font-semibold text-white">İletişim</p>
@@ -82,7 +81,7 @@ export async function MollaFooter() {
               rel="noopener noreferrer"
               className="inline-flex min-h-[2.5rem] items-center justify-center rounded-xl bg-[#25D366] px-4 text-sm font-semibold text-white hover:opacity-95"
             >
-              WhatsApp’tan yazın
+              {f.whatsappButon}
             </a>
           </div>
         </div>
@@ -90,9 +89,8 @@ export async function MollaFooter() {
 
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
         <CookieFooterBar className="mb-2 text-white/45" />
-        © {new Date().getFullYear()} Molla Yazılım — CRM & web sitesi · Tekirdağ Kapaklı
+        © {new Date().getFullYear()} {f.baslik} — {f.telif}
       </div>
     </footer>
   );
 }
-

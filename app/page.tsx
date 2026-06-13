@@ -7,10 +7,9 @@ import { MollaFooter } from "@/components/molla/MollaFooter";
 import { MollaLeadForm } from "@/components/molla/MollaLeadForm";
 import { MollaPageShell } from "@/components/molla/MollaPageShell";
 import { ayarlarGetir, type SiteAyarlar } from "@/lib/settings-store";
-import { landingGetir } from "@/lib/molla-landing-store";
+import { landingGetir, type MollaDemoKey } from "@/lib/molla-landing-store";
 import { parseGoogleMapsInput } from "@/lib/footer-social-map";
 import { siteOrigin, siteUrl } from "@/lib/site";
-import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ayar = await ayarlarGetir();
@@ -114,38 +113,7 @@ function SectionTitle(props: {
   );
 }
 
-const FEATURES = [
-  { title: "Pipeline takibi", desc: "Fırsat aşamaları, teklif ve satış hunisi tek ekranda." },
-  { title: "Müşteri 360°", desc: "Firma, kontak, not ve geçmiş etkileşimler bir arada." },
-  { title: "Mobil CRM", desc: "Saha ekibi telefondan müşteri ve görev yönetir." },
-  { title: "Türkçe & KVKK", desc: "Türkiye iş süreçlerine uygun, yerel destek." },
-] as const;
-
-/** @deprecated landing.json kullanılır */
-const CRM_FEATURES = [
-  { title: "Müşteri & firma kaydı", desc: "Tüm kontaklar, notlar ve geçmiş görüşmeler tek profilde." },
-  { title: "Satış pipeline", desc: "Adaydan kapanışa her aşamayı görsel huni ile takip edin." },
-  { title: "Teklif & fırsat", desc: "Teklif hazırlama, revizyon ve onay sürecini kayıt altına alın." },
-  { title: "Görev & hatırlatıcı", desc: "Ekip görevleri, arama hatırlatmaları ve takvim entegrasyonu." },
-  { title: "Raporlar", desc: "Satış performansı, dönüşüm oranı ve ekip verimliliği." },
-  { title: "Mobil uyum", desc: "Telefon ve tabletten saha satış — her an erişim." },
-];
-
-type DemoKey = "kuafor" | "kuaforKadin" | "restaurant" | "emlak" | "avukat" | "otoyikama" | "crm";
-
-type ShowcaseItem = {
-  key: DemoKey;
-  title: string;
-  href: string;
-  meta: string;
-  external?: boolean;
-  badge?: "Demo" | "Uygulama";
-  secondaryHref?: string;
-  secondaryLabel?: string;
-  primaryLabel?: string;
-};
-
-function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
+function demoGosterilir(key: MollaDemoKey, ayar: SiteAyarlar): boolean {
   /** Yerelde panelden kapatılmış olsa bile demoları göster (proxy + vitrin testi için).
    * Üretimde panel bayrakları geçerlidir. Yerelde bayrakları dinlemek için:
    * NEXT_PUBLIC_RESPECT_DEMO_FLAGS=1 */
@@ -171,88 +139,6 @@ function demoGosterilir(key: DemoKey, ayar: SiteAyarlar): boolean {
   }
 }
 
-/** Ana vitrin (#demolar) — kuaför iki ayrı kart; avukat tek blok; restoran+emlak birlikte */
-const DEMO_GROUPS: readonly {
-  id: string;
-  title: string;
-  desc: string;
-  items: readonly ShowcaseItem[];
-}[] = [
-  {
-    id: "yazilim",
-    title: "Yazılım ürünleri",
-    desc: "Kendi geliştirdiğimiz iş uygulamaları — canlı ortamda inceleyebilir, giriş yaparak deneyebilirsiniz.",
-    items: [
-      {
-        key: "crm",
-        title: "Molla CRM",
-        href: "https://crm.mollayazilim.com",
-        meta: "Mobil-first satış CRM — müşteri, fırsat, pipeline, görev ve ekip yönetimi",
-        external: true,
-        badge: "Uygulama",
-        primaryLabel: "CRM'i incele",
-        secondaryHref: "https://crm.mollayazilim.com/login",
-        secondaryLabel: "Giriş yap",
-      },
-    ],
-  },
-  {
-    id: "kuaför",
-    title: "Kuaför demoları",
-    desc: "Erkek berber vitrinı (/kuafor) ve kadın kuaförü vitrinı (/kuafor-kadin) — farklı tasarım, aynı panel mantığı.",
-    items: [
-      { key: "kuafor", title: "Erkek kuaförü", href: "/kuafor", meta: "Berber vitrin + panel" },
-      { key: "kuaforKadin", title: "Kadın kuaförü", href: "/kuafor-kadin", meta: "Renk & bakım vitrin" },
-    ],
-  },
-  {
-    id: "avukat",
-    title: "Avukatlık vitrini",
-    desc: "Hukuk bürosu için kurumsal sayfalar, görüşme talebi ve içerik yönetimi.",
-    items: [{ key: "avukat", title: "Avukatlık Demo", href: "/avukat", meta: "Hukuk vitrin + görüşme talebi" }],
-  },
-  {
-    id: "diger",
-    title: "Diğer sektör demoları",
-    desc: "Restoran QR menü, emlak ilan vitrinleri ve oto yıkama / detailing.",
-    items: [
-      { key: "restaurant", title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
-      { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
-      { key: "otoyikama", title: "Oto Yıkama Demo", href: "/otoyikama", meta: "Yıkama · pasta cila · seramik" },
-    ],
-  },
-];
-
-const PACKAGES = [
-  {
-    title: "Molla CRM",
-    badge: "Öncelikli ürün",
-    desc: "Müşteri takibi, satış pipeline, teklif ve ekip yönetimi. Tekirdağ ve çevresindeki KOBİ'ler için Türkçe CRM.",
-    items: ["Canlı demo hesabı", "Pipeline & teklif", "Mobil uyum", "Yerel destek Kapaklı"],
-    cta: "CRM demo iste",
-    href: "#crm",
-    featured: true,
-  },
-  {
-    title: "Kurumsal Web",
-    badge: "Web sitesi",
-    desc: "Markanızı Google'da görünür kılın. Kurumsal web sitesi + SEO temel kurulum.",
-    items: ["Modern tasarım", "Mobil uyum", "Tekirdağ yerel SEO", "WhatsApp / form CTA"],
-    cta: "Web teklifi al",
-    href: "#iletisim",
-    featured: false,
-  },
-  {
-    title: "CRM + Web",
-    badge: "Tam paket",
-    desc: "Satış takibi CRM ile, marka görünürlüğü web sitesi ile — en yüksek dönüşüm paketi.",
-    items: ["CRM + kurumsal site", "Admin panel", "Lead takibi", "Tek sözleşme, tek ekip"],
-    cta: "Paket teklifi",
-    href: "#iletisim",
-    featured: false,
-  },
-] as const;
-
 /** ISR: settings en geç ~60 sn içinde yansır; her istekte sıfırdan işlenmez (çok daha hızlı). */
 export const revalidate = 60;
 
@@ -260,21 +146,26 @@ export default async function MollaHome() {
   const [ayar, landing] = await Promise.all([ayarlarGetir(), landingGetir()]);
   const h = landing.hero;
   const crm = landing.crmBolum;
+  const hz = landing.hizmetlerBolum;
+  const dm = landing.demolarBolum;
+  const pk = landing.paketlerBolum;
+  const sr = landing.surecBolum;
+  const sss = landing.sssBolum;
+  const il = landing.iletisimBolum;
+  const mb = landing.mobilBar;
+  const waNum = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
   const origin = (await siteOrigin()).replace(/\/$/, "");
   const mapBlock = parseGoogleMapsInput(ayar.googleMaps);
-  const waDigits = String(ayar.iletisimWhatsapp ?? ayar.whatsapp ?? "").replace(/\D/g, "");
-  const waHref = waDigits
-    ? `https://wa.me/${waDigits}?text=${encodeURIComponent("Merhaba, Molla CRM hakkında bilgi ve demo almak istiyorum.")}`
+  const waHref = waNum
+    ? `https://wa.me/${waNum}?text=${encodeURIComponent(landing.navbar.whatsappMesaj)}`
     : "#";
-  const gorunurDemoSayisi = DEMO_GROUPS.flatMap((g) => g.items).filter((it) =>
-    demoGosterilir(it.key, ayar),
-  ).length;
+  const gorunurDemoSayisi = dm.gruplar.flatMap((g) => g.items).filter((it) => demoGosterilir(it.key, ayar)).length;
   return (
     <MollaPageShell>
     <>
       <JsonLdLocalBusiness />
       <GradientBg>
-        <MollaNavbar />
+        <MollaNavbar navbar={landing.navbar} whatsapp={waNum || "905551234567"} />
 
       <div className="flex min-h-dvh flex-col">
       <main className="molla-root-main relative z-10 flex-1 scroll-mt-0 pb-20 md:pb-0">
@@ -329,9 +220,7 @@ export default async function MollaHome() {
                 <div className="grid gap-0 md:grid-cols-2">
                   <div className="p-4">
                     <p className="text-sm font-semibold text-white">{h.previewAltBaslik}</p>
-                    <p className="mt-1 text-sm text-white/70">
-                      Fırsatlar, teklifler ve müşteri notları — tek ekranda.
-                    </p>
+                    <p className="mt-1 text-sm text-white/70">{h.previewAciklama}</p>
                     <div className="mt-4 grid gap-2">
                       {h.previewItems.map((x) => (
                         <div
@@ -380,46 +269,25 @@ export default async function MollaHome() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="https://crm.mollayazilim.com/login"
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-black hover:opacity-95"
-            >
-              Canlı CRM&apos;yi dene →
+            <a href={crm.ctaPrimaryHref} className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-black hover:opacity-95">
+              {crm.ctaPrimaryLabel}
             </a>
-            <a
-              href="#iletisim"
-              className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
-            >
-              CRM demo talebi
+            <a href={crm.ctaSecondaryHref} className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+              {crm.ctaSecondaryLabel}
             </a>
           </div>
-          <p className="mt-4 text-center text-xs text-white/50">
-            Demo giriş: demo@crm.local / Demo1234!
-          </p>
+          <p className="mt-4 text-center text-xs text-white/50">{crm.demoGirisNotu}</p>
         </section>
 
         <section className="mx-auto max-w-6xl px-4 py-12 md:px-6">
-          <SectionTitle
-            anchorId="hizmetler"
-            overline="Web Sitesi"
-            title="Kurumsal web sitesi & sektörel vitrin demoları"
-            desc="CRM kurduktan sonra veya paralelde: Google'da görünür kurumsal site, admin panel ve hazır sektör demoları."
-          />
+          <SectionTitle anchorId="hizmetler" overline={hz.overline} title={hz.baslik} desc={hz.aciklama} />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                title: "Kuaför (erkek & kadın)",
-                desc: "İki ayrı demo vitrin; randevu akışı, içerik ve panel — berber ve kadın salonu tasarımları.",
-              },
-              { title: "Restoran Sistemi", desc: "QR menü, rezervasyon, masa yönetimi." },
-              { title: "Emlak Sistemi", desc: "İlan yönetimi, filtreleme, admin paneli." },
-              { title: "Avukatlık Vitrini", desc: "Hukuk odaklı sayfalar, görüşme talebi + panel." },
-            ].map((x) => (
+            {hz.kartlar.map((x) => (
               <div key={x.title} className="rounded-3xl border border-white/10 bg-white/5 p-6">
                 <p className="text-base font-semibold text-white">{x.title}</p>
                 <p className="mt-2 text-sm text-white/70">{x.desc}</p>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/70">
-                  {["Modern UI", "Panel dahil", "Hızlı kurulum"].map((b) => (
+                  {hz.rozetler.map((b) => (
                     <span key={b} className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1">
                       {b}
                     </span>
@@ -431,20 +299,12 @@ export default async function MollaHome() {
         </section>
 
         <section className="mx-auto max-w-6xl px-4 pb-4 pt-6 md:px-6 md:pb-10">
-          <SectionTitle
-            anchorId="demolar"
-            overline="Demo / Projeler"
-            title="Demolar ve yazılım ürünleri"
-            desc="Sektörel vitrin demoları ve Molla CRM — örnek siteler gerçek bir işletmeyi temsil etmez; her kartta vitrin + panel (veya uygulama girişi) akışını görebilirsiniz."
-          />
+          <SectionTitle anchorId="demolar" overline={dm.overline} title={dm.baslik} desc={dm.aciklama} />
           <div className="mt-8 space-y-12">
             {gorunurDemoSayisi === 0 ? (
-              <p className="text-center text-sm text-white/65">
-                Bu demolar şu an kapalı. Yönetim panelinde <strong className="text-white">Portföy</strong> sekmesinden
-                tekrar açabilirsiniz.
-              </p>
+              <p className="text-center text-sm text-white/65">{dm.bosMesaj}</p>
             ) : (
-              DEMO_GROUPS.map((group) => {
+              dm.gruplar.map((group) => {
                 const kartlar = group.items.filter((it) => demoGosterilir(it.key, ayar));
                 if (kartlar.length === 0) return null;
                 return (
@@ -523,13 +383,9 @@ export default async function MollaHome() {
         </section>
 
         <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-          <SectionTitle
-            overline="Paketler"
-            title="İhtiyacınıza göre net başlangıç"
-            desc="Önce hızlı demo çıkarıyoruz; sonra paketi işletmenize göre netleştiriyoruz."
-          />
+          <SectionTitle overline={pk.overline} title={pk.baslik} desc={pk.aciklama} />
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {PACKAGES.map((p) => (
+            {pk.paketler.map((p) => (
               <div
                 key={p.title}
                 className={[
@@ -544,9 +400,9 @@ export default async function MollaHome() {
                     <p className="text-base font-semibold text-white">{p.title}</p>
                     <p className="mt-1 text-xs font-semibold text-white/60">{p.badge}</p>
                   </div>
-                  {p.featured ? (
+                  {p.featured && p.featuredLabel ? (
                     <span className="rounded-full border border-emerald-300/25 bg-emerald-500/[0.12] px-3 py-1 text-xs font-semibold text-emerald-100">
-                      En popüler
+                      {p.featuredLabel}
                     </span>
                   ) : null}
                 </div>
@@ -578,53 +434,26 @@ export default async function MollaHome() {
         </section>
 
         <section className="mx-auto max-w-6xl px-4 py-10 md:px-6">
-          <SectionTitle
-            overline="Süreç"
-            title="3 adımda yayına"
-            desc="Sürpriz yok: kapsam, demo, yayına çıkış. Hepsi net planla."
-          />
+          <SectionTitle overline={sr.overline} title={sr.baslik} desc={sr.aciklama} />
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              {
-                n: "01",
-                t: "Keşif (15 dk)",
-                d: "Sektör, hedef, örnek siteler ve içerik ihtiyacı netleşir.",
-              },
-              {
-                n: "02",
-                t: "Demo (24 saat)",
-                d: "Tasarım + akış + CTA’lar demo üzerinde görünür hale gelir.",
-              },
-              {
-                n: "03",
-                t: "Yayına çıkış (3–10 gün)",
-                d: "Alan adı, SEO temel kurulum, hız ve takip ile canlıya alınır.",
-              },
-            ].map((x) => (
-              <div key={x.n} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-                <p className="text-xs font-semibold tracking-wide text-white/60">{x.n}</p>
-                <p className="mt-2 text-base font-semibold text-white">{x.t}</p>
-                <p className="mt-2 text-sm text-white/70">{x.d}</p>
+            {sr.adimlar.map((x) => (
+              <div key={x.no} className="rounded-3xl border border-white/10 bg-white/5 p-6">
+                <p className="text-xs font-semibold tracking-wide text-white/60">{x.no}</p>
+                <p className="mt-2 text-base font-semibold text-white">{x.baslik}</p>
+                <p className="mt-2 text-sm text-white/70">{x.aciklama}</p>
               </div>
             ))}
           </div>
           <div className="mt-6 rounded-3xl border border-emerald-400/25 bg-emerald-500/[0.10] p-6">
-            <p className="text-sm font-semibold text-white">Taahhüt</p>
-            <p className="mt-2 text-sm text-white/80">
-              İlk görüşmeden sonra <strong className="text-white">24 saat içinde demo planı</strong> ve{" "}
-              <strong className="text-white">teslim takvimi</strong> paylaşırız. Uymuyorsa başlamayız.
-            </p>
+            <p className="text-sm font-semibold text-white">{sr.taahhutBaslik}</p>
+            <p className="mt-2 text-sm text-white/80">{sr.taahhutMetin}</p>
           </div>
         </section>
 
         <section className="mx-auto max-w-6xl px-4 pb-6 pt-4 md:px-6">
-          <SectionTitle
-            overline="SSS"
-            title="Sık sorulan sorular"
-            desc="Netleştirelim: süreç, teslim ve içerik yönetimi."
-          />
+          <SectionTitle overline={sss.overline} title={sss.baslik} desc={sss.aciklama} />
           <div className="mx-auto mt-8 grid max-w-3xl gap-3">
-            {MOLLA_LANDING_FAQ.map((x) => (
+            {sss.sorular.map((x) => (
               <details
                 key={x.q}
                 className="group rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
@@ -649,24 +478,18 @@ export default async function MollaHome() {
                 className="block scroll-mt-[calc(var(--header-h)+5rem)]"
                 aria-hidden="true"
               />
-              <p className="text-xs font-semibold tracking-wide text-white/70">İletişim</p>
-              <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
-                CRM veya web — 15 dakikada netleştirelim
-              </h2>
-              <p className="mt-2.5 text-sm text-white/70 md:text-base">
-                Tekirdağ ve Kapaklı&apos;da müşteri takibi mi, kurumsal web sitesi mi, ikisi birden mi? Ücretsiz keşifte
-                ihtiyacınızı dinleyip aynı gün demo planı paylaşıyoruz.
-              </p>
+              <p className="text-xs font-semibold tracking-wide text-white/70">{il.overline}</p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">{il.baslik}</h2>
+              <p className="mt-2.5 text-sm text-white/70 md:text-base">{il.aciklama}</p>
               <p className="mt-4 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.12] px-4 py-3 text-sm text-white/90">
-                Projeyi başlatmak veya satın alma sürecine geçmek için formu doldurun ya da WhatsApp üzerinden yazın —
-                ücretsiz keşif için en geç aynı gün dönüş yapıyoruz.
+                {il.vurguMetin}
               </p>
               <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                <p className="text-sm font-semibold text-white">Hızlı bilgi</p>
+                <p className="text-sm font-semibold text-white">{il.hizliBilgiBaslik}</p>
                 <ul className="mt-2 grid gap-1 text-sm text-white/70">
-                  <li>• Ortalama ilk dönüş: aynı gün</li>
-                  <li>• Demo + fiyat aralığı: 24 saat içinde</li>
-                  <li>• Teslim: ihtiyaca göre günler içinde</li>
+                  {il.hizliBilgi.map((line) => (
+                    <li key={line}>• {line}</li>
+                  ))}
                 </ul>
               </div>
               {mapBlock?.type === "iframe" ? (
@@ -697,7 +520,9 @@ export default async function MollaHome() {
             <MollaLeadForm
               sourcePath="/"
               whatsapp={ayar.iletisimWhatsapp ?? ayar.whatsapp}
-              defaultMessage="Molla CRM demo ve fiyat bilgisi almak istiyorum. İşletmem Tekirdağ/Kapaklı bölgesinde."
+              defaultMessage={il.formVarsayilanMesaj}
+              formBaslik={il.formBaslik}
+              formAciklama={il.formAciklama}
             />
           </div>
         </section>
@@ -711,13 +536,13 @@ export default async function MollaHome() {
             rel="noopener noreferrer"
             className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-[#25D366] text-sm font-semibold text-white"
           >
-            WhatsApp
+            {mb.whatsappLabel}
           </a>
           <a
-            href="#iletisim"
+            href={mb.ctaHref}
             className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 text-sm font-semibold text-black"
           >
-            Ücretsiz keşif
+            {mb.ctaLabel}
           </a>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { siteUrl } from "@/lib/site";
 import type { SiteAyarlar } from "@/lib/settings-store";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { getRequestSite } from "@/lib/site-request";
-import { MOLLA_LANDING_FAQ } from "@/lib/molla-landing-faq";
+import { landingGetir } from "@/lib/molla-landing-store";
 
 function normalizeSocialUrl(
   raw: string | undefined,
@@ -64,6 +64,8 @@ async function jsonLdBody() {
   const logoUrl = `${baseNorm}/icon.svg`;
 
   if (isMolla) {
+    const landing = await landingGetir();
+    const faq = landing.sssBolum.sorular;
     const orgDescription =
       "Tekirdağ Kapaklı merkezli yazılım firması. Molla CRM: Türkçe müşteri takip ve satış yönetimi. Kurumsal web sitesi ve admin panel.";
     const sameAs = sameAsFromAyar(ayar);
@@ -179,7 +181,7 @@ async function jsonLdBody() {
         {
           "@type": "FAQPage",
           "@id": `${baseNorm}/#faq`,
-          mainEntity: MOLLA_LANDING_FAQ.map((item) => ({
+          mainEntity: faq.map((item) => ({
             "@type": "Question",
             name: item.q,
             acceptedAnswer: {
