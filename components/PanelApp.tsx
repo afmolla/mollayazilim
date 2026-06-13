@@ -106,7 +106,6 @@ function readCollapsedPref(baslangic: "acik" | "dar", storageKey: string): boole
 
 const NAV_MASTER_TABS = new Set<TabId>([
   "portfoy",
-  "seo",
   "icerik",
   "site_duzenle",
   "ayarlar",

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type {
   MollaDemoGroup,
   MollaDemoItem,
+  MollaDemoKey,
   MollaFaqItem,
   MollaLanding,
   MollaLandingFeature,
@@ -14,6 +15,89 @@ import type {
   MollaProcessStep,
   MollaSectionMeta,
 } from "@/lib/molla-landing-store";
+
+type MollaPanelSettings = {
+  salonAd: string;
+  iletisimWhatsapp: string;
+  iletisimTelefon: string;
+  iletisimEposta: string;
+  adresKisa: string;
+  adresDetay: string;
+  calismaSaatleri: string;
+  sehir: string;
+  googleMaps: string;
+  instagram: string;
+  facebook: string;
+  twitter: string;
+  youtube: string;
+  tiktok: string;
+  linkedin: string;
+  footerSosyalGoster: boolean;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string;
+  seoOgImage: string;
+  seoIndex: boolean;
+  demoKuaforGoster: boolean;
+  demoKuaforKadinGoster: boolean;
+  demoRestaurantGoster: boolean;
+  demoEmlakGoster: boolean;
+  demoAvukatGoster: boolean;
+  demoOtoyikamaGoster: boolean;
+  demoCrmGoster: boolean;
+};
+
+const DEMO_FLAG_ROWS: { key: MollaDemoKey; label: string; flag: keyof Pick<
+  MollaPanelSettings,
+  | "demoCrmGoster"
+  | "demoKuaforGoster"
+  | "demoKuaforKadinGoster"
+  | "demoRestaurantGoster"
+  | "demoEmlakGoster"
+  | "demoAvukatGoster"
+  | "demoOtoyikamaGoster"
+> }[] = [
+  { key: "crm", label: "Molla CRM", flag: "demoCrmGoster" },
+  { key: "kuafor", label: "Erkek kuaförü", flag: "demoKuaforGoster" },
+  { key: "kuaforKadin", label: "Kadın kuaförü", flag: "demoKuaforKadinGoster" },
+  { key: "restaurant", label: "Restoran", flag: "demoRestaurantGoster" },
+  { key: "emlak", label: "Emlak", flag: "demoEmlakGoster" },
+  { key: "avukat", label: "Avukatlık", flag: "demoAvukatGoster" },
+  { key: "otoyikama", label: "Oto yıkama", flag: "demoOtoyikamaGoster" },
+];
+
+function settingsFromApi(a: Record<string, unknown>): MollaPanelSettings {
+  return {
+    salonAd: String(a.salonAd ?? "Molla Yazılım"),
+    iletisimWhatsapp: String(a.iletisimWhatsapp ?? a.whatsapp ?? ""),
+    iletisimTelefon: String(a.iletisimTelefon ?? ""),
+    iletisimEposta: String(a.iletisimEposta ?? ""),
+    adresKisa: String(a.adresKisa ?? ""),
+    adresDetay: String(a.adresDetay ?? ""),
+    calismaSaatleri: String(a.calismaSaatleri ?? ""),
+    sehir: String(a.sehir ?? ""),
+    googleMaps: String(a.googleMaps ?? ""),
+    instagram: String(a.instagram ?? ""),
+    facebook: String(a.facebook ?? ""),
+    twitter: String(a.twitter ?? ""),
+    youtube: String(a.youtube ?? ""),
+    tiktok: String(a.tiktok ?? ""),
+    linkedin: String(a.linkedin ?? ""),
+    footerSosyalGoster: a.footerSosyalGoster !== false,
+    seoTitle: String(a.seoTitle ?? ""),
+    seoDescription: String(a.seoDescription ?? ""),
+    seoKeywords: String(a.seoKeywords ?? ""),
+    seoOgImage: String(a.seoOgImage ?? ""),
+    seoIndex: a.seoIndex !== false,
+    demoKuaforGoster: a.demoKuaforGoster !== false,
+    demoKuaforKadinGoster: a.demoKuaforKadinGoster !== false,
+    demoRestaurantGoster: a.demoRestaurantGoster !== false,
+    demoEmlakGoster: a.demoEmlakGoster !== false,
+    demoAvukatGoster: a.demoAvukatGoster !== false,
+    demoOtoyikamaGoster: a.demoOtoyikamaGoster !== false,
+    demoCrmGoster: a.demoCrmGoster !== false,
+  };
+}
 
 const TABS = [
   { id: "hero", label: "Hero" },
@@ -24,6 +108,7 @@ const TABS = [
   { id: "surec", label: "Süreç" },
   { id: "sss", label: "SSS" },
   { id: "iletisim", label: "İletişim" },
+  { id: "seo", label: "SEO" },
   { id: "navbar", label: "Menü & bar" },
   { id: "footer", label: "Footer" },
 ] as const;
@@ -129,43 +214,69 @@ export function PanelMollaLanding() {
   const [err, setErr] = useState("");
   const [okMsg, setOkMsg] = useState("");
   const [form, setForm] = useState<MollaLanding | null>(null);
+  const [settings, setSettings] = useState<MollaPanelSettings | null>(null);
 
   useEffect(() => {
     void (async () => {
-      const res = await panelFetch(wb("/api/panel/landing"), { cache: "no-store" });
-      if (res.status === 401) {
+      const [landingRes, settingsRes] = await Promise.all([
+        panelFetch(wb("/api/panel/landing"), { cache: "no-store" }),
+        panelFetch(wb("/api/panel/settings"), { cache: "no-store" }),
+      ]);
+      if (landingRes.status === 401 || settingsRes.status === 401) {
         router.refresh();
         return;
       }
-      if (!res.ok) {
+      if (!landingRes.ok) {
         setErr("Kurumsal içerik yüklenemedi");
         setLoading(false);
         return;
       }
-      const j = (await res.json()) as { landing: MollaLanding };
-      setForm(j.landing);
+      const landingJ = (await landingRes.json()) as { landing: MollaLanding };
+      setForm(landingJ.landing);
+      if (settingsRes.ok) {
+        const settingsJ = (await settingsRes.json()) as { ayarlar?: Record<string, unknown> };
+        setSettings(settingsFromApi(settingsJ.ayarlar ?? {}));
+      } else {
+        setSettings(settingsFromApi({}));
+      }
       setLoading(false);
     })();
   }, [panelFetch, router, wb]);
 
+  function patchSettings(fn: (prev: MollaPanelSettings) => MollaPanelSettings) {
+    setSettings((prev) => (prev ? fn(prev) : prev));
+  }
+
   async function save() {
-    if (!form) return;
+    if (!form || !settings) return;
     setSaving(true);
     setErr("");
     setOkMsg("");
     try {
-      const res = await panelFetch(wb("/api/panel/landing"), {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (res.status === 401) {
+      const [landingRes, settingsRes] = await Promise.all([
+        panelFetch(wb("/api/panel/landing"), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }),
+        panelFetch(wb("/api/panel/settings"), {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(settings),
+        }),
+      ]);
+      if (landingRes.status === 401 || settingsRes.status === 401) {
         router.refresh();
         return;
       }
-      if (!res.ok) {
-        const j = (await res.json()) as { error?: string };
-        setErr(j.error ?? "Kaydedilemedi");
+      if (!landingRes.ok) {
+        const j = (await landingRes.json()) as { error?: string };
+        setErr(j.error ?? "İçerik kaydedilemedi");
+        return;
+      }
+      if (!settingsRes.ok) {
+        const j = (await settingsRes.json()) as { error?: string };
+        setErr(j.error ?? "Ayarlar kaydedilemedi");
         return;
       }
       setOkMsg("Kaydedildi — anasayfayı yenileyin.");
@@ -175,7 +286,7 @@ export function PanelMollaLanding() {
     }
   }
 
-  if (loading || !form) {
+  if (loading || !form || !settings) {
     return <p className="text-sm text-[var(--muted)]">Kurumsal içerik yükleniyor…</p>;
   }
 
@@ -252,8 +363,8 @@ export function PanelMollaLanding() {
       <header>
         <h1 className="text-2xl font-bold text-[var(--text)]">Kurumsal anasayfa</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          mollayazilim.com tüm metinleri buradan düzenlenir. SEO → <strong>SEO</strong>, iletişim bilgileri →{" "}
-          <strong>Ayarlar</strong>, demo kart görünürlüğü → <strong>Portföy</strong>.
+          mollayazilim.com metinleri, iletişim bilgileri, SEO ve demo kart görünürlüğü buradan yönetilir. Panel şifresi →{" "}
+          <strong>Ayarlar</strong>.
         </p>
       </header>
 
@@ -406,6 +517,23 @@ export function PanelMollaLanding() {
             <Field label="Tüm demolar kapalı mesajı">
               <textarea rows={2} className={inputCls} value={dm.bosMesaj} onChange={(e) => setForm({ ...form, demolarBolum: { ...dm, bosMesaj: e.target.value } })} />
             </Field>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+              <p className="text-sm font-semibold text-[var(--text)]">Ana sayfada demo kartı göster</p>
+              <p className="mt-1 text-xs text-[var(--muted)]">Kapalı olan demolar anasayfada listelenmez.</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {DEMO_FLAG_ROWS.map((row) => (
+                  <label key={row.flag} className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="rounded border-[var(--border)]"
+                      checked={settings[row.flag]}
+                      onChange={(e) => patchSettings((s) => ({ ...s, [row.flag]: e.target.checked }))}
+                    />
+                    <span>{row.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
             {dm.gruplar.map((g, gi) => (
               <div key={g.id} className="space-y-3 rounded-xl border border-dashed border-[var(--border)] p-4">
                 <Field label={`Grup: ${g.id}`}>
@@ -482,7 +610,7 @@ export function PanelMollaLanding() {
         ) : null}
 
         {tab === "iletisim" ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <SectionMetaFields value={il} onChange={(v) => setForm({ ...form, iletisimBolum: { ...il, ...v } })} />
             <Field label="Vurgu kutusu">
               <textarea rows={3} className={inputCls} value={il.vurguMetin} onChange={(e) => patchForm((prev) => ({ ...prev, iletisimBolum: { ...prev.iletisimBolum, vurguMetin: e.target.value } }))} />
@@ -500,6 +628,104 @@ export function PanelMollaLanding() {
             <Field label="Form varsayılan mesaj">
               <textarea rows={2} className={inputCls} value={il.formVarsayilanMesaj} onChange={(e) => setForm({ ...form, iletisimBolum: { ...il, formVarsayilanMesaj: e.target.value } })} />
             </Field>
+
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-4 space-y-4">
+              <p className="text-sm font-semibold text-[var(--text)]">İletişim bilgileri (footer & form)</p>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Firma adı">
+                  <input className={inputCls} value={settings.salonAd} onChange={(e) => patchSettings((s) => ({ ...s, salonAd: e.target.value }))} />
+                </Field>
+                <Field label="Şehir">
+                  <input className={inputCls} value={settings.sehir} onChange={(e) => patchSettings((s) => ({ ...s, sehir: e.target.value }))} />
+                </Field>
+                <Field label="WhatsApp (9055...)">
+                  <input className={inputCls} value={settings.iletisimWhatsapp} onChange={(e) => patchSettings((s) => ({ ...s, iletisimWhatsapp: e.target.value }))} />
+                </Field>
+                <Field label="Telefon (+90 ...)">
+                  <input className={inputCls} value={settings.iletisimTelefon} onChange={(e) => patchSettings((s) => ({ ...s, iletisimTelefon: e.target.value }))} />
+                </Field>
+                <Field label="E-posta">
+                  <input className={inputCls} value={settings.iletisimEposta} onChange={(e) => patchSettings((s) => ({ ...s, iletisimEposta: e.target.value }))} />
+                </Field>
+                <Field label="Adres kısa">
+                  <input className={inputCls} value={settings.adresKisa} onChange={(e) => patchSettings((s) => ({ ...s, adresKisa: e.target.value }))} />
+                </Field>
+                <Field label="Adres detay" className="md:col-span-2">
+                  <input className={inputCls} value={settings.adresDetay} onChange={(e) => patchSettings((s) => ({ ...s, adresDetay: e.target.value }))} />
+                </Field>
+                <Field label="Çalışma saatleri">
+                  <input className={inputCls} value={settings.calismaSaatleri} onChange={(e) => patchSettings((s) => ({ ...s, calismaSaatleri: e.target.value }))} />
+                </Field>
+                <Field label="Google Maps embed / link">
+                  <input className={inputCls} value={settings.googleMaps} onChange={(e) => patchSettings((s) => ({ ...s, googleMaps: e.target.value }))} />
+                </Field>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-4 space-y-4">
+              <label className="flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  className="mt-1"
+                  checked={settings.footerSosyalGoster}
+                  onChange={(e) => patchSettings((s) => ({ ...s, footerSosyalGoster: e.target.checked }))}
+                />
+                <span className="text-sm">
+                  <span className="font-medium text-[var(--text)]">Footer’da sosyal medya göster</span>
+                </span>
+              </label>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Instagram">
+                  <input className={inputCls} value={settings.instagram} onChange={(e) => patchSettings((s) => ({ ...s, instagram: e.target.value }))} />
+                </Field>
+                <Field label="Facebook">
+                  <input className={inputCls} value={settings.facebook} onChange={(e) => patchSettings((s) => ({ ...s, facebook: e.target.value }))} />
+                </Field>
+                <Field label="X (Twitter)">
+                  <input className={inputCls} value={settings.twitter} onChange={(e) => patchSettings((s) => ({ ...s, twitter: e.target.value }))} />
+                </Field>
+                <Field label="YouTube">
+                  <input className={inputCls} value={settings.youtube} onChange={(e) => patchSettings((s) => ({ ...s, youtube: e.target.value }))} />
+                </Field>
+                <Field label="TikTok">
+                  <input className={inputCls} value={settings.tiktok} onChange={(e) => patchSettings((s) => ({ ...s, tiktok: e.target.value }))} />
+                </Field>
+                <Field label="LinkedIn">
+                  <input className={inputCls} value={settings.linkedin} onChange={(e) => patchSettings((s) => ({ ...s, linkedin: e.target.value }))} />
+                </Field>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {tab === "seo" ? (
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Site başlığı (title)">
+                <input className={inputCls} value={settings.seoTitle} onChange={(e) => patchSettings((s) => ({ ...s, seoTitle: e.target.value }))} />
+              </Field>
+              <Field label="OG görsel URL">
+                <input className={inputCls} value={settings.seoOgImage} onChange={(e) => patchSettings((s) => ({ ...s, seoOgImage: e.target.value }))} />
+              </Field>
+              <Field label="Meta açıklama" className="md:col-span-2">
+                <textarea rows={3} className={inputCls} value={settings.seoDescription} onChange={(e) => patchSettings((s) => ({ ...s, seoDescription: e.target.value }))} />
+              </Field>
+              <Field label="Anahtar kelimeler" className="md:col-span-2">
+                <textarea rows={2} className={inputCls} value={settings.seoKeywords} onChange={(e) => patchSettings((s) => ({ ...s, seoKeywords: e.target.value }))} />
+              </Field>
+            </div>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={settings.seoIndex}
+                onChange={(e) => patchSettings((s) => ({ ...s, seoIndex: e.target.checked }))}
+              />
+              <span className="text-sm">
+                <span className="font-medium text-[var(--text)]">Google index açık</span>
+                <span className="mt-1 block text-[var(--muted)]">Kapalıysa sayfalara noindex uygulanır.</span>
+              </span>
+            </label>
           </div>
         ) : null}
 

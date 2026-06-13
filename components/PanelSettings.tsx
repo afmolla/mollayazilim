@@ -36,6 +36,7 @@ export function PanelSettings() {
   const wb = useWithBase();
   const panelFetch = usePanelFetch();
   const sitePrefix = useSitePrefix();
+  const isMasterPanel = !sitePrefix.trim();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -185,7 +186,11 @@ export function PanelSettings() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-[var(--text)]">Site ayarları</h1>
-        <p className="text-sm text-[var(--muted)]">Header/footer, SEO ve iletişim bilgileri burada yönetilir.</p>
+        <p className="text-sm text-[var(--muted)]">
+          {isMasterPanel
+            ? "Panel şifresi ve teknik tercihler. İletişim, SEO ve demo görünürlüğü İçerik sekmesindedir."
+            : "Header/footer ve iletişim bilgileri burada yönetilir."}
+        </p>
       </div>
 
       {err ? (
@@ -198,66 +203,77 @@ export function PanelSettings() {
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-          <h2 className="font-semibold text-[var(--text)]">Genel</h2>
-          <div className="mt-4 space-y-4">
-            <Field label="Salon adı" value={form.salonAd} onChange={(v) => setForm((s) => ({ ...s, salonAd: v }))} />
-            <Field label="Şehir" value={form.sehir} onChange={(v) => setForm((s) => ({ ...s, sehir: v }))} />
-            <Field
-              label="WhatsApp (9055...)"
-              value={form.whatsapp}
-              onChange={(v) => setForm((s) => ({ ...s, whatsapp: v }))}
-            />
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
-              <p className="text-sm font-semibold text-[var(--text)]">İletişim (kurumsal)</p>
-              <p className="mt-1 text-xs text-[var(--muted)]">
-                Bu alanlar vitrin/kurumsal sayfalarda (örn. Molla footer + teklif formu) kullanılır.
-              </p>
-              <div className="mt-4 grid gap-4 md:grid-cols-3">
+        {isMasterPanel ? (
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
+            <p className="text-sm text-[var(--muted)]">
+              Kurumsal site iletişim bilgileri, sosyal medya, SEO ve demo kart görünürlüğü{" "}
+              <strong className="text-[var(--text)]">İçerik</strong> sekmesinden düzenlenir.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
+              <h2 className="font-semibold text-[var(--text)]">Genel</h2>
+              <div className="mt-4 space-y-4">
+                <Field label="Salon adı" value={form.salonAd} onChange={(v) => setForm((s) => ({ ...s, salonAd: v }))} />
+                <Field label="Şehir" value={form.sehir} onChange={(v) => setForm((s) => ({ ...s, sehir: v }))} />
                 <Field
-                  label="İletişim WhatsApp (9055...)"
-                  value={form.iletisimWhatsapp ?? ""}
-                  onChange={(v) => setForm((s) => ({ ...s, iletisimWhatsapp: v }))}
+                  label="WhatsApp (9055...)"
+                  value={form.whatsapp}
+                  onChange={(v) => setForm((s) => ({ ...s, whatsapp: v }))}
+                />
+                <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4">
+                  <p className="text-sm font-semibold text-[var(--text)]">İletişim (kurumsal)</p>
+                  <p className="mt-1 text-xs text-[var(--muted)]">
+                    Bu alanlar vitrin/kurumsal sayfalarda (örn. Molla footer + teklif formu) kullanılır.
+                  </p>
+                  <div className="mt-4 grid gap-4 md:grid-cols-3">
+                    <Field
+                      label="İletişim WhatsApp (9055...)"
+                      value={form.iletisimWhatsapp ?? ""}
+                      onChange={(v) => setForm((s) => ({ ...s, iletisimWhatsapp: v }))}
+                    />
+                    <Field
+                      label="Telefon (+90 ...)"
+                      value={form.iletisimTelefon ?? ""}
+                      onChange={(v) => setForm((s) => ({ ...s, iletisimTelefon: v }))}
+                    />
+                    <Field
+                      label="E‑posta"
+                      value={form.iletisimEposta ?? ""}
+                      onChange={(v) => setForm((s) => ({ ...s, iletisimEposta: v }))}
+                    />
+                  </div>
+                </div>
+                <p className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--muted)]">
+                  Vitrinde menü bağlantıları üst çubukta <strong className="text-[var(--text)]">ortada</strong> görünür.
+                  Sol açılır menü yalnızca <strong className="text-[var(--text)]">yönetim panelinde</strong> (/panel).
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
+              <h2 className="font-semibold text-[var(--text)]">Adres ve saatler</h2>
+              <div className="mt-4 space-y-4">
+                <Field
+                  label="Adres kısa"
+                  value={form.adresKisa}
+                  onChange={(v) => setForm((s) => ({ ...s, adresKisa: v }))}
                 />
                 <Field
-                  label="Telefon (+90 ...)"
-                  value={form.iletisimTelefon ?? ""}
-                  onChange={(v) => setForm((s) => ({ ...s, iletisimTelefon: v }))}
+                  label="Adres detay"
+                  value={form.adresDetay}
+                  onChange={(v) => setForm((s) => ({ ...s, adresDetay: v }))}
                 />
                 <Field
-                  label="E‑posta"
-                  value={form.iletisimEposta ?? ""}
-                  onChange={(v) => setForm((s) => ({ ...s, iletisimEposta: v }))}
+                  label="Çalışma saatleri"
+                  value={form.calismaSaatleri}
+                  onChange={(v) => setForm((s) => ({ ...s, calismaSaatleri: v }))}
                 />
               </div>
             </div>
-            <p className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--muted)]">
-              Vitrinde menü bağlantıları üst çubukta <strong className="text-[var(--text)]">ortada</strong> görünür.
-              Sol açılır menü yalnızca <strong className="text-[var(--text)]">yönetim panelinde</strong> (/panel).
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-          <h2 className="font-semibold text-[var(--text)]">Adres ve saatler</h2>
-          <div className="mt-4 space-y-4">
-            <Field
-              label="Adres kısa"
-              value={form.adresKisa}
-              onChange={(v) => setForm((s) => ({ ...s, adresKisa: v }))}
-            />
-            <Field
-              label="Adres detay"
-              value={form.adresDetay}
-              onChange={(v) => setForm((s) => ({ ...s, adresDetay: v }))}
-            />
-            <Field
-              label="Çalışma saatleri"
-              value={form.calismaSaatleri}
-              onChange={(v) => setForm((s) => ({ ...s, calismaSaatleri: v }))}
-            />
-          </div>
-        </div>
+          </>
+        )}
 
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm lg:col-span-2">
           <h2 className="font-semibold text-[var(--text)]">Panel şifresi</h2>

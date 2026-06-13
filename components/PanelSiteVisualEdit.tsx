@@ -33,8 +33,7 @@ export function PanelSiteVisualEdit() {
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
           <p className="text-sm font-semibold text-[var(--text)]">Kurumsal anasayfa</p>
           <p className="mt-1 text-xs text-[var(--muted)]">
-            Canlı siteyi yeni sekmede açın; metin ve yapı sabittir, SEO ve iletişim bilgileri panel sekmelerinden
-            güncellenir.
+            Canlı siteyi yeni sekmede açın. Metin, SEO, iletişim ve demo görünürlüğü İçerik sekmesinden güncellenir.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button
@@ -51,16 +50,14 @@ export function PanelSiteVisualEdit() {
           <p className="text-sm font-semibold text-[var(--text)]">Panel sekmeleri</p>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
             <li>
-              <strong className="font-medium text-[var(--text)]">SEO</strong> — sayfa başlığı, açıklama, anahtar
-              kelimeler, index ayarı
+              <strong className="font-medium text-[var(--text)]">İçerik</strong> — tüm metinler, SEO, iletişim bilgileri,
+              demo kart görünürlüğü
             </li>
             <li>
-              <strong className="font-medium text-[var(--text)]">Ayarlar</strong> — firma adı, iletişim, WhatsApp,
-              adres
+              <strong className="font-medium text-[var(--text)]">Portföy</strong> — demo vitrin adresleri ve panelleri
             </li>
             <li>
-              <strong className="font-medium text-[var(--text)]">Portföy</strong> — ana sayfadaki demo proje kartlarının
-              görünürlüğü; her demo kendi panelinden düzenlenir
+              <strong className="font-medium text-[var(--text)]">Ayarlar</strong> — panel şifresi
             </li>
             <li>
               <strong className="font-medium text-[var(--text)]">Lead&apos;ler</strong> — iletişim formu talepleri
