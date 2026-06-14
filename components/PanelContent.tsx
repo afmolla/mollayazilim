@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { PanelMedia } from "@/components/PanelMedia";
 import {
   PanelFiyatHesapFields,
+  PanelAmbalajHomeFields,
   PanelHomeExtrasFields,
   PanelHizmetlerMetaFields,
   PanelRandevuFields,
@@ -242,7 +243,10 @@ export function PanelContent(props: PanelContentProps = {}) {
               </div>
             </ContentZone>
             {isEsnekAmbalaj ? (
-              <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+              <>
+                <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+                <PanelAmbalajHomeFields form={form} setForm={setForm} />
+              </>
             ) : null}
             <ContentZone
               step={2}
@@ -357,7 +361,10 @@ export function PanelContent(props: PanelContentProps = {}) {
           </Card>
 
           {isEsnekAmbalaj ? (
-            <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+            <>
+              <PanelHomeExtrasFields form={form} setForm={setForm} onPickHeroKart={() => setPickMediaFor("homeKart")} />
+              <PanelAmbalajHomeFields form={form} setForm={setForm} />
+            </>
           ) : null}
 
           <Card title="Neden bu demo? (kartlar)">

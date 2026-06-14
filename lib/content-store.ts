@@ -5,9 +5,12 @@ import type { VfHiza } from "@/lib/vf-hiza";
 
 import type { FiyatHesapIcerik } from "@/lib/fiyat-hesap-defaults";
 import { mergeFiyatHesap, VARSAYILAN_FIYAT_HESAP } from "@/lib/fiyat-hesap-defaults";
+import type { AmbalajHome } from "@/lib/ambalaj-home-defaults";
+import { mergeAmbalajHome, VARSAYILAN_AMBALAJ_HOME } from "@/lib/ambalaj-home-defaults";
 
 export type { VfHiza } from "@/lib/vf-hiza";
 export type { FiyatHesapIcerik } from "@/lib/fiyat-hesap-defaults";
+export type { AmbalajHome } from "@/lib/ambalaj-home-defaults";
 
 /** Hero sağ / alt kart (esnek ambalaj vb.) */
 export type HomeHeroKart = {
@@ -29,7 +32,13 @@ export type HomeFeature = {
   /** md:grid-cols-3 içinde kapladığı sütun (1–3) */
   kolon?: 1 | 2 | 3;
 };
-export type HizmetSatir = { ad: string; sure: string; fiyat: string };
+export type HizmetSatir = {
+  ad: string;
+  sure: string;
+  fiyat: string;
+  /** Ürün sayfası bölüm başlığı için anchor (ör. doypack → #doypack) */
+  anchorId?: string;
+};
 export type GaleriGorsel = { src: string; alt: string; hiza?: VfHiza; kolon?: 1 | 2 };
 
 /** Hero görselinin altında gösterilen serbest bloklar (vitrin düzenleme) */
@@ -82,6 +91,8 @@ export type SiteIcerik = {
   };
   /** Esnek ambalaj fiyat hesaplama sayfası */
   fiyatHesap?: FiyatHesapIcerik;
+  /** Ambalaj vitrin anasayfa bölümleri (kategori vitrin, öne çıkanlar, güven) */
+  ambalajHome?: AmbalajHome;
   /** Randevu / masa ayırt formu — vitrine göre seçenekler (kuaför ≠ restoran). */
   randevuForm?: {
     selectLabel: string;
@@ -281,6 +292,7 @@ function mergeSite(
 export async function icerikGetir(): Promise<SiteIcerik> {
   const v = varsayilan();
   const FILE = await contentFile();
+  const subdir = path.basename(path.dirname(FILE));
   try {
     const raw = await fs.readFile(FILE, "utf8");
     const db = JSON.parse(raw) as Partial<Db>;
@@ -298,6 +310,11 @@ export async function icerikGetir(): Promise<SiteIcerik> {
       ...(stored.site ? { site: mergeSite(undefined, stored.site) } : {}),
       ...(stored.fiyatHesap
         ? { fiyatHesap: mergeFiyatHesap(VARSAYILAN_FIYAT_HESAP, stored.fiyatHesap) }
+        : {}),
+      ...(subdir === "ambalaj" || stored.ambalajHome
+        ? {
+            ambalajHome: mergeAmbalajHome(VARSAYILAN_AMBALAJ_HOME, stored.ambalajHome),
+          }
         : {}),
     };
   } catch {
@@ -322,6 +339,14 @@ export async function icerikKaydet(patch: Partial<SiteIcerik>): Promise<SiteIcer
           fiyatHesap: mergeFiyatHesap(
             cur.fiyatHesap ?? VARSAYILAN_FIYAT_HESAP,
             patch.fiyatHesap ?? cur.fiyatHesap,
+          ),
+        }
+      : {}),
+    ...(patch.ambalajHome !== undefined || cur.ambalajHome
+      ? {
+          ambalajHome: mergeAmbalajHome(
+            cur.ambalajHome ?? VARSAYILAN_AMBALAJ_HOME,
+            patch.ambalajHome ?? cur.ambalajHome,
           ),
         }
       : {}),

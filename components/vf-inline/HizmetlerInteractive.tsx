@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouse
 import type { SiteIcerik } from "@/lib/content-store";
 import { EditableText } from "@/components/vf-inline/EditableText";
 import { useVfInlineSession } from "@/components/vf-inline/useVfInlineSession";
+import { isAmbalajPath } from "@/lib/site-config";
 
 type Hiz = SiteIcerik["hizmetler"];
 
@@ -18,6 +19,7 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
   const router = useRouter();
   const pathname = usePathname() ?? "";
   const isAvukat = pathname.includes("/avukat");
+  const isAmbalaj = isAmbalajPath(pathname);
   const { inline } = useVfInlineSession();
   const [h, setH] = useState<Hiz>(() => ({
     ...props.initial,
@@ -208,7 +210,9 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
             "mt-10 overflow-hidden rounded-2xl shadow-sm",
             isAvukat
               ? "rounded-3xl border border-amber-500/20 bg-slate-950/45 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl"
-              : "border border-[var(--border)] bg-[var(--surface)]",
+              : isAmbalaj
+                ? "border border-emerald-500/15 bg-emerald-950/20"
+                : "border border-[var(--border)] bg-[var(--surface)]",
           ].join(" ")}
         >
           <table className="w-full text-left text-sm">
@@ -216,7 +220,9 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
               className={
                 isAvukat
                   ? "border-b border-amber-500/15 bg-white/[0.05] text-[11px] font-semibold uppercase tracking-wider text-amber-200/75"
-                  : "bg-[var(--surface-2)] text-[var(--muted)]"
+                  : isAmbalaj
+                    ? "border-b border-emerald-500/15 bg-emerald-950/40 text-[11px] font-semibold uppercase tracking-wider text-emerald-200/75"
+                    : "bg-[var(--surface-2)] text-[var(--muted)]"
               }
             >
               <tr>
@@ -225,8 +231,48 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
                 <th className="px-4 py-3 font-medium">{h.kolonFiyat ?? "Başlangıç"}</th>
               </tr>
             </thead>
-            <tbody className={isAvukat ? "divide-y divide-white/[0.06]" : "divide-y divide-[var(--border)]"}>
-              {h.rows.map((r, i) => (
+            <tbody className={isAvukat ? "divide-y divide-white/[0.06]" : isAmbalaj ? "divide-y divide-emerald-500/10" : "divide-y divide-[var(--border)]"}>
+              {h.rows.map((r, i) => {
+                if (r.anchorId) {
+                  return (
+                    <tr key={`sec-${r.anchorId}`} id={r.anchorId} className="scroll-mt-28">
+                      <td
+                        colSpan={3}
+                        className={
+                          isAmbalaj
+                            ? "border-t border-emerald-500/20 bg-emerald-950/30 px-4 py-5 first:border-t-0"
+                            : "border-t border-[var(--border)] bg-[var(--surface-2)] px-4 py-4 first:border-t-0"
+                        }
+                      >
+                        <h2
+                          className={
+                            isAmbalaj
+                              ? "text-lg font-bold text-emerald-50 md:text-xl"
+                              : "text-base font-bold text-[var(--text)]"
+                          }
+                        >
+                          <EditableText
+                            active={inline}
+                            value={r.ad}
+                            onCommit={(v) =>
+                              update((cur) => {
+                                const rows = [...cur.rows];
+                                rows[i] = { ...rows[i], ad: v };
+                                return { ...cur, rows };
+                              })
+                            }
+                          />
+                        </h2>
+                        {r.sure ? (
+                          <p className={isAmbalaj ? "mt-1 text-xs text-emerald-100/55" : "mt-1 text-xs text-[var(--muted)]"}>
+                            {r.sure}
+                          </p>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                }
+                return (
                 <tr
                   key={i}
                   onContextMenu={(e) =>
@@ -247,7 +293,11 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
                 >
                   <td
                     className={
-                      isAvukat ? "px-4 py-4 font-medium text-slate-50" : "px-4 py-4 font-medium text-[var(--text)]"
+                      isAvukat
+                        ? "px-4 py-4 font-medium text-slate-50"
+                        : isAmbalaj
+                          ? "px-4 py-4 font-medium text-emerald-50"
+                          : "px-4 py-4 font-medium text-[var(--text)]"
                     }
                   >
                     <EditableText
@@ -262,7 +312,15 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
                       }
                     />
                   </td>
-                  <td className={isAvukat ? "px-4 py-4 text-slate-400" : "px-4 py-4 text-[var(--muted)]"}>
+                  <td
+                    className={
+                      isAvukat
+                        ? "px-4 py-4 text-slate-400"
+                        : isAmbalaj
+                          ? "px-4 py-4 text-emerald-100/60"
+                          : "px-4 py-4 text-[var(--muted)]"
+                    }
+                  >
                     <EditableText
                       active={inline}
                       value={r.sure}
@@ -275,7 +333,15 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
                       }
                     />
                   </td>
-                  <td className={isAvukat ? "px-4 py-4 text-amber-100/95" : "px-4 py-4 text-[var(--text)]"}>
+                  <td
+                    className={
+                      isAvukat
+                        ? "px-4 py-4 text-amber-100/95"
+                        : isAmbalaj
+                          ? "px-4 py-4 text-emerald-200"
+                          : "px-4 py-4 text-[var(--text)]"
+                    }
+                  >
                     <EditableText
                       active={inline}
                       value={r.fiyat}
@@ -289,7 +355,8 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
                     />
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -322,5 +389,5 @@ export function HizmetlerInteractive(props: { initial: Hiz }) {
     );
   }
 
-  return <div className="mx-auto max-w-4xl px-4 py-14 md:px-6">{pageBody}</div>;
+  return <div className={isAmbalaj ? "mx-auto max-w-4xl px-4 py-14 md:px-6 text-emerald-50" : "mx-auto max-w-4xl px-4 py-14 md:px-6"}>{pageBody}</div>;
 }

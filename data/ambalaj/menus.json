@@ -1,17 +1,21 @@
 {
   "header": [
     { "label": "Ana Sayfa", "href": "/anasayfa", "newTab": false },
-    { "label": "Ürünler", "href": "/hizmetler", "newTab": false },
+    { "label": "Doypack", "href": "/hizmetler#doypack", "newTab": false },
+    { "label": "Quadro", "href": "/hizmetler#quadro", "newTab": false },
+    { "label": "Flat Bottom", "href": "/hizmetler#flat", "newTab": false },
+    { "label": "Torba & Rulo", "href": "/hizmetler#torba", "newTab": false },
     { "label": "Fiyat Hesapla", "href": "/fiyat-hesaplama", "newTab": false },
-    { "label": "Galeri", "href": "/galeri", "newTab": false },
-    { "label": "Nasıl çalışır", "href": "/p/nasil-calisir", "newTab": false },
     { "label": "Teklif Al", "href": "/randevu", "newTab": false },
     { "label": "İletişim", "href": "/iletisim", "newTab": false }
   ],
   "footer": [
+    { "href": "/hizmetler#doypack", "label": "Doypack & kilitli" },
+    { "href": "/hizmetler#quadro", "label": "Quadro ambalaj" },
+    { "href": "/hizmetler#flat", "label": "Flat bottom" },
+    { "href": "/hizmetler#torba", "label": "Torba & rulo" },
+    { "href": "/hizmetler#baski", "label": "Flexo baskı" },
     { "href": "/fiyat-hesaplama", "label": "Fiyat hesaplama" },
-    { "href": "/hizmetler", "label": "Ürün grupları" },
-    { "href": "/p/opp-cpp-rulo", "label": "OPP & CPP rulo" },
     { "href": "/randevu", "label": "Teklif talebi" },
     { "href": "/iletisim", "label": "İletişim" },
     { "href": "/panel", "label": "Yönetim paneli" }

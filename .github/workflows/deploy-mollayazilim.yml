@@ -1,13 +1,12 @@
-# VPS deploy — elle: Actions -> Deploy mollayazilim.com -> Run workflow
+# VPS deploy — push main veya Actions -> Run workflow
 # Secrets: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH = C:/inetpub/wwwroot/mollayazilim
-# Otomatik push deploy: Secrets ekledikten sonra asagidaki push: yorumunu ac.
 
 name: Deploy mollayazilim.com
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   deploy:
@@ -18,7 +17,7 @@ jobs:
         run: |
           echo "::notice::Deploy atlandi — SSH secrets tanimli degil."
           echo "Repo Settings -> Secrets -> Actions: SSH_HOST, SSH_USER, SSH_KEY, DEPLOY_PATH"
-          echo "VPS elle: deploy\sunucu-guncelle.ps1"
+          echo "Elle guncelleme: canli sunucuda YENIDEN-BASLAT.cmd"
 
       - name: SSH deploy (Windows VPS)
         if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USER != '' && secrets.SSH_KEY != '' && secrets.DEPLOY_PATH != '' }}
@@ -29,4 +28,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script_stop: true
           script: |
-            powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${{ secrets.DEPLOY_PATH }}/deploy/sunucu-guncelle.ps1"
+            powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${{ secrets.DEPLOY_PATH }}/deploy/site-yeniden-baslat.ps1"

@@ -23,6 +23,8 @@ import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import { normalizeOtoImageSrc, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
 import { ESNEK_AMBALAJ_IMAGES, normalizeAmbalajImageSrc } from "@/lib/esnek-ambalaj-images";
 import { isAmbalajPath } from "@/lib/site-config";
+import type { AmbalajHome } from "@/lib/ambalaj-home-defaults";
+import { AmbalajHomeSections } from "@/components/ambalaj/AmbalajHomeSections";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
@@ -58,6 +60,7 @@ export function AnasayfaInteractive(props: {
   initialHome: Home;
   salonAd: string;
   emlakPreview?: EmlakPreviewIlan[];
+  ambalajHome?: AmbalajHome;
 }) {
   const wb = useWithBase();
   const panelFetch = usePanelFetch();
@@ -831,6 +834,10 @@ export function AnasayfaInteractive(props: {
 
       {isOtoyikama ? <OtoyikamaVisualBands pathname={pathname} /> : null}
 
+      {isEsnekAmbalaj && props.ambalajHome ? (
+        <AmbalajHomeSections data={props.ambalajHome} pathname={pathname} />
+      ) : null}
+
       <section
         className={
           isRestaurant
@@ -841,6 +848,8 @@ export function AnasayfaInteractive(props: {
                 ? "relative mx-auto max-w-6xl border-t border-white/[0.06] bg-[#0c1829] px-4 py-20 md:px-6"
                 : isOtoyikama
                   ? "relative mx-auto max-w-6xl border-t border-cyan-500/10 bg-[#060a10] px-4 py-20 md:px-6"
+                  : isEsnekAmbalaj
+                    ? "relative mx-auto max-w-6xl border-t border-emerald-500/10 bg-[#030806] px-4 py-20 md:px-6"
                   : isKuaforErkek
                   ? "relative mx-auto max-w-6xl border-t border-[var(--border)] bg-[var(--surface-2)] px-4 py-20 md:px-6"
                   : isKuaforKadin
@@ -874,6 +883,8 @@ export function AnasayfaInteractive(props: {
                     ? "block text-center text-3xl font-extrabold uppercase tracking-tight text-[var(--text)] md:text-4xl"
                     : isKuaforKadin
                       ? "font-[family-name:var(--font-restaurant)] block text-center text-3xl font-semibold tracking-tight text-[var(--text)] md:text-[2.65rem]"
+                      : isEsnekAmbalaj
+                        ? "block text-center text-3xl font-extrabold tracking-tight text-emerald-50 md:text-4xl"
                       : "block text-center text-2xl font-bold text-[var(--text)]"
           }
           value={home.bolumBaslik}
@@ -893,6 +904,8 @@ export function AnasayfaInteractive(props: {
                     ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-slate-400 md:text-base"
                     : isKuaforErkek
                     ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-[var(--muted)] md:text-base"
+                    : isEsnekAmbalaj
+                      ? "mx-auto mt-3 block max-w-2xl text-center text-sm text-emerald-100/60 md:text-base"
                     : "mx-auto mt-2 block max-w-2xl text-center text-[var(--muted)]"
           }
           multiline

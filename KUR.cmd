@@ -27,30 +27,44 @@ if errorlevel 1 (
   call npm install -g pm2
 )
 
-echo [1/4] IIS + site kurulumu...
+echo [1/5] IIS + site kurulumu...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\Install-Mollayazilim-NextIIS.ps1"
 if errorlevel 1 goto fail
 
 echo.
-echo [2/4] npm install...
+echo [2/5] npm install...
 if not exist node_modules call npm ci
 if errorlevel 1 call npm install
 if errorlevel 1 goto fail
 
 echo.
-echo [3/4] Production build...
+echo [3/5] Production build...
 set NODE_ENV=production
 call npm run build
 if errorlevel 1 goto fail
 
 echo.
-echo [4/4] IIS + hosts + firewall...
+echo [4/5] IIS + hosts + firewall...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\ENSURE-HOSTS.ps1"
 if errorlevel 1 goto fail
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\FIX-LOCALHOST.ps1"
 if errorlevel 1 goto fail
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\AC-FIREWALL.ps1"
 if errorlevel 1 goto fail
+
+echo.
+echo [5/5] HTTPS sertifikasi...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\KUR-HTTPS.ps1"
+set HTTPS_ERR=%ERRORLEVEL%
+if %HTTPS_ERR%==2 (
+  echo DNS bu makineye gitmiyor — yerel mkcert deneniyor...
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\yerel-mkcert-https.ps1"
+  if errorlevel 1 (
+    echo UYARI: HTTPS kurulamadi — site HTTP ile calisir. Canli sunucuda KUR.cmd tekrar calistirin.
+  )
+) else if %HTTPS_ERR% NEQ 0 (
+  echo UYARI: HTTPS kurulamadi — site HTTP ile calisir.
+)
 
 echo.
 echo ========================================
@@ -60,7 +74,7 @@ call "%~dp0BASLAT.cmd"
 if errorlevel 1 goto fail
 
 echo.
-echo HTTPS icin (canli sunucu): KUR-HTTPS.cmd
+echo Sonraki guncellemeler: YENIDEN-BASLAT.cmd ^(canli sunucuda^)
 exit /b 0
 
 :fail

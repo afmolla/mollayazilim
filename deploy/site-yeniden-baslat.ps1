@@ -1,15 +1,17 @@
 #Requires -Version 5.1
 <#
-  Yerel / sunucu: git pull (varsa) -> build -> PM2 yeniden baslat -> saglik kontrolu.
+  Sunucu guncelleme: git pull -> npm ci -> build -> PM2 restart -> saglik kontrolu.
+  YENIDEN-BASLAT.cmd cagirir.
 
-  Kullanim:
-    powershell -ExecutionPolicy Bypass -File deploy\site-yeniden-baslat.ps1
-    powershell -ExecutionPolicy Bypass -File deploy\site-yeniden-baslat.ps1 -SkipGit
-    powershell -ExecutionPolicy Bypass -File deploy\site-yeniden-baslat.ps1 -SkipBuild
+  Parametreler:
+    -SkipGit     git atla
+    -SkipBuild   build atla (sadece pm2 restart)
+    -HardReset   git pull yerine origin/main ile zorla esitle
 #>
 param(
   [switch]$SkipGit,
-  [switch]$SkipBuild
+  [switch]$SkipBuild,
+  [switch]$HardReset
 )
 
 $ErrorActionPreference = "Stop"
@@ -32,27 +34,71 @@ function Test-HttpOk {
   }
 }
 
+function Restart-Pm2App {
+  if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
+    Write-Host "HATA: pm2 bulunamadi. npm install -g pm2" -ForegroundColor Red
+    exit 1
+  }
+
+  Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | ForEach-Object {
+    $pid3000 = $_.OwningProcess
+    $proc = Get-CimInstance Win32_Process -Filter "ProcessId=$pid3000" -ErrorAction SilentlyContinue
+    $cmd = if ($proc) { $proc.CommandLine } else { "" }
+    if ($cmd -notmatch "next") {
+      Write-Host "Port $Port temizleniyor (PID $pid3000)..." -ForegroundColor Yellow
+      Stop-Process -Id $pid3000 -Force -ErrorAction SilentlyContinue
+    }
+  }
+  Start-Sleep -Seconds 2
+
+  $has = cmd /c "pm2.cmd jlist" 2>$null | Select-String -Pattern $Pm2Name -Quiet
+  if ($has) {
+    cmd /c "pm2.cmd restart $Pm2Name --update-env"
+  } elseif (Test-Path $Eco) {
+    cmd /c "pm2.cmd delete $Pm2Name" 2>$null
+    cmd /c "pm2.cmd start `"$Eco`" --update-env"
+    cmd /c "pm2.cmd save" 2>$null
+  } else {
+    Write-Host "HATA: PM2 app yok ve ecosystem bulunamadi: $Eco" -ForegroundColor Red
+    exit 1
+  }
+}
+
 Set-Location $AppRoot
-Write-Host "=== Molla Yazilim - Siteyi yeniden baslat ===" -ForegroundColor Cyan
+Write-Host "=== Molla Yazilim - Yeniden baslat / guncelle ===" -ForegroundColor Cyan
 Write-Host "Klasor: $AppRoot`n"
 
-if (-not $SkipGit -and (Test-Path (Join-Path $AppRoot ".git"))) {
-  Write-Host "[1/4] Git pull..." -ForegroundColor Yellow
-  git fetch origin 2>&1 | Out-Host
-  git pull origin main 2>&1 | Out-Host
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "UYARI: git pull basarisiz - yerel dosyalarla devam ediliyor." -ForegroundColor DarkYellow
+if (-not $SkipGit) {
+  Write-Host "[1/4] GitHub'dan cekiliyor..." -ForegroundColor Yellow
+  $gitPull = Join-Path $PSScriptRoot "git-pull.ps1"
+  if ($HardReset) {
+    & $gitPull -HardReset
   } else {
-    $head = (git rev-parse --short HEAD 2>$null)
-    if ($head) { Write-Host "Commit: $head" -ForegroundColor Green }
+    & $gitPull
+  }
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "HATA: git guncelleme basarisiz." -ForegroundColor Red
+    Write-Host "  Zorla esitle: YENIDEN-BASLAT.cmd --hard" -ForegroundColor Yellow
+    Write-Host "  Git yoksa: deploy\GITHUB-ZIP-GUNCELLE.ps1" -ForegroundColor Yellow
+    exit 1
   }
 } else {
   Write-Host "[1/4] Git atlandi." -ForegroundColor DarkGray
 }
 
 if (-not $SkipBuild) {
-  Write-Host "`n[2/4] npm run build..." -ForegroundColor Yellow
+  Write-Host "`n[2/4] npm ci + build..." -ForegroundColor Yellow
   $env:NODE_ENV = "production"
+  if (Test-Path (Join-Path $AppRoot "package-lock.json")) {
+    npm ci
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host "npm ci basarisiz — npm install deneniyor..." -ForegroundColor DarkYellow
+      npm install
+    }
+  } else {
+    npm install
+  }
+  if ($LASTEXITCODE -ne 0) { exit 1 }
   npm run build
   if ($LASTEXITCODE -ne 0) { exit 1 }
 } else {
@@ -60,21 +106,7 @@ if (-not $SkipBuild) {
 }
 
 Write-Host "`n[3/4] PM2 yeniden baslat..." -ForegroundColor Yellow
-if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
-  Write-Host "HATA: pm2 bulunamadi. npm install -g pm2" -ForegroundColor Red
-  exit 1
-}
-
-$has = cmd /c "pm2.cmd jlist" 2>$null | Select-String -Pattern $Pm2Name -Quiet
-if ($has) {
-  cmd /c "pm2.cmd restart $Pm2Name --update-env"
-} elseif (Test-Path $Eco) {
-  cmd /c "pm2.cmd start `"$Eco`" --update-env"
-  cmd /c "pm2.cmd save" 2>$null
-} else {
-  Write-Host "HATA: PM2 app yok ve ecosystem bulunamadi: $Eco" -ForegroundColor Red
-  exit 1
-}
+Restart-Pm2App
 
 Start-Sleep -Seconds 4
 
@@ -98,7 +130,8 @@ foreach ($c in $checks) {
 
 Write-Host ""
 if ($allOk) {
-  Write-Host "Tamam. IIS uzerinden: http://localhost/  ve  http://localhost/ambalaj" -ForegroundColor Green
+  Write-Host "Tamam. Canli: https://mollayazilim.com/" -ForegroundColor Green
+  Write-Host "Yerel:    http://localhost/  ve  http://localhost/ambalaj" -ForegroundColor DarkGray
   exit 0
 }
 

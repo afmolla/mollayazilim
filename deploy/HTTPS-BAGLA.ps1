@@ -25,7 +25,7 @@ function Get-MollaCertificate {
         $_.HasPrivateKey -and (
           $_.FriendlyName -eq "mollayazilim.com" -or
           $_.Subject -match "mollayazilim\.com"
-        )
+        ) -and $_.Issuer -notmatch "CN=mollayazilim\.com"
       } |
       Sort-Object NotAfter -Descending |
       Select-Object -First 1
@@ -89,7 +89,7 @@ function Add-HttpsRedirectRule {
 
 $cert = Get-MollaCertificate
 if (-not $cert) {
-  Write-Host "(HATA) Sertifika bulunamadi - once KUR-HTTPS.cmd" -ForegroundColor Red
+  Write-Host "(HATA) Sertifika bulunamadi - once KUR.cmd (HTTPS adimi)" -ForegroundColor Red
   exit 1
 }
 Write-Host "[OK] Sertifika: $($cert.Subject)" -ForegroundColor Green

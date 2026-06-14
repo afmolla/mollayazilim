@@ -66,6 +66,11 @@ export default async function AnasayfaPage() {
       }));
   }
   return (
-    <AnasayfaInteractive initialHome={c.home} salonAd={ayar.salonAd} emlakPreview={emlakPreview} />
+    <AnasayfaInteractive
+      initialHome={c.home}
+      salonAd={ayar.salonAd}
+      emlakPreview={emlakPreview}
+      ambalajHome={isAmbalajSubdir(site.subdir) ? c.ambalajHome : undefined}
+    />
   );
 }

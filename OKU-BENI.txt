@@ -1,20 +1,20 @@
-Molla Yazilim — TEK KOMUT
-========================
+Molla Yazilim — 3 KOMUT
+=======================
 
-  BASLAT.cmd          Siteyi ac (cift tik — PM2 + tarayici)
-  BASLAT.cmd menu     Menu (1-5)
-  BASLAT.cmd duzelt   IIS + Node duzelt (Yonetici)
-  BASLAT.cmd guncelle GitHub'dan cek + build
-  BASLAT.cmd kur      Ilk kurulum (Yonetici)
-  BASLAT.cmd test     Dis erisim testi
+  KUR.cmd              Ilk kurulum: IIS + npm + build + HTTPS + site ac (Yonetici)
+  BASLAT.cmd           Siteyi calistir (PM2 + IIS)
+  YENIDEN-BASLAT.cmd   GitHub'dan cek + build + PM2 restart (canli sunucuda)
 
-Tarayici: http://localhost/   (:3000 yazma — sadece IIS ic proxy)
+ONEMLI:
+  git push tek basina sunucuyu guncellemez.
+  Push sonrasi canli sunucuda (85.95.251.204) YENIDEN-BASLAT.cmd calistirin.
 
-Eski kisayollar (hepsi BASLAT'a yonlenir):
-  SITE-AC.cmd, SITEYI-BURADAN-AC.cmd, DUZELT.cmd, GUNCELLE.cmd
+Tarayici:
+  http://localhost/
+  https://mollayazilim.com/
 
-VPS sunucu:
-  deploy\VPS-DUZELT.cmd   (git + IIS + Node, Yonetici)
+Zorla git esitleme:
+  YENIDEN-BASLAT.cmd --hard
 
-HTTPS (ayri):
-  KUR-HTTPS.cmd
+Sadece restart (build yok):
+  YENIDEN-BASLAT.cmd --no-git --no-build

@@ -42,6 +42,9 @@ yarn-error.log*
 
 # simple-acme downloaded by deploy/KUR-HTTPS.ps1
 /deploy/simple-acme/
+/deploy/mkcert/
+/deploy/certs/
+/deploy/kur-https-last.log
 
 # vercel
 .vercel

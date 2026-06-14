@@ -2,6 +2,7 @@
 
 import type { SiteIcerik } from "@/lib/content-store";
 import { VARSAYILAN_FIYAT_HESAP } from "@/lib/fiyat-hesap-defaults";
+import { VARSAYILAN_AMBALAJ_HOME } from "@/lib/ambalaj-home-defaults";
 
 const inputCls =
   "w-full rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm outline-none ring-[var(--brand)] focus:ring-2";
@@ -206,6 +207,81 @@ export function PanelFiyatHesapFields(props: {
       <Field label="Sonuç kutusu başlığı" value={fh.sonucBaslik} onChange={(v) => patch({ sonucBaslik: v })} />
       <Field label="WhatsApp butonu" value={fh.waButon} onChange={(v) => patch({ waButon: v })} />
       <Field label="Randevu / numune butonu" value={fh.randevuButon} onChange={(v) => patch({ randevuButon: v })} />
+    </div>
+  );
+}
+
+export function PanelAmbalajHomeFields(props: {
+  form: SiteIcerik;
+  setForm: React.Dispatch<React.SetStateAction<SiteIcerik | null>>;
+}) {
+  const ah = { ...VARSAYILAN_AMBALAJ_HOME, ...(props.form.ambalajHome ?? {}) };
+  const patch = (p: Partial<typeof ah>) =>
+    props.setForm((s) => ({ ...s!, ambalajHome: { ...ah, ...p } }));
+
+  return (
+    <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <h3 className="font-semibold text-[var(--text)]">Vitrin bölümleri (kategori grid, öne çıkanlar)</h3>
+      <Field label="Promo şerit metni" value={ah.promoBar} onChange={(v) => patch({ promoBar: v })} />
+      <Field label="Kategori bölüm başlığı" value={ah.kategoriBaslik} onChange={(v) => patch({ kategoriBaslik: v })} />
+      <Textarea label="Kategori açıklaması" value={ah.kategoriAciklama} onChange={(v) => patch({ kategoriAciklama: v })} />
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-[var(--text)]">Kategori kartları</p>
+        {ah.kategoriler.map((k, i) => (
+          <div key={k.id} className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-3">
+            <div className="grid gap-2 md:grid-cols-2">
+              <Field
+                label="Başlık"
+                value={k.baslik}
+                onChange={(v) => {
+                  const kategoriler = [...ah.kategoriler];
+                  kategoriler[i] = { ...kategoriler[i], baslik: v };
+                  patch({ kategoriler });
+                }}
+              />
+              <Field
+                label="Alt başlık"
+                value={k.altBaslik}
+                onChange={(v) => {
+                  const kategoriler = [...ah.kategoriler];
+                  kategoriler[i] = { ...kategoriler[i], altBaslik: v };
+                  patch({ kategoriler });
+                }}
+              />
+              <Field
+                label="Link (href)"
+                value={k.href}
+                onChange={(v) => {
+                  const kategoriler = [...ah.kategoriler];
+                  kategoriler[i] = { ...kategoriler[i], href: v };
+                  patch({ kategoriler });
+                }}
+              />
+              <Field
+                label="Vurgu etiketi (opsiyonel)"
+                value={k.vurgu ?? ""}
+                onChange={(v) => {
+                  const kategoriler = [...ah.kategoriler];
+                  kategoriler[i] = { ...kategoriler[i], vurgu: v.trim() || undefined };
+                  patch({ kategoriler });
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <Field label="Öne çıkan bölüm başlığı" value={ah.oneCikanBaslik} onChange={(v) => patch({ oneCikanBaslik: v })} />
+      <Textarea label="Öne çıkan açıklama" value={ah.oneCikanAciklama} onChange={(v) => patch({ oneCikanAciklama: v })} />
+      <Field label="Güven bölümü başlığı" value={ah.guvenBaslik} onChange={(v) => patch({ guvenBaslik: v })} />
+      <Field label="Sektör bölümü başlığı" value={ah.sektorBaslik} onChange={(v) => patch({ sektorBaslik: v })} />
+      <Textarea label="Sektör açıklaması" value={ah.sektorAciklama} onChange={(v) => patch({ sektorAciklama: v })} />
+      <div className="grid gap-3 md:grid-cols-2">
+        <Field label="CTA band başlık" value={ah.ctaBand.baslik} onChange={(v) => patch({ ctaBand: { ...ah.ctaBand, baslik: v } })} />
+        <Field label="CTA birincil buton" value={ah.ctaBand.primaryLabel} onChange={(v) => patch({ ctaBand: { ...ah.ctaBand, primaryLabel: v } })} />
+        <Field label="CTA birincil link" value={ah.ctaBand.primaryHref} onChange={(v) => patch({ ctaBand: { ...ah.ctaBand, primaryHref: v } })} />
+        <Field label="CTA ikincil buton" value={ah.ctaBand.secondaryLabel} onChange={(v) => patch({ ctaBand: { ...ah.ctaBand, secondaryLabel: v } })} />
+      </div>
+      <Textarea label="CTA band açıklama" value={ah.ctaBand.aciklama} onChange={(v) => patch({ ctaBand: { ...ah.ctaBand, aciklama: v } })} />
     </div>
   );
 }

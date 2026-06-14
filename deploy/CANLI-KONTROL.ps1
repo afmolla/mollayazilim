@@ -95,5 +95,5 @@ foreach ($u in @("https://mollayazilim.com/", "https://$dns/")) {
 Write-Host ""
 Write-Host "OZET:" -ForegroundColor Cyan
 Write-Host "  HTTP acik adres: http://mollayazilim.com/  (https DEGIL)"
-Write-Host "  HTTPS icin: KUR-HTTPS.cmd (canli sunucuda)"
+Write-Host "  HTTPS icin: KUR.cmd (canli sunucuda, adim 5)"
 Write-Host "  Tarayici https'e zorluyorsa: gizli pencere + http:// yaz"

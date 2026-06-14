@@ -1,9 +1,7 @@
 #Requires -RunAsAdministrator
 <#
   Let's Encrypt HTTPS — IIS site mollayazilim.com
-  Kullanim (canli sunucu, Yonetici):
-    cd C:\inetpub\wwwroot\mollayazilim
-    KUR-HTTPS.cmd
+  Kullanim: KUR.cmd adim 5 (Yonetici) veya deploy\KUR-HTTPS.ps1
 #>
 $ErrorActionPreference = "Stop"
 $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
@@ -12,6 +10,35 @@ $wacsDir = Join-Path $PSScriptRoot "simple-acme"
 $wacs = Join-Path $wacsDir "wacs.exe"
 $wacsZipUrl = "https://github.com/simple-acme/simple-acme/releases/download/v2.3.6/simple-acme.v2.3.6.2257.win-x64.pluggable.zip"
 $hosts = "mollayazilim.com,www.mollayazilim.com,mollayazilim.com.tr,www.mollayazilim.com.tr"
+
+function Remove-BadMollaCerts {
+  $stores = @("Cert:\LocalMachine\WebHosting", "Cert:\LocalMachine\My")
+  $removed = 0
+  foreach ($store in $stores) {
+    Get-ChildItem $store -ErrorAction SilentlyContinue | Where-Object {
+      $_.Subject -match "mollayazilim\.com" -and (
+        $_.Issuer -match "YR1|Root YR" -or $_.Issuer -eq $_.Subject
+      )
+    } | ForEach-Object {
+      Write-Host "  - Sahte sertifika kaldiriliyor: $($_.Subject)" -ForegroundColor Yellow
+      Remove-Item $_.PSPath -Force
+      $removed++
+    }
+  }
+  if ($removed -gt 0) {
+    Write-Host "[OK] $removed sahte sertifika temizlendi" -ForegroundColor Green
+  }
+}
+
+function Test-IsProductionServer {
+  try {
+    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -ErrorAction Stop | Select-Object -First 1).IPAddress
+    $publicIp = (Invoke-WebRequest "https://api.ipify.org" -UseBasicParsing -TimeoutSec 10).Content.Trim()
+    return ($dnsIp -and $publicIp -and $dnsIp -eq $publicIp)
+  } catch {
+    return $false
+  }
+}
 
 function Ensure-Wacs {
   if (Test-Path $wacs) { return $wacs }
@@ -96,7 +123,7 @@ function Get-MollaCertificate {
         $_.HasPrivateKey -and (
           $_.FriendlyName -eq "mollayazilim.com" -or
           $_.Subject -match "mollayazilim\.com"
-        )
+        ) -and $_.Issuer -notmatch "CN=mollayazilim\.com"
       } |
       Sort-Object NotAfter -Descending |
       Select-Object -First 1
@@ -186,6 +213,27 @@ function Add-HttpsRedirectRule {
 
 Write-Host "=== HTTPS kurulumu (Let's Encrypt) ===" -ForegroundColor Cyan
 Write-Host "Site: $AppRoot`n"
+
+Remove-BadMollaCerts
+
+if (-not (Test-IsProductionServer)) {
+  try {
+    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -ErrorAction Stop | Select-Object -First 1).IPAddress
+    $publicIp = (Invoke-WebRequest "https://api.ipify.org" -UseBasicParsing -TimeoutSec 10).Content.Trim()
+    Write-Host "(HATA) mollayazilim.com DNS bu makineye gitmiyor." -ForegroundColor Red
+    Write-Host "  DNS IP   : $dnsIp" -ForegroundColor Yellow
+    Write-Host "  Bu makine: $publicIp" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Let's Encrypt http-01 dogrulamasi internetten $dnsIp adresine gider." -ForegroundColor Yellow
+    Write-Host "Yerel IIS icin secenekler:" -ForegroundColor Cyan
+    Write-Host "  1) DNS A kaydini bu makinenin IP'sine al, firewall 80/443 ac, KUR.cmd tekrar calistirin" -ForegroundColor White
+    Write-Host "  2) Yerel gelistirme: KUR.cmd mkcert adimini otomatik dener" -ForegroundColor White
+    exit 2
+  } catch {
+    Write-Host "(HATA) DNS kontrolu basarisiz: $($_.Exception.Message)" -ForegroundColor Red
+    exit 2
+  }
+}
 
 $httpCode = Test-SiteHttp "http://127.0.0.1/"
 if ($httpCode -lt 200 -or $httpCode -ge 400) {
