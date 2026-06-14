@@ -35,7 +35,7 @@ export function defaultRandevuOptionsForSubdir(subdir: string): string[] {
         "Seramik ön muayene",
         "Cam filmi / PPF bilgi",
       ];
-    case "esnek-ambalaj":
+    case "ambalaj":
       return [
         "OPP torba / poşet",
         "CPP torba / ekmek",

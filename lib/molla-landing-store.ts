@@ -170,14 +170,14 @@ const DEFAULT_DEMO_GROUPS: MollaDemoGroup[] = [
   {
     id: "diger",
     title: "Diğer sektör demoları",
-    desc: "Restoran QR menü, emlak ilan vitrinleri, esnek ambalaj ve oto yıkama.",
+    desc: "Restoran QR menü, emlak ilan vitrinleri, ambalaj fiyat motoru ve oto yıkama.",
     items: [
       { key: "restaurant", title: "Restoran Demo", href: "/restaurant", meta: "QR menü + rezervasyon" },
       { key: "emlak", title: "Emlak Demo", href: "/emlak", meta: "İlan + filtreleme" },
       {
         key: "esnekAmbalaj",
-        title: "Esnek Ambalaj",
-        href: "/esnek-ambalaj",
+        title: "Ambalaj Demo",
+        href: "/ambalaj",
         meta: "OPP · CPP · torba/rulo · fiyat hesaplama",
       },
       { key: "otoyikama", title: "Oto Yıkama Demo", href: "/otoyikama", meta: "Yıkama · pasta cila · seramik" },
@@ -299,6 +299,10 @@ export function varsayilanMollaLanding(): MollaLanding {
         { title: "Restoran Sistemi", desc: "QR menü, rezervasyon, masa yönetimi." },
         { title: "Emlak Sistemi", desc: "İlan yönetimi, filtreleme, admin paneli." },
         { title: "Avukatlık Vitrini", desc: "Hukuk odaklı sayfalar, görüşme talebi + panel." },
+        {
+          title: "Ambalaj",
+          desc: "Esnek ambalaj vitrin; OPP/CPP torba-rulo, online fiyat hesaplama ve teklif formu.",
+        },
       ],
       rozetler: ["Modern UI", "Panel dahil", "Hızlı kurulum"],
     },

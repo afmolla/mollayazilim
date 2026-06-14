@@ -3,6 +3,7 @@ import type { SiteAyarlar } from "@/lib/settings-store";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { getRequestSite } from "@/lib/site-request";
 import { landingGetir } from "@/lib/molla-landing-store";
+import { isAmbalajSubdir } from "@/lib/site-config";
 
 function normalizeSocialUrl(
   raw: string | undefined,
@@ -59,7 +60,7 @@ async function jsonLdBody() {
   const isRestaurant = subdir === "restaurant";
   const isEmlak = subdir === "emlak";
   const isAvukat = subdir === "avukat";
-  const isEsnekAmbalaj = subdir === "esnek-ambalaj";
+  const isEsnekAmbalaj = isAmbalajSubdir(subdir);
   const base = await siteUrl();
   const baseNorm = base.replace(/\/$/, "");
   const logoUrl = `${baseNorm}/icon.svg`;

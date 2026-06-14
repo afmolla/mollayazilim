@@ -6,6 +6,7 @@ import {
   type EmlakPreviewIlan,
 } from "@/components/vf-inline/AnasayfaInteractive";
 import { getRequestSite } from "@/lib/site-request";
+import { isAmbalajSubdir } from "@/lib/site-config";
 import { ilanlarGetir, ilanYayinda } from "@/lib/ilan-store";
 
 export const revalidate = 60;
@@ -33,7 +34,7 @@ const emlakMeta: Metadata = {
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();
   if (site.subdir === "emlak") return emlakMeta;
-  if (site.subdir === "esnek-ambalaj") {
+  if (isAmbalajSubdir(site.subdir)) {
     const [c, ayar] = await Promise.all([icerikGetir(), ayarlarGetir()]);
     return {
       title: c.home.baslik || ayar.seoTitle || "Ana Sayfa",

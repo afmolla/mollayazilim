@@ -12,6 +12,14 @@ function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string
   return h;
 }
 
+/** `/kuafor` → `/anasayfa` rewrite sonrası proxy tekrar çalışır; kiracı üst bilgisi varsa yönlendirme yapma. */
+function isActivePortfolioRewrite(req: NextRequest): boolean {
+  const prefix = req.headers.get("x-site-prefix")?.trim() ?? "";
+  if (prefix && prefix !== MOLLA_SITE_PREFIX_SENTINEL) return true;
+  const vitrinPath = req.headers.get(VITRIN_URL_PATH_HEADER)?.trim();
+  return vitrinPath ? isPortfolioPath(vitrinPath) !== null : false;
+}
+
 /**
  * Vercel: Edge `middleware` → RSC arasında üst bilgi kaybı / 500 olabiliyor.
  * Next 16 `proxy` (Node) aynı mantık, sunucu render ile uyumlu.
@@ -51,13 +59,26 @@ export function proxy(req: NextRequest) {
     u.pathname = "/restaurant" + pathname.slice("/restaturant".length);
     return NextResponse.redirect(u, 308);
   }
+  if (pathname === "/esnek-ambalaj" || pathname === "/esnek-ambalaj/") {
+    const u = req.nextUrl.clone();
+    u.pathname = "/ambalaj";
+    return NextResponse.redirect(u, 308);
+  }
+  if (pathname.startsWith("/esnek-ambalaj/")) {
+    const u = req.nextUrl.clone();
+    u.pathname = "/ambalaj" + pathname.slice("/esnek-ambalaj".length);
+    return NextResponse.redirect(u, 308);
+  }
 
   const matched = isPortfolioPath(pathname);
   if (!matched) {
     if (isPortfolioInternalRoute(pathname)) {
-      const u = req.nextUrl.clone();
-      u.pathname = "/";
-      return NextResponse.redirect(u, 308);
+      if (!isActivePortfolioRewrite(req)) {
+        const u = req.nextUrl.clone();
+        u.pathname = "/";
+        return NextResponse.redirect(u, 308);
+      }
+      return NextResponse.next();
     }
     const reqHeaders = requestHeadersWithSite(req, MOLLA_SITE_PREFIX_SENTINEL, "molla");
     return NextResponse.next({ request: { headers: reqHeaders } });

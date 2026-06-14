@@ -8,6 +8,7 @@ import { PanelIcerikHeaderMenu } from "@/components/PanelIcerikHeaderMenu";
 import { PanelPages } from "@/components/PanelPages";
 import { PanelQrMenuTab } from "@/components/PanelQrMenuTab";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
+import { AMBALAJ_PREFIX } from "@/lib/site-config";
 
 type CmsRow = { slug: string; baslik: string; yayin: boolean };
 
@@ -56,7 +57,7 @@ export type PanelUnifiedIcerikProps = {
 export function PanelUnifiedIcerik(props: PanelUnifiedIcerikProps = {}) {
   const wb = useWithBase();
   const sitePrefix = useSitePrefix();
-  const isEsnekAmbalaj = sitePrefix.includes("esnek-ambalaj");
+  const isEsnekAmbalaj = sitePrefix === AMBALAJ_PREFIX || sitePrefix.startsWith(`${AMBALAJ_PREFIX}/`);
   const panelFetch = usePanelFetch();
   const router = useRouter();
   const vfSnap = props.vfSnapshot ?? null;

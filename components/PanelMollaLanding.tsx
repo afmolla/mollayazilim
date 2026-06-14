@@ -66,7 +66,7 @@ const DEMO_FLAG_ROWS: { key: MollaDemoKey; label: string; flag: keyof Pick<
   { key: "emlak", label: "Emlak", flag: "demoEmlakGoster" },
   { key: "avukat", label: "Avukatlık", flag: "demoAvukatGoster" },
   { key: "otoyikama", label: "Oto yıkama", flag: "demoOtoyikamaGoster" },
-  { key: "esnekAmbalaj", label: "Esnek ambalaj", flag: "demoEsnekAmbalajGoster" },
+  { key: "esnekAmbalaj", label: "Ambalaj", flag: "demoEsnekAmbalajGoster" },
 ];
 
 function settingsFromApi(a: Record<string, unknown>): MollaPanelSettings {

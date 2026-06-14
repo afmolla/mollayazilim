@@ -22,6 +22,7 @@ import { CtaBlock } from "@/components/vf-inline/CtaBlock";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import { normalizeOtoImageSrc, OTOYIKAMA_IMAGES } from "@/lib/otoyikama-images";
 import { ESNEK_AMBALAJ_IMAGES, normalizeAmbalajImageSrc } from "@/lib/esnek-ambalaj-images";
+import { isAmbalajPath } from "@/lib/site-config";
 import { KuaforErkekHero } from "@/components/kuafor-vitrin/KuaforErkekHero";
 import { KuaforKadinHero } from "@/components/kuafor-vitrin/KuaforKadinHero";
 
@@ -67,7 +68,7 @@ export function AnasayfaInteractive(props: {
   const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
   const isAvukat = pathname.includes("/avukat");
   const isOtoyikama = pathname.includes("/otoyikama");
-  const isEsnekAmbalaj = pathname.includes("/esnek-ambalaj");
+  const isEsnekAmbalaj = isAmbalajPath(pathname);
   const searchParams = useSearchParams();
   const router = useRouter();
   const vfEdit = searchParams.get("vf_edit") === "1";

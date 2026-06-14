@@ -61,10 +61,10 @@ const ROWS: {
     panel: "/otoyikama/panel",
   },
   {
-    label: "Esnek ambalaj vitrin",
-    desc: "/esnek-ambalaj — OPP, CPP, torba/rulo + fiyat hesaplama",
-    site: "/esnek-ambalaj",
-    panel: "/esnek-ambalaj/panel",
+    label: "Ambalaj vitrin",
+    desc: "/ambalaj — OPP, CPP, torba/rulo + fiyat hesaplama",
+    site: "/ambalaj",
+    panel: "/ambalaj/panel",
   },
 ];
 

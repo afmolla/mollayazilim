@@ -20,6 +20,7 @@ import { PanelMollaLanding } from "@/components/PanelMollaLanding";
 import { PanelEsnekAmbalajAracilik } from "@/components/PanelEsnekAmbalajAracilik";
 import { PanelIlanlar } from "@/components/PanelIlanlar";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
+import { AMBALAJ_PREFIX } from "@/lib/site-config";
 
 type TabId =
   | "portfoy"
@@ -151,7 +152,7 @@ export function PanelApp(props: PanelAppProps) {
         x.id === "randevular" ? { ...x, label: "Rezervasyonlar", short: "Re" } : x,
       );
     }
-    if (pfx === "/esnek-ambalaj") {
+    if (pfx === AMBALAJ_PREFIX) {
       core = core.map((x) =>
         x.id === "randevular" ? { ...x, label: "Teklif talepleri", short: "Te" } : x,
       );
@@ -194,7 +195,7 @@ export function PanelApp(props: PanelAppProps) {
   }, [pathname, tab]);
 
   useEffect(() => {
-    const onAmbalaj = pathname.includes("/esnek-ambalaj");
+    const onAmbalaj = pathname.includes(AMBALAJ_PREFIX);
     if (!onAmbalaj && tab === "tedarik") queueMicrotask(() => setTab("randevular"));
   }, [pathname, tab]);
 

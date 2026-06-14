@@ -59,7 +59,7 @@ export type SiteAyarlar = {
   demoOtoyikamaGoster?: boolean;
   /** Ana vitrinde Molla CRM kartı (crm.mollayazilim.com) */
   demoCrmGoster?: boolean;
-  /** Ana vitrinde esnek ambalaj demo kartı (`/esnek-ambalaj`) */
+  /** Ana vitrinde ambalaj demo kartı (`/ambalaj`) */
   demoEsnekAmbalajGoster?: boolean;
 };
 

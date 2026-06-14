@@ -25,8 +25,23 @@ const DEFAULT_PORTFOLIO_PREFIXES = [
   "/emlak",
   "/avukat",
   "/otoyikama",
-  "/esnek-ambalaj",
+  "/ambalaj",
 ] as const;
+
+/** Ambalaj vitrin kökü — demo kartları ve panel yönlendirmesi için */
+export const AMBALAJ_PREFIX = "/ambalaj";
+export const AMBALAJ_SUBDIR = "ambalaj";
+
+export function isAmbalajSubdir(subdir: string): boolean {
+  return subdir === AMBALAJ_SUBDIR;
+}
+
+export function isAmbalajPath(pathname: string): boolean {
+  const p = (pathname.split("?")[0] || "/").replace(/\/+$/, "") || "/";
+  if (p === AMBALAJ_PREFIX || p.startsWith(`${AMBALAJ_PREFIX}/`)) return true;
+  if (p === "/esnek-ambalaj" || p.startsWith("/esnek-ambalaj/")) return true;
+  return false;
+}
 
 export function portfolioPrefixes(): string[] {
   const fromEnv = process.env.NEXT_PUBLIC_PORTFOLIO_PREFIXES;

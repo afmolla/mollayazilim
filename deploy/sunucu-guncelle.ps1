@@ -55,7 +55,7 @@ if ($pm2 -and (Test-Path $eco)) {
   pm2 delete $Pm2Name 2>$null | Out-Null
   pm2 start $eco
   pm2 save
-  Write-Host "PM2: $Pm2Name (ecosystem-iis.config.cjs, port 3000)"
+  Write-Host "PM2: $Pm2Name — ecosystem-iis.config.cjs port 3000"
 } elseif ($pm2) {
   pm2 restart $Pm2Name
   Write-Host "PM2: $Pm2Name restart"

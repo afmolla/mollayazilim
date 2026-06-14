@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/site";
-import { portfolioPrefixes, dataSubdirForPrefix } from "@/lib/site-config";
+import { portfolioPrefixes, dataSubdirForPrefix, AMBALAJ_SUBDIR } from "@/lib/site-config";
 import { runWithSiteContext } from "@/lib/site-context";
 import { yayinSayfalar } from "@/lib/pages-store";
 import { qrMenuGetir } from "@/lib/qr-menu-store";
@@ -30,7 +30,7 @@ async function pushMollaLandingAndDemos(out: MetadataRoute.Sitemap) {
       changeFrequency: "weekly",
       priority: 1,
     });
-    for (const path of ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat", "/otoyikama", "/esnek-ambalaj", "/cerez-politikasi"]) {
+    for (const path of ["/kuafor", "/kuafor-kadin", "/restaurant", "/emlak", "/avukat", "/otoyikama", "/ambalaj", "/cerez-politikasi"]) {
       out.push({
         url: `${root}${path}`,
         lastModified: new Date(),
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const q = await qrMenuGetir();
           if (!q.yayin) continue;
         }
-        if (p === "/fiyat-hesaplama" && subdir !== "esnek-ambalaj") continue;
+        if (p === "/fiyat-hesaplama" && subdir !== AMBALAJ_SUBDIR) continue;
         out.push({
           url: `${base}${p}`,
           lastModified: new Date(),

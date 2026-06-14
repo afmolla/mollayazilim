@@ -13,6 +13,7 @@ import {
   PanelSayfaBaslikField,
   PanelSiteFooterField,
 } from "@/components/PanelSiteExtras";
+import { AMBALAJ_PREFIX } from "@/lib/site-config";
 
 function normalize(s: string) {
   return s.trim().toLocaleLowerCase("tr-TR");
@@ -35,7 +36,7 @@ export type PanelContentProps = {
 export function PanelContent(props: PanelContentProps = {}) {
   const wb = useWithBase();
   const sitePrefix = useSitePrefix();
-  const isEsnekAmbalaj = sitePrefix.includes("esnek-ambalaj");
+  const isEsnekAmbalaj = sitePrefix === AMBALAJ_PREFIX || sitePrefix.startsWith(`${AMBALAJ_PREFIX}/`);
   const panelFetch = usePanelFetch();
   const layout = props.layout ?? "standalone";
   const hideTabBar = props.hideTabBar === true;

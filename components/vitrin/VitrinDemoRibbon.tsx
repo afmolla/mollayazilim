@@ -2,6 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { useSitePrefix } from "@/components/SitePrefixProvider";
+import { AMBALAJ_PREFIX } from "@/lib/site-config";
 
 const STORAGE_KEY = "molla-vitrin-demo-ribbon-dismissed";
 
@@ -31,7 +32,7 @@ function notifyRibbon() {
 /** Portföy vitrinlerinde demo şeridi — esnek ambalaj sitesinde gösterilmez */
 export function VitrinDemoRibbon() {
   const prefix = useSitePrefix();
-  const isEsnekAmbalaj = prefix.includes("esnek-ambalaj");
+  const isEsnekAmbalaj = prefix === AMBALAJ_PREFIX || prefix.startsWith(`${AMBALAJ_PREFIX}/`);
 
   const hidden = useSyncExternalStore(
     subscribe,
