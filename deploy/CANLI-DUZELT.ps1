@@ -53,6 +53,12 @@ Write-Host ""
 Write-Host "=== MOLLA YAZILIM CANLI DUZELT ===" -ForegroundColor Cyan
 Write-Host ""
 
+Write-Host "[0/6] Kaynak + git..." -ForegroundColor Yellow
+$verifyArgs = @()
+if (-not $SkipGit) { $verifyArgs += "-ForceSync" }
+& (Join-Path $PSScriptRoot "Verify-Source.ps1") @verifyArgs
+if ($LASTEXITCODE -ne 0) { exit 1 }
+
 Write-Host "[1/6] IIS binding + ARR + localhost..." -ForegroundColor Yellow
 & (Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1")
 if ($LASTEXITCODE -ne 0) {

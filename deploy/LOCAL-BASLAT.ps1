@@ -123,7 +123,10 @@ function Test-HostsActive {
     $hostsText = Get-Content "$env:SystemRoot\System32\drivers\etc\hosts" -ErrorAction Stop
     foreach ($line in $hostsText) {
       if ($line -match '^\s*#') { continue }
-      if ($line -match [regex]::Escape($Domain)) { return $true }
+      if ($line -match [regex]::Escape($Domain)) {
+        if ($Domain -eq "mollayazilim.com" -and $line -match 'crm\.mollayazilim') { continue }
+        return $true
+      }
     }
   } catch { }
   return $false
@@ -147,7 +150,10 @@ if ($domainLocal) {
 Write-Host ""
 
 if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
-  Write-Host "Build eksik - npm run build..." -ForegroundColor Yellow
+  Write-Host "Build eksik - kaynak kontrol..." -ForegroundColor Yellow
+  & (Join-Path $PSScriptRoot "Verify-Source.ps1")
+  if ($LASTEXITCODE -ne 0) { exit 1 }
+  Write-Host "npm run build..." -ForegroundColor Yellow
   $env:NODE_ENV = "production"
   npm run build
   if ($LASTEXITCODE -ne 0) { exit 1 }

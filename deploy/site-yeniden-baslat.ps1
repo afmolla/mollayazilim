@@ -70,30 +70,12 @@ Write-Host "Klasor: $AppRoot`n"
 
 if (-not $SkipGit) {
   Write-Host "[1/4] GitHubdan cekiliyor..." -ForegroundColor Yellow
-  $gitPull = Join-Path $PSScriptRoot "git-pull.ps1"
-  if ($HardReset) {
-    & $gitPull -HardReset
-  } else {
-    & $gitPull
-  }
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "git pull basarisiz - ZIP deneniyor..." -ForegroundColor Yellow
-    $zipScript = Join-Path $PSScriptRoot "GITHUB-ZIP-GUNCELLE.ps1"
-    if (Test-Path $zipScript) {
-      & $zipScript
-      if ($LASTEXITCODE -eq 0) {
-        Write-Host "OK: ZIP ile guncellendi" -ForegroundColor Green
-      } else {
-        Write-Host "HATA: git ve ZIP guncelleme basarisiz." -ForegroundColor Red
-        exit 1
-      }
-    } else {
-      Write-Host "HATA: git guncelleme basarisiz." -ForegroundColor Red
-      exit 1
-    }
-  }
+  & (Join-Path $PSScriptRoot "Verify-Source.ps1") -ForceSync
+  if ($LASTEXITCODE -ne 0) { exit 1 }
 } else {
-  Write-Host "[1/4] Git atlandi." -ForegroundColor DarkGray
+  Write-Host "[1/4] Git atlandi — kaynak kontrol..." -ForegroundColor DarkGray
+  & (Join-Path $PSScriptRoot "Verify-Source.ps1")
+  if ($LASTEXITCODE -ne 0) { exit 1 }
 }
 
 if (-not $SkipBuild) {
