@@ -48,8 +48,8 @@ git config --global --add safe.directory "*" 2>$null
 
 if (-not (Test-Path ".git")) {
   Write-Host ""
-  Write-Host ".git YOK — bu klasor git reposu degil (ZIP kopyasi olabilir)." -ForegroundColor Yellow
-  Write-Host "Secenek A — yeniden klonla (onerilen):"
+  Write-Host ".git YOK - bu klasor git reposu degil (ZIP kopyasi olabilir)." -ForegroundColor Yellow
+  Write-Host "Secenek A - yeniden klonla (onerilen):"
   Write-Host "  cd C:\inetpub\wwwroot"
   Write-Host "  ren mollayazilim mollayazilim_yedek"
   Write-Host "  git clone $RepoUrl mollayazilim"
@@ -68,7 +68,7 @@ if ($origin -and $origin -ne $RepoUrl) {
 
 $dirty = git status --porcelain
 if ($dirty -and -not $HardReset) {
-  Write-Host "Yerel degisiklik var — stash..." -ForegroundColor Yellow
+  Write-Host "Yerel degisiklik var - stash..." -ForegroundColor Yellow
   git stash push -u -m "git-pull $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
 }
 
@@ -96,7 +96,7 @@ if ($HardReset) {
   git -c core.editor=true pull origin $Branch --no-edit 2>&1 | ForEach-Object { Write-Host $_ }
   if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "PULL BASARISIZ — zorla esitle:" -ForegroundColor Yellow
+    Write-Host "PULL BASARISIZ - zorla esitle:" -ForegroundColor Yellow
     Write-Host "  .\git-pull.ps1 -HardReset"
     Write-Host "veya: .\GITHUB-ZIP-GUNCELLE.ps1"
     exit 1
@@ -104,4 +104,5 @@ if ($HardReset) {
 }
 
 Write-Host ""
-Write-Host "OK: $(git log -1 --oneline)" -ForegroundColor Green
+$lastCommit = git log -1 --oneline
+Write-Host "OK: $lastCommit" -ForegroundColor Green
