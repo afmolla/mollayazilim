@@ -120,12 +120,34 @@ Restart-Pm2App
 
 Start-Sleep -Seconds 4
 
+$syncScript = Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1"
+if (Test-Path $syncScript) {
+  try { & $syncScript 2>$null } catch { }
+}
+
+function Test-IsProductionServer {
+  try {
+    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -ErrorAction Stop | Select-Object -First 1).IPAddress
+    $publicIp = (Invoke-WebRequest "https://api.ipify.org" -UseBasicParsing -TimeoutSec 8).Content.Trim()
+    return ($dnsIp -and $publicIp -and $dnsIp -eq $publicIp)
+  } catch {
+    return $false
+  }
+}
+
 Write-Host "`n[4/4] Saglik kontrolu..." -ForegroundColor Yellow
 $checks = @(
-  @{ Label = "API health"; Url = "http://127.0.0.1:$Port/api/health" },
-  @{ Label = "Ana sayfa"; Url = "http://127.0.0.1:$Port/" },
-  @{ Label = "Ambalaj demo"; Url = "http://127.0.0.1:$Port/ambalaj" }
+  @{ Label = "Node health"; Url = "http://127.0.0.1:$Port/api/health" },
+  @{ Label = "Node ana sayfa"; Url = "http://127.0.0.1:$Port/" },
+  @{ Label = "Node ambalaj"; Url = "http://127.0.0.1:$Port/ambalaj" },
+  @{ Label = "IIS localhost"; Url = "http://localhost/" },
+  @{ Label = "IIS ambalaj"; Url = "http://localhost/ambalaj" }
 )
+
+if (Test-IsProductionServer) {
+  $checks += @{ Label = "IIS domain"; Url = "http://mollayazilim.com/" }
+  $checks += @{ Label = "IIS domain ambalaj"; Url = "http://mollayazilim.com/ambalaj" }
+}
 $allOk = $true
 foreach ($c in $checks) {
   $t = Test-HttpOk -Url $c.Url

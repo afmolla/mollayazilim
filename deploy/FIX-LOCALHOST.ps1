@@ -246,7 +246,12 @@ Write-Host "[OK] Port 80 dinleniyor" -ForegroundColor Green
 
 # 6) IIS test
 Write-Host ""
-$allOk = Test-IisUrls -Urls @("http://localhost/", "http://127.0.0.1/") -MaxAttempts 12 -DelaySec 4
+$testUrls = @("http://localhost/", "http://127.0.0.1/", "http://mollayazilim.com/", "http://mollayazilim.com/ambalaj")
+$allOk = Test-IisUrls -Urls $testUrls -MaxAttempts 12 -DelaySec 4
+
+Write-Host ""
+Write-Host "HttpToHttps senkron..." -ForegroundColor Yellow
+& "$PSScriptRoot\Sync-HttpToHttps.ps1" 2>$null
 
 if (-not $allOk) {
   Write-Host ""
@@ -258,5 +263,8 @@ if (-not $allOk) {
 }
 
 Write-Host ""
-Write-Host "Tamam. Ac: http://localhost/" -ForegroundColor Green
+Write-Host "Tamam." -ForegroundColor Green
+Write-Host "  http://localhost/" -ForegroundColor Green
+Write-Host "  http://mollayazilim.com/" -ForegroundColor Green
+Write-Host "  http://mollayazilim.com/ambalaj" -ForegroundColor Green
 exit 0

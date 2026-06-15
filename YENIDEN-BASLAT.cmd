@@ -38,10 +38,11 @@ if %ERR%==0 (
 ) else if %ERR%==2 (
   echo.
   echo UYARI: Site ayakta ama bazi URL kontrolleri basarisiz.
+  echo Cozum: CANLI-DUZELT.cmd  ^(IIS + domain + HTTPS^)
   echo Log: pm2 logs mollayazilim --lines 30
 ) else (
   echo.
-  echo HATA. git pull basarisizsa: YENIDEN-BASLAT.cmd --hard
+  echo HATA. CANLI-DUZELT.cmd calistirin
   echo Log: pm2 logs mollayazilim --lines 30
 )
 
