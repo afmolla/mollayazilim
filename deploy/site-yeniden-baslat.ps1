@@ -73,7 +73,7 @@ if (-not $SkipGit) {
   & (Join-Path $PSScriptRoot "Verify-Source.ps1") -ForceSync
   if ($LASTEXITCODE -ne 0) { exit 1 }
 } else {
-  Write-Host "[1/4] Git atlandi — kaynak kontrol..." -ForegroundColor DarkGray
+  Write-Host "[1/4] Git atlandi - kaynak kontrol..." -ForegroundColor DarkGray
   & (Join-Path $PSScriptRoot "Verify-Source.ps1")
   if ($LASTEXITCODE -ne 0) { exit 1 }
 }
