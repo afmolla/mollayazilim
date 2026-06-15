@@ -27,6 +27,8 @@ if /I "%~1"=="--no-git" set "EXTRA=-SkipGit"
 if /I "%~1"=="--no-build" set "EXTRA=-SkipBuild"
 if /I "%~1"=="--hard" set "EXTRA=-HardReset"
 
+call "%~dp0deploy\BOOTSTRAP-PATH.cmd"
+
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0deploy\site-yeniden-baslat.ps1" %EXTRA%
 set ERR=%ERRORLEVEL%
 

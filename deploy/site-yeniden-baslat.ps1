@@ -77,10 +77,20 @@ if (-not $SkipGit) {
     & $gitPull
   }
   if ($LASTEXITCODE -ne 0) {
-    Write-Host "HATA: git guncelleme basarisiz." -ForegroundColor Red
-    Write-Host "  Zorla esitle: YENIDEN-BASLAT.cmd --hard" -ForegroundColor Yellow
-    Write-Host "  Git yoksa: deploy\GITHUB-ZIP-GUNCELLE.ps1" -ForegroundColor Yellow
-    exit 1
+    Write-Host "git pull basarisiz - ZIP deneniyor..." -ForegroundColor Yellow
+    $zipScript = Join-Path $PSScriptRoot "GITHUB-ZIP-GUNCELLE.ps1"
+    if (Test-Path $zipScript) {
+      & $zipScript
+      if ($LASTEXITCODE -eq 0) {
+        Write-Host "OK: ZIP ile guncellendi" -ForegroundColor Green
+      } else {
+        Write-Host "HATA: git ve ZIP guncelleme basarisiz." -ForegroundColor Red
+        exit 1
+      }
+    } else {
+      Write-Host "HATA: git guncelleme basarisiz." -ForegroundColor Red
+      exit 1
+    }
   }
 } else {
   Write-Host "[1/4] Git atlandi." -ForegroundColor DarkGray
