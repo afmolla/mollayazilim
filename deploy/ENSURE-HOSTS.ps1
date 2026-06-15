@@ -31,7 +31,17 @@ $entries = @(
 
 $content = Get-Content $hostsPath -ErrorAction Stop
 $domains = @("mollayazilim.com", "www.mollayazilim.com", "mollayazilim.com.tr", "www.mollayazilim.com.tr")
-$missing = $domains | Where-Object { -not ($content -match [regex]::Escape($_)) }
+
+function Test-HostsActive {
+  param([string]$Domain)
+  foreach ($line in $content) {
+    if ($line -match '^\s*#') { continue }
+    if ($line -match [regex]::Escape($Domain)) { return $true }
+  }
+  return $false
+}
+
+$missing = $domains | Where-Object { -not (Test-HostsActive $_) }
 
 if (-not $missing) {
   Write-Host "[OK] hosts zaten ayarli - mollayazilim.com -> 127.0.0.1" -ForegroundColor DarkGray
@@ -45,7 +55,7 @@ if ($content -notmatch [regex]::Escape($marker)) {
 }
 foreach ($line in $entries) {
   $domain = ($line -split '\s+', 2)[1]
-  if ($content -notmatch [regex]::Escape($domain)) {
+  if (-not (Test-HostsActive $domain)) {
     $toAdd.Add($line)
     Write-Host "  + $line" -ForegroundColor Green
   }

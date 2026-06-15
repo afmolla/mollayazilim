@@ -115,15 +115,36 @@ function Test-NodeHealthy {
 }
 
 $SiteUrl = "http://mollayazilim.com/"
+$AmbalajUrl = "http://localhost/ambalaj"
+
+function Test-HostsActive {
+  param([string]$Domain)
+  try {
+    $hostsText = Get-Content "$env:SystemRoot\System32\drivers\etc\hosts" -ErrorAction Stop
+    foreach ($line in $hostsText) {
+      if ($line -match '^\s*#') { continue }
+      if ($line -match [regex]::Escape($Domain)) { return $true }
+    }
+  } catch { }
+  return $false
+}
 
 Set-Location $AppRoot
-Write-Host "=== Siteyi ac ===" -ForegroundColor Cyan
-Write-Host "$SiteUrl  (port yok, :3000 kullanma)" -ForegroundColor Cyan
-Write-Host "http://localhost/`n"
 
 if (Test-IsAdministrator) {
   & (Join-Path $PSScriptRoot "ENSURE-HOSTS.ps1")
 }
+
+$domainLocal = Test-HostsActive "mollayazilim.com"
+
+Write-Host "=== Siteyi ac ===" -ForegroundColor Cyan
+Write-Host "Ambalaj: http://localhost/ambalaj" -ForegroundColor Cyan
+if ($domainLocal) {
+  Write-Host "$SiteUrl  (port yok, :3000 kullanma)" -ForegroundColor Cyan
+} else {
+  Write-Host "(mollayazilim.com hosts kapali - localhost kullaniliyor)" -ForegroundColor DarkGray
+}
+Write-Host ""
 
 if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
   Write-Host "Build eksik - npm run build..." -ForegroundColor Yellow
@@ -179,33 +200,41 @@ if (-not $nodeOk) {
 }
 
 $openUrl = $null
-if (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 8 -DelaySec 3) {
+if ($domainLocal -and (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 4 -DelaySec 2)) {
   $openUrl = $SiteUrl
-} elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 3) {
+} elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 2) {
   $openUrl = "http://localhost/"
+}
+if ($openUrl -and (Wait-HttpOk -Url $AmbalajUrl -Label "ambalaj" -MaxAttempts 4 -DelaySec 2)) {
+  Write-Host "(OK) Ambalaj: $AmbalajUrl" -ForegroundColor Green
 }
 if ($openUrl) {
   Write-Host ""
   Write-Host "Tarayici: $openUrl" -ForegroundColor Green
-  Start-Process $openUrl
+  Write-Host "Ambalaj:  $AmbalajUrl" -ForegroundColor Green
+  Start-Process $AmbalajUrl
   exit 0
 }
 
-$last = Test-HttpUrl -Url $SiteUrl
+$last = if ($domainLocal) { Test-HttpUrl -Url $SiteUrl } else { @{ Ok = $false } }
 if (-not $last.Ok) { $last = Test-HttpUrl -Url "http://localhost/" }
 $repairReason = if ($last.Code) { "HTTP $($last.Code)" } else { $last.Error }
 if (Invoke-LocalhostRepair -Reason $repairReason) {
   Start-Sleep -Seconds 5
   $openUrl = $null
-  if (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 6 -DelaySec 3) {
+  if ($domainLocal -and (Wait-HttpOk -Url $SiteUrl -Label "mollayazilim.com" -MaxAttempts 4 -DelaySec 2)) {
     $openUrl = $SiteUrl
-  } elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 3) {
+  } elseif (Wait-HttpOk -Url "http://localhost/" -Label "localhost" -MaxAttempts 4 -DelaySec 2) {
     $openUrl = "http://localhost/"
+  }
+  if ($openUrl -and (Wait-HttpOk -Url $AmbalajUrl -Label "ambalaj" -MaxAttempts 4 -DelaySec 2)) {
+    Write-Host "(OK) Ambalaj: $AmbalajUrl" -ForegroundColor Green
   }
   if ($openUrl) {
     Write-Host ""
     Write-Host "Tarayici: $openUrl" -ForegroundColor Green
-    Start-Process $openUrl
+    Write-Host "Ambalaj:  $AmbalajUrl" -ForegroundColor Green
+    Start-Process $AmbalajUrl
     exit 0
   }
 }
