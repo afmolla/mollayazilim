@@ -4,6 +4,16 @@ import { dataSubdirForPrefix, isPortfolioInternalRoute, isPortfolioPath } from "
 import { detectSiteFromRequestParts } from "@/lib/detect-request-site";
 import { MOLLA_SITE_PREFIX_SENTINEL, VITRIN_URL_PATH_HEADER } from "@/lib/site-proxy-headers";
 
+function internalRewriteUrl(req: NextRequest, pathname: string): URL {
+  const u = req.nextUrl.clone();
+  u.protocol = "http:";
+  u.hostname = process.env.BIND_HOST?.trim() || "127.0.0.1";
+  u.port = process.env.PORT?.trim() || "3000";
+  u.pathname = pathname;
+  u.search = "";
+  return u;
+}
+
 function requestHeadersWithSite(req: NextRequest, prefix: string, subdir: string): Headers {
   const h = new Headers(req.headers);
   h.set("x-site-prefix", prefix);
@@ -85,15 +95,15 @@ export function proxy(req: NextRequest) {
   }
 
   const subdir = dataSubdirForPrefix(matched);
-  const u = req.nextUrl.clone();
-  if (pathname === matched || pathname === `${matched}/`) {
-    u.pathname = "/anasayfa";
-  } else {
-    u.pathname = pathname.slice(matched.length) || "/";
-  }
+  const rewrittenPath =
+    pathname === matched || pathname === `${matched}/`
+      ? "/anasayfa"
+      : pathname.slice(matched.length) || "/";
 
   const reqHeaders = requestHeadersWithSite(req, matched, subdir);
-  return NextResponse.rewrite(u, { request: { headers: reqHeaders } });
+  return NextResponse.rewrite(internalRewriteUrl(req, rewrittenPath), {
+    request: { headers: reqHeaders },
+  });
 }
 
 export const config = {

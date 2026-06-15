@@ -69,7 +69,7 @@ Write-Host "=== Molla Yazilim - Yeniden baslat / guncelle ===" -ForegroundColor 
 Write-Host "Klasor: $AppRoot`n"
 
 if (-not $SkipGit) {
-  Write-Host "[1/4] GitHub'dan cekiliyor..." -ForegroundColor Yellow
+  Write-Host "[1/4] GitHubdan cekiliyor..." -ForegroundColor Yellow
   $gitPull = Join-Path $PSScriptRoot "git-pull.ps1"
   if ($HardReset) {
     & $gitPull -HardReset
@@ -92,7 +92,7 @@ if (-not $SkipBuild) {
   if (Test-Path (Join-Path $AppRoot "package-lock.json")) {
     npm ci
     if ($LASTEXITCODE -ne 0) {
-      Write-Host "npm ci basarisiz — npm install deneniyor..." -ForegroundColor DarkYellow
+      Write-Host "npm ci basarisiz - npm install deneniyor..." -ForegroundColor DarkYellow
       npm install
     }
   } else {
