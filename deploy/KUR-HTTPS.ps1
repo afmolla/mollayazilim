@@ -16,7 +16,9 @@ function Remove-BadMollaCerts {
   $removed = 0
   foreach ($store in $stores) {
     Get-ChildItem $store -ErrorAction SilentlyContinue | Where-Object {
-      $_.Subject -match "mollayazilim\.com" -and (
+      $_.Subject -match "mollayazilim\.com" -and
+      $_.Subject -notmatch "crm\.mollayazilim" -and
+      (
         $_.Issuer -match "YR1|Root YR" -or $_.Issuer -eq $_.Subject
       )
     } | ForEach-Object {
@@ -121,7 +123,9 @@ function Get-MollaCertificate {
   foreach ($store in $stores) {
     $cert = Get-ChildItem -Path $store -ErrorAction SilentlyContinue |
       Where-Object {
-        $_.HasPrivateKey -and (
+        $_.HasPrivateKey -and
+        $_.FriendlyName -notmatch "crm\." -and
+        $_.Subject -notmatch "crm\.mollayazilim" -and (
           $_.FriendlyName -eq "mollayazilim.com" -or
           $_.Subject -match "mollayazilim\.com"
         ) -and $_.Issuer -notmatch "CN=mollayazilim\.com"

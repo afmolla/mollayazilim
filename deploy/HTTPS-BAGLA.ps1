@@ -22,7 +22,9 @@ function Get-MollaCertificate {
   foreach ($store in $stores) {
     $cert = Get-ChildItem -Path $store -ErrorAction SilentlyContinue |
       Where-Object {
-        $_.HasPrivateKey -and (
+        $_.HasPrivateKey -and
+        $_.FriendlyName -notmatch "crm\." -and
+        $_.Subject -notmatch "crm\.mollayazilim" -and (
           $_.FriendlyName -eq "mollayazilim.com" -or
           $_.Subject -match "mollayazilim\.com"
         ) -and $_.Issuer -notmatch "CN=mollayazilim\.com"
