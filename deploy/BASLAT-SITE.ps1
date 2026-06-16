@@ -72,6 +72,10 @@ if (-not (Start-Pm2Site)) {
 }
 
 Start-IisSite | Out-Null
+$syncScript = Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1"
+if (Test-Path $syncScript) {
+  try { & $syncScript 2>$null } catch { }
+}
 Start-Sleep -Seconds 1
 
 $ok = $false
