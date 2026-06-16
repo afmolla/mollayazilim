@@ -287,7 +287,7 @@ $hostList = $hosts -split "," | ForEach-Object { $_.Trim() } | Where-Object { $_
   --validation filesystem `
   --webroot $acmeWebroot `
   --store certificatestore `
-  --storename WebHosting `
+  --certificatestore WebHosting `
   --installation iis `
   --installationsiteid $siteId `
   --accepttos `
