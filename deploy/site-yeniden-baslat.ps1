@@ -69,13 +69,16 @@ Write-Host "=== Molla Yazilim - Yeniden baslat / guncelle ===" -ForegroundColor 
 Write-Host "Klasor: $AppRoot`n"
 
 if (-not $SkipGit) {
-  Write-Host "[1/4] GitHubdan cekiliyor..." -ForegroundColor Yellow
-  & (Join-Path $PSScriptRoot "Verify-Source.ps1") -ForceSync
+  Write-Host "[1/4] Git pull..." -ForegroundColor Yellow
+  $gitPull = Join-Path $PSScriptRoot "git-pull.ps1"
+  if ($HardReset) {
+    & $gitPull -HardReset
+  } else {
+    & $gitPull
+  }
   if ($LASTEXITCODE -ne 0) { exit 1 }
 } else {
-  Write-Host "[1/4] Git atlandi - kaynak kontrol..." -ForegroundColor DarkGray
-  & (Join-Path $PSScriptRoot "Verify-Source.ps1")
-  if ($LASTEXITCODE -ne 0) { exit 1 }
+  Write-Host "[1/4] Git atlandi." -ForegroundColor DarkGray
 }
 
 if (-not $SkipBuild) {

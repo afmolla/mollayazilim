@@ -43,12 +43,6 @@ if ($LASTEXITCODE -ge 8) { throw "robocopy hata kodu: $LASTEXITCODE" }
 Remove-Item $TempZip -Force -ErrorAction SilentlyContinue
 Remove-Item $TempDir -Recurse -Force -ErrorAction SilentlyContinue
 
-$verifyScript = Join-Path $PSScriptRoot "Verify-Source.ps1"
-if (Test-Path $verifyScript) {
-  & $verifyScript
-  if ($LASTEXITCODE -ne 0) { exit 1 }
-}
-
 Set-Location $AppRoot
 if (-not (Test-Path "node_modules")) {
   Write-Host "npm ci..."
