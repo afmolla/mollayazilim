@@ -4,6 +4,8 @@ Molla Yazilim — 3 KOMUT
   KUR.cmd              Ilk kurulum: IIS + npm + build + HTTPS + site ac (Yonetici)
   BASLAT.cmd           Siteyi calistir (PM2 + IIS)
   YENIDEN-BASLAT.cmd   GitHub'dan cek + build + PM2 restart (canli sunucuda)
+  VPS-DUZELT.cmd       VPS tamir: HTTPS reset + IIS + SSL (85.95.251.204)
+  CANLI-DUZELT.cmd     Ayni tamir (VPS-DUZELT ile ayni)
 
 ONEMLI:
   git push tek basina sunucuyu guncellemez.

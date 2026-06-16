@@ -53,32 +53,9 @@ Write-Host ""
 Write-Host "=== MOLLA YAZILIM CANLI DUZELT ===" -ForegroundColor Cyan
 Write-Host ""
 
-Write-Host "[1/5] IIS binding + ARR + localhost..." -ForegroundColor Yellow
-& (Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1")
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "(HATA) IIS duzeltme basarisiz" -ForegroundColor Red
-  exit 1
-}
-
-Write-Host ""
-Write-Host "[2/6] HTTPS sertifikasi bagla (varsa)..." -ForegroundColor Yellow
-$httpsScript = Join-Path $PSScriptRoot "HTTPS-BAGLA.ps1"
-if (Test-Path $httpsScript) {
-  & $httpsScript
-  if ($LASTEXITCODE -ne 0) {
-    Write-Host "(UYARI) HTTPS baglanamadi - HTTP ile devam" -ForegroundColor Yellow
-  }
-}
-
-Write-Host ""
-Write-Host "[3/6] HttpToHttps senkron..." -ForegroundColor Yellow
-& (Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1")
-
-Write-Host ""
-Write-Host "[4/6] Yerel hosts (canli sunucuda temizlik)..." -ForegroundColor Yellow
 function Test-IsProductionServer {
   try {
-    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -ErrorAction Stop | Select-Object -First 1).IPAddress
+    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -DnsOnly -ErrorAction Stop | Select-Object -First 1).IPAddress
     $publicIp = (Invoke-WebRequest "https://api.ipify.org" -UseBasicParsing -TimeoutSec 8).Content.Trim()
     return ($dnsIp -and $publicIp -and $dnsIp -eq $publicIp)
   } catch {
@@ -86,23 +63,47 @@ function Test-IsProductionServer {
   }
 }
 
+Write-Host "[1/7] Yerel hosts temizligi..." -ForegroundColor Yellow
 if (Test-IsProductionServer) {
-  Write-Host "  Canli sunucu - yerel hosts temizleniyor..." -ForegroundColor Yellow
   & (Join-Path $PSScriptRoot "KALDIR-YEREL-HOSTS.ps1")
 } else {
-  Write-Host "  [OK] Gelistirme PC - hosts kullanilmiyor (DNS/canli sunucu)" -ForegroundColor DarkGray
+  Write-Host "  Gelistirme PC - hosts kullanilmiyor" -ForegroundColor DarkGray
 }
 
 Write-Host ""
-Write-Host "[5/6] Git + build + PM2..." -ForegroundColor Yellow
+Write-Host "[2/7] IIS binding + ARR + localhost..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "FIX-LOCALHOST.ps1")
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "(HATA) IIS duzeltme basarisiz" -ForegroundColor Red
+  exit 1
+}
+
+Write-Host ""
+Write-Host "[3/7] Guvenlik duvari (80/443)..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "AC-FIREWALL.ps1")
+
+Write-Host ""
+Write-Host "[4/7] Git + build + PM2..." -ForegroundColor Yellow
 $restartArgs = @()
 if ($SkipGit) { $restartArgs += "-SkipGit" }
 if ($SkipBuild) { $restartArgs += "-SkipBuild" }
 & (Join-Path $PSScriptRoot "site-yeniden-baslat.ps1") @restartArgs
 $pm2Ok = ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 2)
+if (-not $pm2Ok) {
+  Write-Host "(UYARI) PM2/build sorunu - devam ediliyor" -ForegroundColor Yellow
+}
 
 Write-Host ""
-Write-Host "[6/6] Domain saglik kontrolu..." -ForegroundColor Yellow
+Write-Host "[5/7] HTTPS tamir (ERR_CONNECTION_RESET)..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "VPS-HTTPS-TAMIR.ps1")
+$httpsOk = ($LASTEXITCODE -eq 0)
+
+Write-Host ""
+Write-Host "[6/7] HttpToHttps senkron..." -ForegroundColor Yellow
+& (Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1")
+
+Write-Host ""
+Write-Host "[7/7] Domain saglik kontrolu..." -ForegroundColor Yellow
 Import-Module WebAdministration -ErrorAction SilentlyContinue
 Start-Website -Name $SiteName -ErrorAction SilentlyContinue
 
@@ -150,16 +151,27 @@ if ($httpsBinding) {
   $h = Test-HttpStatus -Url "https://mollayazilim.com/"
   if ($h.Ok) {
     Write-Host "  [OK] https://mollayazilim.com/ -> $($h.Code)" -ForegroundColor Green
+    $httpsOk = $true
   } else {
-    Write-Host "  [UYARI] https://mollayazilim.com/ -> $($h.Error)" -ForegroundColor Yellow
+    Write-Host "  [HATA] https://mollayazilim.com/ -> $($h.Error)" -ForegroundColor Red
+    Write-Host "         Kirik HTTPS kaldiriliyor..." -ForegroundColor Yellow
+    & (Join-Path $PSScriptRoot "KALDIR-KIRIK-HTTPS.ps1")
+    & (Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1")
+    $httpsOk = $false
   }
+} else {
+  $httpsOk = $false
 }
 
 Write-Host ""
 if ($allOk -and $pm2Ok) {
   Write-Host "SONUC: Site calisiyor" -ForegroundColor Green
   Write-Host "  http://mollayazilim.com/" -ForegroundColor Green
-  Write-Host "  http://mollayazilim.com/ambalaj" -ForegroundColor Green
+  if ($httpsOk) {
+    Write-Host "  https://mollayazilim.com/" -ForegroundColor Green
+  } else {
+    Write-Host "  HTTPS henuz yok - tarayicida http:// yaz veya VPS-HTTPS-TAMIR tekrar calistir" -ForegroundColor Yellow
+  }
   exit 0
 }
 
