@@ -4,8 +4,14 @@ Molla Yazilim — 3 KOMUT
   KUR.cmd              Ilk kurulum: IIS + npm + build + HTTPS + site ac (Yonetici)
   BASLAT.cmd           Siteyi calistir (PM2 + IIS)
   YENIDEN-BASLAT.cmd   GitHub'dan cek + build + PM2 restart (canli sunucuda)
-  VPS-DUZELT.cmd       VPS tamir: HTTPS reset + IIS + SSL (85.95.251.204)
-  CANLI-DUZELT.cmd     Ayni tamir (VPS-DUZELT ile ayni)
+  HTTPS-SADECE.cmd     Sadece SSL (HTTP calisiyor HTTPS calismiyorsa) <- BUNU CALISTIR
+  VPS-DUZELT.cmd       Tam tamir: SSL + IIS + build
+  CANLI-DUZELT.cmd     VPS-DUZELT ile ayni
+
+SUNUCUDA TARAYICI:
+  Site acik mi? -> http://localhost/  (domain degil!)
+  HTTPS duzelt  -> HTTPS-SADECE.cmd (Yonetici)
+  Sonra         -> https://mollayazilim.com/
 
 ONEMLI:
   git push tek basina sunucuyu guncellemez.

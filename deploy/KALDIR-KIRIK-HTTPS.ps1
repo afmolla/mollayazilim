@@ -24,8 +24,10 @@ Get-WebBinding -Name $SiteName -ErrorAction SilentlyContinue |
   }
 
 foreach ($hh in $hostList) {
-  $hp = "0.0.0.0:443:$hh"
-  cmd /c "netsh http delete sslcert hostnameport=$hp" 2>$null | Out-Null
+  foreach ($prefix in @("0.0.0.0", "::")) {
+    $hp = "${prefix}:443:$hh"
+    cmd /c "netsh http delete sslcert hostnameport=$hp" 2>$null | Out-Null
+  }
 }
 
 $kaldirRedirect = Join-Path $PSScriptRoot "KALDIR-HTTPS-YONLENDIRME.ps1"

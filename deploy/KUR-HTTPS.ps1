@@ -69,7 +69,8 @@ function Test-SiteHttp {
 
 function Get-AcmeWebroot {
   param([string]$Root)
-  return Join-Path $Root "public"
+  # IIS web.config once kok .well-known dosyasini statik sunar
+  return $Root
 }
 
 function Test-AcmeChallengePath {
@@ -213,6 +214,14 @@ function Add-HttpsRedirectRule {
 
 Write-Host "=== HTTPS kurulumu (Let's Encrypt) ===" -ForegroundColor Cyan
 Write-Host "Site: $AppRoot`n"
+
+$kaldirKirik = Join-Path $PSScriptRoot "KALDIR-KIRIK-HTTPS.ps1"
+if (Test-Path $kaldirKirik) {
+  & $kaldirKirik
+  Write-Host "IIS yeniden baslatiliyor (SSL temizligi sonrasi)..." -ForegroundColor Yellow
+  & $env:windir\system32\iisreset.exe /restart | Out-Null
+  Start-Sleep -Seconds 6
+}
 
 Remove-BadMollaCerts
 
