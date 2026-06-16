@@ -8,17 +8,21 @@ $lines = Get-Content $hostsPath
 $out = New-Object System.Collections.Generic.List[string]
 $removed = 0
 
+$dropHosts = @(
+  "mollayazilim.com",
+  "www.mollayazilim.com",
+  "mollayazilim.com.tr",
+  "www.mollayazilim.com.tr"
+)
+
 foreach ($line in $lines) {
   if ($line -match '^\s*#') {
     if ($line -match 'mollayazilim-local') { continue }
     $out.Add($line)
     continue
   }
-  if ($line -match 'crm\.mollayazilim\.com') {
-    $out.Add($line)
-    continue
-  }
-  if ($line -match 'mollayazilim\.com(\.tr)?') {
+  $parts = ($line -split '\s+') | Where-Object { $_ }
+  if ($parts.Count -ge 2 -and $dropHosts -contains $parts[1]) {
     $removed++
     continue
   }
