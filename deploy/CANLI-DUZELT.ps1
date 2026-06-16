@@ -87,18 +87,10 @@ function Test-IsProductionServer {
 }
 
 if (Test-IsProductionServer) {
-  $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
-  $active = Get-Content $hostsPath -ErrorAction SilentlyContinue | Where-Object {
-    $_ -notmatch '^\s*#' -and $_ -match 'mollayazilim'
-  }
-  if ($active) {
-    Write-Host "  Sunucuda yerel hosts bulundu - kaldiriliyor..." -ForegroundColor Yellow
-    & (Join-Path $PSScriptRoot "KALDIR-YEREL-HOSTS.ps1")
-  } else {
-    Write-Host "  [OK] Canli sunucu - hosts temiz" -ForegroundColor DarkGray
-  }
+  Write-Host "  Canli sunucu - yerel hosts temizleniyor..." -ForegroundColor Yellow
+  & (Join-Path $PSScriptRoot "KALDIR-YEREL-HOSTS.ps1")
 } else {
-  & (Join-Path $PSScriptRoot "ENSURE-HOSTS.ps1")
+  Write-Host "  [OK] Gelistirme PC - hosts kullanilmiyor (DNS/canli sunucu)" -ForegroundColor DarkGray
 }
 
 Write-Host ""

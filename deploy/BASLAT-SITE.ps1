@@ -39,6 +39,34 @@ function Start-Pm2Site {
   return (Wait-PortListen -P $Port)
 }
 
+function Test-DomainHttpOk {
+  try {
+    $req = [System.Net.HttpWebRequest]::Create("http://mollayazilim.com/")
+    $req.Method = "GET"
+    $req.AllowAutoRedirect = $false
+    $req.Timeout = 12000
+    $resp = $req.GetResponse()
+    $code = [int]$resp.StatusCode
+    $loc = $resp.Headers["Location"]
+    $resp.Close()
+    if ($code -ge 200 -and $code -lt 300) { return $true }
+    if ($code -ge 300 -and $code -lt 400 -and $loc -like "https://*") { return $false }
+    return ($code -ge 200 -and $code -lt 500)
+  } catch {
+    return $false
+  }
+}
+
+function Test-IsProductionServer {
+  try {
+    $dnsIp = (Resolve-DnsName "mollayazilim.com" -Type A -DnsOnly -ErrorAction Stop | Select-Object -First 1).IPAddress
+    $publicIp = (Invoke-WebRequest "https://api.ipify.org" -UseBasicParsing -TimeoutSec 8).Content.Trim()
+    return ($dnsIp -and $publicIp -and $dnsIp -eq $publicIp)
+  } catch {
+    return $false
+  }
+}
+
 function Start-IisSite {
   try {
     Import-Module WebAdministration -ErrorAction Stop
@@ -72,6 +100,14 @@ if (-not (Start-Pm2Site)) {
 }
 
 Start-IisSite | Out-Null
+
+if (Test-IsProductionServer) {
+  $kaldirHosts = Join-Path $PSScriptRoot "KALDIR-YEREL-HOSTS.ps1"
+  if (Test-Path $kaldirHosts) {
+    try { & $kaldirHosts 2>$null } catch { }
+  }
+}
+
 $syncScript = Join-Path $PSScriptRoot "Sync-HttpToHttps.ps1"
 if (Test-Path $syncScript) {
   try { & $syncScript 2>$null } catch { }
@@ -96,6 +132,16 @@ if (-not $ok) {
 if (-not $ok) {
   Write-Host "HATA: Site acilmadi" -ForegroundColor Red
   exit 1
+}
+
+if (-not (Test-DomainHttpOk)) {
+  Write-Host "UYARI: localhost OK ama mollayazilim.com acilmiyor - HTTPS yonlendirme kaldiriliyor..." -ForegroundColor Yellow
+  $kaldirHttps = Join-Path $PSScriptRoot "KALDIR-HTTPS-YONLENDIRME.ps1"
+  if (Test-Path $kaldirHttps) {
+    try { & $kaldirHttps 2>$null } catch { }
+  }
+  Start-IisSite | Out-Null
+  Start-Sleep -Seconds 2
 }
 
 Write-Host "CALISIYOR" -ForegroundColor Green

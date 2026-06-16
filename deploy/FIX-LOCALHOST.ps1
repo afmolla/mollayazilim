@@ -133,8 +133,6 @@ $poolName = "MollayazilimPool"
 Write-Host "=== FIX localhost (403 / 404 / 500 / 502) ===" -ForegroundColor Cyan
 Write-Host "Klasor: $AppRoot`n"
 
-& "$PSScriptRoot\ENSURE-HOSTS.ps1"
-
 # 1) ARR + URL Rewrite (IIS proxy icin zorunlu)
 $arrDll = "${env:ProgramFiles}\IIS\Application Request Routing\requestrouter.dll"
 $arrScript = Join-Path $PSScriptRoot "Install-ARR-MSI.ps1"

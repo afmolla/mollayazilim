@@ -1,26 +1,35 @@
 #Requires -RunAsAdministrator
 $ErrorActionPreference = "Stop"
 $hostsPath = "$env:SystemRoot\System32\drivers\etc\hosts"
-$marker = "# mollayazilim-local"
 
 if (-not (Test-Path $hostsPath)) { exit 0 }
 
 $lines = Get-Content $hostsPath
 $out = New-Object System.Collections.Generic.List[string]
-$skip = $false
+$removed = 0
 
 foreach ($line in $lines) {
-  if ($line -match [regex]::Escape($marker)) {
-    $skip = -not $skip
+  if ($line -match '^\s*#') {
+    if ($line -match 'mollayazilim-local') { continue }
+    $out.Add($line)
     continue
   }
-  if ($skip) { continue }
-  if ($line -match 'mollayazilim\.com') { continue }
-  if ($line -match 'mollayazilim\.com\.tr') { continue }
+  if ($line -match 'crm\.mollayazilim\.com') {
+    $out.Add($line)
+    continue
+  }
+  if ($line -match 'mollayazilim\.com(\.tr)?') {
+    $removed++
+    continue
+  }
   $out.Add($line)
 }
 
+while ($out.Count -gt 0 -and [string]::IsNullOrWhiteSpace($out[$out.Count - 1])) {
+  $out.RemoveAt($out.Count - 1)
+}
+
 Set-Content $hostsPath ($out -join "`r`n") -Encoding ASCII
-Write-Host "[OK] Yerel hosts kaldirildi" -ForegroundColor Green
-Write-Host "  Simdi test: http://mollayazilim.com/" -ForegroundColor Green
-Write-Host "  NOT: https:// henuz yok — http:// yaz" -ForegroundColor Yellow
+Write-Host "[OK] Yerel hosts kaldirildi ($removed satir)" -ForegroundColor Green
+Write-Host "  http://mollayazilim.com/ artik DNS uzerinden acilir" -ForegroundColor Green
+exit 0
