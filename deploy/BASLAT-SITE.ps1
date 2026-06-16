@@ -1,60 +1,100 @@
 #Requires -Version 5.1
-<#
-  Sadece siteyi baslatir. Git yok, ZIP yok, build yok.
-  Build yoksa: YENIDEN-BASLAT.cmd (bir kez)
-  IIS sorunu: CANLI-DUZELT.cmd
-#>
-$ErrorActionPreference = "Stop"
+# Sunucu yeniden basladi - siteyi ac. Git/build yok.
+$ErrorActionPreference = "Continue"
 $AppRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $Eco = Join-Path $AppRoot "deploy\ecosystem-iis.config.cjs"
 $SiteName = "mollayazilim.com"
+$PoolName = "MollayazilimPool"
 $Port = 3000
 
 Set-Location $AppRoot
 
-if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
-  Write-Host "(HATA) Build yok (.next)" -ForegroundColor Red
-  Write-Host "Bir kez: YENIDEN-BASLAT.cmd" -ForegroundColor Yellow
-  exit 1
+function Wait-PortListen {
+  param([int]$P, [int]$Sec = 40)
+  for ($i = 0; $i -lt $Sec; $i++) {
+    if (Get-NetTCPConnection -LocalPort $P -State Listen -ErrorAction SilentlyContinue) { return $true }
+    Start-Sleep -Seconds 1
+  }
+  return $false
 }
 
-if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
-  Write-Host "(HATA) pm2 yok - npm install -g pm2" -ForegroundColor Red
-  exit 1
+function Start-Pm2Site {
+  if (-not (Get-Command pm2.cmd -ErrorAction SilentlyContinue)) {
+    Write-Host "HATA: pm2 yok" -ForegroundColor Red
+    return $false
+  }
+  cmd /c "pm2.cmd resurrect" 2>$null | Out-Null
+  Start-Sleep -Seconds 2
+  $has = cmd /c "pm2.cmd jlist 2>nul" | Select-String -Pattern '"mollayazilim"' -Quiet
+  if ($has) {
+    cmd /c "pm2.cmd restart mollayazilim --update-env" 2>$null | Out-Null
+  } else {
+    cmd /c "pm2.cmd start `"$Eco`" --update-env" 2>$null | Out-Null
+  }
+  cmd /c "pm2.cmd save" 2>$null | Out-Null
+  if (Wait-PortListen -P $Port) { return $true }
+  cmd /c "pm2.cmd delete mollayazilim" 2>$null | Out-Null
+  cmd /c "pm2.cmd start `"$Eco`" --update-env" 2>$null | Out-Null
+  cmd /c "pm2.cmd save" 2>$null | Out-Null
+  return (Wait-PortListen -P $Port)
 }
 
-Write-Host "PM2 baslatiliyor..." -ForegroundColor Cyan
-$has = cmd /c "pm2.cmd jlist 2>nul" | Select-String -Pattern "mollayazilim" -Quiet
-if ($has) {
-  cmd /c "pm2.cmd restart mollayazilim --update-env"
-} else {
-  cmd /c "pm2.cmd start `"$Eco`" --update-env"
-}
-cmd /c "pm2.cmd save 2>nul" | Out-Null
-
-Start-Sleep -Seconds 2
-
-try {
-  $r = Invoke-WebRequest "http://127.0.0.1:$Port/" -UseBasicParsing -TimeoutSec 8
-  Write-Host "[OK] Node :$Port -> $($r.StatusCode)" -ForegroundColor Green
-} catch {
-  cmd /c "pm2.cmd logs mollayazilim --lines 12 --nostream" 2>$null
-  Write-Host "(HATA) Node calismiyor" -ForegroundColor Red
-  exit 1
-}
-
-Import-Module WebAdministration -ErrorAction SilentlyContinue
-if (Get-Website -Name $SiteName -ErrorAction SilentlyContinue) {
-  Start-Website -Name $SiteName -ErrorAction SilentlyContinue | Out-Null
+function Start-IisSite {
   try {
-    $iis = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 8
-    Write-Host "[OK] IIS http://localhost/ -> $($iis.StatusCode)" -ForegroundColor Green
+    Import-Module WebAdministration -ErrorAction Stop
+    $w3 = Get-Service W3SVC -ErrorAction SilentlyContinue
+    if ($w3 -and $w3.Status -ne "Running") { Start-Service W3SVC; Start-Sleep 2 }
+    if (Get-WebAppPoolState -Name $PoolName -ErrorAction SilentlyContinue) {
+      $st = (Get-WebAppPoolState -Name $PoolName).Value
+      if ($st -eq "Stopped") { Start-WebAppPool -Name $PoolName }
+      else { Restart-WebAppPool -Name $PoolName }
+    }
+    if (Get-Website -Name $SiteName -ErrorAction SilentlyContinue) {
+      Start-Website -Name $SiteName -ErrorAction SilentlyContinue | Out-Null
+    }
+    return $true
   } catch {
-    Write-Host "[UYARI] IIS acilmadi - CANLI-DUZELT.cmd calistirin" -ForegroundColor Yellow
+    return $false
   }
 }
 
-Write-Host ""
-Write-Host "http://localhost/" -ForegroundColor Green
-Write-Host "http://localhost/ambalaj" -ForegroundColor Green
+Write-Host "Baslatiliyor..." -ForegroundColor Cyan
+
+if (-not (Test-Path (Join-Path $AppRoot ".next\BUILD_ID"))) {
+  Write-Host "HATA: build yok" -ForegroundColor Red
+  exit 1
+}
+
+if (-not (Start-Pm2Site)) {
+  cmd /c "pm2.cmd logs mollayazilim --lines 15 --nostream" 2>$null
+  Write-Host "HATA: Node baslamadi" -ForegroundColor Red
+  exit 1
+}
+
+Start-IisSite | Out-Null
+Start-Sleep -Seconds 1
+
+$ok = $false
+try {
+  $r = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 12
+  if ($r.StatusCode -ge 200 -and $r.StatusCode -lt 500) { $ok = $true }
+} catch { }
+
+if (-not $ok) {
+  Start-IisSite | Out-Null
+  Start-Sleep -Seconds 2
+  try {
+    $r = Invoke-WebRequest "http://localhost/" -UseBasicParsing -TimeoutSec 12
+    if ($r.StatusCode -ge 200 -and $r.StatusCode -lt 500) { $ok = $true }
+  } catch { }
+}
+
+if (-not $ok) {
+  Write-Host "HATA: Site acilmadi" -ForegroundColor Red
+  exit 1
+}
+
+Write-Host "CALISIYOR" -ForegroundColor Green
+Write-Host "http://localhost/"
+Write-Host "http://mollayazilim.com/"
 exit 0
