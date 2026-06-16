@@ -36,7 +36,8 @@ function Test-HostsActive {
   param([string]$Domain)
   foreach ($line in $content) {
     if ($line -match '^\s*#') { continue }
-    if ($line -match [regex]::Escape($Domain)) { return $true }
+    $parts = ($line -split '\s+') | Where-Object { $_ }
+    if ($parts.Count -ge 2 -and $parts[1] -eq $Domain) { return $true }
   }
   return $false
 }

@@ -17,7 +17,7 @@ $mkcert = Join-Path $mkcertDir "mkcert.exe"
 $mkcertUrl = "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-windows-amd64.exe"
 $certDir = Join-Path $AppRoot "deploy\certs"
 $pfxPath = Join-Path $certDir "mollayazilim-local.pfx"
-$pfxPass = "mollayazilim-local"
+$pfxPass = "changeit"
 
 function Ensure-Mkcert {
   if (Test-Path $mkcert) { return $mkcert }
@@ -68,12 +68,17 @@ Write-Host "Not: DNS baska sunucuya gidiyorsa Let's Encrypt http-01 yerel IIS'te
 Write-Host "Bu script yerel gelistirme icin guvenilir sertifika uretir.`n" -ForegroundColor DarkYellow
 
 $mk = Ensure-Mkcert
-& $mk -install 2>&1 | Out-Host
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+cmd /c "`"$mk`" -install" 2>&1 | Out-Host
+$ErrorActionPreference = $prevEap
 
 New-Item -ItemType Directory -Force -Path $certDir | Out-Null
 $names = ($hostList -join " ")
 Push-Location $certDir
-& $mk -pkcs12 -p12file $pfxPath -p12password $pfxPass $names 2>&1 | Out-Host
+$ErrorActionPreference = "Continue"
+cmd /c "`"$mk`" -pkcs12 -p12-file `"$pfxPath`" $names" 2>&1 | Out-Host
+$ErrorActionPreference = $prevEap
 Pop-Location
 
 if (-not (Test-Path $pfxPath)) { throw "PFX olusturulamadi: $pfxPath" }
