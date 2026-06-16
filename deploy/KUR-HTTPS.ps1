@@ -218,12 +218,12 @@ Write-Host "Site: $AppRoot`n"
 $kaldirKirik = Join-Path $PSScriptRoot "KALDIR-KIRIK-HTTPS.ps1"
 if (Test-Path $kaldirKirik) {
   & $kaldirKirik
-  Write-Host "IIS yeniden baslatiliyor (SSL temizligi sonrasi)..." -ForegroundColor Yellow
-  & $env:windir\system32\iisreset.exe /restart | Out-Null
-  Start-Sleep -Seconds 6
 }
 
 Remove-BadMollaCerts
+
+& (Join-Path $PSScriptRoot "Ensure-SiteAyakta.ps1")
+if ($LASTEXITCODE -ne 0) { exit 1 }
 
 if (-not (Test-IsProductionServer)) {
   try {
@@ -244,7 +244,12 @@ if (-not (Test-IsProductionServer)) {
   }
 }
 
-$httpCode = Test-SiteHttp "http://127.0.0.1/"
+$httpCode = 0
+for ($i = 1; $i -le 5; $i++) {
+  $httpCode = Test-SiteHttp "http://127.0.0.1/"
+  if ($httpCode -ge 200 -and $httpCode -lt 400) { break }
+  Start-Sleep -Seconds 2
+}
 if ($httpCode -lt 200 -or $httpCode -ge 400) {
   Write-Host "(HATA) HTTP calismiyor (kod: $httpCode)" -ForegroundColor Red
   Write-Host "  Once: BASLAT.cmd veya KUR.cmd" -ForegroundColor Yellow

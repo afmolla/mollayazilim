@@ -30,24 +30,9 @@ if (Test-HttpsOk) {
   exit 0
 }
 
-Write-Host "HTTPS calismiyor - temizlik + Let's Encrypt..." -ForegroundColor Yellow
+Write-Host "HTTPS calismiyor - sertifika aliniyor..." -ForegroundColor Yellow
 
-# HTTP on kontrol (Let's Encrypt icin sart)
-try {
-  $http = Invoke-WebRequest "http://127.0.0.1/" -UseBasicParsing -TimeoutSec 15
-  Write-Host "[OK] HTTP localhost -> $($http.StatusCode)" -ForegroundColor Green
-} catch {
-  Write-Host "(HATA) Once site HTTP acik olmali: BASLAT.cmd veya YENIDEN-BASLAT.cmd" -ForegroundColor Red
-  exit 1
-}
-
-$kurHttps = Join-Path $PSScriptRoot "KUR-HTTPS.ps1"
-if (-not (Test-Path $kurHttps)) {
-  Write-Host "(HATA) KUR-HTTPS.ps1 bulunamadi" -ForegroundColor Red
-  exit 1
-}
-
-& $kurHttps
+& (Join-Path $PSScriptRoot "SERTIFIKA-YUKLE.ps1")
 if ($LASTEXITCODE -ne 0) {
   Write-Host ""
   Write-Host "(UYARI) Let's Encrypt basarisiz - site sadece HTTP ile acilir" -ForegroundColor Yellow
@@ -56,9 +41,7 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
-Start-Sleep -Seconds 3
-& $env:windir\system32\iisreset.exe /restart | Out-Null
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 
 if (Test-HttpsOk) {
   Write-Host ""
