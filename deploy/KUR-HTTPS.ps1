@@ -16,7 +16,9 @@ function Remove-BadMollaCerts {
   $removed = 0
   foreach ($store in $stores) {
     Get-ChildItem $store -ErrorAction SilentlyContinue | Where-Object {
-      $_.Subject -match "mollayazilim\.com" -and (
+      $_.Subject -match "mollayazilim\.com" -and
+      $_.Subject -notmatch "crm\.mollayazilim" -and
+      (
         $_.Issuer -match "YR1|Root YR" -or $_.Issuer -eq $_.Subject
       )
     } | ForEach-Object {
@@ -116,74 +118,7 @@ function Test-AcmeChallengePath {
   }
 }
 
-function Get-MollaCertificate {
-  $stores = @("Cert:\LocalMachine\WebHosting", "Cert:\LocalMachine\My")
-  foreach ($store in $stores) {
-    $cert = Get-ChildItem -Path $store -ErrorAction SilentlyContinue |
-      Where-Object {
-        $_.HasPrivateKey -and (
-          $_.FriendlyName -eq "mollayazilim.com" -or
-          $_.Subject -match "mollayazilim\.com"
-        ) -and $_.Issuer -notmatch "CN=mollayazilim\.com"
-      } |
-      Sort-Object NotAfter -Descending |
-      Select-Object -First 1
-    if ($cert) { return $cert }
-  }
-  return $null
-}
-
-function Install-IisHttpsBindings {
-  param(
-    [string]$SiteName,
-    [string[]]$HostHeaders,
-    [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
-  )
-
-  Import-Module WebAdministration -ErrorAction Stop
-  $thumb = $Cert.Thumbprint
-  $iisAppId = "{4dc3e181-e14b-4a21-b982-7cc71b20b5a4}"
-
-  $storeName = "WebHosting"
-  if (-not (Get-ChildItem "Cert:\LocalMachine\WebHosting\$thumb" -ErrorAction SilentlyContinue)) {
-    $storeName = "My"
-  }
-
-  Write-Host "IIS HTTPS binding kuruluyor (store: $storeName)..." -ForegroundColor Cyan
-
-  foreach ($hh in $HostHeaders) {
-    $info = "*:443:$hh"
-    $has = Get-WebBinding -Name $SiteName -ErrorAction SilentlyContinue |
-      Where-Object { $_.protocol -eq "https" -and $_.bindingInformation -eq $info }
-
-    if (-not $has) {
-      New-WebBinding -Name $SiteName -Protocol https -Port 443 -HostHeader $hh | Out-Null
-      Write-Host "  + binding $info" -ForegroundColor Green
-    }
-
-    $bound = $false
-    try {
-      $binding = Get-WebBinding -Name $SiteName -Protocol https -HostHeader $hh -ErrorAction Stop
-      $binding.AddSslCertificate($thumb, $storeName)
-      $bound = $true
-      Write-Host "  [OK] SSL: $hh" -ForegroundColor Green
-    } catch {
-      Write-Host "  AddSslCertificate atlandi ($hh): $($_.Exception.Message)" -ForegroundColor DarkYellow
-    }
-
-    if (-not $bound) {
-      $hp = "0.0.0.0:443:$hh"
-      & netsh http delete sslcert hostnameport=$hp 2>$null | Out-Null
-      $out = & netsh http add sslcert hostnameport=$hp certhash=$thumb appid=$iisAppId certstorename=$storeName 2>&1
-      if ($LASTEXITCODE -ne 0) {
-        Write-Host "  (HATA) netsh $hh : $out" -ForegroundColor Red
-        return $false
-      }
-      Write-Host "  [OK] netsh SSL: $hh" -ForegroundColor Green
-    }
-  }
-  return $true
-}
+. (Join-Path $PSScriptRoot "SSL-MOLLA.ps1")
 
 function Add-HttpsRedirectRule {
   param([string]$ConfigPath)
@@ -315,10 +250,7 @@ if ($httpsBindings.Count -eq 0) {
 }
 
 if ($httpsBindings.Count -eq 0) {
-  if (-not (Install-IisHttpsBindings -SiteName $siteName -HostHeaders $hostList -Cert $cert)) {
-    Write-Host "(HATA) IIS HTTPS binding kurulamadi" -ForegroundColor Red
-    exit 1
-  }
+  Install-MollaHttpsBindings -Cert $cert -SiteName $siteName -HostHeaders $hostList
 }
 
 Write-Host ""
@@ -327,19 +259,13 @@ Get-WebBinding -Name $siteName | Where-Object { $_.protocol -eq "https" } |
   Format-Table protocol, bindingInformation -AutoSize
 
 Start-Sleep -Seconds 3
-$httpsOk = $false
-try {
-  $https = Invoke-WebRequest -Uri "https://mollayazilim.com/" -UseBasicParsing -TimeoutSec 30
-  Write-Host "[OK] https://mollayazilim.com/ -> $($https.StatusCode)" -ForegroundColor Green
-  $httpsOk = $true
-} catch {
-  Write-Host "(HATA) HTTPS test: $($_.Exception.Message)" -ForegroundColor Red
+if (Test-MollaSslCert) {
+  Write-Host "[OK] https://mollayazilim.com/ TLS guvenilir" -ForegroundColor Green
+  Add-HttpsRedirectRule -ConfigPath (Join-Path $AppRoot "web.config")
+} else {
+  Write-Host "(HATA) TLS test basarisiz" -ForegroundColor Red
   Write-Host "  HTTP->HTTPS yonlendirme EKLENMEDI (site kirilmasin diye)" -ForegroundColor Yellow
   exit 1
-}
-
-if ($httpsOk) {
-  Add-HttpsRedirectRule -ConfigPath (Join-Path $AppRoot "web.config")
 }
 
 Write-Host ""
