@@ -86,10 +86,10 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
               <p className="mt-2 max-w-2xl text-sm text-emerald-100/60">{data.oneCikanAciklama}</p>
             </div>
             <Link
-              href={ph("/hizmetler")}
+              href={ph("/urunler")}
               className="shrink-0 rounded-xl border border-emerald-400/25 px-5 py-2.5 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-500/10"
             >
-              Tüm ürün listesi
+              Online mağaza
             </Link>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

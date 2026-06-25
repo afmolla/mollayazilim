@@ -19,6 +19,7 @@ import { PanelSiparisler } from "@/components/PanelSiparisler";
 import { PanelMollaLanding } from "@/components/PanelMollaLanding";
 import { PanelEsnekAmbalajAracilik } from "@/components/PanelEsnekAmbalajAracilik";
 import { PanelIlanlar } from "@/components/PanelIlanlar";
+import { PanelUrunler } from "@/components/PanelUrunler";
 import { isPanelContentTab, type VfIcerikSnapshot } from "@/lib/panel-deeplink";
 import { AMBALAJ_PREFIX } from "@/lib/site-config";
 
@@ -26,6 +27,7 @@ type TabId =
   | "portfoy"
   | "randevular"
   | "ilanlar"
+  | "urunler"
   | "siparisler"
   | "leads"
   | "ziyaretciler"
@@ -46,6 +48,7 @@ function tabFromSearchParams(sp: ReadonlyURLSearchParams, isMaster: boolean): Ta
     "portfoy",
     "randevular",
     "ilanlar",
+    "urunler",
     "siparisler",
     "leads",
     "ziyaretciler",
@@ -68,6 +71,12 @@ const NAV_COLLAPSE_KEY_PREFIX = "panel-nav-collapsed";
 type PanelAppProps = {
   panelSolMenuSabitle?: boolean;
   panelSolMenuBaslangic?: "acik" | "dar";
+};
+
+const NAV_URUNLER: { id: TabId; label: string; short: string } = {
+  id: "urunler",
+  label: "Ürünler",
+  short: "Ür",
 };
 
 const NAV_ILAN: { id: TabId; label: string; short: string } = {
@@ -136,7 +145,7 @@ export function PanelApp(props: PanelAppProps) {
     let core = isMasterPanel
       ? [NAV_MASTER_FIRST, ...NAV_BASE.filter((x) => NAV_MASTER_TABS.has(x.id))]
       : NAV_BASE;
-    if (pfx !== "/restaurant") {
+    if (pfx !== "/restaurant" && pfx !== AMBALAJ_PREFIX) {
       core = core.filter((x) => x.id !== "siparisler");
     }
     if (pfx === "/emlak") {
@@ -156,10 +165,16 @@ export function PanelApp(props: PanelAppProps) {
       core = core.map((x) =>
         x.id === "randevular" ? { ...x, label: "Teklif talepleri", short: "Te" } : x,
       );
+      const siIdx = core.findIndex((x) => x.id === "siparisler");
+      if (siIdx >= 0) {
+        core = [...core.slice(0, siIdx + 1), NAV_URUNLER, ...core.slice(siIdx + 1)];
+      }
       const ayIdx = core.findIndex((x) => x.id === "ayarlar");
       if (ayIdx >= 0) {
         core = [...core.slice(0, ayIdx), NAV_TEDARIK, ...core.slice(ayIdx)];
       }
+    } else {
+      core = core.filter((x) => x.id !== "urunler");
     }
     return core;
   }, [isMasterPanel, sitePrefix]);
@@ -186,7 +201,8 @@ export function PanelApp(props: PanelAppProps) {
 
   useEffect(() => {
     const onRestaurant = pathname.includes("/restaurant");
-    if (!onRestaurant && tab === "siparisler") queueMicrotask(() => setTab("randevular"));
+    const onAmbalaj = pathname.includes(AMBALAJ_PREFIX);
+    if (!onRestaurant && !onAmbalaj && tab === "siparisler") queueMicrotask(() => setTab("randevular"));
   }, [pathname, tab]);
 
   useEffect(() => {
@@ -197,6 +213,7 @@ export function PanelApp(props: PanelAppProps) {
   useEffect(() => {
     const onAmbalaj = pathname.includes(AMBALAJ_PREFIX);
     if (!onAmbalaj && tab === "tedarik") queueMicrotask(() => setTab("randevular"));
+    if (!onAmbalaj && tab === "urunler") queueMicrotask(() => setTab("randevular"));
   }, [pathname, tab]);
 
   useEffect(() => {
@@ -323,6 +340,8 @@ export function PanelApp(props: PanelAppProps) {
           <PanelSiparisler />
         ) : tab === "ilanlar" ? (
           <PanelIlanlar />
+        ) : tab === "urunler" ? (
+          <PanelUrunler />
         ) : tab === "leads" ? (
           <PanelLeads />
         ) : tab === "ziyaretciler" ? (

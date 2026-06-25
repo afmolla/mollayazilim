@@ -22,11 +22,12 @@ async function dosyaOku(): Promise<SiparisListesi> {
 function satirGecerli(r: unknown): r is Siparis {
   if (!r || typeof r !== "object") return false;
   const o = r as Record<string, unknown>;
+  const kaynakOk = o.kaynak === "mobil" || o.kaynak === "web";
   return (
     typeof o.id === "string" &&
     typeof o.olusturulma === "string" &&
     typeof o.telefon === "string" &&
-    o.kaynak === "mobil" &&
+    kaynakOk &&
     typeof o.durum === "string" &&
     Array.isArray(o.satirlar)
   );
@@ -71,7 +72,7 @@ export async function siparisEkle(r: Omit<Siparis, "id" | "olusturulma">): Promi
 
 export async function siparisGuncelle(
   id: string,
-  patch: Partial<Pick<Siparis, "durum" | "notlar">>,
+  patch: Partial<Pick<Siparis, "durum" | "notlar" | "odemeDurum" | "odemeReferans">>,
 ): Promise<Siparis | null> {
   const data = await dosyaOku();
   const i = data.siparisler.findIndex((x) => satirGecerli(x) && x.id === id);
@@ -84,10 +85,18 @@ export async function siparisGuncelle(
     patch.durum === "iptal"
       ? patch.durum
       : cur.durum;
+  const odemeOk =
+    patch.odemeDurum === "bekliyor" ||
+    patch.odemeDurum === "baslatildi" ||
+    patch.odemeDurum === "odendi" ||
+    patch.odemeDurum === "basarisiz" ||
+    patch.odemeDurum === "iptal";
   data.siparisler[i] = {
     ...cur,
     durum: nextDurum,
     notlar: typeof patch.notlar === "string" ? patch.notlar : cur.notlar,
+    odemeDurum: odemeOk ? patch.odemeDurum : cur.odemeDurum,
+    odemeReferans: typeof patch.odemeReferans === "string" ? patch.odemeReferans : cur.odemeReferans,
   };
   await dosyaYaz(data);
   return data.siparisler[i] as Siparis;

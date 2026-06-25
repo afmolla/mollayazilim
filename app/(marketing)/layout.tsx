@@ -9,12 +9,17 @@ import { getRequestSite } from "@/lib/site-request";
 import { VitrinDemoRibbon } from "@/components/vitrin/VitrinDemoRibbon";
 import { ayarlarGetir } from "@/lib/settings-store";
 import { siteUrl } from "@/lib/site";
+import { AmbalajStoreShell } from "@/components/ambalaj/AmbalajStoreShell";
+import { isAmbalajSubdir } from "@/lib/site-config";
 
-function MarketingShell({ children }: { children: React.ReactNode }) {
-  return (
+function MarketingShell({ children, ambalaj }: { children: React.ReactNode; ambalaj: boolean }) {
+  const inner = (
     <>
-      <SiteHeader />
-      <main className="flex-1" style={{ paddingTop: "calc(var(--header-h, 64px) + 16px)" }}>
+      <SiteHeader ambalaj={ambalaj} />
+      <main
+        className={`flex-1 ${ambalaj ? "bg-[#041008]" : ""}`}
+        style={{ paddingTop: "calc(var(--header-h, 64px) + 16px)" }}
+      >
         <Suspense
           fallback={
             <div className="mx-auto max-w-6xl px-4 py-14 text-center text-sm text-[var(--muted)]">Yükleniyor…</div>
@@ -27,6 +32,7 @@ function MarketingShell({ children }: { children: React.ReactNode }) {
       <VitrinDemoRibbon />
     </>
   );
+  return ambalaj ? <AmbalajStoreShell>{inner}</AmbalajStoreShell> : inner;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -62,6 +68,7 @@ export default async function MarketingLayout({
   children: React.ReactNode;
 }) {
   const { prefix, subdir } = await getRequestSite();
+  const ambalaj = isAmbalajSubdir(subdir);
   return (
     <SitePrefixProvider prefix={prefix}>
       <JsonLdLocalBusiness />
@@ -77,7 +84,7 @@ export default async function MarketingLayout({
             data-vitrin={subdir}
             className="flex min-h-[100dvh] w-full flex-1 flex-col bg-[var(--surface)] text-[var(--text)]"
           >
-            <MarketingShell>{children}</MarketingShell>
+            <MarketingShell ambalaj={ambalaj}>{children}</MarketingShell>
           </div>
         </SiteEditModeHost>
       </Suspense>

@@ -7,11 +7,13 @@ import type { MenuItem } from "@/lib/menu-store";
 import { MobileNav } from "@/components/MobileNav";
 import { SiteNavLinks } from "@/components/SiteNavLinks";
 import { SiteAnalyticsBadge } from "@/components/SiteAnalyticsBadge";
+import { CartButton } from "@/components/ambalaj/CartButton";
 
 export function SiteHeaderClient(props: {
   brand: string;
   items: MenuItem[];
   navLinks: MenuItem[];
+  ambalaj?: boolean;
 }) {
   const wb = useWithBase();
   const pathname = usePathname() ?? "";
@@ -21,6 +23,7 @@ export function SiteHeaderClient(props: {
   const isOtoyikama = pathname.includes("/otoyikama");
   const isKuaforKadin = pathname.includes("/kuafor-kadin");
   const isKuaforErkek = pathname.includes("/kuafor") && !isKuaforKadin;
+  const isAmbalaj = props.ambalaj || pathname.includes("/ambalaj") || pathname.includes("/esnek-ambalaj");
   /** Beyaz şerit navbar yerine cam koyu vitrinler */
   const darkNav =
     isRestaurant ||
@@ -28,14 +31,17 @@ export function SiteHeaderClient(props: {
     isAvukat ||
     isOtoyikama ||
     isKuaforErkek ||
-    isKuaforKadin;
+    isKuaforKadin ||
+    isAmbalaj;
   return (
     <header
       data-fixed-header
       className={
         isRestaurant
           ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-amber-900/25 bg-[#14110e]/88 backdrop-blur-xl"
-          : darkNav
+          : isAmbalaj
+            ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-emerald-500/20 bg-[#041008]/92 backdrop-blur-xl"
+            : darkNav
             ? isEmlak
               ? "fixed inset-x-0 top-0 z-50 h-16 border-b border-sky-500/15 bg-[#0a1628]/92 backdrop-blur-xl"
               : isAvukat
@@ -71,8 +77,11 @@ export function SiteHeaderClient(props: {
           <SiteNavLinks links={props.navLinks} />
         </nav>
 
-        <div className="ml-auto hidden shrink-0 md:block">
-          <SiteAnalyticsBadge />
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          {isAmbalaj ? <CartButton /> : null}
+          <div className="hidden md:block">
+            <SiteAnalyticsBadge />
+          </div>
         </div>
       </div>
     </header>

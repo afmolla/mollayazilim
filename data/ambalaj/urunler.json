@@ -1,0 +1,239 @@
+{
+  "urunler": [
+    {
+      "id": "urun_metalize_kilitli",
+      "slug": "metalize-kilitli-torba-12x18",
+      "baslik": "Metalize kilitli torba 12×18 cm",
+      "ozet": "Gıda bariyer · önden zip · kahve ve atıştırmalık için",
+      "aciklama": "Metalize bariyer katmanlı kilitli torba. Önden zip ile yeniden kapatılabilir. Kuruyemiş, kahve ve granül gıda ürünleri için uygundur.",
+      "kategoriId": "doypack",
+      "imageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Metalize kilitli torba",
+      "etiket": "Doypack",
+      "minSiparis": "Min. 5.000 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "5.000 adet", "miktar": 5000, "birim": "adet", "fiyat": 0.038, "indirimliFiyat": 0.032 },
+        { "id": "v2", "etiket": "10.000 adet", "miktar": 10000, "birim": "adet", "fiyat": 0.035, "indirimliFiyat": 0.029 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 1,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_icecek_doypack",
+      "slug": "icecek-doypack-250ml-valfli",
+      "baslik": "İçecek doypack 250 ml valfli",
+      "ozet": "13×22 cm · sıvı dolum uyumlu · aroma koruma",
+      "aciklama": "Valfli içecek doypack formatı. Sıvı dolum hatlarına uyumlu, aroma koruma bariyeri ile kahve ve meyve suyu uygulamaları için idealdir.",
+      "kategoriId": "doypack",
+      "imageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Valfli içecek doypack",
+      "etiket": "Valfli",
+      "minSiparis": "Min. 3.000 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "3.000 adet", "miktar": 3000, "birim": "adet", "fiyat": 0.102, "indirimliFiyat": 0.087 },
+        { "id": "v2", "etiket": "1.750 adet", "miktar": 1750, "birim": "adet", "fiyat": 0.115, "indirimliFiyat": 0.098 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 2,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_seffaf_doypack",
+      "slug": "seffaf-renkli-doypack",
+      "baslik": "Şeffaf / renkli doypack",
+      "ozet": "Stand-up pouch · önden kilitli · renk seçenekleri",
+      "aciklama": "Şeffaf veya renkli doypack formatları. Ürün görünürlüğü ve raf çekiciliği için tercih edilir.",
+      "kategoriId": "doypack",
+      "imageSrc": "https://images.unsplash.com/photo-1706881811952-31148fe91adc?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Şeffaf doypack ambalaj",
+      "etiket": "Doypack",
+      "minSiparis": "Min. 8.000 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "8.000 adet", "miktar": 8000, "birim": "adet", "fiyat": 0.028, "indirimliFiyat": 0.024 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 3,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_quadro_500",
+      "slug": "quadro-500g-metalize",
+      "baslik": "Quadro 500 g metalize",
+      "ozet": "12,5×27 cm · yan körük · raf duruşu güçlü",
+      "aciklama": "Yan körüklü quadro ambalaj. Kahve, kuruyemiş ve granül ürünler için ideal raf duruşu sağlar.",
+      "kategoriId": "quadro",
+      "imageSrc": "https://images.unsplash.com/photo-1703564202740-e9805c4a14ea?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Quadro metalize ambalaj",
+      "etiket": "Quadro",
+      "minSiparis": "Min. 2.000 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "2.000 adet", "miktar": 2000, "birim": "adet", "fiyat": 0.42, "indirimliFiyat": 0.357 },
+        { "id": "v2", "etiket": "750 adet", "miktar": 750, "birim": "adet", "fiyat": 0.48, "indirimliFiyat": 0.408 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 4,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_quadro_1000",
+      "slug": "quadro-1000g-format",
+      "baslik": "Quadro 1000 g format",
+      "ozet": "Büyük hacim · yan körüklü · metalize bariyer",
+      "aciklama": "1000 g kapasiteli quadro ambalaj. Endüstriyel ve perakende kahve paketleme için uygundur.",
+      "kategoriId": "quadro",
+      "imageSrc": "https://images.unsplash.com/photo-1703564202740-e9805c4a14ea?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Quadro 1000g ambalaj",
+      "etiket": "Quadro",
+      "minSiparis": "Min. 1.500 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "1.500 adet", "miktar": 1500, "birim": "adet", "fiyat": 0.55, "indirimliFiyat": 0.468 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 5,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_flat_250",
+      "slug": "flat-bottom-250g-mat",
+      "baslik": "Flat bottom 250 g mat",
+      "ozet": "11,5×21 cm · düz taban · mat yüzey",
+      "aciklama": "Alttan körüklü flat bottom ambalaj. Mat yüzey ile premium görünüm, güçlü raf duruşu.",
+      "kategoriId": "flat",
+      "imageSrc": "https://images.unsplash.com/photo-1706881811952-31148fe91adc?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Flat bottom mat ambalaj",
+      "etiket": "Flat",
+      "minSiparis": "Min. 2.500 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "2.500 adet", "miktar": 2500, "birim": "adet", "fiyat": 0.22, "indirimliFiyat": 0.187 },
+        { "id": "v2", "etiket": "1.000 adet", "miktar": 1000, "birim": "adet", "fiyat": 0.25, "indirimliFiyat": 0.213 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 6,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_flat_kilitli",
+      "slug": "flat-bottom-onden-kilitli",
+      "baslik": "Flat bottom önden kilitli",
+      "ozet": "Mat beyaz / siyah · önden zip · 250–500 g",
+      "aciklama": "Önden kilitli flat bottom ambalaj. Mat beyaz veya siyah yüzey seçenekleri mevcuttur.",
+      "kategoriId": "flat",
+      "imageSrc": "https://images.unsplash.com/photo-1703564202740-e9805c4a14ea?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Flat bottom önden kilitli",
+      "etiket": "Flat",
+      "minSiparis": "Min. 2.500 ad",
+      "varyantlar": [
+        { "id": "v1", "etiket": "2.500 adet", "miktar": 2500, "birim": "adet", "fiyat": 0.22, "indirimliFiyat": 0.187 },
+        { "id": "v2", "etiket": "1.000 adet", "miktar": 1000, "birim": "adet", "fiyat": 0.25, "indirimliFiyat": 0.213 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 7,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_opp_cpp_rulo",
+      "slug": "opp-cpp-laminasyon-rulo",
+      "baslik": "OPP+CPP laminasyon rulo",
+      "ozet": "Bobin · otomatik dolum hattı · gıda temasına uygun",
+      "aciklama": "OPP+CPP laminasyon rulo. Otomatik dolum hatlarına uygun, yüksek hacimli üretim siparişleri için.",
+      "kategoriId": "torba",
+      "imageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Laminasyon rulo üretim hattı",
+      "etiket": "Rulo",
+      "minSiparis": "Min. 300 kg",
+      "varyantlar": [
+        { "id": "v1", "etiket": "300 kg", "miktar": 300, "birim": "kg", "fiyat": 42.5, "indirimliFiyat": 36.1 },
+        { "id": "v2", "etiket": "500 kg", "miktar": 500, "birim": "kg", "fiyat": 38.0, "indirimliFiyat": 32.3 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 8,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_opp_cpp_torba",
+      "slug": "opp-cpp-torba",
+      "baslik": "OPP / CPP torba",
+      "ozet": "Ekmek, market ve endüstriyel torba formatları",
+      "aciklama": "OPP ve CPP torba çeşitleri. Ekmek, market ve endüstriyel uygulamalar için kg/adet bazlı üretim.",
+      "kategoriId": "torba",
+      "imageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "OPP CPP torba",
+      "etiket": "Torba",
+      "minSiparis": "Min. sipariş kg/adet",
+      "varyantlar": [
+        { "id": "v1", "etiket": "500 kg", "miktar": 500, "birim": "kg", "fiyat": 35.0, "indirimliFiyat": 29.75 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 9,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_pet_laminasyon",
+      "slug": "pet-pe-gida-laminasyonu",
+      "baslik": "PET+PE gıda laminasyonu",
+      "ozet": "Gıda bariyer · yüksek koruma · min. 250 kg",
+      "aciklama": "PET+PE gıda laminasyonu. Yüksek bariyer performansı ile uzun raf ömrü gerektiren ürünler için.",
+      "kategoriId": "torba",
+      "imageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "PET laminasyon",
+      "etiket": "Laminasyon",
+      "minSiparis": "Min. 250 kg",
+      "varyantlar": [
+        { "id": "v1", "etiket": "250 kg", "miktar": 250, "birim": "kg", "fiyat": 48.0, "indirimliFiyat": 40.8 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 10,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_flexo_ldpe",
+      "slug": "flexo-baskili-ldpe-torba",
+      "baslik": "Flexo baskılı LDPE torba",
+      "ozet": "6 renk · klise dahil teklif · endüstriyel hacim",
+      "aciklama": "Flexo baskılı LDPE torba. Klise hazırlığı ve renk provası dahil teklif seçenekleri.",
+      "kategoriId": "baski",
+      "imageSrc": "https://images.unsplash.com/photo-1758183961426-88d64eb5f787?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Flexo baskı makinesi",
+      "etiket": "Baskı",
+      "minSiparis": "Min. 500 kg",
+      "varyantlar": [
+        { "id": "v1", "etiket": "500 kg", "miktar": 500, "birim": "kg", "fiyat": 52.0, "indirimliFiyat": 44.2 },
+        { "id": "v2", "etiket": "1.000 kg", "miktar": 1000, "birim": "kg", "fiyat": 46.0, "indirimliFiyat": 39.1 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 11,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    },
+    {
+      "id": "urun_flexo_torba",
+      "slug": "flexo-baskili-torba-rulo",
+      "baslik": "Flexo baskılı torba / rulo",
+      "ozet": "Klise + kg bazlı · renk provası · 3–5 iş günü numune",
+      "aciklama": "Flexo baskılı torba ve rulo üretimi. Klise maliyeti ve kg bazlı fiyatlandırma ile projeye özel teklif.",
+      "kategoriId": "baski",
+      "imageSrc": "https://images.unsplash.com/photo-1758183961426-88d64eb5f787?w=800&q=88&auto=format&fit=crop",
+      "imageAlt": "Flexo baskılı ambalaj",
+      "etiket": "Baskı",
+      "minSiparis": "Klise + kg",
+      "varyantlar": [
+        { "id": "v1", "etiket": "300 kg", "miktar": 300, "birim": "kg", "fiyat": 55.0, "indirimliFiyat": 46.75 }
+      ],
+      "yayinda": true,
+      "stokta": true,
+      "sira": 12,
+      "guncellenme": "2026-06-25T00:00:00.000Z"
+    }
+  ]
+}

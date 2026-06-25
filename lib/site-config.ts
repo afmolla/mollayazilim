@@ -81,6 +81,9 @@ const PORTFOLIO_INTERNAL_ROUTES = [
   "/qr-menu",
   "/ilanlar",
   "/fiyat-hesaplama",
+  "/urunler",
+  "/sepet",
+  "/odeme",
 ] as const;
 
 export function isPortfolioInternalRoute(pathname: string): boolean {
@@ -88,5 +91,7 @@ export function isPortfolioInternalRoute(pathname: string): boolean {
   if ((PORTFOLIO_INTERNAL_ROUTES as readonly string[]).includes(p)) return true;
   if (p.startsWith("/p/")) return true;
   if (p.startsWith("/ilan/")) return true;
+  if (p.startsWith("/urun/")) return true;
+  if (p.startsWith("/siparis-onay/")) return true;
   return false;
 }

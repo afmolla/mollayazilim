@@ -1,7 +1,7 @@
 "use client";
 
 import { usePanelFetch, useWithBase } from "@/components/SitePrefixProvider";
-import type { Siparis, SiparisDurum } from "@/lib/types";
+import type { Siparis, SiparisDurum, OdemeDurum } from "@/lib/types";
 import { whatsappLink } from "@/lib/whatsapp";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +11,14 @@ const DURUM_LABEL: Record<SiparisDurum, string> = {
   hazirlaniyor: "Hazırlanıyor",
   tamamlandi: "Tamamlandı",
   iptal: "İptal",
+};
+
+const ODEME_LABEL: Record<OdemeDurum, string> = {
+  bekliyor: "Ödeme bekliyor",
+  baslatildi: "Ödeme başlatıldı",
+  odendi: "Ödendi",
+  basarisiz: "Ödeme başarısız",
+  iptal: "Ödeme iptal",
 };
 
 export function PanelSiparisler() {
@@ -149,9 +157,9 @@ export function PanelSiparisler() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text)]">Siparişler (mobil)</h1>
+          <h1 className="text-2xl font-bold text-[var(--text)]">Siparişler</h1>
           <p className="text-sm text-[var(--muted)]">
-            Panelde düzenlediğiniz QR menü bu siparişlerde kullanılır. Durumu güncelleyin; müşteriye WhatsApp ile yazın.
+            Web mağaza ve mobil siparişler. Durumu güncelleyin; müşteriye WhatsApp ile yazın.
           </p>
         </div>
       </div>
@@ -194,11 +202,20 @@ export function PanelSiparisler() {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
-                    {new Date(s.olusturulma).toLocaleString("tr-TR")} · Mobil
+                    {new Date(s.olusturulma).toLocaleString("tr-TR")} · {s.kaynak === "web" ? "Web mağaza" : "Mobil"}
+                    {s.odemeDurum ? ` · ${ODEME_LABEL[s.odemeDurum] ?? s.odemeDurum}` : ""}
                   </p>
                   <p className="mt-1 font-semibold text-[var(--text)]">
                     {s.musteriAd?.trim() || "İsimsiz"} · {s.telefon}
                   </p>
+                  {s.eposta?.trim() ? (
+                    <p className="mt-0.5 text-xs text-[var(--muted)]">{s.eposta}</p>
+                  ) : null}
+                  {typeof s.toplam === "number" ? (
+                    <p className="mt-1 text-sm font-medium text-[var(--text)]">
+                      Toplam: {s.toplam.toLocaleString("tr-TR", { style: "currency", currency: "TRY" })}
+                    </p>
+                  ) : null}
                   {s.adres?.trim() ? (
                     <p className="mt-1 text-sm text-[var(--muted)]">{s.adres.trim()}</p>
                   ) : null}
