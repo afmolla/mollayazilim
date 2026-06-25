@@ -37,8 +37,12 @@ export async function generateMetadata(): Promise<Metadata> {
   if (isAmbalajSubdir(site.subdir)) {
     const [c, ayar] = await Promise.all([icerikGetir(), ayarlarGetir()]);
     return {
-      title: c.home.baslik || ayar.seoTitle || "Ana Sayfa",
+      title: "Ana Sayfa",
       description: c.home.aciklama?.slice(0, 160) ?? ayar.seoDescription,
+      openGraph: {
+        title: `${ayar.salonAd} | Ana Sayfa`,
+        description: c.home.aciklama?.slice(0, 160) ?? ayar.seoDescription,
+      },
     };
   }
   return kuaförMeta;

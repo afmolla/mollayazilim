@@ -8,13 +8,18 @@ import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 
 export type NavLinkItem = MenuItem;
 
-function linkClass(active: boolean) {
+function linkClass(active: boolean, tone: "light" | "dark") {
+  if (tone === "dark") {
+    return active
+      ? "block whitespace-nowrap font-semibold text-emerald-300 underline decoration-2 underline-offset-4"
+      : "block whitespace-nowrap text-emerald-100/75 transition hover:text-emerald-200";
+  }
   return active
     ? "block whitespace-nowrap font-semibold text-[var(--brand)] underline decoration-2 underline-offset-4"
     : "block whitespace-nowrap text-[var(--muted)] transition hover:text-[var(--brand)]";
 }
 
-export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
+export function SiteNavLinks({ links, tone = "light" }: { links: NavLinkItem[]; tone?: "light" | "dark" }) {
   const pathname = usePathname() ?? "/";
   const pf = usePrefixedNavHref();
 
@@ -35,7 +40,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
                 href={pf(n.href)}
                 target={n.newTab ? "_blank" : undefined}
                 rel={n.newTab ? "noreferrer" : undefined}
-                className={linkClass(leafActive)}
+                className={linkClass(leafActive, tone)}
                 aria-current={leafActive ? "page" : undefined}
               >
                 {n.label}
@@ -49,7 +54,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
             {n.href === "#" ? (
               <span
                 className={[
-                  linkClass(active),
+                  linkClass(active, tone),
                   "cursor-default px-0.5 py-0.5",
                   "after:ml-0.5 after:text-[10px] after:content-['▾']",
                 ].join(" ")}
@@ -62,7 +67,7 @@ export function SiteNavLinks({ links }: { links: NavLinkItem[] }) {
                 href={pf(n.href)}
                 target={n.newTab ? "_blank" : undefined}
                 rel={n.newTab ? "noreferrer" : undefined}
-                className={[linkClass(isNavActive(pathname, n.href, n.newTab) || active), "px-0.5 py-0.5"].join(" ")}
+                className={[linkClass(isNavActive(pathname, n.href, n.newTab) || active, tone), "px-0.5 py-0.5"].join(" ")}
                 aria-current={isNavActive(pathname, n.href, n.newTab) ? "page" : undefined}
               >
                 {n.label}

@@ -11,10 +11,23 @@ export function inferPrefixFromPathname(pathname: string): string {
   return "";
 }
 
-/** Bilinen portföy öneklerini kaldırır; iç route (`/hizmetler`) döner. */
+/** href içindeki yol, sorgu ve hash parçalarını ayırır */
+function splitHrefParts(href: string): { path: string; suffix: string } {
+  const h = href.trim();
+  const q = h.indexOf("?");
+  const hash = h.indexOf("#");
+  let pathEnd = h.length;
+  if (q >= 0) pathEnd = Math.min(pathEnd, q);
+  if (hash >= 0) pathEnd = Math.min(pathEnd, hash);
+  const path = h.slice(0, pathEnd) || "/";
+  const suffix = h.slice(pathEnd);
+  return { path, suffix };
+}
+
+/** Bilinen portföy öneklerini kaldırır; iç route (`/hizmetler`) döner. Sorgu/hash korunmaz. */
 export function stripSitePrefix(path: string): string {
-  const raw = (path ?? "").split("?")[0] || "/";
-  const withSlash = raw.startsWith("/") ? raw : `/${raw}`;
+  const { path: rawPath } = splitHrefParts(path ?? "");
+  const withSlash = rawPath.startsWith("/") ? rawPath : `/${rawPath}`;
   for (const base of portfolioPrefixes()) {
     if (withSlash === base || withSlash === `${base}/`) return "/";
     if (withSlash.startsWith(`${base}/`)) {
@@ -54,12 +67,14 @@ export function publicHref(href: string, pathname?: string | null): string {
   ) {
     return h;
   }
+  const { path, suffix } = splitHrefParts(h);
   const base = getBasePathFromPathname(pathname ?? null);
-  const internal = stripSitePrefix(h.startsWith("/") ? h : `/${h}`);
-  if (!base) return internal;
-  const already = h === base || h.startsWith(`${base}/`);
-  if (already) return h.startsWith("/") ? h : `/${h}`;
-  return withBaseFromPrefix(base, internal);
+  const pathNorm = path.startsWith("/") ? path : `/${path}`;
+  const internal = stripSitePrefix(pathNorm);
+  if (!base) return `${internal}${suffix}`;
+  const already = pathNorm === base || pathNorm.startsWith(`${base}/`);
+  if (already) return `${pathNorm.startsWith("/") ? pathNorm : `/${pathNorm}`}${suffix}`;
+  return `${withBaseFromPrefix(base, internal)}${suffix}`;
 }
 
 /** @deprecated stripSitePrefix kullanın; uyumluluk için pathname ile aynı. */

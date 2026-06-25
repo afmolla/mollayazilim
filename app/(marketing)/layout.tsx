@@ -18,7 +18,11 @@ function MarketingShell({ children, ambalaj }: { children: React.ReactNode; amba
       <SiteHeader ambalaj={ambalaj} />
       <main
         className={`flex-1 ${ambalaj ? "bg-[#041008]" : ""}`}
-        style={{ paddingTop: "calc(var(--header-h, 64px) + 16px)" }}
+        style={
+          ambalaj
+            ? { paddingTop: "var(--header-h, 64px)" }
+            : { paddingTop: "calc(var(--header-h, 64px) + 16px)" }
+        }
       >
         <Suspense
           fallback={
@@ -28,7 +32,7 @@ function MarketingShell({ children, ambalaj }: { children: React.ReactNode; amba
           {children}
         </Suspense>
       </main>
-      <SiteFooter />
+      <SiteFooter ambalaj={ambalaj} />
       <VitrinDemoRibbon />
     </>
   );

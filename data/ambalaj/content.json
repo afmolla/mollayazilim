@@ -4,10 +4,10 @@
       "badge": "OPP · CPP · PET · LDPE",
       "baslik": "Esnek ambalajda kalite ve hızlı teslim.",
       "aciklama": "Torba ve rulo siparişlerinizde mikron, baskı ve adet detayına göre uygun maliyetle üretim ve sevkiyat sunuyoruz.",
-      "ctaPrimaryLabel": "Fiyat hesapla",
-      "ctaPrimaryHref": "/fiyat-hesaplama",
-      "ctaSecondaryLabel": "Teklif talebi",
-      "ctaSecondaryHref": "/randevu",
+      "ctaPrimaryLabel": "Mağazaya git",
+      "ctaPrimaryHref": "/urunler",
+      "ctaSecondaryLabel": "Fiyat hesapla",
+      "ctaSecondaryHref": "/fiyat-hesaplama",
       "heroImageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=1920&q=88&auto=format&fit=crop",
       "heroImageAlt": "Valfli kilitli doypack ambalaj",
       "etiketler": ["Doypack · Quadro", "Flat bottom", "Torba & rulo", "Flexo baskı"],
@@ -153,7 +153,7 @@
           "id": "doypack",
           "baslik": "Kilitli poşet & Doypack",
           "altBaslik": "Şeffaf, metalize, renkli, içecek valfli",
-          "href": "/hizmetler#doypack",
+          "href": "/urunler?kategori=doypack",
           "imageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=1200&q=88&auto=format&fit=crop",
           "imageAlt": "Valfli kilitli doypack ambalaj",
           "vurgu": "Popüler"
@@ -162,7 +162,7 @@
           "id": "quadro",
           "baslik": "Quadro ambalaj",
           "altBaslik": "Yan körüklü, raf duruşu güçlü",
-          "href": "/hizmetler#quadro",
+          "href": "/urunler?kategori=quadro",
           "imageSrc": "https://images.unsplash.com/photo-1706881811952-31148fe91adc?w=1200&q=88&auto=format&fit=crop",
           "imageAlt": "Çoklu stand-up pouch ambalaj"
         },
@@ -170,7 +170,7 @@
           "id": "flat",
           "baslik": "Flat bottom",
           "altBaslik": "Alttan körüklü, valfli seçenekler",
-          "href": "/hizmetler#flat",
+          "href": "/urunler?kategori=flat",
           "imageSrc": "https://images.unsplash.com/photo-1703564202740-e9805c4a14ea?w=1200&q=88&auto=format&fit=crop",
           "imageAlt": "Alttan körüklü flat bottom ambalaj"
         },
@@ -178,7 +178,7 @@
           "id": "torba",
           "baslik": "Torba & rulo",
           "altBaslik": "OPP · CPP · PET · LDPE",
-          "href": "/hizmetler#torba",
+          "href": "/urunler?kategori=torba",
           "imageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&q=88&auto=format&fit=crop",
           "imageAlt": "Esnek ambalaj üretim tesisi"
         },
@@ -186,7 +186,7 @@
           "id": "baski",
           "baslik": "Baskılı ambalaj",
           "altBaslik": "Flexo baskı · klise · renk provası",
-          "href": "/hizmetler#baski",
+          "href": "/urunler?kategori=baski",
           "imageSrc": "https://images.unsplash.com/photo-1758183961426-88d64eb5f787?w=1200&q=88&auto=format&fit=crop",
           "imageAlt": "Flexo baskı makinesi"
         }
@@ -200,7 +200,7 @@
           "ozellik": "Gıda bariyer · önden zip",
           "minSiparis": "Min. 5.000 ad",
           "etiket": "Doypack",
-          "href": "/randevu",
+          "href": "/urun/metalize-kilitli-torba-12x18",
           "imageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Metalize kilitli torba"
         },
@@ -210,7 +210,7 @@
           "ozellik": "13×22 cm · sıvı dolum uyumlu",
           "minSiparis": "Min. 3.000 ad",
           "etiket": "Valfli",
-          "href": "/fiyat-hesaplama",
+          "href": "/urun/icecek-doypack-250ml-valfli",
           "imageSrc": "https://images.unsplash.com/photo-1706881811917-6590b1054050?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Valfli içecek doypack"
         },
@@ -220,7 +220,7 @@
           "ozellik": "12,5×27 cm · yan körük",
           "minSiparis": "Min. 2.000 ad",
           "etiket": "Quadro",
-          "href": "/randevu",
+          "href": "/urun/quadro-500g-metalize",
           "imageSrc": "https://images.unsplash.com/photo-1703564202740-e9805c4a14ea?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Quadro metalize ambalaj"
         },
@@ -230,7 +230,7 @@
           "ozellik": "11,5×21 cm · düz taban",
           "minSiparis": "Min. 2.500 ad",
           "etiket": "Flat",
-          "href": "/randevu",
+          "href": "/urun/flat-bottom-250g-mat",
           "imageSrc": "https://images.unsplash.com/photo-1706881811952-31148fe91adc?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Flat bottom mat ambalaj"
         },
@@ -240,7 +240,7 @@
           "ozellik": "Bobin · otomatik hat",
           "minSiparis": "Min. 300 kg",
           "etiket": "Rulo",
-          "href": "/fiyat-hesaplama",
+          "href": "/urun/opp-cpp-laminasyon-rulo",
           "imageSrc": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Laminasyon rulo üretim hattı"
         },
@@ -250,7 +250,7 @@
           "ozellik": "6 renk · klise dahil teklif",
           "minSiparis": "Min. 500 kg",
           "etiket": "Baskı",
-          "href": "/randevu",
+          "href": "/urun/flexo-baskili-ldpe-torba",
           "imageSrc": "https://images.unsplash.com/photo-1758183961426-88d64eb5f787?w=800&q=88&auto=format&fit=crop",
           "imageAlt": "Flexo baskı makinesi"
         }
@@ -289,11 +289,11 @@
       ],
       "ctaBand": {
         "baslik": "Ölçünüz hazır mı?",
-        "aciklama": "Online hesaplayıcıdan tahmin alın veya numune talebi bırakın — satış ekibimiz aynı gün dönüş yapar.",
-        "primaryLabel": "Fiyat hesapla",
-        "primaryHref": "/fiyat-hesaplama",
-        "secondaryLabel": "Teklif formu",
-        "secondaryHref": "/randevu"
+        "aciklama": "Online mağazadan sipariş verin veya fiyat hesaplayıcı ile ön tahmin alın.",
+        "primaryLabel": "Mağazaya git",
+        "primaryHref": "/urunler",
+        "secondaryLabel": "Fiyat hesapla",
+        "secondaryHref": "/fiyat-hesaplama"
       }
     }
   }

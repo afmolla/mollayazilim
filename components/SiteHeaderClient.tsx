@@ -58,7 +58,7 @@ export function SiteHeaderClient(props: {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4 md:px-6 lg:gap-5">
         <div className="flex min-w-0 shrink-0 items-center gap-3">
-          <MobileNav brand={props.brand} items={props.items} />
+          <MobileNav brand={props.brand} items={props.items} dark={isAmbalaj} />
           <Link
             href={wb("/anasayfa")}
             className={
@@ -74,7 +74,7 @@ export function SiteHeaderClient(props: {
         </div>
 
         <nav className="site-header-nav hidden min-w-0 flex-1 items-center justify-center md:flex" aria-label="Ana menü">
-          <SiteNavLinks links={props.navLinks} />
+          <SiteNavLinks links={props.navLinks} tone={isAmbalaj ? "dark" : "light"} />
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-2">

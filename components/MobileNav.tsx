@@ -16,12 +16,20 @@ function filterMenu(items: MenuItem[]): MenuItem[] {
     .filter((x) => x.label && (x.href || (x.children?.length ?? 0) > 0));
 }
 
-export function MobileNav(props: { brand: string; items: MenuItem[] }) {
+export function MobileNav(props: { brand: string; items: MenuItem[]; dark?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname() ?? "/";
   const wb = useWithBase();
   const pf = usePrefixedNavHref();
   const items = filterMenu(props.items);
+
+  const dark = props.dark ?? false;
+  const linkActive = dark
+    ? "block rounded-xl bg-emerald-500/15 px-3 py-2 text-sm font-semibold text-emerald-200"
+    : "block rounded-xl bg-[var(--surface-2)] px-3 py-2 text-sm font-semibold text-[var(--brand)]";
+  const linkIdle = dark
+    ? "block rounded-xl px-3 py-2 text-sm font-medium text-emerald-100/80 hover:bg-emerald-500/10"
+    : "block rounded-xl px-3 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-2)]";
 
   function Row({ n, depth }: { n: MenuItem; depth: number }) {
     const hasChildren = (n.children?.length ?? 0) > 0;
@@ -38,11 +46,7 @@ export function MobileNav(props: { brand: string; items: MenuItem[] }) {
             onClick={() => setOpen(false)}
             aria-current={leafActive ? "page" : undefined}
             style={{ paddingLeft: `${12 + depth * 12}px` }}
-            className={
-              leafActive
-                ? "block rounded-xl bg-[var(--surface-2)] px-3 py-2 text-sm font-semibold text-[var(--brand)]"
-                : "block rounded-xl px-3 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--surface-2)]"
-            }
+            className={leafActive ? linkActive : linkIdle}
           >
             {n.label}
           </Link>

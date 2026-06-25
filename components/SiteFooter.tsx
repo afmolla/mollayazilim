@@ -9,7 +9,8 @@ import { FooterNavLinks } from "@/components/FooterNavLinks";
 import { siteOrigin } from "@/lib/site";
 import { resolveDownloadHref } from "@/lib/download-href";
 
-export async function SiteFooter() {
+export async function SiteFooter(props?: { ambalaj?: boolean }) {
+  const ambalaj = props?.ambalaj ?? false;
   const origin = await siteOrigin();
   const ayar = await ayarlarGetir();
   const icerik = await icerikGetir();
@@ -60,28 +61,50 @@ export async function SiteFooter() {
   const showAppDownloads = !!(iosHrefStore || androidHrefStore || apkHref);
 
   return (
-    <footer className="mt-auto border-t border-[var(--border)] bg-[var(--surface-2)]">
+    <footer
+      className={
+        ambalaj
+          ? "mt-auto border-t border-emerald-500/15 bg-[#061510] text-emerald-50"
+          : "mt-auto border-t border-[var(--border)] bg-[var(--surface-2)]"
+      }
+    >
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-3 md:px-6">
         <div>
-          <p className="font-semibold text-[var(--text)]">{ayar.salonAd}</p>
-          <p className="mt-2 text-sm text-[var(--muted)]">
+          <p className={ambalaj ? "font-semibold text-white" : "font-semibold text-[var(--text)]"}>{ayar.salonAd}</p>
+          <p className={ambalaj ? "mt-2 text-sm text-emerald-100/60" : "mt-2 text-sm text-[var(--muted)]"}>
             {ayar.adresKisa} — {ayar.calismaSaatleri}
           </p>
         </div>
         <div>
-          <p className="text-sm font-medium text-[var(--text)]">Hızlı bağlantılar</p>
-          <FooterNavLinks items={footerItems} />
+          <p className={ambalaj ? "text-sm font-medium text-emerald-100" : "text-sm font-medium text-[var(--text)]"}>
+            Hızlı bağlantılar
+          </p>
+          <FooterNavLinks items={footerItems} tone={ambalaj ? "dark" : "light"} />
         </div>
         <div>
-          <p className="text-sm font-medium text-[var(--text)]">İletişim</p>
+          <p className={ambalaj ? "text-sm font-medium text-emerald-100" : "text-sm font-medium text-[var(--text)]"}>
+            İletişim
+          </p>
           {phone ? (
-            <p className="mt-2 text-sm text-[var(--muted)]">
-              Telefon: <span className="font-medium text-[var(--text)]">{phone}</span>
+            <p className={ambalaj ? "mt-2 text-sm text-emerald-100/60" : "mt-2 text-sm text-[var(--muted)]"}>
+              Telefon:{" "}
+              <span className={ambalaj ? "font-medium text-white" : "font-medium text-[var(--text)]"}>{phone}</span>
             </p>
           ) : null}
           {email ? (
-            <p className={phone ? "mt-1 text-sm text-[var(--muted)]" : "mt-2 text-sm text-[var(--muted)]"}>
-              E‑posta: <span className="font-medium text-[var(--text)]">{email}</span>
+            <p
+              className={
+                ambalaj
+                  ? phone
+                    ? "mt-1 text-sm text-emerald-100/60"
+                    : "mt-2 text-sm text-emerald-100/60"
+                  : phone
+                    ? "mt-1 text-sm text-[var(--muted)]"
+                    : "mt-2 text-sm text-[var(--muted)]"
+              }
+            >
+              E‑posta:{" "}
+              <span className={ambalaj ? "font-medium text-white" : "font-medium text-[var(--text)]"}>{email}</span>
             </p>
           ) : null}
           {showSocialMap ? (
@@ -168,7 +191,13 @@ export async function SiteFooter() {
         </div>
       ) : null}
 
-      <div className="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]">
+      <div
+        className={
+          ambalaj
+            ? "border-t border-emerald-500/10 py-4 text-center text-xs text-emerald-100/50"
+            : "border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]"
+        }
+      >
         <CookieFooterBar className="mb-2" />
         © {new Date().getFullYear()} {ayar.salonAd}
         {icerik.site?.footerEkMetin?.trim() ? ` — ${icerik.site.footerEkMetin.trim()}` : ""}

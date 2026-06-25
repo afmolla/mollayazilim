@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import type { UrunKayit } from "@/lib/urun-types";
 import { URUN_KATEGORILER } from "@/lib/urun-types";
 import { publicHref } from "@/lib/base-path";
@@ -16,6 +17,12 @@ export function UrunlerPageClient({ urunler }: Props) {
   const searchParams = useSearchParams();
   const ph = (href: string) => publicHref(href, pathname);
   const kategori = searchParams.get("kategori")?.trim() ?? "";
+
+  useEffect(() => {
+    if (kategori) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [kategori]);
 
   const filtered = kategori ? urunler.filter((u) => u.kategoriId === kategori) : urunler;
 

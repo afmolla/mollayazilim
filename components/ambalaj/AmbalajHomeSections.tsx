@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { AmbalajHome } from "@/lib/ambalaj-home-defaults";
+import { ambalajKategoriMagazaHref, ambalajOneCikanHref } from "@/lib/ambalaj-shop-links";
 import { normalizeAmbalajImageSrc, ESNEK_AMBALAJ_IMAGES } from "@/lib/esnek-ambalaj-images";
 import { publicHref } from "@/lib/base-path";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
@@ -13,6 +14,8 @@ type Props = {
 
 export function AmbalajHomeSections({ data, pathname }: Props) {
   const ph = (href: string) => publicHref(href, pathname);
+  const kategoriLink = (id: string, href: string) => ph(ambalajKategoriMagazaHref(id) || href);
+  const urunLink = (itemId: string, href: string) => ph(ambalajOneCikanHref(itemId, href));
 
   return (
     <div className="ambalaj-home-sections bg-[#041008] text-emerald-50">
@@ -44,7 +47,7 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
             return (
               <Link
                 key={k.id}
-                href={ph(k.href)}
+                href={kategoriLink(k.id, k.href)}
                 className={`group relative overflow-hidden rounded-2xl border border-emerald-500/15 bg-emerald-950/30 shadow-xl transition hover:-translate-y-1 hover:border-emerald-400/35 hover:shadow-emerald-900/30 ${span}`}
               >
                 <div className={`relative w-full ${tall ? "min-h-[280px] lg:min-h-full lg:h-full" : "min-h-[160px]"}`}>
@@ -66,8 +69,8 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
                   ) : null}
                   <h3 className={`font-bold text-white ${tall ? "text-xl md:text-2xl" : "text-lg"}`}>{k.baslik}</h3>
                   <p className="mt-1 text-sm text-emerald-100/70">{k.altBaslik}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 opacity-0 transition group-hover:opacity-100">
-                    İncele <span aria-hidden>→</span>
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 opacity-80 transition group-hover:opacity-100">
+                    Mağazada gör →
                   </span>
                 </div>
               </Link>
@@ -96,7 +99,7 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
             {data.oneCikan.map((p) => (
               <Link
                 key={p.id}
-                href={ph(p.href)}
+                href={urunLink(p.id, p.href)}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-white/[0.03] backdrop-blur-sm transition hover:border-emerald-400/30 hover:bg-emerald-500/[0.06]"
               >
                 {p.imageSrc ? (
@@ -123,8 +126,8 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
                 <p className="mt-2 text-sm text-emerald-100/55">{p.ozellik}</p>
                 <div className="mt-auto flex items-center justify-between pt-4">
                   <span className="text-xs font-medium text-emerald-400/90">{p.minSiparis}</span>
-                  <span className="text-xs font-semibold text-emerald-300 opacity-0 transition group-hover:opacity-100">
-                    Teklif al →
+                  <span className="text-xs font-semibold text-emerald-300 opacity-80 transition group-hover:opacity-100">
+                    Ürünü incele →
                   </span>
                 </div>
                 </div>
