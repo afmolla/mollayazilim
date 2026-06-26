@@ -4,7 +4,7 @@
 
 import Image from "next/image";
 
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 
 import { ESNEK_AMBALAJ_IMAGES, normalizeAmbalajImageSrc } from "@/lib/esnek-ambalaj-images";
 
@@ -18,7 +18,9 @@ import type { KuaforHeroProps } from "@/components/kuafor-vitrin/kuafor-hero-typ
 
 export function EsnekAmbalajFullscreenHero(props: KuaforHeroProps) {
 
-  const { home, inline, salonAdLive, setSalonAdLive, patchSalonAd, updateHome, pathname, openCtx } = props;
+  const { home, inline, salonAdLive, setSalonAdLive, patchSalonAd, updateHome, openCtx } = props;
+
+  const ph = usePrefixedNavHref();
 
 
 
@@ -218,7 +220,7 @@ export function EsnekAmbalajFullscreenHero(props: KuaforHeroProps) {
 
               inline={inline}
 
-              href={publicHref(home.ctaPrimaryHref, pathname)}
+              href={ph(home.ctaPrimaryHref)}
 
               label={home.ctaPrimaryLabel}
 
@@ -258,7 +260,7 @@ export function EsnekAmbalajFullscreenHero(props: KuaforHeroProps) {
 
               inline={inline}
 
-              href={publicHref(home.ctaSecondaryHref, pathname)}
+              href={ph(home.ctaSecondaryHref)}
 
               label={home.ctaSecondaryLabel}
 

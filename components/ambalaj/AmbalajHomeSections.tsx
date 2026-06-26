@@ -4,16 +4,15 @@ import Link from "next/link";
 import type { AmbalajHome } from "@/lib/ambalaj-home-defaults";
 import { ambalajKategoriMagazaHref, ambalajOneCikanHref } from "@/lib/ambalaj-shop-links";
 import { normalizeAmbalajImageSrc, ESNEK_AMBALAJ_IMAGES } from "@/lib/esnek-ambalaj-images";
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
 
 type Props = {
   data: AmbalajHome;
-  pathname: string;
 };
 
-export function AmbalajHomeSections({ data, pathname }: Props) {
-  const ph = (href: string) => publicHref(href, pathname);
+export function AmbalajHomeSections({ data }: Props) {
+  const ph = usePrefixedNavHref();
   const kategoriLink = (id: string, href: string) => ph(ambalajKategoriMagazaHref(id) || href);
   const urunLink = (itemId: string, href: string) => ph(ambalajOneCikanHref(itemId, href));
 
@@ -59,7 +58,7 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
                     sizes="(max-width:768px) 100vw, 400px"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#041008] via-[#041008]/50 to-transparent" />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(34,197,94,0.15),transparent_50%)]" />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(34,197,94,0.15),transparent_50%)]" />
                 </div>
                 <div className="absolute inset-x-0 bottom-0 p-5 md:p-6">
                   {k.vurgu ? (
@@ -175,7 +174,7 @@ export function AmbalajHomeSections({ data, pathname }: Props) {
                     className="object-cover opacity-45 transition group-hover:scale-105 group-hover:opacity-60"
                     sizes="400px"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#081810] to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#081810] to-transparent" />
                 </div>
                 <div className="p-5">
                   <h3 className="font-bold text-white">{s.baslik}</h3>

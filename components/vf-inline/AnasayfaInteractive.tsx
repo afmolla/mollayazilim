@@ -835,9 +835,10 @@ export function AnasayfaInteractive(props: {
       {isOtoyikama ? <OtoyikamaVisualBands pathname={pathname} /> : null}
 
       {isEsnekAmbalaj && props.ambalajHome ? (
-        <AmbalajHomeSections data={props.ambalajHome} pathname={pathname} />
+        <AmbalajHomeSections data={props.ambalajHome} />
       ) : null}
 
+      {!isEsnekAmbalaj ? (
       <section
         className={
           isRestaurant
@@ -1057,6 +1058,7 @@ export function AnasayfaInteractive(props: {
           ) : null}
         </div>
       </section>
+      ) : null}
     </div>
   );
 }

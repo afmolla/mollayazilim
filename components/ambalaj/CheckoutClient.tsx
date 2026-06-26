@@ -2,16 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/components/ambalaj/CartProvider";
 import { formatTry } from "@/lib/urun-types";
-import { publicHref } from "@/lib/base-path";
-import { useWithBase } from "@/components/SitePrefixProvider";
+import { usePrefixedNavHref, useWithBase } from "@/components/SitePrefixProvider";
 
 export function CheckoutClient() {
   const router = useRouter();
-  const pathname = usePathname() ?? "";
-  const ph = (href: string) => publicHref(href, pathname);
+  const ph = usePrefixedNavHref();
   const wb = useWithBase();
   const cart = useCart();
 

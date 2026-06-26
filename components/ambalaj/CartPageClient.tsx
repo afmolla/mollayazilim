@@ -1,17 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCart } from "@/components/ambalaj/CartProvider";
 import { cartLineTotal, cartKdv } from "@/lib/cart-types";
 import { formatTry } from "@/lib/urun-types";
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 import { normalizeAmbalajImageSrc, ESNEK_AMBALAJ_IMAGES } from "@/lib/esnek-ambalaj-images";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
 
 export function CartPageClient() {
-  const pathname = usePathname() ?? "";
-  const ph = (href: string) => publicHref(href, pathname);
+  const ph = usePrefixedNavHref();
   const cart = useCart();
   const kdv = cartKdv(cart.subtotal);
 

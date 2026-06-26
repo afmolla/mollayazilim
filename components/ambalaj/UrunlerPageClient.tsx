@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import type { UrunKayit } from "@/lib/urun-types";
 import { URUN_KATEGORILER } from "@/lib/urun-types";
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 import { ProductCard } from "@/components/ambalaj/ProductCard";
 
 type Props = {
@@ -13,9 +13,8 @@ type Props = {
 };
 
 export function UrunlerPageClient({ urunler }: Props) {
-  const pathname = usePathname() ?? "";
   const searchParams = useSearchParams();
-  const ph = (href: string) => publicHref(href, pathname);
+  const ph = usePrefixedNavHref();
   const kategori = searchParams.get("kategori")?.trim() ?? "";
 
   useEffect(() => {

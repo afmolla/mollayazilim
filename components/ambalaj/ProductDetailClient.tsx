@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import type { UrunKayit } from "@/lib/urun-types";
 import { urunVaryantFiyat, formatTry, URUN_KATEGORILER } from "@/lib/urun-types";
 import { normalizeAmbalajImageSrc, ESNEK_AMBALAJ_IMAGES } from "@/lib/esnek-ambalaj-images";
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 import { VitrinImage } from "@/components/vitrin/VitrinImage";
 import { useCart } from "@/components/ambalaj/CartProvider";
 
@@ -15,8 +14,7 @@ type Props = {
 };
 
 export function ProductDetailClient({ urun }: Props) {
-  const pathname = usePathname() ?? "";
-  const ph = (href: string) => publicHref(href, pathname);
+  const ph = usePrefixedNavHref();
   const cart = useCart();
   const [varyantId, setVaryantId] = useState(urun.varyantlar[0]?.id ?? "");
   const [added, setAdded] = useState(false);

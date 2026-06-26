@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { publicHref } from "@/lib/base-path";
+import { usePrefixedNavHref } from "@/components/SitePrefixProvider";
 import { formatTry } from "@/lib/urun-types";
 
 type Props = {
@@ -12,8 +11,7 @@ type Props = {
 };
 
 export function OrderConfirmClient({ siparisId, toplam, odemeMesaj }: Props) {
-  const pathname = usePathname() ?? "";
-  const ph = (href: string) => publicHref(href, pathname);
+  const ph = usePrefixedNavHref();
 
   return (
     <div className="ambalaj-shop mx-auto max-w-2xl px-4 py-16 text-center text-emerald-50 md:px-8">

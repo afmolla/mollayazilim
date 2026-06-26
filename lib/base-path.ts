@@ -38,7 +38,10 @@ export function stripSitePrefix(path: string): string {
 }
 
 export function getBasePathFromPathname(pathname: string | null | undefined): string {
-  if (pathname) return inferPrefixFromPathname(pathname);
+  if (pathname) {
+    const fromPath = inferPrefixFromPathname(pathname);
+    if (fromPath) return fromPath;
+  }
   if (typeof window !== "undefined") {
     return inferPrefixFromPathname(window.location.pathname);
   }
